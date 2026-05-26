@@ -1,0 +1,388 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2026-05-24",
+  "description": "妝容模組母庫 - 所有妝容定義的中央管理檔案",
+  "makeups": [
+    {
+      "id": "xianxia",
+      "name": "仙氣靈秀",
+      "category": "fantasy",
+      "riskLevel": "medium",
+      "desc": "xianxia-style surface makeup applied on the original face: natural untouched eyebrows, pale champagne surface eye color, peach or nude lip color, sheer cosmetics evoking xianxia atmosphere — applied as surface layer only without altering facial structure",
+      "tags": ["fantasy", "xianxia", "natural", "surface-only"]
+    },
+    {
+      "id": "gudian_hong",
+      "name": "古典紅妝",
+      "category": "historical",
+      "riskLevel": "low",
+      "desc": "classical Tang-era red makeup: pale powder base, defined arch brows, bold vermillion red lip, subtle eye contour, traditional court beauty aesthetic",
+      "tags": ["historical", "tang", "classical"]
+    },
+    {
+      "id": "gongting",
+      "name": "宮廷盛妝",
+      "category": "historical",
+      "riskLevel": "low",
+      "desc": "elaborate imperial court makeup: white powder base, painted high arch brows, layered eye shadow, decorative forehead floral mark, bright vermillion lip, full court splendor",
+      "tags": ["historical", "imperial", "elaborate"]
+    },
+    {
+      "id": "wuxia",
+      "name": "武俠颯爽",
+      "category": "fantasy",
+      "riskLevel": "low",
+      "desc": "capable warrior natural makeup: clean defined skin, strong brows, clean eyeliner, neutral or light red lip, fresh and capable without excess decoration",
+      "tags": ["fantasy", "wuxia", "warrior", "natural"]
+    },
+    {
+      "id": "gothic",
+      "name": "哥德暗黑",
+      "category": "dark",
+      "riskLevel": "low",
+      "desc": "gothic surface makeup: cool-toned complexion base, eye shadow in black, burgundy or deep violet, bold black upper eyeliner, dark wine or black-red lip — surface cosmetics only, cold dramatic elegance without reshaping the face",
+      "tags": ["gothic", "dark", "surface-only"]
+    },
+    {
+      "id": "mermaid",
+      "name": "珠光水女",
+      "category": "fantasy",
+      "riskLevel": "medium",
+      "desc": "pearlescent aqua surface makeup: pearl shimmer highlights on skin, gradient eye shadow in ocean blue or lavender, glossy dewy lip in coral or clear, fresh oceanic shimmer as surface cosmetics only without altering skin texture",
+      "tags": ["fantasy", "mermaid", "aquatic", "surface-only"]
+    },
+    {
+      "id": "mermaid_pearl",
+      "name": "深海珠光",
+      "category": "fantasy",
+      "riskLevel": "medium",
+      "desc": "deep-sea pearl makeup: dewy luminous skin, pearlescent blue-violet eye glow, wet-look shimmer highlights, coral-rose glossy lip, aquatic fantasy elegance without changing facial structure",
+      "tags": ["fantasy", "mermaid", "pearl", "aquatic"]
+    },
+    {
+      "id": "fox",
+      "name": "狐妖魅惑",
+      "category": "fantasy",
+      "riskLevel": "high",
+      "desc": "fox enchantress seductive makeup: sultry smoky eye in amber and deep brown, slanted eyeliner for foxy eye shape, bold deep wine or crimson lip, warm golden shimmer on skin, dangerously beautiful, eye-direction styling as surface liner only without reshaping original eye structure",
+      "tags": ["fantasy", "fox", "seductive", "high-risk"],
+      "warnings": ["Contains 'foxy eye shape' - monitor for eye restructuring"]
+    },
+    {
+      "id": "fox_noir",
+      "name": "九尾深妝",
+      "category": "fantasy",
+      "riskLevel": "high",
+      "desc": "nine-tailed fox surface makeup: layered gold and black eye shadow, extended upper liner for fox-eye silhouette, deep burgundy-red lip, warm golden shimmer on skin — applied as surface cosmetics only, respecting the original eye shape, eyelid structure, and facial structure",
+      "tags": ["fantasy", "fox", "nine-tailed", "high-risk"],
+      "warnings": ["Contains 'fox-eye silhouette' - monitor for eye restructuring"]
+    },
+    {
+      "id": "cyber",
+      "name": "賽博冷光",
+      "category": "scifi",
+      "riskLevel": "low",
+      "desc": "cyberpunk chrome makeup: clean high-contrast skin finish, precise metallic liner, cool neon blue or magenta eye accents, glossy structured lip, controlled futuristic glow",
+      "tags": ["scifi", "cyberpunk", "futuristic"]
+    },
+    {
+      "id": "cyber_idol",
+      "name": "賽博偶像",
+      "category": "scifi",
+      "riskLevel": "medium",
+      "desc": "futuristic idol stage makeup: high-shine luminous skin, colorful graphic eye shadow in electric blue or pink, precise graphic liner, glossy bold lip, holographic or metallic highlights",
+      "tags": ["scifi", "idol", "stage", "futuristic"]
+    },
+    {
+      "id": "oriental",
+      "name": "東方淡妝",
+      "category": "natural",
+      "riskLevel": "low",
+      "desc": "soft oriental minimalist makeup: natural translucent skin, barely-there brow fill, warm neutral eye shadow with soft eyeliner, soft pink or coral lip, understated refined elegance",
+      "tags": ["natural", "oriental", "minimalist"]
+    },
+    {
+      "id": "yaohou",
+      "name": "妖后魅惑",
+      "category": "dark",
+      "riskLevel": "low",
+      "desc": "dark supernatural surface makeup: smoky eye shadow in deep purple or black, controlled upper eyeliner, dark wine or blood-red lip — applied on the original face as surface cosmetics only, preserving natural facial structure",
+      "tags": ["dark", "supernatural", "surface-only"]
+    },
+    {
+      "id": "succubus_alluring",
+      "name": "魅魔魅惑",
+      "category": "dark",
+      "riskLevel": "medium",
+      "desc": "succubus alluring surface makeup: smoky violet-black eye shadow, sharp but elegant winged eyeliner, crimson inner-corner eye shadow, deep wine or rose-black glossy lips, subtle pink heart-shaped highlight motifs near the eyes or cheeks — seductive supernatural surface cosmetics while preserving the original face",
+      "tags": ["dark", "succubus", "supernatural", "surface-only"]
+    },
+    {
+      "id": "demon_lord",
+      "name": "魔王威壓",
+      "category": "dark",
+      "riskLevel": "low",
+      "desc": "demon sovereign makeup: dark regal contour kept surface-only, blackened red smoky eyes, controlled blood-red lip, subtle obsidian and antique-gold highlights, commanding underworld authority without facial reshaping",
+      "tags": ["dark", "demon", "sovereign", "surface-only"]
+    },
+    {
+      "id": "fallen_angel",
+      "name": "墮天使冷焰",
+      "category": "fantasy",
+      "riskLevel": "low",
+      "desc": "fallen angel surface makeup: cool-toned complexion, smoky charcoal and violet eye shadow, silver tear-like shimmer, muted wine lip — surface cosmetics evoking tragic celestial corruption without altering facial structure",
+      "tags": ["fantasy", "angel", "fallen", "surface-only"]
+    },
+    {
+      "id": "angel_holy",
+      "name": "聖堂天使",
+      "category": "fantasy",
+      "riskLevel": "medium",
+      "desc": "holy angel makeup: clean radiant skin, soft champagne shimmer eyes, pearl-white highlights, gentle rose lip, pure golden-white celestial glow with serene dignity",
+      "tags": ["fantasy", "angel", "holy", "celestial"]
+    },
+    {
+      "id": "imperial_empress",
+      "name": "帝后權威",
+      "category": "historical",
+      "riskLevel": "low",
+      "desc": "imperial empress makeup: immaculate ceremonial base, defined noble brows, refined red lip, subtle forehead ornament or floral mark, gold-highlighted eyes, dignified absolute authority",
+      "tags": ["historical", "imperial", "empress"]
+    },
+    {
+      "id": "tang_peony_soft",
+      "name": "盛唐花鈿",
+      "category": "historical",
+      "riskLevel": "low",
+      "desc": "Tang peony court makeup: soft powdered base, round warm blush, floral forehead mark, peach-red lip, golden eye shimmer, opulent Tang dynasty feminine grace",
+      "tags": ["historical", "tang", "court"]
+    },
+    {
+      "id": "song_pearl_lady",
+      "name": "宋代珍珠",
+      "category": "historical",
+      "riskLevel": "low",
+      "desc": "Song dynasty pearl makeup: refined pale translucent base, slender brows, minimal soft eyeliner, small rose lip, delicate pearl-like highlights, scholarly quiet elegance",
+      "tags": ["historical", "song", "pearl"]
+    },
+    {
+      "id": "outdoor_glow",
+      "name": "外景光感",
+      "category": "natural",
+      "riskLevel": "low",
+      "desc": "minimal real outdoor travel makeup: real skin texture, natural daylight highlights, natural untouched eyebrows and eyelashes, natural lip color matching the reference person, unretouched realistic travel-photo finish",
+      "tags": ["natural", "outdoor", "travel", "minimal"]
+    },
+    {
+      "id": "natural_clean",
+      "name": "自然裸妝",
+      "category": "natural",
+      "riskLevel": "low",
+      "desc": "natural clean makeup: barely visible complexion polish, natural brows, natural untouched eyelashes, nude-pink lip color, realistic everyday appearance while preserving all original facial details",
+      "tags": ["natural", "clean", "minimal"]
+    },
+    {
+      "id": "editorial",
+      "name": "高級寫真",
+      "category": "commercial",
+      "riskLevel": "high",
+      "desc": "controlled real-person makeup: natural skin texture, surface eye color only, soft liner following original eye shape, neutral or red lip color, no commercial beauty reconstruction",
+      "tags": ["commercial", "editorial", "high-risk"],
+      "warnings": ["Editorial category - monitor for beauty template activation"]
+    },
+    {
+      "id": "global_sun",
+      "name": "環球日光",
+      "category": "natural",
+      "riskLevel": "low",
+      "desc": "minimal global travel makeup: natural outdoor color, natural daylight highlights, natural untouched eye area, natural lip color matching the reference person, real travel snapshot naturalness",
+      "tags": ["natural", "travel", "global", "minimal"]
+    },
+    {
+      "id": "cinematic",
+      "name": "電影角色",
+      "category": "commercial",
+      "riskLevel": "high",
+      "desc": "story-driven surface makeup: natural complexion, original eye shape preserved with scene-appropriate color only, controlled lip color and believable documentary production realism",
+      "tags": ["commercial", "cinematic", "high-risk"],
+      "warnings": ["Cinematic category - monitor for beauty template activation"]
+    },
+    {
+      "id": "character_pop",
+      "name": "動漫角色",
+      "category": "cosplay",
+      "riskLevel": "high",
+      "desc": "anime or game character-inspired makeup: vivid but realistic eye color accents, clean graphic liner, bright polished lip, expressive cosplay energy without turning the face into a cartoon",
+      "tags": ["cosplay", "anime", "character", "high-risk"],
+      "warnings": ["Character archetype - monitor for face replacement"]
+    },
+    {
+      "id": "flower_fairy",
+      "name": "花草淡妝",
+      "category": "fantasy",
+      "riskLevel": "high",
+      "desc": "minimal botanical makeup: soft petal blush as surface color only, subtle botanical surface color around the eyes with no fantasy-eye styling, natural lip color matching the reference person, ordinary real-person forest snapshot naturalness",
+      "tags": ["fantasy", "fairy", "botanical", "high-risk"],
+      "warnings": ["Fairy archetype - monitor for face replacement"]
+    },
+    {
+      "id": "oracle_gold",
+      "name": "神諭金妝",
+      "category": "fantasy",
+      "riskLevel": "medium",
+      "desc": "divine oracle gold makeup: radiant gold eye accents, clean luminous skin, symbolic temple-like shimmer, noble rose-gold lip, sacred mythological authority",
+      "tags": ["fantasy", "oracle", "divine", "mythological"]
+    },
+    {
+      "id": "dragon_epic",
+      "name": "龍族戰妝",
+      "category": "fantasy",
+      "riskLevel": "medium",
+      "desc": "dragon epic battle makeup: strong brows, bronze or emerald metallic eye accents, restrained warrior contour, deep red or neutral lip, fierce elemental fantasy power",
+      "tags": ["fantasy", "dragon", "warrior", "epic"]
+    },
+    {
+      "id": "wedding",
+      "name": "鑽光婚紗",
+      "category": "commercial",
+      "riskLevel": "high",
+      "desc": "bridal surface makeup: champagne shimmer highlights, soft romantic eye definition, rose or nude glossy lip, elegant tenderness — applied as surface cosmetics respecting original skin texture and facial features",
+      "tags": ["commercial", "bridal", "wedding", "high-risk"],
+      "warnings": ["Bridal category - monitor for beauty template activation"]
+    },
+    {
+      "id": "luxury_glam",
+      "name": "奢華名媛",
+      "category": "commercial",
+      "riskLevel": "high",
+      "desc": "luxury glamour surface makeup: refined smoky eye shadow, champagne highlighter, elegant red or nude lip — surface-only cosmetics for a premium socialite aesthetic without altering the original complexion",
+      "tags": ["commercial", "luxury", "glamour", "high-risk"],
+      "warnings": ["Luxury category - monitor for beauty template activation"]
+    },
+    {
+      "id": "runway_supermodel",
+      "name": "超模秀場",
+      "category": "commercial",
+      "riskLevel": "high",
+      "desc": "runway supermodel makeup: sculptural editorial eyes, clean cheekbone highlights kept surface-only, neutral or bold fashion lip, high-end runway confidence",
+      "tags": ["commercial", "runway", "supermodel", "high-risk"],
+      "warnings": ["Supermodel archetype - monitor for face replacement"]
+    },
+    {
+      "id": "japanese_geisha",
+      "name": "和風藝伎",
+      "category": "cultural",
+      "riskLevel": "medium",
+      "desc": "Japanese classical stage makeup: pale refined base, precise red lip, delicate black liner, controlled blush and traditional elegance adapted tastefully for photographic realism",
+      "tags": ["cultural", "japanese", "geisha", "traditional"]
+    },
+    {
+      "id": "magic_girl",
+      "name": "魔法少女",
+      "category": "cosplay",
+      "riskLevel": "high",
+      "desc": "magical girl makeup: bright youthful fantasy eye shimmer, soft pink blush, glossy cherry lip, sparkling highlights, cheerful heroic character energy",
+      "tags": ["cosplay", "magical-girl", "fantasy", "high-risk"],
+      "warnings": ["Character archetype - monitor for face replacement"]
+    },
+    {
+      "id": "bohemian_sun",
+      "name": "波西米亞",
+      "category": "natural",
+      "riskLevel": "low",
+      "desc": "bohemian sun makeup: warm natural skin, bronze-gold eye shimmer, soft earthy blush, terracotta or peach lip, relaxed outdoor festival and desert travel beauty",
+      "tags": ["natural", "bohemian", "outdoor"]
+    },
+    {
+      "id": "vampire_lady",
+      "name": "吸血貴女",
+      "category": "dark",
+      "riskLevel": "medium",
+      "desc": "vampire noble makeup: pale luminous base, deep burgundy smoky eyes, sharp elegant liner, blood-wine lip, aristocratic nocturnal glamour",
+      "tags": ["dark", "vampire", "gothic", "nocturnal"]
+    },
+    {
+      "id": "india_bold",
+      "name": "印度華麗",
+      "category": "cultural",
+      "riskLevel": "low",
+      "desc": "Indian bold makeup: radiant warm skin, dramatic kohl-rimmed eyes, gold shimmer, rich berry or red lip, ornate festive elegance",
+      "tags": ["cultural", "indian", "bold", "festive"]
+    },
+    {
+      "id": "arabica_mystic",
+      "name": "沙漠神祕",
+      "category": "cultural",
+      "riskLevel": "low",
+      "desc": "Arabian mystic makeup: smoky bronze eyes, precise dark liner, warm golden highlights, rose-brown lip, desert palace mystery and luxury",
+      "tags": ["cultural", "arabian", "mystic", "desert"]
+    },
+    {
+      "id": "hk_film",
+      "name": "港風電影",
+      "category": "commercial",
+      "riskLevel": "medium",
+      "desc": "Hong Kong film makeup: soft cinematic skin, classic defined brows, gentle smoky eyes, muted red or rose lip, nostalgic movie-star atmosphere",
+      "tags": ["commercial", "hongkong", "film", "nostalgic"]
+    }
+  ],
+  "categories": {
+    "natural": {
+      "name": "自然系",
+      "defaultRisk": "low",
+      "description": "強調自然真實感的妝容"
+    },
+    "fantasy": {
+      "name": "奇幻系",
+      "defaultRisk": "medium",
+      "description": "奇幻、仙俠、神話風格妝容"
+    },
+    "dark": {
+      "name": "暗黑系",
+      "defaultRisk": "low",
+      "description": "哥德、魅魔、吸血鬼等暗黑風格"
+    },
+    "historical": {
+      "name": "古裝系",
+      "defaultRisk": "low",
+      "description": "歷史朝代宮廷妝容"
+    },
+    "commercial": {
+      "name": "商業系",
+      "defaultRisk": "high",
+      "description": "時尚、婚紗、電影等商業妝容（高風險）"
+    },
+    "scifi": {
+      "name": "科幻系",
+      "defaultRisk": "low",
+      "description": "賽博龐克、未來科技風格"
+    },
+    "cultural": {
+      "name": "文化系",
+      "defaultRisk": "low",
+      "description": "各國傳統文化妝容"
+    },
+    "cosplay": {
+      "name": "角色扮演系",
+      "defaultRisk": "high",
+      "description": "動漫、遊戲角色妝容（高風險）"
+    }
+  },
+  "riskLevels": {
+    "low": {
+      "name": "低風險",
+      "color": "green",
+      "description": "不太可能觸發換臉或美化模板"
+    },
+    "medium": {
+      "name": "中風險",
+      "color": "yellow",
+      "description": "可能觸發輕微美化，需要監控"
+    },
+    "high": {
+      "name": "高風險",
+      "color": "red",
+      "description": "容易觸發換臉或美女模板，需要特別注意"
+    }
+  }
+}

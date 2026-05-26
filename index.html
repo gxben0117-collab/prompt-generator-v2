@@ -1,0 +1,2352 @@
+﻿<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>美片咒語產生器</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2305040e'/%3E%3Cpath d='M32 11 50 24v26H14V24L32 11Z' fill='%23a01818' stroke='%23f0c060' stroke-width='3'/%3E%3Ccircle cx='32' cy='30' r='9' fill='%23f4ece0'/%3E%3Cpath d='M19 50c3-9 9-14 13-14s10 5 13 14' fill='%23f0c060'/%3E%3C/svg%3E">
+<style>
+/* ═══ Reset & Root ═══ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#05040e;
+  --surface-0:rgba(255,255,255,0.025);
+  --surface-1:rgba(255,255,255,0.055);
+  --surface-2:rgba(255,255,255,0.09);
+  --surface-3:rgba(255,255,255,0.13);
+  --gold:#c9922a;--gold-bright:#f0c060;--gold-dim:rgba(201,146,42,0.55);
+  --gold-glow:rgba(201,146,42,0.18);--gold-subtle:rgba(201,146,42,0.07);
+  --red:#a01818;--red-bright:#d43828;
+  --text:#f4ece0;--text-2:#b0a090;--text-3:#655850;
+  --border:rgba(255,255,255,0.065);
+  --border-gold:rgba(201,146,42,0.32);
+  --radius:20px;--radius-sm:13px;--radius-xs:9px;
+  --blur:saturate(200%) blur(28px);
+  --spring:.42s cubic-bezier(.34,1.52,.64,1);
+  --ease:.24s cubic-bezier(.4,0,.2,1);
+}
+
+/* ═══ Base ═══ */
+html{font-size:16px;scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  background:var(--ink);color:var(--text);
+  font-family:-apple-system,'PingFang TC','Microsoft JhengHei',BlinkMacSystemFont,'Segoe UI',sans-serif;
+  min-height:100vh;overflow-x:hidden;
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+}
+
+/* ═══ Cinematic Background ═══ */
+body::before{
+  content:'';position:fixed;inset:0;
+  background:
+    radial-gradient(ellipse 110% 65% at 18% -5%,rgba(130,22,12,.36) 0%,transparent 52%),
+    radial-gradient(ellipse 80% 55% at 82% 105%,rgba(22,12,88,.42) 0%,transparent 52%),
+    radial-gradient(ellipse 70% 90% at 50% 45%,rgba(6,4,22,.72) 0%,transparent 100%);
+  pointer-events:none;z-index:0;
+}
+body::after{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg width='400' height='400' viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  opacity:.4;pointer-events:none;z-index:0;
+}
+#app{position:relative;z-index:1}
+
+/* ═══ Hero ═══ */
+.hero{
+  text-align:center;
+  padding:108px 24px 80px;
+  position:relative;overflow:hidden;
+}
+.hero-glow{
+  position:absolute;top:-80px;left:50%;
+  transform:translateX(-50%);
+  width:1000px;height:480px;
+  background:radial-gradient(ellipse at 50% 0%,rgba(201,146,42,.13) 0%,transparent 62%);
+  pointer-events:none;
+}
+.hero-glow::after{
+  content:'';
+  position:absolute;bottom:0;left:50%;
+  transform:translateX(-50%);
+  width:560px;height:1px;
+  background:linear-gradient(to right,transparent,rgba(201,146,42,.18),transparent);
+}
+.hero-eyebrow{
+  font-size:10px;letter-spacing:5.5px;
+  color:var(--gold);text-transform:uppercase;
+  font-weight:600;opacity:.75;margin-bottom:22px;
+  animation:heroIn .9s .1s both;
+}
+.hero-title{
+  font-size:clamp(34px,6.5vw,62px);
+  font-weight:700;letter-spacing:-.8px;line-height:1.07;
+  background:linear-gradient(165deg,#fdf6ea 0%,#eacc80 38%,#faf0d0 68%,#cc9e40 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:18px;
+  animation:heroIn .9s .2s both;
+}
+.hero-title em{
+  font-style:normal;
+  -webkit-text-fill-color:transparent;
+  background:linear-gradient(145deg,#f4c458 0%,#bf6e18 60%,#e8a838 100%);
+  -webkit-background-clip:text;background-clip:text;
+}
+.hero-sub{
+  font-size:15px;color:var(--text-2);
+  letter-spacing:.2px;line-height:1.75;
+  max-width:520px;margin:0 auto;
+  animation:heroIn .9s .32s both;
+}
+@keyframes heroIn{from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)}}
+
+/* ═══ Wrap ═══ */
+.wrap{max-width:980px;margin:0 auto;padding:0 24px 108px}
+.app-title-block{padding:4px 0 18px}
+.app-title{
+  font-size:34px;line-height:1.15;font-weight:800;
+  letter-spacing:0;color:var(--text);
+}
+.app-version{
+  margin-top:8px;font-size:13px;line-height:1.5;
+  letter-spacing:1.5px;color:var(--gold-bright);opacity:.82;
+}
+@media(max-width:640px){.app-title{font-size:26px}.app-version{font-size:12px}}
+
+/* ═══ Sections ═══ */
+.sec{margin-bottom:34px;animation:secIn .55s both}
+@keyframes secIn{from{opacity:0;transform:translateY(18px)}to{opacity:1;transform:translateY(0)}}
+.sec:nth-child(1){animation-delay:.06s}.sec:nth-child(2){animation-delay:.12s}
+.sec:nth-child(3){animation-delay:.18s}.sec:nth-child(4){animation-delay:.24s}
+.sec:nth-child(5){animation-delay:.30s}.sec:nth-child(6){animation-delay:.36s}
+.sec:nth-child(7){animation-delay:.42s}.sec:nth-child(8){animation-delay:.48s}
+.sec:nth-child(9){animation-delay:.54s}.sec:nth-child(10){animation-delay:.60s}
+.sec-label{
+  font-size:10px;font-weight:700;color:var(--gold);
+  letter-spacing:3.5px;text-transform:uppercase;
+  margin-bottom:14px;display:flex;align-items:center;gap:14px;
+}
+.sec-meta{font-size:10px;color:var(--text-3);letter-spacing:.8px;text-transform:none;font-weight:500}
+.sec-label::after{content:'';flex:1;height:1px;background:linear-gradient(to right,rgba(201,146,42,.2),transparent)}
+.glass{
+  background:var(--surface-1);border:1px solid var(--border);
+  border-radius:var(--radius);
+  backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
+}
+
+/* ═══ Random Button ═══ */
+.rand-row{display:flex;gap:12px;align-items:center;justify-content:space-between}
+.rand-btn{
+  flex-shrink:0;margin-left:auto;padding:16px 24px;
+  background:linear-gradient(135deg,rgba(22,42,135,.42),rgba(58,16,108,.36));
+  border:1px solid rgba(95,140,255,.25);
+  border-radius:var(--radius);color:#b8ccff;
+  font-size:14px;font-weight:600;font-family:inherit;
+  cursor:pointer;letter-spacing:.8px;
+  transition:all .35s cubic-bezier(.34,1.4,.64,1);
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  min-height:54px;text-align:center;white-space:normal;
+}
+.rand-btn:hover{
+  background:linear-gradient(135deg,rgba(32,62,175,.52),rgba(75,26,148,.46));
+  border-color:rgba(135,172,255,.42);
+  box-shadow:0 6px 32px rgba(65,88,255,.16);
+  transform:translateY(-2px);
+}
+.rand-btn:active{transform:translateY(0)}
+.rand-icon{font-size:18px;display:inline-block;transition:transform .55s cubic-bezier(.34,1.56,.64,1)}
+.rand-btn:hover .rand-icon{transform:rotate(210deg)}
+.rand-label{
+  flex:1;display:flex;align-items:center;min-height:54px;padding:12px 18px;
+  background:rgba(0,0,0,.45);
+  border:1px solid rgba(201,146,42,.52);
+  border-radius:var(--radius);color:#c8a97e;
+  font-size:13px;font-weight:600;letter-spacing:.5px;
+  text-align:left;line-height:1.45;
+}
+.rand-help{font-size:11px;opacity:.7;margin-left:2px}
+@media(max-width:640px){
+  .wrap{padding:0 14px 84px}
+  .rand-row{flex-direction:column;align-items:stretch}
+  .rand-btn{width:100%;margin-left:0;padding:14px 16px}
+  .rand-label{min-height:48px}
+  .rand-help{display:block;margin-left:0;margin-top:2px}
+}
+
+/* ═══ Category Strip ═══ */
+.cat-strip{
+  display:grid;grid-template-rows:repeat(9,auto);grid-auto-flow:column;
+  gap:8px;overflow-x:auto;padding-bottom:8px;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;
+  scroll-snap-type:x proximity;
+}
+.cat-strip::-webkit-scrollbar{display:none}
+.cat-pill{
+  flex-shrink:0;display:flex;align-items:center;gap:7px;
+  padding:9px 17px;border-radius:30px;
+  border:1px solid var(--border);background:var(--surface-0);
+  cursor:pointer;user-select:none;
+  transition:var(--ease);white-space:nowrap;
+  font-size:12.5px;color:var(--text-2);
+  scroll-snap-align:start;
+}
+.cat-pill:hover{
+  border-color:rgba(201,146,42,.28);color:var(--text);
+  background:var(--surface-1);transform:translateY(-1px);
+}
+.cat-pill:focus-visible,.preset-card:focus-visible,.series-chip:focus-visible,.chip:focus-visible,.pro-toggle:focus-visible{
+  outline:2px solid var(--gold-bright);outline-offset:3px;
+  box-shadow:0 0 0 5px rgba(201,146,42,.16),0 8px 28px rgba(0,0,0,.32);
+}
+.cat-pill.active{
+  background:linear-gradient(135deg,rgba(115,32,10,.5),rgba(32,20,72,.36));
+  border-color:var(--border-gold);color:var(--gold-bright);
+  box-shadow:0 2px 22px rgba(201,146,42,.08),inset 0 1px 0 rgba(255,255,255,.04);
+}
+.cat-pill-icon{font-size:15px}
+.cat-pill-name{font-weight:600;letter-spacing:.15px}
+.cat-pill-count{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-width:18px;padding:2px 6px;border-radius:999px;
+  background:rgba(255,255,255,.05);font-size:10px;color:var(--text-3);
+}
+.cat-pill.active .cat-pill-count{background:rgba(201,146,42,.18);color:var(--gold-bright)}
+
+/* ═══ Preset Grid ═══ */
+.preset-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+@media(max-width:640px){.preset-grid{grid-template-columns:repeat(2,1fr)}}
+@media(min-width:641px) and (max-width:820px){.preset-grid{grid-template-columns:repeat(3,1fr)}}
+.preset-card{
+  padding:17px 10px 14px;text-align:center;
+  cursor:pointer;user-select:none;
+  border-radius:var(--radius-sm);
+  border:1px solid var(--border);background:var(--surface-0);
+  transition:var(--ease);position:relative;overflow:hidden;
+}
+.preset-card::before{
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% 0%,rgba(201,146,42,.06) 0%,transparent 62%);
+  opacity:0;transition:opacity var(--ease);
+}
+.preset-card::after{
+  content:'';position:absolute;bottom:0;left:0;right:0;height:2px;
+  background:linear-gradient(to right,transparent,var(--gold),transparent);
+  transform:scaleX(0);transition:transform var(--ease);
+}
+.preset-card:hover{
+  border-color:rgba(201,146,42,.26);background:var(--surface-1);
+  transform:translateY(-3px);box-shadow:0 9px 30px rgba(0,0,0,.3);
+}
+.preset-card:hover::before{opacity:1}
+.preset-card:hover::after{transform:scaleX(1)}
+.preset-card:active{transform:translateY(-1px)}
+.preset-card.active{
+  border-color:var(--border-gold);
+  background:linear-gradient(160deg,rgba(105,30,8,.46),rgba(30,18,70,.32));
+  box-shadow:0 5px 24px rgba(201,146,42,.1),inset 0 1px 0 rgba(255,255,255,.04);
+  transform:translateY(-2px);
+}
+.preset-card.active::after{transform:scaleX(1)}
+.preset-card.active::before{opacity:1}
+.preset-icon{
+  font-size:28px;margin-bottom:8px;display:block;line-height:1;
+  transition:transform var(--spring);
+}
+.preset-card:hover .preset-icon{transform:scale(1.14)}
+.preset-name{
+  font-size:12px;font-weight:600;color:var(--text);
+  display:block;margin-bottom:3px;line-height:1.3;letter-spacing:.1px;
+}
+.preset-card.active .preset-name{color:var(--gold-bright)}
+.preset-sub{font-size:10px;color:var(--text-3);letter-spacing:.3px;display:block}
+.preset-meta{display:flex;justify-content:center;gap:5px;flex-wrap:wrap;margin-top:8px}
+.preset-tag{
+  font-size:9px;letter-spacing:.6px;padding:2px 6px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.045);color:var(--text-3);
+}
+.preset-tag.core{border-color:rgba(201,146,42,.42);background:rgba(201,146,42,.12);color:var(--gold-bright)}
+.preset-tag.official{border-color:rgba(255,255,255,.1);color:var(--text-2)}
+.preset-tag.supplement{border-color:rgba(92,163,255,.24);background:rgba(92,163,255,.08);color:#9cc6ff}
+.preset-tag.review{border-color:rgba(255,190,90,.26);background:rgba(255,190,90,.08);color:#ffd090}
+.preset-tag.duplicate{border-color:rgba(255,96,96,.26);background:rgba(255,96,96,.08);color:#ff9a9a}
+.preset-tag.risk{border-color:rgba(255,124,124,.28);background:rgba(255,124,124,.08);color:#ffb3b3}
+.preset-tag.safe{border-color:rgba(112,214,178,.24);background:rgba(112,214,178,.08);color:#95e6c9}
+.series-filter{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}
+.series-chip{
+  border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.035);color:var(--text-2);
+  padding:8px 11px;border-radius:999px;font-size:11px;letter-spacing:.5px;cursor:pointer;
+  transition:var(--ease);user-select:none;
+}
+.series-chip:hover{border-color:rgba(201,146,42,.24);color:var(--text)}
+.series-chip.active{border-color:var(--border-gold);background:rgba(201,146,42,.12);color:var(--gold-bright)}
+.series-chip-count{opacity:.58;margin-left:4px}
+
+/* ═══ Chips ═══ */
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{
+  padding:10px 20px;font-size:14px;letter-spacing:.2px;
+  color:var(--text-2);border:1px solid var(--border);border-radius:30px;
+  background:var(--surface-0);
+  cursor:pointer;user-select:none;white-space:nowrap;transition:var(--ease);
+}
+.chip:hover{border-color:rgba(201,146,42,.36);color:var(--text);background:var(--surface-1)}
+.chip.active{
+  background:rgba(201,146,42,.11);border-color:var(--gold);
+  color:var(--gold-bright);box-shadow:0 0 14px rgba(201,146,42,.09);
+}
+.chip.caution{border-color:rgba(220,120,30,.26);color:rgba(220,160,80,.7)}
+.chip.caution:hover{border-color:rgba(220,120,30,.46);background:var(--surface-1)}
+.chip.caution.active{
+  background:rgba(220,120,30,.1);border-color:rgba(220,120,30,.56);
+  color:rgba(240,170,80,1);
+}
+#angChips .chip{
+  white-space:normal;display:flex;flex-direction:column;
+  align-items:center;text-align:center;padding:8px 13px;gap:2px;
+}
+#angChips .chip-sub{font-size:9.5px;opacity:.55;letter-spacing:.2px;font-weight:400;line-height:1.3}
+
+/* ═══ Form Fields ═══ */
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+@media(max-width:520px){.row2{grid-template-columns:1fr}}
+.field{display:flex;flex-direction:column;gap:8px}
+.field-label{font-size:10px;color:var(--text-3);font-weight:700;letter-spacing:2.5px;text-transform:uppercase}
+.field input,.field select,.field textarea{
+  background:var(--surface-1);border:1px solid var(--border);
+  border-radius:var(--radius-sm);color:var(--text);font-family:inherit;
+  font-size:13px;padding:12px 14px;width:100%;transition:var(--ease);
+}
+.field input:focus,.field select:focus,.field textarea:focus{
+  outline:none;border-color:var(--gold);background:var(--surface-2);
+  box-shadow:0 0 0 3px rgba(201,146,42,.1);
+}
+.field input::placeholder,.field textarea::placeholder{color:var(--text-3)}
+.field select option{background:#0e0c1e;color:var(--text)}
+.field textarea{resize:vertical;min-height:68px;line-height:1.65}
+
+/* ═══ Pro Panel ═══ */
+.pro-toggle{
+  padding:14px 18px;display:flex;align-items:center;justify-content:space-between;
+  cursor:pointer;user-select:none;
+  border-radius:var(--radius-sm);border:1px solid var(--border);
+  background:var(--surface-0);font-size:13px;color:var(--text-2);transition:var(--ease);
+}
+.pro-toggle:hover{border-color:rgba(201,146,42,.26);color:var(--text);background:var(--surface-1)}
+.pro-arrow{
+  width:18px;height:18px;border:1px solid var(--text-3);border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;color:var(--text-3);transition:transform var(--ease);flex-shrink:0;
+}
+.pro-toggle.open .pro-arrow{transform:rotate(180deg)}
+.pro-body{overflow:hidden;max-height:0;transition:max-height .44s cubic-bezier(.4,0,.2,1)}
+.pro-body.open{max-height:520px}
+.pro-inner{
+  padding:15px;border:1px solid var(--border);border-top:none;
+  border-radius:0 0 var(--radius-sm) var(--radius-sm);
+  background:var(--surface-0);display:flex;flex-direction:column;gap:13px;
+}
+.pro-row{display:grid;grid-template-columns:1fr 1fr;gap:11px}
+@media(max-width:520px){.pro-row{grid-template-columns:1fr}}
+
+/* ═══ Generate Button ═══ */
+.gen-wrap{padding:6px 0}
+.gen-btn{
+  width:100%;padding:20px 28px;
+  background:linear-gradient(140deg,#7a1212 0%,#be2e20 42%,#8c1818 80%,#7a1212 100%);
+  background-size:220% 220%;
+  border:1px solid rgba(201,146,42,.36);
+  border-radius:var(--radius);color:#fff;
+  font-size:16px;font-weight:700;font-family:inherit;
+  cursor:pointer;letter-spacing:2.5px;
+  transition:all .38s cubic-bezier(.34,1.18,.64,1);
+  box-shadow:0 8px 40px rgba(130,18,18,.42),inset 0 1px 0 rgba(255,255,255,.08);
+  display:flex;align-items:center;justify-content:center;gap:14px;
+  position:relative;overflow:hidden;
+}
+.gen-btn::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.08) 50%,transparent 70%);
+  transform:translateX(-130%);transition:transform .68s ease;
+}
+.gen-btn::after{
+  content:'';position:absolute;inset:0;
+  border-radius:inherit;
+  box-shadow:0 0 0 0 rgba(201,146,42,0);
+  transition:box-shadow .38s ease;
+}
+.gen-btn:hover{
+  background-position:right center;
+  box-shadow:0 12px 52px rgba(185,42,32,.5),inset 0 1px 0 rgba(255,255,255,.13);
+  transform:translateY(-3px);border-color:rgba(201,146,42,.58);
+}
+.gen-btn:hover::before{transform:translateX(130%)}
+.gen-btn:hover::after{box-shadow:0 0 0 3px rgba(201,146,42,.1)}
+.gen-btn:active{transform:translateY(-1px);box-shadow:0 5px 20px rgba(130,18,18,.45)}
+.gen-btn-spark{font-size:20px;animation:sparkPulse 4s ease-in-out infinite}
+@keyframes sparkPulse{
+  0%,100%{transform:rotate(0) scale(1)}
+  25%{transform:rotate(90deg) scale(1.15)}
+  50%{transform:rotate(180deg) scale(1)}
+  75%{transform:rotate(270deg) scale(1.15)}
+}
+
+/* ═══ Output ═══ */
+.output-shell{
+  border-radius:var(--radius);border:1px solid var(--border);
+  background:var(--surface-0);overflow:hidden;
+  transition:border-color var(--ease),box-shadow var(--ease);
+}
+.output-shell.has-content{
+  border-color:rgba(201,146,42,.2);
+  box-shadow:0 5px 36px rgba(0,0,0,.22);
+}
+.output-header{
+  padding:12px 17px;display:flex;align-items:center;justify-content:space-between;
+  border-bottom:1px solid var(--border);background:var(--surface-1);
+}
+.output-dots{display:flex;gap:6px}
+.dot{width:10px;height:10px;border-radius:50%}
+.dot-r{background:#ff5f57}.dot-y{background:#febc2e}.dot-g{background:#28c840}
+.output-label{font-size:10px;color:var(--text-3);letter-spacing:2.5px;text-transform:uppercase}
+.output-body{
+  padding:14px 17px;min-height:90px;
+  font-size:10.5px;line-height:1.78;color:var(--text);
+  white-space:pre-wrap;word-break:break-word;
+  font-family:'SF Mono','Cascadia Code','Consolas',monospace;
+  max-height:340px;overflow-y:auto;
+}
+.output-body::-webkit-scrollbar{width:4px}
+.output-body::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px}
+.output-ph{color:var(--text-3);font-family:inherit;font-size:14px;font-style:italic;font-weight:400}
+.char-count{font-size:10px;color:var(--text-3);text-align:right;padding:8px 17px;border-top:1px solid var(--border)}
+.out-actions{display:flex;gap:9px;padding:13px 17px;border-top:1px solid var(--border)}
+.copy-btn{
+  flex:1;padding:11px 14px;
+  background:var(--surface-1);border:1px solid var(--border);
+  border-radius:var(--radius-sm);color:var(--text);
+  font-family:inherit;font-size:12.5px;font-weight:600;
+  cursor:pointer;letter-spacing:.5px;transition:var(--ease);
+}
+.copy-btn:hover{border-color:var(--gold);color:var(--gold-bright);background:var(--surface-2)}
+.copy-btn.done{border-color:#27ae60;color:#2ecc71;background:rgba(39,174,96,.06)}
+.clr-btn{
+  padding:11px 14px;
+  background:var(--surface-1);border:1px solid var(--border);
+  border-radius:var(--radius-sm);color:var(--text-3);
+  font-family:inherit;font-size:12.5px;
+  cursor:pointer;transition:var(--ease);
+}
+.clr-btn:hover{border-color:#c0392b;color:#e74c3c;background:rgba(192,57,43,.06)}
+
+/* ═══ Usage Note ═══ */
+.usage-note{
+  padding:16px 20px;border-radius:var(--radius-sm);
+  border:1px solid rgba(201,146,42,.16);background:rgba(201,146,42,.04);
+  font-size:15px;color:var(--text-2);line-height:1.72;
+}
+.usage-note strong{color:var(--gold-bright);font-weight:600}
+.identity-sovereignty-note{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:11px 14px;border-radius:var(--radius-sm);
+  border:1px solid rgba(112,214,178,.2);
+  background:linear-gradient(135deg,rgba(112,214,178,.09),rgba(255,255,255,.025));
+  color:var(--text-2);font-size:12px;line-height:1.6;
+}
+.identity-sovereignty-note strong{color:#95e6c9;font-weight:700}
+
+/* ═══ Selection Badge ═══ */
+.selection-badge{
+  display:flex;align-items:center;gap:10px;
+  padding:11px 16px;border-radius:var(--radius-sm);
+  border:1px solid rgba(201,146,42,.17);
+  background:rgba(201,146,42,.05);
+  font-size:12px;color:var(--text-2);flex-wrap:wrap;
+}
+.badge-item{display:flex;align-items:center;gap:5px;color:var(--gold-bright);font-weight:600}
+.badge-sep{color:var(--text-3)}
+
+/* ═══ Divider ═══ */
+.divider{height:1px;margin:8px 0;background:linear-gradient(to right,transparent,var(--border),transparent)}
+
+/* ═══ Footer ═══ */
+.footer{text-align:center;padding:52px 0 36px;font-size:11px;color:var(--text-3);letter-spacing:2px}
+.footer-divider{
+  width:100px;height:1px;
+  background:linear-gradient(to right,transparent,var(--border-gold),transparent);
+  margin:0 auto 22px;
+}
+
+/* ═══ Hero Stats ═══ */
+.hero-stats{
+  display:inline-flex;align-items:center;gap:0;
+  margin-top:32px;
+  padding:12px 28px;
+  border:1px solid rgba(201,146,42,.16);
+  border-radius:999px;
+  background:rgba(201,146,42,.04);
+  backdrop-filter:blur(20px);
+  animation:heroIn .9s .5s both;
+}
+.hero-stat{display:flex;flex-direction:column;align-items:center;gap:3px;padding:0 20px}
+.hero-stat-num{
+  font-size:20px;font-weight:700;letter-spacing:-.5px;
+  background:linear-gradient(145deg,#f0c060,#c9922a);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.hero-stat-label{font-size:10px;color:var(--text-3);letter-spacing:1.5px;text-transform:uppercase;font-weight:500}
+.hero-stat-sep{width:1px;height:32px;background:rgba(255,255,255,.08)}
+
+/* ═══ Scrollbar ═══ */
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:rgba(255,255,255,.02)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:rgba(255,255,255,.11)}
+</style>
+</head>
+<body>
+<div id="app">
+
+<div class="wrap">
+
+  <div class="app-title-block">
+    <div class="app-title">美片咒語產生器</div>
+    <div class="app-version">紅兵開發 · v1.2.4 · 核心規範 v1.7</div>
+  </div>
+
+  <div class="sec">
+    <div class="usage-note">
+      <strong>使用方式：</strong>在 ChatGPT 同一則訊息先附上本人照片（建議女性容顏修圖完成，本系統無美顏功能），再貼下方咒語一起送出。
+    </div>
+  </div>
+
+  <!-- 快速隨機 -->
+  <div class="sec rand-row">
+    <div id="randLabel" class="rand-label">
+      隨機到：<span id="randStyleName" style="color:var(--text-1);font-weight:500;">尚未隨機</span>
+    </div>
+    <button class="rand-btn" onclick="doRandomAndCopy()">
+      <span class="rand-icon">🎲</span>
+      快速隨機
+      <span class="rand-help">從可顯示索引隨機挑選，同時複製咒語</span>
+    </button>
+  </div>
+
+  <!-- 當前選擇 -->
+  <div class="sec" id="selBadgeSec" style="display:none">
+    <div class="selection-badge" id="selBadge"></div>
+  </div>
+
+
+  <!-- 大分類 -->
+  <div class="sec">
+    <div class="sec-label">選擇風格大類 <span class="sec-meta" id="catCountMeta"></span></div>
+    <div class="cat-strip" id="catStrip"></div>
+  </div>
+
+  <!-- 場景主題 -->
+  <div class="sec">
+    <div class="sec-label">選擇場景主題 <span class="sec-meta" id="presetCountMeta"></span></div>
+    <div class="preset-grid" id="presetGrid"></div>
+  </div>
+
+  <!-- 額外輸入 -->
+  <div class="sec">
+    <div class="field" style="margin-bottom:12px">
+      <label class="field-label">主題（可輸入）</label>
+      <input type="text" id="themeInput" placeholder="例如：三國江南小喬">
+      <div style="font-size:11px;opacity:0.6;margin-top:4px">
+        只填角色／職業／人物名字與劇情狀況，避免描述長相、美貌、氣質，否則可能導致 AI 換臉。
+      </div>
+    </div>
+    <div class="field" style="margin-bottom:12px">
+      <label class="field-label">場景</label>
+      <textarea id="sceneInput" rows="3" placeholder="依主題讓AI設計 OR 敘述人在做什麼、在什麼地方、做什麼事情 + 環境背景特效元素"></textarea>
+      <div style="font-size:11px;opacity:0.6;margin-top:4px">
+        描述人在做什麼、在什麼地方、做什麼事情，以及環境背景特效元素。
+      </div>
+    </div>
+    <div class="field" style="margin-bottom:12px">
+      <label class="field-label">服裝</label>
+      <textarea id="costumeInput" rows="3" placeholder="依主題讓AI設計 OR 敘述衣服、材質、風格、吊飾、首飾、頭飾"></textarea>
+      <div style="font-size:11px;opacity:0.6;margin-top:4px">
+        描述衣服、材質、風格、吊飾、首飾、頭飾。
+      </div>
+    </div>
+    <div class="field" style="margin-bottom:12px">
+      <label class="field-label">妝容</label>
+      <textarea id="makeupInput" rows="3" placeholder="依主題讓AI設計 OR 敘述上妝畫法、頭髮可以變換髮型"></textarea>
+      <div style="font-size:11px;opacity:0.6;margin-top:4px">
+        描述上妝畫法、頭髮髮型。僅限表面妝容效果，不改變骨相。
+      </div>
+    </div>
+  </div>
+
+  <!-- 構圖/出圖尺寸 -->
+  <div class="sec">
+    <div class="sec-label">構圖 / 出圖尺寸</div>
+    <div class="chips" id="ratioChips"></div>
+  </div>
+
+  <!-- 鏡頭角度 -->
+  <div class="sec">
+    <div class="sec-label">鏡頭角度</div>
+    <div class="chips" id="angChips"></div>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="sec gen-wrap">
+    <button class="gen-btn" onclick="generateAndCopy()">
+      <span class="gen-btn-spark">✦</span>
+      產出咒語 + 複製咒語
+      <span class="gen-btn-spark">✦</span>
+    </button>
+  </div>
+
+  <div class="sec">
+    <div class="sec-label">生成結果</div>
+    <div class="output-shell" id="outputShell">
+      <div class="output-header">
+        <div class="output-dots"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+        <span class="output-label">咒語輸出</span>
+        <span style="width:50px"></span>
+      </div>
+      <div class="output-body" id="out">
+        <span class="output-ph">選好風格和場景後，點「產出咒語 + 複製咒語」即可獲得完整英文 prompt。</span>
+      </div>
+      <div class="char-count" id="charCount"></div>
+      <div class="out-actions" id="outActions" style="display:none">
+        <button class="copy-btn" id="copyBtn" onclick="doCopy()">📋 複製咒語</button>
+        <button class="clr-btn" onclick="doClear()">清除</button>
+        <button class="clr-btn" onclick="window.scrollTo({top:0,behavior:'smooth'})">⬆ 回首頁</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <div class="footer-divider"></div>
+  <div style="letter-spacing:3px;margin-bottom:8px">美片咒語產生器</div>
+  <div style="font-size:10px;opacity:.45;letter-spacing:1.5px;line-height:2">風格範例庫 · 核心咒語規範 · 真人鎖臉系統</div>
+  <div style="margin-top:12px;font-size:10px;opacity:.38;letter-spacing:2px">紅兵開發 · v1.0.5 · 核心規範 v1.7</div>
+</div>
+
+</div>
+
+<script>
+// ═══════════════════════════════════════════
+// prompt_governance.js (內嵌)
+// ═══════════════════════════════════════════
+// Prompt governance config v1.1.0
+// Keep risk terms, lens policy, pose modes, and category-specific rules outside core prompt code.
+window.PROMPT_GOVERNANCE = {
+  antiPatterns: {
+    bannedCameraLanguageIds: ['cl_movie', 'cl_travel'],
+    bannedAngleIds: ['yang', 'huimou'],
+    bannedPromptTerms: [
+      'movie trailer',
+      'blockbuster',
+      'dramatic hero framing',
+      'looking back over shoulder',
+      'turn-back glance',
+      'low angle upward shot',
+      'low-angle',
+      'perfect beauty',
+      'beauty',
+      'gorgeous',
+      'glamorous',
+      'flawless',
+      'perfect skin',
+      'porcelain skin',
+      'model face',
+      'influencer face',
+      'luxury beauty',
+      'fantasy beauty',
+      'succubus queen',
+      'succubus woman',
+      'demon queen',
+      'demon sovereign',
+      'fantasy queen',
+      'fantasy empress',
+      'goddess face',
+      'goddess aura',
+      'immortal aesthetic',
+      'xianxia heroine',
+      'dark fantasy heroine',
+      'magazine cover',
+      'magazine beauty',
+      'editorial realism',
+      'character editorial realism',
+      'premium fantasy editorial realism',
+      'concept art quality',
+      'character concept art',
+      'fashion beauty portrait',
+      'cat-eye',
+      'fox-eye',
+      'sharp winged eyeliner',
+      'dark regal contour',
+      'contouring',
+      'heavy smoky eye',
+      'extreme pose',
+      'jumping',
+      'spinning',
+      'back-facing',
+      'travel documentary',
+      'vlog',
+      'candid travel',
+      'low-key dramatic',
+      'ethereal atmosphere',
+      'celestial mist',
+      'arms overhead',
+      'covering face',
+      'oversized head',
+      'chibi proportions',
+      'looking upward',
+      'looking upwards',
+      'dramatic side profile',
+      'side profile',
+      'over-the-shoulder',
+      'half-body close portrait',
+      'waist-up portrait',
+      'face-readable close framing',
+      'beauty-camera framing',
+    ],
+  },
+  replacements: [
+    ['movie trailer camera language', 'controlled documentary camera framing'],
+    ['fashion editorial camera language', 'controlled real-person environmental camera framing'],
+    ['magazine cover camera language', 'real tourist documentary photography language'],
+    ['blockbuster visual language', 'documentary photographic language'],
+    ['blockbuster', 'documentary photographic quality'],
+    ['vlog', 'location-based real-person photography'],
+    ['dramatic hero framing', 'stable cinematic framing'],
+    ['looking back over shoulder', 'gentle three-quarter pause with face still readable'],
+    ['turn-back glance', 'calm paused glance with face still readable'],
+    ['looking curious toward the side', 'gentle natural eye contact toward camera'],
+    ['looking upwards thoughtfully', 'soft neutral gaze slightly above camera level'],
+    ['looking upward', 'camera-level gaze with stable face orientation'],
+    ['looking upwards', 'camera-level gaze with stable face orientation'],
+    ['dramatic side profile', 'mild three-quarter face angle with stable facial geometry'],
+    ['side profile', 'mild three-quarter face angle with stable facial geometry'],
+    ['over-the-shoulder turn-back pose', 'mild body turn while face remains camera-level and structurally readable'],
+    ['turning back over the shoulder', 'mild body turn while face remains directed toward camera'],
+    ['low-angle hero shot', 'eye-level or natural chest-height shot'],
+    ['heroic angle', 'stable eye-level camera angle'],
+    ['forced-perspective hero shot', 'stable eye-level camera angle without forced perspective'],
+    ['low angle upward shot', 'stable eye-level or slight three-quarter shot'],
+    ['low-angle', 'stable eye-level'],
+    ['half-body close portrait', 'medium three-quarter portrait with balanced body proportion'],
+    ['half-body portrait from waist up', 'medium three-quarter portrait with balanced head-to-shoulder-to-torso proportion'],
+    ['waist-up portrait', 'medium three-quarter body composition'],
+    ['face-readable half-body', 'identity-readable three-quarter portrait without enlarging the head'],
+    ['face-readable close framing', 'identity-readable medium framing without enlarging the head'],
+    ['upper costume details', 'complete upper-body silhouette'],
+    ['beauty-camera framing', 'real-person camera framing with natural body scale'],
+    ['perfect beauty reconstruction', 'natural appearance'],
+    ['perfect beauty', 'authentic real-person appearance'],
+    ['perfect skin', 'natural skin texture with real imperfections'],
+    ['flawless skin', 'natural skin texture with real imperfections'],
+    ['flawless', 'natural'],
+    ['porcelain skin', 'authentic human skin texture'],
+    ['model face', 'authentic real-person appearance'],
+    ['influencer face', 'authentic real-person appearance'],
+    ['glamorous beauty', 'authentic real-person appearance'],
+    ['gorgeous', 'authentic'],
+    ['glamorous', 'refined'],
+    ['luxury beauty enhancement', 'natural styling'],
+    ['luxury beauty', 'natural styling'],
+    ['fantasy beauty', 'real-person portrait in a fantasy environment'],
+    ['succubus queen', 'uploaded real person in dark supernatural costume styling'],
+    ['succubus woman', 'uploaded real person wearing dark supernatural costume styling'],
+    ['demon queen', 'real woman inside a dark supernatural environment'],
+    ['demon sovereign', 'real woman in dark supernatural royal styling'],
+    ['fantasy queen', 'uploaded real person wearing fantasy-inspired royal costume styling'],
+    ['fantasy empress', 'uploaded real person wearing fantasy-inspired royal costume styling'],
+    ['goddess face', 'mythic environment styling, no facial redesign'],
+    ['goddess aura', 'mythic atmosphere around the environment'],
+    ['immortal aesthetic', 'xianxia-inspired environment, not facial styling'],
+    ['dark fantasy heroine', 'real person inside a dark fantasy environment'],
+    ['xianxia heroine', 'real person inside a xianxia-inspired environment'],
+    ['goddess', 'mythic figure styling around the uploaded real person'],
+    ['heroine', 'central real person'],
+    ['celebrity', 'reference subject'],
+    ['cat-eye liner reshaping', 'soft liner color following the original eye shape'],
+    ['cat-eye', 'soft liner following the original eye shape'],
+    ['fox-eye', 'soft liner following the original eye shape'],
+    ['sharp winged eyeliner', 'soft eyeliner color only, no eye-shape-changing liner'],
+    ['dark regal contour', 'surface-only shadow toning, no facial reshaping'],
+    ['contouring', 'surface color toning only, no facial reshaping'],
+    ['contour', 'surface color toning only'],
+    ['blackened red smoky eyes', 'subtle dark red smoky makeup, surface-only'],
+    ['heavy smoky eye', 'controlled smoky eye kept surface-only'],
+    ['extreme pose', 'controlled pose'],
+    ['jumping', 'grounded motion'],
+    ['spinning', 'gentle movement'],
+    ['back-facing', 'face-readable'],
+    ['arms overhead', 'hands kept below eye level'],
+    ['covering face', 'face unobstructed'],
+    ['ethereal light', 'soft atmospheric light'],
+    ['cinematic glow makeup', 'minimal real travel makeup'],
+    ['outdoor cinematic glow makeup', 'minimal real outdoor travel makeup'],
+    ['glow makeup', 'minimal real makeup'],
+    ['camera-ready but realistic', 'unretouched and realistic'],
+    ['camera-ready', 'unretouched'],
+    ['softly defined brows and lashes', 'natural untouched eyebrows and eyelashes'],
+    ['softly defined brows', 'natural untouched eyebrows'],
+    ['defined brows and lashes', 'natural untouched eyebrows and eyelashes'],
+    ['defined lashes', 'natural untouched eyelashes'],
+    ['defined brows', 'natural untouched eyebrows'],
+    ['healthy peach or rose lip', 'natural lip color matching the reference person'],
+    ['healthy coral lip', 'natural lip color matching the reference person'],
+    ['premium world travel editorial realism', 'documentary world travel photo realism'],
+    ['premium travel editorial realism', 'documentary travel photo realism'],
+    ['8K HDR', 'natural dynamic range'],
+    ['HDR', 'natural dynamic range'],
+    ['ultra realistic', 'realistic'],
+    ['cinematic realism', 'documentary photo realism'],
+    ['cinematic', 'documentary'],
+    ['flower fairy makeup', 'minimal botanical makeup'],
+    ['flower fairy', 'botanical environment styling'],
+    ['fairy makeup', 'minimal botanical makeup'],
+    ['luminous pastel eye shimmer', 'subtle botanical surface color around the eyes, no fantasy-eye styling'],
+    ['pastel eye shimmer', 'subtle botanical surface color around the eyes'],
+    ['delicate botanical glow', 'subtle botanical color tint'],
+    ['botanical glow', 'botanical color tint'],
+    ['romantic fantasy freshness', 'ordinary real-person forest snapshot naturalness'],
+    ['fantasy freshness', 'real-person naturalness'],
+    ['professional travel photography', 'ordinary documentary travel photography'],
+    ['travel photoshoot', 'travel snapshot'],
+    ['photoshoot', 'snapshot'],
+    ['photographic polish', 'photographic realism'],
+    ['high-end', 'plain'],
+    ['premium', 'natural'],
+    ['ethereal glow', 'soft atmospheric light'],
+    ['ethereal atmosphere', 'soft atmospheric depth'],
+    ['ethereal particles', 'soft atmospheric light'],
+    ['celestial particles', 'soft ambient light'],
+    ['celestial radiance', 'soft ambient light'],
+    ['celestial glow', 'soft ambient light'],
+    ['celestial light', 'soft ambient light'],
+    ['immortal realm glow', 'soft environmental glow'],
+    ['divine radiance', 'warm environmental light'],
+    ['xianxia ethereal', 'soft xianxia atmospheric'],
+    ['premium fantasy editorial realism', 'documentary photo realism with real-person identity fidelity'],
+    ['editorial realism', 'documentary photo realism'],
+    ['magazine cover', 'real tourist documentary photography'],
+    ['concept art quality', 'real-person photographic quality'],
+    ['character concept art', 'real photograph of the uploaded person inside a designed environment'],
+    ['fashion beauty portrait', 'controlled real-person portrait photography'],
+    ['travel documentary', 'location-based real-person photography'],
+    ['candid travel', 'grounded location-based real-person photography'],
+    ['location editorial', 'location-based real tourist photography'],
+    ['travel editorial', 'real tourist documentary photography'],
+    ['low-key dramatic', 'controlled dramatic'],
+  ],
+  sanitizeTiers: [
+    {
+      id: 'tier01_identity_sovereignty',
+      name: 'Identity sovereignty and face ownership',
+      scope: ['all'],
+      replacements: [
+        ['perfect beauty reconstruction', 'authentic real-person appearance'],
+        ['AI glamour-face replacement', 'authentic uploaded-person likeness'],
+        ['influencer-face reconstruction', 'authentic uploaded-person likeness'],
+        ['actress-face conversion', 'authentic uploaded-person likeness'],
+        ['standardized facial features', 'recognizable real-person facial features'],
+        ['template face', 'uploaded-person face identity'],
+      ],
+      bannedTerms: [
+        'AI glamour-face replacement',
+        'influencer-face reconstruction',
+        'actress-face conversion',
+        'standardized facial features',
+        'template face',
+      ],
+    },
+    {
+      id: 'tier02_beauty_template',
+      name: 'Beauty-template downgrade',
+      scope: ['all'],
+      replacements: [
+        ['perfect beauty', 'authentic real-person appearance'],
+        ['beautiful woman', 'uploaded real person'],
+        ['attractive face', 'recognizable real-person face'],
+        ['pretty face', 'recognizable real-person face'],
+        ['celestial beauty', 'mythic atmosphere around the scene'],
+        ['immortal beauty', 'xianxia-inspired atmosphere around the scene'],
+        ['heroine beauty', 'central real-person presence'],
+        ['perfect skin', 'natural skin texture with real imperfections'],
+        ['flawless skin', 'natural skin texture with real imperfections'],
+        ['porcelain skin', 'authentic human skin texture'],
+        ['gorgeous', 'authentic'],
+        ['glamorous', 'refined'],
+      ],
+      bannedTerms: [
+        'perfect beauty',
+        'beautiful woman',
+        'attractive face',
+        'pretty face',
+        'celestial beauty',
+        'immortal beauty',
+        'heroine beauty',
+        'perfect skin',
+        'flawless skin',
+        'porcelain skin',
+      ],
+    },
+    {
+      id: 'tier03_editorial_commercial',
+      name: 'Editorial and commercial polish downgrade',
+      scope: ['all'],
+      replacements: [
+        ['magazine cover camera language', 'real tourist documentary photography language'],
+        ['magazine cover', 'real tourist documentary photography'],
+        ['fashion editorial camera language', 'controlled real-person environmental camera framing'],
+        ['fashion editorial', 'documentary clothing photography'],
+        ['editorial realism', 'documentary photo realism'],
+        ['character editorial realism', 'documentary environmental realism with real-person identity fidelity'],
+        ['premium fantasy editorial realism', 'documentary photo realism with real-person identity fidelity'],
+        ['beauty campaign', 'real-person documentary image'],
+        ['luxury beauty', 'natural styling'],
+        ['high-fashion face', 'recognizable real-person face'],
+        ['editorial face', 'recognizable real-person face'],
+        ['camera-ready', 'unretouched'],
+        ['photographic polish', 'photographic realism'],
+        ['high-end', 'plain'],
+        ['premium', 'natural'],
+      ],
+      bannedTerms: [
+        'magazine cover',
+        'fashion editorial',
+        'editorial realism',
+        'beauty campaign',
+        'luxury beauty',
+        'high-fashion face',
+        'editorial face',
+        'camera-ready',
+        'photographic polish',
+      ],
+    },
+    {
+      id: 'tier04_fantasy_archetype',
+      name: 'Fantasy archetype containment',
+      scope: ['all'],
+      replacements: [
+        ['succubus queen', 'uploaded real person in dark supernatural costume styling'],
+        ['succubus woman', 'uploaded real person wearing dark supernatural costume styling'],
+        ['demon queen', 'real woman inside a dark supernatural environment'],
+        ['fantasy queen', 'uploaded real person wearing fantasy-inspired royal costume styling'],
+        ['fantasy empress', 'uploaded real person wearing fantasy-inspired royal costume styling'],
+        ['goddess face', 'mythic environment styling, no facial redesign'],
+        ['goddess aura', 'mythic atmosphere around the environment'],
+        ['immortal aesthetic', 'xianxia-inspired environment, not facial styling'],
+        ['xianxia heroine', 'real person inside a xianxia-inspired environment'],
+        ['dark fantasy heroine', 'real person inside a dark fantasy environment'],
+        ['flower fairy', 'botanical environment styling'],
+        ['fairy makeup', 'minimal botanical makeup'],
+        ['heroine', 'central real person'],
+      ],
+      bannedTerms: [
+        'succubus queen',
+        'demon queen',
+        'fantasy queen',
+        'fantasy empress',
+        'goddess face',
+        'goddess aura',
+        'immortal aesthetic',
+        'xianxia heroine',
+        'dark fantasy heroine',
+        'flower fairy',
+      ],
+    },
+    {
+      id: 'tier05_makeup_restructure',
+      name: 'Surface-only makeup',
+      scope: ['makeup', 'all'],
+      replacements: [
+        ['cinematic glow makeup', 'minimal real travel makeup'],
+        ['outdoor cinematic glow makeup', 'minimal real outdoor travel makeup'],
+        ['glow makeup', 'minimal real makeup'],
+        ['luminous pastel eye shimmer', 'subtle botanical surface color around the eyes, no fantasy-eye styling'],
+        ['pastel eye shimmer', 'subtle botanical surface color around the eyes'],
+        ['sharp winged eyeliner', 'soft eyeliner color only, no eye-shape-changing liner'],
+        ['cat-eye liner reshaping', 'soft liner color following the original eye shape'],
+        ['cat-eye', 'soft liner following the original eye shape'],
+        ['fox-eye', 'soft liner following the original eye shape'],
+        ['dark regal contour', 'surface-only shadow toning, no facial reshaping'],
+        ['contouring', 'surface color toning only, no facial reshaping'],
+        ['contour', 'surface color toning only'],
+        ['defined brows and lashes', 'natural untouched eyebrows and eyelashes'],
+        ['defined lashes', 'natural untouched eyelashes'],
+        ['defined brows', 'natural untouched eyebrows'],
+        ['healthy peach or rose lip', 'natural lip color matching the reference person'],
+      ],
+      bannedTerms: [
+        'cinematic glow makeup',
+        'glow makeup',
+        'luminous pastel eye shimmer',
+        'sharp winged eyeliner',
+        'cat-eye',
+        'fox-eye',
+        'dark regal contour',
+        'contouring',
+        'defined brows and lashes',
+      ],
+    },
+    {
+      id: 'tier06_camera_angle_identity',
+      name: 'Camera angle and face geometry stability',
+      scope: ['camera', 'pose', 'all'],
+      replacements: [
+        ['looking upwards thoughtfully', 'soft neutral gaze slightly above camera level'],
+        ['looking upward', 'camera-level gaze with stable face orientation'],
+        ['looking upwards', 'camera-level gaze with stable face orientation'],
+        ['dramatic side profile', 'mild three-quarter face angle with stable facial geometry'],
+        ['side profile', 'mild three-quarter face angle with stable facial geometry'],
+        ['over-the-shoulder turn-back pose', 'mild body turn while face remains camera-level and structurally readable'],
+        ['turning back over the shoulder', 'mild body turn while face remains directed toward camera'],
+        ['looking back over shoulder', 'mild body turn while face remains directed toward camera'],
+        ['low-angle hero shot', 'eye-level or natural chest-height shot'],
+        ['forced-perspective hero shot', 'stable eye-level camera angle without forced perspective'],
+        ['low angle upward shot', 'stable eye-level or slight three-quarter shot'],
+      ],
+      bannedTerms: [
+        'looking upward',
+        'dramatic side profile',
+        'side profile',
+        'over-the-shoulder',
+        'looking back over shoulder',
+        'low-angle hero shot',
+        'forced-perspective hero shot',
+      ],
+    },
+    {
+      id: 'tier07_head_body_scale',
+      name: 'Head-to-body scale protection',
+      scope: ['composition', 'camera', 'all'],
+      replacements: [
+        ['half-body close portrait', 'medium three-quarter portrait with balanced body proportion'],
+        ['half-body portrait from waist up', 'medium three-quarter portrait with balanced head-to-shoulder-to-torso proportion'],
+        ['waist-up portrait', 'medium three-quarter body composition'],
+        ['face-readable half-body', 'identity-readable three-quarter portrait without enlarging the head'],
+        ['face-readable close framing', 'identity-readable medium framing without enlarging the head'],
+        ['upper costume details', 'complete upper-body silhouette'],
+        ['beauty-camera framing', 'real-person camera framing with natural body scale'],
+        ['close-up beauty portrait', 'medium three-quarter real-person portrait'],
+      ],
+      bannedTerms: [
+        'half-body close portrait',
+        'waist-up portrait',
+        'face-readable close framing',
+        'upper costume details',
+        'beauty-camera framing',
+        'close-up beauty portrait',
+      ],
+    },
+    {
+      id: 'tier08_quality_retouch',
+      name: 'Quality and retouching downgrade',
+      scope: ['quality', 'all'],
+      replacements: [
+        ['8K HDR', 'natural dynamic range'],
+        ['HDR', 'natural dynamic range'],
+        ['ultra realistic', 'realistic'],
+        ['cinematic realism', 'documentary photo realism'],
+        ['cinematic production quality', 'documentary photographic quality'],
+        ['professional travel photography', 'ordinary documentary travel photography'],
+        ['travel photoshoot', 'travel snapshot'],
+        ['photoshoot', 'snapshot'],
+        ['vivid colors', 'true-to-life colors'],
+        ['crisp clean air', 'clean natural visibility'],
+      ],
+      bannedTerms: [
+        '8K HDR',
+        'HDR',
+        'ultra realistic',
+        'cinematic realism',
+        'cinematic production quality',
+        'professional travel photography',
+        'photoshoot',
+        'vivid colors',
+        'crisp clean air',
+      ],
+    },
+    {
+      id: 'tier09_motion_obstruction',
+      name: 'Pose, motion, and face obstruction safety',
+      scope: ['pose', 'action', 'all'],
+      replacements: [
+        ['extreme pose', 'controlled pose'],
+        ['jumping', 'grounded motion'],
+        ['spinning', 'gentle movement'],
+        ['back-facing', 'face-readable'],
+        ['arms overhead', 'hands kept below eye level'],
+        ['covering face', 'face unobstructed'],
+        ['face-hidden pose', 'face-readable pose'],
+        ['mannequin pose', 'natural real-person pose'],
+      ],
+      bannedTerms: [
+        'extreme pose',
+        'jumping',
+        'spinning',
+        'back-facing',
+        'arms overhead',
+        'covering face',
+        'face-hidden pose',
+        'mannequin pose',
+      ],
+    },
+    {
+      id: 'tier10_scope_language',
+      name: 'Scope language and worldbuilding retention',
+      scope: ['all'],
+      replacements: [
+        ['environmental portrait photography language', 'documentary travel photography language'],
+        ['environmental portrait composition', 'documentary location composition'],
+        ['environmental portrait', 'documentary location photo'],
+        ['location-appropriate fashion', 'location-appropriate clothing'],
+        ['contemporary travel fashion', 'contemporary travel clothing'],
+        ['fashion beauty portrait', 'controlled real-person portrait photography'],
+        ['concept art quality', 'real-person photographic quality'],
+        ['character concept art', 'real photograph of the uploaded person inside a designed environment'],
+        ['ethereal glow', 'soft atmospheric light'],
+        ['celestial radiance', 'soft ambient light'],
+        ['divine radiance', 'warm environmental light'],
+      ],
+      bannedTerms: [
+        'environmental portrait',
+        'fashion beauty portrait',
+        'concept art quality',
+        'character concept art',
+        'ethereal glow',
+        'celestial radiance',
+        'divine radiance',
+      ],
+    },
+    {
+      id: 'tier11_head_body_proportion',
+      name: 'Head-body proportion and portrait framing safety',
+      scope: ['composition', 'camera', 'pose', 'all'],
+      replacements: [
+        ['portrait', 'body framing'],
+        ['half-body portrait', 'three-quarter body view'],
+        ['medium shot', 'balanced body composition'],
+        ['close up', 'documentary framing'],
+        ['close-up', 'documentary framing'],
+        ['close up medium shot', 'balanced body composition'],
+        ['walking toward viewer', 'standing naturally within the environment'],
+        ['walking toward camera', 'positioned naturally in the scene'],
+        ['approaching viewer', 'standing naturally within the environment'],
+        ['approaching camera', 'positioned naturally in the scene'],
+        ['eye contact', 'natural attentive expression'],
+        ['intense eye contact', 'calm documentary presence'],
+        ['strong gaze', 'calm documentary presence'],
+        ['determined gaze', 'natural observational gaze'],
+        ['piercing gaze', 'calm documentary presence'],
+        ['eye look gaze expression', 'natural observational gaze'],
+        ['three-quarter portrait', 'three-quarter body view'],
+        ['portrait composition', 'balanced body composition'],
+        ['cinematic portrait', 'documentary body framing'],
+        ['portrait framing', 'body framing'],
+      ],
+      bannedTerms: [
+        'walking toward viewer',
+        'walking toward camera',
+        'approaching viewer',
+        'approaching camera',
+        'intense eye contact',
+        'strong gaze',
+        'piercing gaze',
+        'eye look gaze expression',
+        'close-up beauty portrait',
+        'portrait compression',
+        'beauty-shot framing',
+        'fashion-editorial face emphasis',
+        'hero-shot perspective',
+      ],
+    },
+    {
+      id: 'tier12_beauty_archetype',
+      name: 'Beauty archetype and feminine template elimination',
+      scope: ['character', 'makeup', 'atmosphere', 'all'],
+      replacements: [
+        ['feminine grace', 'period-appropriate appearance'],
+        ['opulent', 'detailed'],
+        ['spectacular', 'detailed'],
+        ['glamorous', 'refined'],
+        ['radiant', 'clear'],
+        ['ethereal', 'atmospheric'],
+        ['stunning', 'notable'],
+        ['gorgeous', 'well-crafted'],
+        ['elegant beauty', 'refined appearance'],
+        ['delicate beauty', 'refined detail'],
+        ['smiling candidly', 'neutral relaxed expression'],
+        ['bright joyful smile', 'subtle natural expression'],
+        ['candid smile', 'natural expression'],
+        ['realistic lens flare', ''],
+        ['lens flare', ''],
+        ['vibrant', 'colorful'],
+        ['lifelike human appearance', 'ordinary unretouched real-person appearance'],
+        ['high production value', 'documentary quality'],
+        ['cinematic quality', 'photographic quality'],
+        ['editorial quality', 'documentary quality'],
+        ['luxury atmosphere', 'refined atmosphere'],
+        ['goddess', 'figure'],
+        ['heroine', 'figure'],
+        ['queen', 'noble figure'],
+        ['fairy', 'figure'],
+        ['perfect skin', 'natural skin'],
+        ['flawless skin', 'natural skin'],
+        ['porcelain skin', 'natural skin'],
+        ['doll-like', 'refined'],
+      ],
+      bannedTerms: [
+        'feminine grace',
+        'opulent feminine',
+        'glamorous beauty',
+        'radiant beauty',
+        'ethereal beauty',
+        'stunning beauty',
+        'gorgeous face',
+        'elegant beauty',
+        'delicate beauty',
+        'goddess face',
+        'heroine face',
+        'queen face',
+        'fairy face',
+        'perfect skin',
+        'flawless complexion',
+        'porcelain skin',
+        'doll-like face',
+        'angelic beauty',
+        'divine beauty',
+        'celestial beauty',
+      ],
+    },
+    {
+      id: 'tier13_style_conflict_reduction',
+      name: 'Style conflict auto-reduction and anatomy priority',
+      scope: ['all'],
+      replacements: [
+        ['盛世長安', 'historical Tang dynasty setting'],
+        ['大國風華', 'historical Chinese setting'],
+        ['Tang peony court makeup', 'light Tang-inspired surface makeup color only'],
+        ['court makeup', 'period-appropriate surface makeup color only'],
+        ['palace makeup', 'period-appropriate surface makeup color only'],
+      ],
+      bannedTerms: [],
+    },
+  ],
+  identitySafety: {
+    mode: 'identity_sovereign',
+    fantasyScope: ['environment', 'costume', 'props', 'lighting', 'atmosphere'],
+    faceScope: 'preserve_only',
+    riskFlags: [
+      'beauty_template_risk',
+      'archetype_face_risk',
+      'editorial_beauty_risk',
+      'dynamic_angle_identity_risk',
+      'head_scale_risk',
+      'makeup_restructure_risk',
+    ],
+  },
+  lensOptions: [
+    {
+      id: 'l_50',
+      name: '50mm 全身最穩',
+      desc: 'Simulated 50mm full-body real travel photography lens: natural human-eye perspective, minimal distortion, realistic head-to-body proportions, safest for full-body costume, large skirts, robes, armor, and complete outfit display with stable full-body or three-quarter documentary framing.',
+    },
+  ],
+  poseModes: [
+    { id: 'scene_default', label: '場景預設', prompt: '' },
+    { id: 'identity_front', label: '鎖臉正面', prompt: 'Identity-first front-facing pose: face directed toward camera, very slight body angle only, no head twist, no face obstruction.' },
+    { id: 'micro_turn', label: '鎖臉微側', prompt: 'Identity-safe micro-turn: face remains mostly front-facing with only a subtle 10-15 degree head turn, shoulders may angle gently, facial geometry must remain readable.' },
+    { id: 'three_quarter_body', label: '三分之四身', prompt: 'Three-quarter body documentary pose: upper body and costume visible, face open to camera, natural neck and shoulder alignment.' },
+    { id: 'full_body_stable', label: '全身穩定', prompt: 'Stable full-body pose: head-to-toe visible, realistic head-to-body proportion, eye-level or chest-height camera, no forced perspective.' },
+    { id: 'seated_safe', label: '安全坐姿', prompt: 'Identity-safe seated pose: graceful seated angle, torso supported, face clearly visible, hands below face line.' },
+    { id: 'walking_safe', label: '緩步動作', prompt: 'Slow walking motion: grounded step, fabric movement, face still directed toward camera, no spin or jump.' },
+    { id: 'prop_safe', label: '安全持物', prompt: 'Prop interaction pose: hands and prop stay below eye level or to the side, never covering eyes, nose, mouth, jawline, or facial outline.' },
+    { id: 'bridal_soft', label: '婚紗柔和', prompt: 'Soft bridal pose: veil, bouquet, or gown interaction kept away from the face, romantic half-body or three-quarter framing, facial identity clean.' },
+    { id: 'queen_command', label: '女王威儀', prompt: 'Commanding regal pose: stable torso, calm authority through posture, hand on throne, scepter, document, or architectural support, no exaggerated gesture.' },
+  ],
+  categoryRules: {
+    ancientFullBody: {
+      categories: ['xianxia', 'hanfu', 'oriental', 'myth', 'fantasy', 'water', 'drama', 'spirits', 'jinyong', 'chinese_story', 'dynasty_palace', 'classic_lit', 'china_drama'],
+      lens: 'l_50',
+      guidance: 'Ancient costume lens rule: prioritize 50mm for full robe, wide sleeves, hair ornaments, and head-to-body stability.',
+    },
+    balancedEditorial: {
+      categories: ['queen', 'modern_lady', 'realistic_life', 'reference_styles', 'holy_angel', 'goddess_myth', 'fallen_angel', 'succubus_demon', 'darkfantasy', 'gothic'],
+      lens: 'l_50',
+      guidance: 'Balanced documentary lens rule: use 50mm to preserve head-to-body proportion while keeping face, outfit, and environment equally readable.',
+    },
+    characterStable: {
+      categories: ['game', 'cos_character', 'cyberpunk_sf', 'wedding_diamond'],
+      lens: 'l_50',
+      guidance: 'Character and bridal lens rule: use 50mm to keep costume detail, full-body scale, and face readability stable in one frame.',
+    },
+    travelStable: {
+      categories: ['taiwan_travel', 'europe_travel', 'japan_travel', 'korea_sea', 'world_travel', 'china_mark', 'mountain_sea', 'beast_tamer', 'dragon_beast'],
+      lens: 'l_50',
+      guidance: 'Travel lens rule: use 50mm for documentary location framing where the location, outfit, and body scale must stay readable.',
+    },
+  },
+};
+
+
+// ═══════════════════════════════════════════
+// core.js (內嵌)
+// ═══════════════════════════════════════════
+// 美片咒語產生器 - 核心邏輯
+// 版本：v2.0.0 (2026-05-24) - 繁體中文版
+
+// ═══════════════════════════════════════════════════════════
+// STEP 1: 真人身份優先
+// ═══════════════════════════════════════════════════════════
+
+const STEP1_IDENTITY_LOCK = `【真人身份優先｜最高權重】
+
+生成前先讀取上傳照片中的真實臉部身份與人體比例。
+
+所有奇幻風格、服裝、妝容、場景設計，
+都只能建立在原始真人身份之上。
+
+不可重新設計一張新的臉。
+
+AI 必須先建立：
+真人身份、
+真實人體比例、
+真實攝影結構，
+
+其次才建立奇幻風格。
+
+人物主體權重高於場景特效權重。
+
+優先呈現真人攝影感，
+而不是 AI 概念藝術感。
+
+不可因為奇幻風格而重新設計真人五官比例。
+
+保留上傳照片中的完整臉部身份與五官。
+
+不可改變：
+臉型、
+眼型、
+鼻型、
+嘴型、
+下顎線、
+五官比例、
+可辨識特徵。
+
+保留自然臉部不對稱、
+真實年齡細節、
+真人感。
+
+若奇幻、服裝、妝容、電影感與臉部身份衝突，
+一律保留真人臉部身份。
+
+If any cinematic, fantasy, costume, or makeup styling conflicts with facial identity preservation, preserve the real facial identity first.
+
+避免：
+AI 美女臉、
+網紅濾鏡感、
+娃娃臉比例、
+模板美女臉、
+標準化五官。`;
+
+// ═══════════════════════════════════════════════════════════
+// STEP 2: 真實人體骨架
+// ═══════════════════════════════════════════════════════════
+
+const STEP2_BODY_STRUCTURE = `【真實人體骨架】
+
+優先建立真實成年女性骨架。
+
+頭部大小必須與肩膀、身體維持真實人體比例。
+
+保持：
+平衡肩寬、
+真實鎖骨、
+自然胸腔厚度、
+正常軀幹深度、
+自然脖子連接。
+
+禁止：
+大頭比例、
+壓縮上半身、
+過窄肩膀、
+娃娃比例、
+頭重腳輕、
+身體過小、
+動漫骨架、
+卡通化人體。
+
+人物身體必須與真實臉部自然融合。`;
+
+// 擴展版：統一使用，強化真實身體比例描述
+const STEP2_BODY_STRUCTURE_EXTENDED = `【真實人體骨架】
+
+優先建立真實成年女性骨架。
+
+頭部大小必須與肩膀、身體維持真實人體比例。
+
+保持：
+平衡肩寬、
+真實鎖骨、
+自然胸腔厚度、
+正常軀幹深度、
+自然脖子連接。
+
+維持真實成熟成年女性體積感。
+
+自然豐滿胸型需建立在真實胸腔骨架結構之上。
+
+保持自然胸部重量與真實軀幹厚度。
+
+維持肩膀與胸部之間的自然比例平衡。
+
+布料張力需自然貼合人體結構。
+
+避免動漫式誇張胸型。
+
+避免極端沙漏型身材。
+
+避免不合理腰臀比例。
+
+維持真實可信的人體比例。
+
+保持成熟成年女性骨架比例。
+
+胸部體積需符合真實重力與站姿。
+
+胸型需跟隨姿勢與布料自然變化。
+
+避免 AI 性感模板身材。
+
+避免網紅式極細腰身。
+
+避免誇張挺胸姿勢。
+
+避免 Pin-up 女郎姿勢。
+
+維持自然脊椎與身體重心。
+
+胸腔厚度需符合真實人體結構。
+
+人物整體體積感需優先於性感化誇張。
+
+禁止：
+大頭比例、
+壓縮上半身、
+過窄肩膀、
+娃娃比例、
+頭重腳輕、
+身體過小、
+動漫骨架、
+卡通化人體。
+
+人物身體必須與真實臉部自然融合。`;
+
+// 動態生成帶罩杯設定的身體結構（根據角色卡的 cupSize 欄位）
+function buildBodyStructureWithCupSize(cupSize) {
+  return `【真實人體骨架】
+
+優先建立真實成年女性骨架。
+
+頭部大小必須與肩膀、身體維持真實人體比例。
+
+保持：
+平衡肩寬、
+真實鎖骨、
+自然胸腔厚度、
+正常軀幹深度、
+自然脖子連接。
+
+維持真實成熟成年女性體積感。
+
+自然豐滿胸型需建立在真實胸腔骨架結構之上。
+
+保持自然胸部重量與真實軀幹厚度。
+
+維持肩膀與胸部之間的自然比例平衡。
+
+胸腔厚度需符合真實人體結構。
+
+布料張力需自然貼合人體結構。
+
+胸型需跟隨姿勢與布料自然變化。
+
+胸部體積需符合真實重力與站姿。
+
+保持成熟成年女性骨架比例。
+
+維持真實可信的人體比例。
+
+罩杯預設${cupSize}。
+
+避免極端沙漏型身材。
+
+避免不合理腰臀比例。
+
+避免動漫式誇張胸型。
+
+避免 AI 性感模板身材。
+
+避免網紅式極細腰身。
+
+避免誇張挺胸姿勢。
+
+避免 Pin-up 女郎姿勢。
+
+維持自然脊椎與身體重心。
+
+人物整體體積感需優先於性感化誇張。
+
+禁止：
+大頭比例、
+壓縮上半身、
+過窄肩膀、
+娃娃比例、
+頭重腳輕、
+身體過小、
+動漫骨架、
+卡通化人體。
+
+人物身體必須與真實臉部自然融合。`;
+}
+
+// 魅魔系列專用版：包含罩杯F設定（保留作為向後兼容）
+const STEP2_BODY_STRUCTURE_SUCCUBUS = buildBodyStructureWithCupSize('F');
+
+// 需要使用擴展版身體描述的風格關鍵字
+// ═══════════════════════════════════════════════════════════
+// 注意：所有角色卡統一使用擴展版身體比例描述
+// 如果角色卡有 cupSize 欄位（英文或數字），則使用帶罩杯設定的版本
+// 魅魔系列使用專用版本（包含罩杯F設定）
+// ═══════════════════════════════════════════════════════════
+
+// ═══════════════════════════════════════════════════════════
+// STEP 3: 電影攝影結構
+// ═══════════════════════════════════════════════════════════
+
+const STEP3_CINEMA_STRUCTURE = `【電影攝影結構】
+
+固定使用：
+50mm 全片幅電影攝影視角。
+
+真實人像拍攝距離。
+
+全身完整入鏡。
+
+電影感中遠景構圖。
+
+人物與場景必須保持真實空間透視。
+
+避免：
+人像特寫、
+自拍視角、
+誇張透視、
+半身近拍、
+腰上人像、
+臉部放大、
+beauty framing。
+
+避免臉部主導畫面比例。
+
+優先呈現完整人物與環境關係。`;
+
+// ═══════════════════════════════════════════════════════════
+// STEP 4: 真實攝影感
+// ═══════════════════════════════════════════════════════════
+
+const STEP4_PHOTO_REALISM = `【真實攝影感】
+
+畫面必須像：
+
+「真實攝影師拍攝的真人奇幻電影海報」
+
+而不是 AI 插畫。
+
+強調：
+
+真實光影、
+
+真實空氣感、
+
+真實環境互動、
+
+真實皮膚反光、
+
+真實布料重量、
+
+真實人體站姿。
+
+奇幻世界只能襯托真人，
+不能取代真人。
+
+人物必須是被拍進奇幻世界的真人，
+不是重新設計的奇幻女主角。
+
+The fantasy world must support the photographed real person.
+
+The person must remain a real photographed woman, not a redesigned fantasy heroine.
+
+Prioritize real-person photographic identity and cinematic realism over fantasy beauty aesthetics.
+
+真人演員被拍進奇幻世界。
+
+奇幻世界支撐真人照片身份，
+而不是重新設計奇幻角色。`;
+
+// ═══════════════════════════════════════════════════════════
+// STEP 5: 動作控制
+// ═══════════════════════════════════════════════════════════
+
+const STEP5_ACTION_CONTROL = `【動作控制】
+
+電影海報式站姿。
+
+自然人體重心。
+
+肩膀與軀幹平衡。
+
+手部比例正確。
+
+腿部比例正確。
+
+自然手指結構。
+
+自然站姿。
+
+姿勢需配合臉部角度自然生成。
+
+避免：
+
+扭曲四肢、
+
+錯誤手指、
+
+不合理肢體、
+
+過度誇張動作、
+
+不自然姿勢、
+
+跳躍、
+
+旋轉、
+
+背對鏡頭、
+
+手遮臉、
+
+手舉過頭。`;
+
+// ═══════════════════════════════════════════════════════════
+// STEP 6: 主題、場景、服裝、妝容
+// ═══════════════════════════════════════════════════════════
+
+function cleanPromptText(value) {
+  return String(value || '')
+    .replace(/\s+/g, ' ')
+    .replace(/\s+([,.。；;:])/g, '$1')
+    .trim();
+}
+
+function buildSceneCostumeProps(data) {
+  const parts = [];
+
+  // 主題
+  if (data.theme) {
+    parts.push(`主題：${data.theme}`);
+  }
+
+  // 場景
+  const sceneContent = data.scene || `使用配合主題的電影場景。
+
+動作配合主題。
+
+若主題無動作提示，
+則由 AI 設計合乎角色風格的動作。`;
+  parts.push(`【場景】\n\n${sceneContent}`);
+
+  // 動作與道具
+  const actionContent = cleanPromptText(data.action);
+  if (actionContent) {
+    parts.push(`【動作與道具】\n\n${actionContent}`);
+  }
+
+  // 服裝
+  const costumeContent = data.costume || `配合主題，
+若主題無服飾提示，
+讓 AI 設計服裝裝飾要有華麗感，
+但仍保有真實攝影感。`;
+  parts.push(`【服裝】\n\n${costumeContent}`);
+
+  // 妝容
+  const makeupContent = data.makeup || '配合主題讓 AI 設計妝容與髮型。';
+  parts.push(`【妝容】\n\n在不改變原始臉部結構前提下：\n\n${makeupContent}\n\n僅限表面妝容效果。\n\n不可改變骨相。\n\n不可 AI 美顏化。`);
+
+  // 固定的品質描述
+  parts.push(`【固定品質描述】
+
+8K 超高細節。
+
+電影級光影。
+
+真實皮膚紋理。
+
+高細節布料物理。
+
+超高畫質。`);
+
+  return parts.join('\n\n');
+}
+
+// ═══════════════════════════════════════════════════════════
+// STEP 7: 構圖
+// ═══════════════════════════════════════════════════════════
+
+function buildCompositionSection(data) {
+  const ratioLabels = {
+    r_11: '1:1',
+    r_23: '2:3',
+    r_34: '3:4',
+    r_43: '4:3',
+    r_916: '9:16',
+    r_cinema: '2.39:1'
+  };
+  const ratioName = ratioLabels[data.ratio] || '9:16';
+  const ratioLine = data.ratio === 'r_916' ? '預設9:16手機螢幕' : `其他 ${ratioName}`;
+
+  const compositionContent = cleanPromptText(data.composition);
+  const compositionExtra = compositionContent ? `\n\n角色卡構圖：${compositionContent}` : '';
+
+  return `構圖 (${ratioLine})
+
+人物整體存在感優先於臉部特寫。
+
+臉部不可過度銳化。
+
+避免臉部主導畫面。
+
+避免時尚雜誌封面感。
+
+優先呈現完整人物與環境關係。
+
+全身完整入鏡。
+
+使用中遠景真人攝影距離。
+
+避免自拍感與近距離人像特寫。
+
+避免臉部主導畫面比例。${compositionExtra}`;
+}
+
+// ═══════════════════════════════════════════════════════════
+// STEP 8: 負面詞
+// ═══════════════════════════════════════════════════════════
+
+const STEP8_NEGATIVE_PROMPTS = `【負面詞｜非常重要】
+
+禁止：
+AI 美女臉、
+美肌濾鏡感、
+塑膠皮膚、
+過度磨皮、
+大頭比例、
+人像特寫臉部放大、
+自拍視角、
+娃娃比例、
+卡通化人體、
+動漫骨架、
+肩膀過窄、
+壓縮上半身、
+身體過小、
+錯誤四肢、
+扭曲手指、
+不自然動作、
+誇張透視、
+AI 插畫感、
+過度性感化、
+CG 遊戲角色感、
+AI 時尚大片感、
+fashion editorial、
+magazine cover、
+beauty campaign、
+臉部過度平滑、
+過度銳利眼睛、
+假睫毛過重、
+塑膠嘴唇、
+不自然皮膚發光、
+角色卡面風格、
+手機自拍感、
+網美風、
+臉部主導畫面、
+模板美女臉、
+標準化五官、
+過度 HDR、
+塑膠感 cinematic realism。`;
+
+// ═══════════════════════════════════════════════════════════
+// 主要 Prompt 生成函式
+// ═══════════════════════════════════════════════════════════
+
+function buildPrompt(styleData) {
+  const sections = [];
+
+  // STEP 1: 身份鎖定
+  sections.push(STEP1_IDENTITY_LOCK);
+
+  // STEP 2: 真實人體骨架（根據 cupSize 欄位或系列選擇版本）
+  // 優先檢查 cupSize 欄位（如果有英文或數字）
+  if (styleData.cupSize && /[A-Za-z0-9]/.test(styleData.cupSize)) {
+    sections.push(buildBodyStructureWithCupSize(styleData.cupSize));
+  } else {
+    // 向後兼容：魅魔系列使用預設 F 罩杯
+    const isSuccubusSeries = styleData.sub === '魅魔系列' || styleData.series === '魅魔系列';
+    if (isSuccubusSeries) {
+      sections.push(STEP2_BODY_STRUCTURE_SUCCUBUS);
+    } else {
+      sections.push(STEP2_BODY_STRUCTURE_EXTENDED);
+    }
+  }
+
+  // STEP 3: 電影攝影結構
+  sections.push(STEP3_CINEMA_STRUCTURE);
+
+  // STEP 4: 真實攝影感
+  sections.push(STEP4_PHOTO_REALISM);
+
+  // STEP 5: 動作控制
+  sections.push(STEP5_ACTION_CONTROL);
+
+  // STEP 6: 主題、場景、服裝、妝容
+  sections.push(buildSceneCostumeProps(styleData));
+
+  // STEP 7: 構圖
+  sections.push(buildCompositionSection(styleData));
+
+  // STEP 8: 負面詞
+  sections.push(STEP8_NEGATIVE_PROMPTS);
+
+  // 組合所有段落
+  let finalPrompt = sections.join('\n\n');
+
+  // 檢查建議長度限制（5000字元）
+  if (finalPrompt.length > 5000) {
+    console.warn(`⚠️ Prompt 長度 ${finalPrompt.length} 超過 5000 字元建議上限`);
+  }
+
+  return finalPrompt;
+}
+
+// ═══════════════════════════════════════════════════════════
+// 匯出
+// ═══════════════════════════════════════════════════════════
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = { buildPrompt };
+}
+
+</script>
+<script>
+// ═══════════════════════════════════════════
+// 妝容模組資料
+// ═══════════════════════════════════════════
+const MAKEUPS = {
+  "succubus_alluring": "succubus alluring surface makeup: smoky violet-black eye shadow, sharp but elegant winged eyeliner, crimson inner-corner eye shadow, deep wine or rose-black glossy lips, subtle pink heart-shaped highlight motifs near the eyes or cheeks — seductive supernatural surface cosmetics while preserving the original face",
+  "xianxia": "xianxia-style surface makeup applied on the original face: natural untouched eyebrows, pale champagne surface eye color, peach or nude lip color, sheer cosmetics evoking xianxia atmosphere — applied as surface layer only without altering facial structure",
+  "gudian_hong": "classical Tang-era red makeup: pale powder base, defined arch brows, bold vermillion red lip, subtle eye contour, traditional court beauty aesthetic",
+  "gongting": "elaborate imperial court makeup: white powder base, painted high arch brows, layered eye shadow, decorative forehead floral mark, bright vermillion lip, full court splendor",
+  "wuxia": "capable warrior natural makeup: clean defined skin, strong brows, clean eyeliner, neutral or light red lip, fresh and capable without excess decoration",
+  "gothic": "gothic surface makeup: cool-toned complexion base, eye shadow in black, burgundy or deep violet, bold black upper eyeliner, dark wine or black-red lip — surface cosmetics only, cold dramatic elegance without reshaping the face",
+  "mermaid": "pearlescent aqua surface makeup: pearl shimmer highlights on skin, gradient eye shadow in ocean blue or lavender, glossy dewy lip in coral or clear, fresh oceanic shimmer as surface cosmetics only without altering skin texture",
+  "mermaid_pearl": "deep-sea pearl makeup: dewy luminous skin, pearlescent blue-violet eye glow, wet-look shimmer highlights, coral-rose glossy lip, aquatic fantasy elegance without changing facial structure",
+  "fox": "fox enchantress seductive makeup: sultry smoky eye in amber and deep brown, slanted eyeliner for foxy eye shape, bold deep wine or crimson lip, warm golden shimmer on skin, dangerously beautiful, eye-direction styling as surface liner only without reshaping original eye structure",
+  "fox_noir": "nine-tailed fox surface makeup: layered gold and black eye shadow, extended upper liner for fox-eye silhouette, deep burgundy-red lip, warm golden shimmer on skin — applied as surface cosmetics only, respecting the original eye shape, eyelid structure, and facial structure",
+  "cyber": "cyberpunk chrome makeup: clean high-contrast skin finish, precise metallic liner, cool neon blue or magenta eye accents, glossy structured lip, controlled futuristic glow",
+  "cyber_idol": "futuristic idol stage makeup: high-shine luminous skin, colorful graphic eye shadow in electric blue or pink, precise graphic liner, glossy bold lip, holographic or metallic highlights",
+  "oriental": "soft oriental minimalist makeup: natural translucent skin, barely-there brow fill, warm neutral eye shadow with soft eyeliner, soft pink or coral lip, understated refined elegance",
+  "yaohou": "dark supernatural surface makeup: smoky eye shadow in deep purple or black, controlled upper eyeliner, dark wine or blood-red lip — applied on the original face as surface cosmetics only, preserving natural facial structure",
+  "demon_lord": "demon sovereign makeup: dark regal contour kept surface-only, blackened red smoky eyes, controlled blood-red lip, subtle obsidian and antique-gold highlights, commanding underworld authority without facial reshaping",
+  "fallen_angel": "fallen angel surface makeup: cool-toned complexion, smoky charcoal and violet eye shadow, silver tear-like shimmer, muted wine lip — surface cosmetics evoking tragic celestial corruption without altering facial structure",
+  "angel_holy": "holy angel makeup: clean radiant skin, soft champagne shimmer eyes, pearl-white highlights, gentle rose lip, pure golden-white celestial glow with serene dignity",
+  "imperial_empress": "imperial empress makeup: immaculate ceremonial base, defined noble brows, refined red lip, subtle forehead ornament or floral mark, gold-highlighted eyes, dignified absolute authority",
+  "tang_peony_soft": "Tang peony court makeup: soft powdered base, round warm blush, floral forehead mark, peach-red lip, golden eye shimmer, opulent Tang dynasty feminine grace",
+  "song_pearl_lady": "Song dynasty pearl makeup: refined pale translucent base, slender brows, minimal soft eyeliner, small rose lip, delicate pearl-like highlights, scholarly quiet elegance",
+  "outdoor_glow": "minimal real outdoor travel makeup: real skin texture, natural daylight highlights, natural untouched eyebrows and eyelashes, natural lip color matching the reference person, unretouched realistic travel-photo finish",
+  "natural_clean": "natural clean makeup: barely visible complexion polish, natural brows, natural untouched eyelashes, nude-pink lip color, realistic everyday appearance while preserving all original facial details",
+  "editorial": "controlled real-person makeup: natural skin texture, surface eye color only, soft liner following original eye shape, neutral or red lip color, no commercial beauty reconstruction",
+  "global_sun": "minimal global travel makeup: natural outdoor color, natural daylight highlights, natural untouched eye area, natural lip color matching the reference person, real travel snapshot naturalness",
+  "cinematic": "story-driven surface makeup: natural complexion, original eye shape preserved with scene-appropriate color only, controlled lip color and believable documentary production realism",
+  "character_pop": "anime or game character-inspired makeup: vivid but realistic eye color accents, clean graphic liner, bright polished lip, expressive cosplay energy without turning the face into a cartoon",
+  "flower_fairy": "minimal botanical makeup: soft petal blush as surface color only, subtle botanical surface color around the eyes with no fantasy-eye styling, natural lip color matching the reference person, ordinary real-person forest snapshot naturalness",
+  "oracle_gold": "divine oracle gold makeup: radiant gold eye accents, clean luminous skin, symbolic temple-like shimmer, noble rose-gold lip, sacred mythological authority",
+  "dragon_epic": "dragon epic battle makeup: strong brows, bronze or emerald metallic eye accents, restrained warrior contour, deep red or neutral lip, fierce elemental fantasy power",
+  "wedding": "bridal surface makeup: champagne shimmer highlights, soft romantic eye definition, rose or nude glossy lip, elegant tenderness — applied as surface cosmetics respecting original skin texture and facial features",
+  "luxury_glam": "luxury glamour surface makeup: refined smoky eye shadow, champagne highlighter, elegant red or nude lip — surface-only cosmetics for a premium socialite aesthetic without altering the original complexion",
+  "runway_supermodel": "runway supermodel makeup: sculptural editorial eyes, clean cheekbone highlights kept surface-only, neutral or bold fashion lip, high-end runway confidence",
+  "japanese_geisha": "Japanese classical stage makeup: pale refined base, precise red lip, delicate black liner, controlled blush and traditional elegance adapted tastefully for photographic realism",
+  "magic_girl": "magical girl makeup: bright youthful fantasy eye shimmer, soft pink blush, glossy cherry lip, sparkling highlights, cheerful heroic character energy",
+  "bohemian_sun": "bohemian sun makeup: warm natural skin, bronze-gold eye shimmer, soft earthy blush, terracotta or peach lip, relaxed outdoor festival and desert travel beauty",
+  "vampire_lady": "vampire noble makeup: pale luminous base, deep burgundy smoky eyes, sharp elegant liner, blood-wine lip, aristocratic nocturnal glamour",
+  "india_bold": "Indian bold makeup: radiant warm skin, dramatic kohl-rimmed eyes, gold shimmer, rich berry or red lip, ornate festive elegance",
+  "arabica_mystic": "Arabian mystic makeup: smoky bronze eyes, precise dark liner, warm golden highlights, rose-brown lip, desert palace mystery and luxury",
+  "hk_film": "Hong Kong film makeup: soft cinematic skin, classic defined brows, gentle smoky eyes, muted red or rose lip, nostalgic movie-star atmosphere"
+};
+
+// ═══════════════════════════════════════════
+// 父分類定義（20 個大類）
+// ═══════════════════════════════════════════
+const PARENT_CATEGORIES = [
+  {
+    "id": "pc_001",
+    "name": "科幻賽博",
+    "icon": "🎭",
+    "description": "科幻賽博",
+    "themes": [
+      "theme_001"
+    ]
+  },
+  {
+    "id": "pc_002",
+    "name": "異世界奇幻文學",
+    "icon": "🎭",
+    "description": "異世界奇幻文學",
+    "themes": [
+      "theme_002"
+    ]
+  },
+  {
+    "id": "pc_003",
+    "name": "婚紗系列",
+    "icon": "🎭",
+    "description": "婚紗系列",
+    "themes": [
+      "theme_003"
+    ]
+  },
+  {
+    "id": "pc_004",
+    "name": "世界風情",
+    "icon": "🎭",
+    "description": "世界風情",
+    "themes": [
+      "theme_004"
+    ]
+  },
+  {
+    "id": "pc_005",
+    "name": "動漫遊戲",
+    "icon": "🎭",
+    "description": "動漫遊戲",
+    "themes": [
+      "theme_005"
+    ]
+  },
+  {
+    "id": "pc_006",
+    "name": "熱播影視劇",
+    "icon": "🎭",
+    "description": "熱播影視劇",
+    "themes": [
+      "theme_006"
+    ]
+  },
+  {
+    "id": "pc_007",
+    "name": "中國古典文學",
+    "icon": "🎭",
+    "description": "中國古典文學",
+    "themes": [
+      "theme_007"
+    ]
+  },
+  {
+    "id": "pc_008",
+    "name": "中國朝代古裝",
+    "icon": "🎭",
+    "description": "中國朝代古裝",
+    "themes": [
+      "theme_008"
+    ]
+  },
+  {
+    "id": "pc_009",
+    "name": "都市時尚",
+    "icon": "🎭",
+    "description": "都市時尚",
+    "themes": [
+      "theme_009"
+    ]
+  }
+]
+
+// ═══════════════════════════════════════════
+// 風格分類資料（完整版）
+// ═══════════════════════════════════════════
+const CATS = [
+  {
+    "id": "theme_001",
+    "name": "科幻賽博",
+    "icon": "🎭",
+    "tpl": "default",
+    "entries": [
+      {
+        "id": "cyber_01",
+        "name": "新東京霓虹機械偶像",
+        "sub": "科幻賽博",
+        "icon": "🎭",
+        "scene": "前景為雨後街道反射的霓虹光影與漂浮水氣，中景為賽博朋克城市街道中心，女性自然站立回望鏡頭，巨型霓虹廣告牌與雨夜街景形成未來都市空間，遠景為延伸至天際的摩天大樓群與飛行載具光軌，整體色調以蜜桃粉、霓虹藍、深黑為主，保持真實空間透視與電影級攝影感",
+        "light": "ls_cinematic",
+        "outfit": "黑粉雙色未來偶像戰鬥服，內層為黑色彈性緊身衣帶有電路紋理印花，中層粉色硬質塑膠護甲覆蓋胸部與肩膀形成機械感輪廓，外層透明塑膠材質披風帶有霓虹光條裝飾，金屬腰帶使用發光LED扣件與電子顯示屏，發光耳機頭戴裝置帶有藍色光環與天線結構，手臂配有金屬護腕與電子手環，靴子為黑色高筒戰鬥靴帶有粉色霓虹光條，整體服裝具有真實布料與塑膠材質的重量感與未來科技質感",
+        "makeup": "自然清透底妝保持真實皮膚紋理，自然眉型，未經修飾的自然睫毛，裸粉色唇妝，保持日常真實妝感與中性神態，黑色中長直髮搭配粉色挑染，整體維持電影級真實妝容而非AI美女化",
+        "prop": "女性緩慢行走於雨後街道中心，自然回望鏡頭，右手輕觸發光耳機裝置，左手自然垂放，透明披風隨步伐輕微飄動，霓虹光條隨動作閃爍，保持臉部清晰可見，頭頸肩自然對齊，展現電影感微動作而非擺拍感",
+        "comp": "",
+        "mk": "natural_clean",
+        "tpl": "default",
+        "ratio": "r_34",
+        "lens": "l_50",
+        "ang": "sanfen",
+        "camLang": "cl_magazine",
+        "atm": "at_clear",
+        "series": "科幻賽博",
+        "ui_status": "core",
+        "sort_weight": 1000,
+        "source_type": "manual",
+        "source_batch": "core",
+        "risk_flags": [],
+        "cupSize": "",
+        "race": "人類"
+      }
+    ]
+  },
+  {
+    "id": "theme_002",
+    "name": "異世界奇幻文學",
+    "icon": "🎭",
+    "tpl": "default",
+    "entries": [
+      {
+        "id": "dl_17",
+        "name": "星辰隕落",
+        "sub": "異世界奇幻文學",
+        "icon": "🎭",
+        "scene": "前景為漂浮的星光粒子與古老石柱碎片，中景為開放式石造廢墟神殿，女性站立於神殿中央，遠景為古老天空中長條白色流星劃過深藍夜空形成壯觀星辰隕落景象，整體保持真實空間透視與電影級奇幻攝影感",
+        "light": "ls_cinematic",
+        "outfit": "午夜藍天鵝絨長裙，內層為深藍色絲綢襯裙帶有星光刺繡，中層厚重天鵝絨主體長袍覆蓋深色亮片捕捉星光反射，外層透明深藍薄紗披肩帶有銀色星辰圖案，腰部使用黑曜石腰封與古銅金屬扣件，頸部配有流星造型項鍊與深藍寶石吊墜，頭飾為銀色星冠帶有墜落流星裝飾，手臂配有深藍絲綢長手套與銀色手鐲，整體服裝具有真實天鵝絨重量與奇幻魔物的神秘質感",
+        "makeup": "魔物君主妝容保持表面妝感，深色輪廓修容不改變骨相，黑紅煙燻眼妝，控制性血紅唇妝，細微黑曜石與古銅金高光，展現冥界威嚴而不重塑臉部結構，黑色長直髮帶有深藍挑染，整體維持電影級奇幻妝容",
+        "prop": "女性站立於廢墟神殿中央，雙手輕撫天鵝絨長裙，頭部微微仰起凝視流星，深藍薄紗披肩隨微風飄動，星光粒子環繞身體流動，自然呼吸帶動服裝細微起伏，保持臉部清晰可見，展現魔物君主的威嚴與孤寂感",
+        "comp": "identity-readable three-quarter body view without enlarging the head, realistic head-to-body proportion, natural face-neck-shoulder alignment, no forced perspective",
+        "mk": "demon_lord",
+        "tpl": "default",
+        "ratio": "r_916",
+        "lens": "l_50",
+        "ang": "huanjing",
+        "camLang": "cl_magazine",
+        "atm": "at_clear",
+        "series": "異世界奇幻文學",
+        "ui_status": "core",
+        "sort_weight": 1000,
+        "source_type": "manual",
+        "source_batch": "core",
+        "risk_flags": [],
+        "cupSize": "F",
+        "race": "魔物"
+      }
+    ]
+  },
+  {
+    "id": "theme_003",
+    "name": "婚紗系列",
+    "icon": "🎭",
+    "tpl": "default",
+    "entries": [
+      {
+        "id": "hs_15",
+        "name": "星空璀璨",
+        "sub": "婚紗系列",
+        "icon": "🎭",
+        "scene": "前景為石造陽台欄杆與漂浮星光粒子，中景為開放式城堡陽台露台，女性站立於陽台邊緣俯瞰，遠景為廣闊黑暗奇幻城市中數千盞發光窗戶形成模糊天際線全景，清澈夜空中密集銀河星系與淡粉色極光帶交織，整體保持神秘寧靜氛圍與電影級星空攝影感",
+        "light": "ls_cinematic",
+        "outfit": "華麗午夜藍天鵝絨緞面婚紗禮服，內層為深藍絲綢襯裙帶有星光刺繡，中層厚重天鵝絨主體禮服鑲嵌數千顆細小水鑽與亮片捕捉星光反射，外層深藍緞面拖尾長裙鋪陳於石板路面，腰部使用銀色金屬腰封與水晶扣件，頸部配有鑽石項鍊與藍寶石吊墜，頭部配有銀色星冠與透明薄紗頭紗，手臂配有透明薄紗長袖與銀色手鐲，整體服裝具有真實天鵝絨與緞面的重量感與星空婚紗的夢幻質感",
+        "makeup": "極簡植物系妝容，柔和花瓣腮紅僅作表面色彩，眼周細微植物系表面色彩不做奇幻眼妝造型，自然唇色匹配真人膚色，保持普通真人森林快照的自然感，深棕色長捲髮帶有自然波浪，整體維持電影級自然妝容",
+        "prop": "女性站立於城堡陽台邊緣，雙手輕扶石造欄杆俯瞰城市，頭部緩慢轉向鏡頭，深藍緞面拖尾長裙隨微風輕微擺動，透明薄紗頭紗飄動，水鑽捕捉星光閃爍，自然呼吸帶動禮服細微起伏，保持臉部清晰可見，展現夢幻婚紗的浪漫與寧靜感",
+        "comp": "mobile vertical environmental full or three-quarter composition with clear face, realistic head-to-body proportion, natural face-neck-shoulder alignment, complete costume/body readability, and enough scene depth behind the subject; no forced perspective and no oversized head",
+        "mk": "flower_fairy",
+        "tpl": "default",
+        "ratio": "r_916",
+        "lens": "l_50",
+        "ang": "huanjing",
+        "camLang": "cl_magazine",
+        "atm": "at_clear",
+        "series": "婚紗系列",
+        "ui_status": "core",
+        "sort_weight": 1000,
+        "source_type": "manual",
+        "source_batch": "core",
+        "risk_flags": [],
+        "cupSize": "",
+        "race": "人類"
+      }
+    ]
+  },
+  {
+    "id": "theme_004",
+    "name": "世界風情",
+    "icon": "🎭",
+    "tpl": "default",
+    "entries": [
+      {
+        "id": "rev_079",
+        "name": "星夜金紗 · 水岸攜燈",
+        "sub": "世界風情",
+        "icon": "🎭",
+        "scene": "前景為靜止水道中的倒影與漂浮花瓣，中景為華麗古代宮殿建築群，女性站立於水岸邊手持燈籠，溫暖琥珀色燈光完美倒映於靜止水道中，遠景為延伸的宮殿建築與星夜天空，整體保持真實空間透視與電影級宮廷攝影感",
+        "light": "ls_cinematic",
+        "outfit": "深海軍藍絲綢長裙禮服，內層為金色絲綢襯裙帶有密集金線刺繡圖案，中層深藍絲綢主體長裙覆蓋精緻金色刺繡花紋，外層透明金邊薄紗披肩帶有流蘇裝飾，腰部使用金色金屬腰帶與寶石扣件，頸部配有金色項鍊與藍寶石吊墜，頭部配有金色頭飾與薄紗頭紗，手臂配有金色手鐲與戒指，整體服裝具有真實絲綢重量感與印度宮廷禮服的華麗質感",
+        "makeup": "柔和東方極簡妝容，自然透明肌膚，細微眉毛填充，溫暖中性眼影搭配柔和眼線，柔和粉色或珊瑚色唇妝，低調精緻優雅感，黑色長直髮帶有自然光澤，整體維持電影級自然妝容",
+        "prop": "女性站立於水岸邊，右手持燈籠輕輕舉起，左手輕撫金色刺繡長裙，頭部微微側向鏡頭，深藍絲綢長裙與金邊薄紗披肩隨微風飄動，燈光在水面形成倒影，自然呼吸帶動服裝細微起伏，保持臉部清晰可見，展現印度宮廷的優雅與神秘感",
+        "comp": "full-body vertical documentary shot with the palace complex centered behind over the water reflection, starry sky filling the upper frame, realistic head-to-body proportion, natural face-neck-shoulder alignment, no forced perspective",
+        "mk": "oriental",
+        "tpl": "default",
+        "ratio": "r_23",
+        "lens": "l_50",
+        "ang": "quan",
+        "camLang": "cl_fashion",
+        "atm": "at_moody",
+        "series": "世界風情",
+        "ui_status": "core",
+        "sort_weight": 1000,
+        "source_type": "manual",
+        "source_batch": "core",
+        "risk_flags": [],
+        "cupSize": "",
+        "race": "人類"
+      }
+    ]
+  },
+  {
+    "id": "theme_005",
+    "name": "動漫遊戲",
+    "icon": "🎭",
+    "tpl": "default",
+    "entries": [
+      {
+        "id": "rev_088",
+        "name": "粉霧星光 · 新季主打",
+        "sub": "動漫遊戲",
+        "icon": "🎭",
+        "scene": "前景為漂浮的全息星光粒子與光斑，中景為光澤商業時尚海報背景，淡紫粉色漸層背景，女性自然站立展示服裝，遠景為散落的全息星星裝飾與柔和光暈，整體保持時尚海報攝影感與電影級商業攝影質感",
+        "light": "ls_cinematic",
+        "outfit": "淺粉色光澤運動外套，內層為白色短版背心帶有星星圖案印花，中層淺粉色超大尺寸運動外套帶有光澤面料與拉鍊裝飾，下身搭配協調工裝褲帶有多口袋設計，腰部使用白色腰帶與金屬扣件，頸部配有銀色項鍊與星星吊墜，頭部配有粉色棒球帽，腳部配有白色運動鞋帶有粉色裝飾，整體服裝具有真實運動服飾的輕盈感與動漫時尚的活力質感",
+        "makeup": "自然清透底妝保持真實皮膚紋理，自然眉型，未經修飾的自然睫毛，裸粉色唇妝，保持日常真實妝感與中性神態，黑色短髮帶有粉色挑染，整體維持電影級真實妝容而非AI美女化",
+        "prop": "女性自然站立展示服裝，右手插入工裝褲口袋，左手輕觸粉色棒球帽，頭部微微側向鏡頭帶有自信微笑，淺粉色運動外套隨身體微動，全息星光粒子環繞飄動，保持臉部清晰可見，展現動漫時尚的活力與青春感",
+        "comp": "three-quarter upper-body commercial portrait centered in the sparkle background, decorative text and badge elements at poster margins, realistic head-to-body proportion, natural face-neck-shoulder alignment, no forced perspective",
+        "mk": "natural_clean",
+        "tpl": "default",
+        "ratio": "r_23",
+        "lens": "l_50",
+        "ang": "sanfen",
+        "camLang": "cl_fashion",
+        "atm": "at_clear",
+        "series": "動漫遊戲",
+        "ui_status": "core",
+        "sort_weight": 1000,
+        "source_type": "manual",
+        "source_batch": "core",
+        "risk_flags": [],
+        "cupSize": "",
+        "race": "人類"
+      }
+    ]
+  },
+  {
+    "id": "theme_006",
+    "name": "熱播影視劇",
+    "icon": "🎭",
+    "tpl": "default",
+    "entries": [
+      {
+        "id": "tv_22",
+        "name": "星漢燦爛",
+        "sub": "熱播影視劇",
+        "icon": "🎭",
+        "scene": "前景為懸掛的黃色玉米束與編織柳條籃，中景為古老鄉村堡壘木造庭院後院小徑，女性自然站立於庭院中，遠景為延伸的木造建築與鄉村田園景色，整體保持真實鄉村生活空間透視與電影級古裝劇攝影感",
+        "light": "ls_cinematic",
+        "outfit": "舒適素色淺藍棉質日常漢服長袍，內層為白色棉質襯衣帶有簡約領口，中層淺藍色棉質主體長袍帶有單一高品質刺繡裝飾，外層淺色披帛自然垂落，腰部使用淺色布帶與簡約扣件，頸部配有簡約玉墜項鍊，頭部配有簡約髮簪，手臂自然垂放，整體服裝具有真實棉質布料的舒適感與日常漢服的樸實質感",
+        "makeup": "自然清透底妝保持真實皮膚紋理，自然眉型，未經修飾的自然睫毛，裸粉色唇妝，保持日常真實妝感與中性神態，黑色長直髮簡單束起，整體維持電影級真實妝容而非AI美女化",
+        "prop": "女性站立於庭院小徑，右手輕提淺藍色長袍下擺，左手自然垂放，頭部微微低垂帶有溫柔神態，淺色披帛隨微風輕輕飄動，陽光灑落在棉質長袍上形成自然光影，保持臉部清晰可見，展現日常漢服的樸實與寧靜感",
+        "comp": "vertical three-quarter composition with clear face, realistic head-to-body proportion, natural face-neck-shoulder alignment, complete costume/body readability, and enough scene depth behind the subject; no forced perspective and no oversized head",
+        "mk": "natural_clean",
+        "tpl": "default",
+        "ratio": "r_34",
+        "lens": "l_50",
+        "ang": "sanfen",
+        "camLang": "cl_magazine",
+        "atm": "at_warm",
+        "series": "熱播影視劇",
+        "ui_status": "core",
+        "sort_weight": 1000,
+        "source_type": "manual",
+        "source_batch": "core",
+        "risk_flags": [],
+        "cupSize": "",
+        "race": "人類"
+      }
+    ]
+  },
+  {
+    "id": "theme_007",
+    "name": "中國古典文學",
+    "icon": "🎭",
+    "tpl": "default",
+    "entries": [
+      {
+        "id": "wx_16",
+        "name": "星宿毒辣",
+        "sub": "中國古典文學",
+        "icon": "🎭",
+        "scene": "前景為漂浮的綠色發光霧氣與沼澤植物，中景為深沼澤叢林樹林夜景，女性站立於樹林中，奇異綠色發光苔蘚斑塊覆蓋樹幹，遠景為霧氣瀰漫的沼澤深處與神秘光源，整體保持真實沼澤空間透視與電影級奇幻攝影感",
+        "light": "ls_cinematic",
+        "outfit": "時尚深紫色絲綢長袍，內層為黑色絲綢襯裙帶有暗紋刺繡，中層深紫色絲綢主體長袍帶有黑色蕾絲邊緣裝飾，外層透明黑紗披肩自然垂落，腰部使用黑色絲帶與玉石扣件，頸部配有銀色項鍊與紫水晶吊墜，手持小型裝飾玻璃瓶，頭部配有簡約髮簪，整體服裝具有真實絲綢重量感與狐妖魅惑的神秘質感",
+        "makeup": "狐妖魅惑誘惑妝容，魅惑煙燻眼妝使用琥珀色與深棕色，傾斜眼線營造狐狸眼效果，深紅唇妝，細微金色高光，展現妖媚誘惑感而不重塑臉部結構，黑色長直髮帶有自然光澤，整體維持電影級奇幻妝容",
+        "prop": "女性站立於沼澤樹林中，右手持小型裝飾玻璃瓶輕輕舉起觀察，左手輕撫深紫色絲綢長袍，頭部微微側向鏡頭帶有魅惑眼神，透明黑紗披肩隨霧氣飄動，綠色發光霧氣環繞身體流動，保持臉部清晰可見，展現狐妖的魅惑與神秘感",
+        "comp": "identity-readable three-quarter body view without enlarging the head, realistic head-to-body proportion, natural face-neck-shoulder alignment, no forced perspective",
+        "mk": "fox",
+        "tpl": "default",
+        "ratio": "r_34",
+        "lens": "l_50",
+        "ang": "banshen",
+        "camLang": "cl_fashion",
+        "atm": "at_clear",
+        "series": "中國古典文學",
+        "ui_status": "core",
+        "sort_weight": 1000,
+        "source_type": "manual",
+        "source_batch": "core",
+        "risk_flags": [],
+        "cupSize": "",
+        "race": "人類"
+      }
+    ]
+  },
+  {
+    "id": "theme_008",
+    "name": "中國朝代古裝",
+    "icon": "🎭",
+    "tpl": "default",
+    "entries": [
+      {
+        "id": "gz_09",
+        "name": "明窗抹香",
+        "sub": "中國朝代古裝",
+        "icon": "🎭",
+        "scene": "前景為木製窗框與香爐煙霧，中景為溫馨復古起居室角落桌面擺設，女性坐於桌旁，木製窗板打開俯瞰小竹園，遠景為延伸的竹林與庭院景色，整體保持真實居家空間透視與電影級古裝劇攝影感",
+        "light": "ls_cinematic",
+        "outfit": "簡約舒適淺灰粉色亞麻日常服飾，內層為白色棉質襯衣帶有簡約領口，中層淺灰粉色亞麻宋代風格短外套帶有簡約扣件，下身搭配淺色長裙，腰部使用淺色布帶，頸部配有簡約玉墜項鍊，頭部配有簡約髮簪，手臂自然垂放，整體服裝具有真實亞麻布料的舒適感與宋代日常服飾的樸實質感",
+        "makeup": "古典唐代紅妝，淡粉底妝，明確弓形眉，大膽朱紅唇妝，細微腮紅，保持古典妝容而不改變骨相，黑色長髮簡單盤起，整體維持電影級古典妝容",
+        "prop": "女性坐於木桌旁，右手輕撫桌面香爐，左手自然放於膝上，頭部微微轉向窗外竹園，淺灰粉色亞麻外套隨呼吸細微起伏，香煙裊裊上升，陽光透過木窗灑落形成自然光影，保持臉部清晰可見，展現宋代日常的寧靜與雅致感",
+        "comp": "vertical three-quarter composition with clear face, realistic head-to-body proportion, natural face-neck-shoulder alignment, complete costume/body readability, and enough scene depth behind the subject; no forced perspective and no oversized head",
+        "mk": "gudian_hong",
+        "tpl": "default",
+        "ratio": "r_34",
+        "lens": "l_50",
+        "ang": "sanfen",
+        "camLang": "cl_fashion",
+        "atm": "at_clear",
+        "series": "中國朝代古裝",
+        "ui_status": "core",
+        "sort_weight": 1000,
+        "source_type": "manual",
+        "source_batch": "core",
+        "risk_flags": [],
+        "cupSize": "",
+        "race": "人類"
+      }
+    ]
+  },
+  {
+    "id": "theme_009",
+    "name": "都市時尚",
+    "icon": "🎭",
+    "tpl": "default",
+    "entries": [
+      {
+        "id": "rev_021",
+        "name": "高爾夫球場午後 · 球場閒趣",
+        "sub": "都市時尚",
+        "icon": "🎭",
+        "scene": "前景為修剪整齊的草坪與高爾夫球旗，中景為錦標賽高爾夫球場午後光線，女性自然站立於球場中，遠處旗幟飄揚，遠景為鄉村俱樂部優雅建築與延伸的球場景觀，整體保持真實球場空間透視與電影級時尚攝影感",
+        "light": "ls_cinematic",
+        "outfit": "高級時尚權力穿搭，內層為白色絲綢襯衫帶有精緻領口，中層銳利剪裁西裝外套帶有墊肩設計，外層奢華設計師大衣帶有高級面料與金屬扣件，腰部使用皮革腰帶與金屬扣件，頸部配有奢華珠寶項鍊，手臂配有名牌手錶與手鐲，手持名牌手提包，整體服裝具有真實高級面料的重量感與都市時尚的權力質感",
+        "makeup": "新娘表面妝容，香檳色光澤高光，柔和浪漫眼妝定義，玫瑰色或裸色光澤唇妝，保持優雅妝感而不改變骨相，深棕色波浪長髮，整體維持電影級時尚妝容",
+        "prop": "女性自然站立於高爾夫球場，右手持名牌手提包，左手輕觸西裝外套領口，頭部微微側向鏡頭帶有自信神態，奢華大衣隨微風輕微擺動，午後陽光灑落在高級面料上形成光澤，保持臉部清晰可見，展現都市時尚的權力與優雅感",
+        "comp": "vertical travel documentary shot with clear face, natural body angle, and enough environmental space to keep the location recognizable. Angle guidance: three-quarter angle, slight natural head turn, most flattering for face and costume., realistic head-to-body proportion, natural face-neck-shoulder alignment, no forced perspective",
+        "mk": "wedding",
+        "tpl": "default",
+        "ratio": "r_34",
+        "lens": "l_50",
+        "ang": "sanfen",
+        "camLang": "cl_magazine",
+        "atm": "at_clear",
+        "series": "都市時尚",
+        "ui_status": "core",
+        "sort_weight": 1000,
+        "source_type": "manual",
+        "source_batch": "core",
+        "risk_flags": [],
+        "cupSize": "",
+        "race": "人類"
+      }
+    ]
+  }
+];
+
+const HISTORY_KEY = 'prompt_history';
+const MAX_HISTORY = 20;
+
+function saveToHistory(prompt, styleName) {
+  try {
+    let history = JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+
+    history.unshift({
+      prompt: prompt,
+      styleName: styleName,
+      timestamp: new Date().toISOString()
+    });
+
+    // 限制歷史記錄數量
+    if (history.length > MAX_HISTORY) {
+      history = history.slice(0, MAX_HISTORY);
+    }
+
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+  } catch (err) {
+    console.error('儲存歷史記錄失敗:', err);
+  }
+}
+
+function loadHistory() {
+  try {
+    return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+  } catch (err) {
+    console.error('讀取歷史記錄失敗:', err);
+    return [];
+  }
+}
+
+// Init
+(function(){
+  const cat = getCat(curCatID);
+  if(cat) applyDefs(cat.entries[0], cat.entries[0].tpl || cat.tpl);
+  // Populate hero entry count stat
+  const totalEntries = CATS.reduce((s,c) => s + (c.entries ? c.entries.length : 0), 0);
+  const statEl = document.getElementById('totalEntryCount');
+  if(statEl) statEl.textContent = totalEntries.toLocaleString();
+})();
+renderAll();
+</script>
+</body>
+</html>
