@@ -1175,16 +1175,21 @@ describe("prompt engine", () => {
       theme: "長安夜宴樂姬",
       scene: "長安盛唐花宴大殿",
     });
+    const inferredDarkRoyal = buildPrompt({
+      theme: "紫蝶夜宴魅魔",
+      scene: "暗紫絲絨寢宮",
+    });
 
     expect(darkRoyal).toContain("暗黑王族身形預設");
     expect(darkRoyal).toContain("成熟豐滿但真實的成年女性體積感");
+    expect(darkRoyal).toContain("真實人體骨架追加：罩杯:J");
     expect(darkRoyal).toContain("couture support");
     expect(darkRoyal).toContain("真實胸腔厚度");
     expect(darkRoyal).toContain("視覺焦點集中在黑暗王族氣場");
-    expect(darkRoyal).not.toContain("J");
-    expect(darkRoyal).not.toContain("罩杯");
+    expect(inferredDarkRoyal).toContain("真實人體骨架追加：罩杯:J");
     expect(darkRoyal).not.toContain("不做動漫誇張身材");
     expect(changan).not.toContain("暗黑王族身形預設");
+    expect(changan).not.toContain("罩杯:J");
   });
 
   it("builds an identity-first cinematic prompt", () => {

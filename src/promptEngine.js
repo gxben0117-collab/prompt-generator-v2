@@ -287,6 +287,7 @@ function buildDarkRoyalBodyPresenceText(form, category) {
 
   return [
     "暗黑王族身形預設：成熟豐滿但真實的成年女性體積感",
+    "真實人體骨架追加：罩杯:J，需由真實胸腔厚度、couture support 與高訂禮服布料張力自然承托",
     "上身輪廓需由 couture support、structured silk gown、velvet robe drapery 與真實胸腰支撐結構承托",
     "保留真實胸腔厚度、自然重力、肩頸連接、正常腰臀比例與高訂禮服布料張力",
     "視覺焦點集中在黑暗王族氣場、絲綢高光、禮服支撐、真實人體重心與電影女王銀幕存在感",

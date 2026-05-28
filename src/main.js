@@ -24,7 +24,7 @@ const HISTORY_KEY = "hongbing-travel-prompt-history";
 const UI_PREFS_KEY = "hongbing-travel-prompt-ui-prefs";
 const HISTORY_LIMIT = 5;
 const ALL_FILTER_LABEL = "全部";
-const APP_VERSION = "v0.99";
+const APP_VERSION = "v1.00";
 const PARENT_ROLE_CATEGORIES = [
   {
     label: "中國歷代服裝",

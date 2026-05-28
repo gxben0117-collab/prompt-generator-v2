@@ -9,8 +9,8 @@ const html = `<!doctype html>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="出圖自組咒語生產器 v0.99：不複製母板全文的導演式生成咒語工具" />
-    <title>出圖自組咒語生產器 v0.99</title>
+    <meta name="description" content="出圖自組咒語生產器 v1.00：不複製母板全文的導演式生成咒語工具" />
+    <title>出圖自組咒語生產器 v1.00</title>
   </head>
   <body>
     <div id="app"></div>
