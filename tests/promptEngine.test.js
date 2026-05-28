@@ -13,6 +13,7 @@ import {
   assessThemeInput,
   expandCostumeToLayers,
   expandSceneToDirectorFields,
+  getHiddenSystemPrompt,
   normalizeForm,
   sanitizeInput,
   suggestThemeRewrite,
@@ -1333,20 +1334,20 @@ describe("prompt engine", () => {
     expect(ceremony).toContain("主角仍佔 absolute visual priority");
   });
 
-  it("injects background control and commercial glamour lighting into the fixed mother template", () => {
+  it("uses background control and commercial glamour lighting in the compact final prompt", () => {
     const instruction = buildChatGptInstruction({
       theme: "紫蝶夜宴魅魔",
       scene: "暗紫絲絨寢宮",
     });
 
-    expect(instruction).toContain("【背景角色控制系統】");
-    expect(instruction).toContain("不是群演場面");
-    expect(instruction).toContain("small-scale cinematic silhouettes");
-    expect(instruction).toContain("absolute visual priority");
-    expect(instruction).toContain("【商業奇幻亮場系統｜Commercial Fantasy Glamour Mode】");
-    expect(instruction).toContain("Commercial Fantasy Glamour Mode");
-    expect(instruction).toContain("face underexposure");
-    expect(instruction).toContain("luminous fantasy glamour lighting");
+    expect(instruction).toContain("請根據上傳真人照片生成");
+    expect(instruction).toContain("背景不得出現路人或群演");
+    expect(instruction).toContain("高亮商業奇幻曝光");
+    expect(instruction).toContain("臉部明亮可辨識");
+    expect(instruction).toContain("catchlight");
+    expect(instruction).toContain("sparkle highlights");
+    expect(instruction).not.toContain("【背景角色控制系統】");
+    expect(instruction).not.toContain("【商業奇幻亮場系統｜Commercial Fantasy Glamour Mode】");
     expect(instruction).not.toContain("遠景群演與燈光正在襯托她出場");
     expect(instruction).not.toContain("grand oriental fantasy spectacle");
     expect(instruction).not.toContain("environmental storytelling");
@@ -1567,33 +1568,27 @@ describe("prompt engine", () => {
 
   it("wraps the prompt for ChatGPT image generation", () => {
     const instruction = buildChatGptInstruction({ theme: "雲海仙門旅拍" });
-    expect(instruction).toContain("【真人電影級 AI 電影角色系統｜V4.0 Ultimate】");
-    expect(instruction).toContain("真人演員被拍進奇幻世界");
+    expect(instruction).toContain("請根據上傳真人照片生成 4:5 真人電影級奇幻海報");
+    expect(instruction).toContain("最高優先：保留上傳照片中的原始真人臉部身份");
     expect(instruction).toContain("原始臉型");
     expect(instruction).toContain("原始眼型");
     expect(instruction).toContain("原始鼻型");
-    expect(instruction).toContain("【Facial Identity Lock｜最高優先】");
-    expect(instruction).toContain("【臉部主控｜最高優先】");
-    expect(instruction).toContain("Do NOT redesign the face.");
-    expect(instruction).toContain("Do NOT beautify the face.");
-    expect(instruction).toContain("先鎖定原始真人臉");
-    expect(instruction).toContain("臉部角度需接近上傳照片");
-    expect(instruction).toContain("face swap");
-    expect(instruction).toContain("【真人比例穩定系統｜Body Proportion Stabilization】");
-    expect(instruction).toContain("full-body physical coherence has equal priority with facial identity preservation");
-    expect(instruction).toContain("【輸出比例控制系統】");
+    expect(instruction).toContain("不換臉");
+    expect(instruction).toContain("真實人體骨架");
+    expect(instruction).toContain("頭大、肩窄、軀幹壓縮");
     expect(instruction).toContain("composition must respect the specified aspect ratio");
-    expect(instruction).toContain("- 罩杯j");
-    expect(instruction).toContain("original eyelid structure");
-    expect(instruction).toContain("The fantasy world exists around the real photographed person");
-    expect(instruction).toContain("50mm 全片幅中遠景電影構圖");
-    expect(instruction).toContain("【輸出格式】");
+    expect(instruction).toContain("構圖：50mm 全片幅");
     expect(instruction).toContain("分類：");
     expect(instruction).toContain("服裝：");
-    expect(instruction).toContain("【最高核心原則】");
-    expect(instruction).toContain("【負面咒語系統】");
-    expect(instruction.indexOf("分類：")).toBeGreaterThan(instruction.indexOf("【輸出格式】"));
-    expect(instruction.indexOf("分類：")).toBeLessThan(instruction.indexOf("【最終核心】"));
+    expect(instruction).toContain("妝容：");
+    expect(instruction).toContain("場景：");
+    expect(instruction).toContain("動作：");
+    expect(instruction).toContain("光影：");
+    expect(instruction).toContain("負面：");
+    expect(instruction).not.toContain("【真人電影級 AI 電影角色系統｜V4.0 Ultimate】");
+    expect(instruction).not.toContain("【輸出格式】");
+    expect(instruction).not.toContain("【最高核心原則】");
+    expect(instruction).not.toContain("【最終核心】");
     expect(instruction).not.toContain("==================================================");
     expect(instruction).not.toContain("********** 使用規範 **********");
     expect(instruction).not.toContain("### Layer 1");
@@ -1602,7 +1597,7 @@ describe("prompt engine", () => {
     expect(instruction).not.toContain("罩杯:J");
   });
 
-  it("does not inject dark royal cup presets into the fixed skeleton section", () => {
+  it("keeps the mother skeleton internal but avoids cup-driven final prompts", () => {
     const darkInstruction = buildChatGptInstruction({
       category: "奇幻異世界 / 暗黑王族",
       theme: "紫蝶夜宴魅魔",
@@ -1614,13 +1609,13 @@ describe("prompt engine", () => {
       scene: "長安宮廷花宴",
     });
 
-    expect(darkInstruction).toContain("【真實人體骨架】");
-    expect(darkInstruction).toContain("- 罩杯j");
+    expect(getHiddenSystemPrompt()).toContain("【真實人體骨架】");
+    expect(getHiddenSystemPrompt()).toContain("- 罩杯j");
+    expect(darkInstruction).toContain("真實人體骨架");
     expect(darkInstruction).toContain("不指定罩杯");
-    expect(darkInstruction).toContain("依照上傳真人原始體型自然延伸");
     expect(darkInstruction).not.toContain("- 罩杯:J");
     expect(darkInstruction).not.toContain("真實人體骨架追加：罩杯:J");
-    expect(normalInstruction).toContain("- 罩杯j");
+    expect(normalInstruction).not.toContain("- 罩杯j");
     expect(normalInstruction).not.toContain("- 罩杯:J");
   });
 });

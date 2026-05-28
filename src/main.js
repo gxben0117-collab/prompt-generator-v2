@@ -29,7 +29,7 @@ const STORAGE_KEY = "hongbing-travel-prompt-state";
 const HISTORY_KEY = "hongbing-travel-prompt-history";
 const UI_PREFS_KEY = "hongbing-travel-prompt-ui-prefs";
 const HISTORY_LIMIT = 5;
-const APP_VERSION = "v1.12";
+const APP_VERSION = "v1.13";
 const PRODUCT_PRINCIPLE = "最高原則：真人鎖臉優先於所有華麗主視覺，不讓角色滑回 AI 仙女臉。";
 const RATIO_LABELS = {
   "4:5": "4:5 商業海報",

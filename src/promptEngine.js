@@ -249,23 +249,6 @@ export function getHiddenSystemPrompt() {
   return CORE_SPEC_TEXT;
 }
 
-function getFixedCorePrompt() {
-  return CORE_SPEC_TEXT.split("********** 使用規範 **********")[0].trim();
-}
-
-function findAfterOutputFormatSection(text) {
-  const candidates = ["【最終核心】", "【負面規則】", "【負面咒語系統】"];
-  const outputStart = text.indexOf("【輸出格式】");
-  if (outputStart === -1) return { outputStart: -1, nextStart: -1 };
-
-  const nextStart = candidates
-    .map((marker) => text.indexOf(marker, outputStart + "【輸出格式】".length))
-    .filter((index) => index !== -1)
-    .sort((a, b) => a - b)[0] ?? -1;
-
-  return { outputStart, nextStart };
-}
-
 function inferCategory(theme, costume, scene) {
   const text = `${theme} ${costume} ${scene}`;
   if (/魅魔|魅姬|睡袍式|絲絨寢宮|暗黑浪漫/.test(text)) return "夜宴魅魔／高訂睡袍電影";
@@ -390,6 +373,130 @@ function buildAspectRatioControlText(form = DEFAULT_FORM) {
     "composition must respect the specified aspect ratio and keep the full cinematic silhouette inside frame",
     "避免裁頭、裁手、截斷全身、過度留白、AI 自動特寫或自拍式構圖",
   ].filter(Boolean).join("；");
+}
+
+function effectiveOutputRatio(form = DEFAULT_FORM) {
+  return isDarkRoyalCategory(form.category, form.theme, form.scene) && ["9:16", "16:9"].includes(form.ratio)
+    ? "4:5"
+    : form.ratio;
+}
+
+function compactText(value = "", maxLength = 150) {
+  const text = String(value || "")
+    .replace(/【[^】]+】/g, "")
+    .replace(/\s+/g, " ")
+    .replace(/；+/g, "；")
+    .trim();
+  if (text.length <= maxLength) return text;
+  const cut = text.slice(0, maxLength);
+  const punctuationIndex = Math.max(cut.lastIndexOf("。"), cut.lastIndexOf("；"), cut.lastIndexOf("，"));
+  return `${cut.slice(0, punctuationIndex > 45 ? punctuationIndex : maxLength).trim()}。`;
+}
+
+function compactLayerValue(value = "") {
+  return compactText(value, 42)
+    .replace(/作為.*$/g, "")
+    .replace(/使用.*$/g, "")
+    .replace(/，$/g, "")
+    .trim();
+}
+
+function buildFinalIdentityText() {
+  return [
+    "最高優先：保留上傳照片中的原始真人臉部身份，不換臉、不美化成 AI 美女，不改變眼型、鼻型、嘴型、臉型、下顎線、成熟年齡感與皮膚質感。",
+    "真人身份優先：保留原始臉型、原始眼型、原始鼻型、原始嘴型、五官比例、可辨識特徵、自然臉部不對稱與真人攝影感；臉部正面或微側正面看向鏡頭。",
+    "真實人體骨架：平衡肩寬、真實鎖骨、胸腔厚度、軀幹深度、骨盆比例、人體重心、四肢比例與脊椎結構；避免頭大、肩窄、軀幹壓縮或臉貼在服裝上的 AI 感。",
+  ].join("\n");
+}
+
+function buildFinalCostumeText(form, category, theme) {
+  if (isDarkRoyalCategory(category, theme, form.scene)) {
+    return "真人可穿戴的深紫絲絨高訂夜宴長袍，黑紫絲綢內層，流動紫色薄紗披帛，紫蝶刺繡，紅寶石與金色鏈飾。重點是大輪廓、絲絨光澤、薄紗流動與電影高訂質感；保持禮服遮覆，不指定罩杯，不放大胸腰比例。";
+  }
+
+  const layerText = [form.costumeLayer1, form.costumeLayer3, form.costumeLayer4, form.costumeLayer6, form.costumeLayer8]
+    .map(compactLayerValue)
+    .filter(Boolean)
+    .slice(0, 4)
+    .join("，");
+  const base = compactText(form.costume, 130) || `真人可穿戴的「${theme}」電影級高訂戲服`;
+  const detail = layerText ? `主要元素：${layerText}。` : "";
+
+  return `${base}。${detail}重點是主輪廓、主材質、主色彩與一到兩個記憶點，真實布料重量、可穿戴結構與電影高訂質感。`;
+}
+
+function buildFinalSceneText(form, category, theme) {
+  const sceneBase = compactText(form.scene, 120) || `依據「${theme}」建立可被真實攝影拍出的奇幻電影場景`;
+  const environment = compactText(form.sceneEnvironment, 180);
+  if (environment) {
+    return `${sceneBase}。${environment}。背景不得出現路人或隨機群演；用建築輪廓、光影、水霧、燈火、布料、空氣粒子、景深與前景遮擋建立電影空間。`;
+  }
+  if (isDarkRoyalCategory(category, theme, sceneBase)) {
+    return `${sceneBase}。赤金燭光、哥德建築輪廓、深酒紅帷幕、黑曜石反光、古器或聖器、空氣微粒與景深共同形成高級暗黑奇幻電影空間。背景不得出現路人或群演。`;
+  }
+  return `${sceneBase}。近景提供花瓣、燭火、霧氣、布料或建築遮擋；中景服務真人主角與服裝動態；遠景建立建築、天光、燈火、水霧或地形輪廓。背景不得出現路人。`;
+}
+
+function buildFinalActionText(form, category, theme) {
+  if (isDarkRoyalCategory(category, theme, form.scene)) {
+    return "人物剛從燭光與薄霧中走出，微側正面停步看向鏡頭，雙手自然牽起外袍或披帛，手不遮臉，布料形成電影主視覺流線。";
+  }
+  const action = compactText(stabilizeFaceAngleText(form.sceneAction), 180);
+  if (action) return `${action}。手部不遮臉，臉部正面或微側正面清楚看向鏡頭，動作需符合真實人體重心。`;
+  return `${inferEmotionalAction(theme, form.scene)}。手部不遮臉，布料跟隨動作形成自然視線流線。`;
+}
+
+function buildFinalLightingText(form, category, theme) {
+  const lighting = compactText(form.sceneLighting, 150);
+  const commercial = shouldUseCommercialGlamourLighting({ ...form, category, theme });
+  const base = lighting || "側前方柔和主光、燭光或月光環境光、柔和邊緣分離光、自然景深、空氣霧化與真實皮膚反光。";
+  if (commercial) {
+    return `${base} 臉部明亮可辨識，眼睛有高級 catchlight，珠寶有 sparkle highlights，紫黑服裝保留暗部細節，避免過暗、過度 HDR 與塑膠皮膚。`;
+  }
+  return `${base} 臉部清楚可辨識，保留皮膚紋理、髮絲細節、真實空氣透視與電影攝影感。`;
+}
+
+function buildFinalNegativeText() {
+  return "負面：AI beauty face, influencer face, doll face, anime face, cgi heroine face, anime body, tiny waist, extreme hourglass, selfie angle, plastic skin, cheap cosplay, game skin outfit, pin-up pose, twisted anatomy, face swap, new actress face, side profile, covered face, face underexposure, oversized head, compressed torso, narrow shoulders, over HDR, unreal engine render.";
+}
+
+function buildFinalStyleText(form, category, theme) {
+  const visualModeText = {
+    "Netflix 東方奇幻": "真人身份保留的東方奇幻電影主視覺",
+    "暗黑夜宴": "暗黑夜宴電影主視覺",
+    "商業奇幻海報": "高級商業奇幻電影海報",
+  }[form.visualMode] || "真人電影級奇幻主視覺";
+  const colorText = {
+    "高級艷麗": "高級艷麗，saturated but realistic cinematic palette，寶石色高光與絲綢反射",
+    "紅金寶石": "紅金寶石，ruby red silk、lantern gold、jewel-tone highlights",
+    "暗紫酒紅": "暗紫酒紅，amethyst violet atmosphere、deep wine-red silk、black velvet shadow",
+    "盛唐花宴": "盛唐花宴，peony crimson、lantern gold、emerald palace drapery",
+  }[form.colorIntensity] || "高級電影色彩";
+  const fabricText = {
+    "大動態飄紗": "大動態飄紗，extra-long flowing silk drapery、airborne translucent shawls",
+    "中度流動": "中度流動，披帛、長袖與外袍依照動作自然延伸",
+    "靜態垂墜": "靜態垂墜，重點是真實布料重量與高訂結構",
+  }[form.fabricMotion] || "真實布料動態";
+  const commercial = shouldUseCommercialGlamourLighting({ ...form, category, theme })
+    ? "高亮商業奇幻曝光，臉亮、珠寶亮、避免灰暗低光。"
+    : "真人電影級奇幻主視覺，華麗但保持真實攝影可存在性。";
+  return [visualModeText, colorText, fabricText, commercial].join("；");
+}
+
+function buildFinalCompositionText(form, ratio) {
+  const ratioText = RATIO_COMPOSITION_TEXT[ratio] || RATIO_COMPOSITION_TEXT[DEFAULT_FORM.ratio];
+  return [
+    `50mm 全片幅，中遠景，${ratioText}`,
+    `單人主角，${form.cameraFraming || DEFAULT_FORM.cameraFraming}完整入鏡`,
+    "composition must respect the specified aspect ratio and keep the full cinematic silhouette inside frame",
+    "不裁頭、不裁手、不自拍感",
+  ].join("，");
+}
+
+function buildFinalMakeupText(form) {
+  const makeup = compactText(form.makeup, 110);
+  const base = makeup || "成熟真人電影妝感，保留自然皮膚紋理、原始五官比例與真實年齡感。";
+  return `${base} 妝容只影響色彩、質地與光澤，不重塑五官或臉型。`;
 }
 
 function buildBodyProportionStabilizationText(form = DEFAULT_FORM) {
@@ -649,19 +756,46 @@ export function buildPrompt(input = {}) {
 }
 
 export function buildChatGptInstruction(input = {}) {
-  const prompt = buildPrompt(input);
-  const fixedCore = getFixedCorePrompt();
-  const { outputStart, nextStart } = findAfterOutputFormatSection(fixedCore);
-
-  if (outputStart === -1 || nextStart === -1 || nextStart <= outputStart) {
-    return [fixedCore, "", prompt].join("\n");
+  const form = normalizeForm(input);
+  if (!form.theme) {
+    throw new Error("主題為必填欄位");
   }
 
+  const theme = form.theme;
+  const sceneInput = buildSceneInput(form, theme);
+  const costumeInput = buildCostumeLayerText(form, theme);
+  const category = form.category || inferCategory(theme, costumeInput, sceneInput);
+  const ratio = effectiveOutputRatio({ ...form, category });
+  const ratioText = RATIO_COMPOSITION_TEXT[ratio] || RATIO_COMPOSITION_TEXT[DEFAULT_FORM.ratio];
+  const ratioNotice =
+    ratio !== form.ratio
+      ? `比例修正：此主題改用 ${ratioText}，避免性感寫真構圖或身體比例漂移。`
+      : "";
+
   return [
-    fixedCore.slice(0, outputStart).trimEnd(),
-    prompt,
-    fixedCore.slice(nextStart).trimStart(),
-  ].join("\n\n");
+    `請根據上傳真人照片生成 ${ratio} 真人電影級奇幻海報。`,
+    ratioNotice,
+    "",
+    buildFinalIdentityText(),
+    "",
+    `分類：${category}`,
+    `主題：${theme}`,
+    `風格：${buildFinalStyleText(form, category, theme)}`,
+    "",
+    `構圖：${buildFinalCompositionText(form, ratio)}`,
+    "",
+    `服裝：${buildFinalCostumeText(form, category, theme)}`,
+    "",
+    `妝容：${buildFinalMakeupText(form)}`,
+    "",
+    `場景：${buildFinalSceneText(form, category, theme)}`,
+    "",
+    `動作：${buildFinalActionText(form, category, theme)}`,
+    "",
+    `光影：${buildFinalLightingText(form, category, theme)}`,
+    "",
+    buildFinalNegativeText(),
+  ].filter((part) => part !== "").join("\n");
 }
 
 export function estimatePromptHealth(prompt) {

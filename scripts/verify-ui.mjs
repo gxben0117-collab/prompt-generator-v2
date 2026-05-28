@@ -144,7 +144,7 @@ try {
     await page.reload({ waitUntil: "domcontentloaded" });
 
     const title = await page.title();
-    if (title !== "出圖自組咒語生產器 v1.12") {
+    if (title !== "出圖自組咒語生產器 v1.13") {
       throw new Error(`${viewport.name}: unexpected page title ${title}`);
     }
 
@@ -152,8 +152,8 @@ try {
     if ((await page.getByRole("heading", { name: /出圖自組咒語生產器/ }).count()) !== 1) {
       throw new Error(`${viewport.name}: visible app name was not updated`);
     }
-    if ((await page.getByText("v1.12", { exact: true }).count()) < 1) {
-      throw new Error(`${viewport.name}: visible version v1.12 missing`);
+    if ((await page.getByText("v1.13", { exact: true }).count()) < 1) {
+      throw new Error(`${viewport.name}: visible version v1.13 missing`);
     }
     if ((await page.getByText("最高原則：真人鎖臉優先於所有華麗主視覺，不讓角色滑回 AI 仙女臉。", { exact: true }).count()) !== 1) {
       throw new Error(`${viewport.name}: visible product principle missing`);
@@ -392,19 +392,19 @@ try {
     if (!promptText.includes(typedTheme)) {
       throw new Error(`${viewport.name}: prompt did not include theme after compose`);
     }
-    if (!promptText.includes("【輸出格式】")) {
-      throw new Error(`${viewport.name}: output format section missing`);
+    if (!promptText.includes("請根據上傳真人照片生成")) {
+      throw new Error(`${viewport.name}: compact ChatGPT prompt opening missing`);
     }
-    if (!promptText.includes("【真人電影級 AI 電影角色系統｜V4.0 Ultimate】") || !promptText.includes("真人演員被拍進奇幻世界")) {
-      throw new Error(`${viewport.name}: fixed core prompt missing`);
+    if (promptText.includes("【真人電影級 AI 電影角色系統｜V4.0 Ultimate】") || promptText.includes("【輸出格式】")) {
+      throw new Error(`${viewport.name}: full mother template leaked into final prompt`);
     }
-    if (!promptText.includes("50mm 全片幅中遠景電影構圖")) {
+    if (!promptText.includes("構圖：50mm 全片幅")) {
       throw new Error(`${viewport.name}: fixed 50mm camera language missing`);
     }
-    if (!promptText.includes("人物構圖：膝蓋以上")) {
+    if (!promptText.includes("膝蓋以上完整入鏡")) {
       throw new Error(`${viewport.name}: selected camera framing did not enter prompt`);
     }
-    if (!promptText.includes("主視覺模式：暗黑夜宴電影")) {
+    if (!promptText.includes("暗黑夜宴電影主視覺")) {
       throw new Error(`${viewport.name}: visual mode did not enter prompt`);
     }
     if (!promptText.includes("deep wine-red silk") || !promptText.includes("amethyst violet atmosphere")) {
@@ -420,13 +420,13 @@ try {
       throw new Error(`${viewport.name}: extra generated-layer sections leaked into prompt`);
     }
     if (!promptText.includes("分類：測試分類") || !promptText.includes(`主題：${typedTheme}`)) {
-      throw new Error(`${viewport.name}: UI fields were not inserted into output format section`);
+      throw new Error(`${viewport.name}: UI fields were not inserted into compact prompt`);
     }
-    if (!promptText.includes("服裝：") || !promptText.includes("妝容：") || !promptText.includes("場景：")) {
-      throw new Error(`${viewport.name}: five-field prompt structure missing`);
+    if (!promptText.includes("服裝：") || !promptText.includes("妝容：") || !promptText.includes("場景：") || !promptText.includes("動作：") || !promptText.includes("光影：") || !promptText.includes("負面：")) {
+      throw new Error(`${viewport.name}: compact final prompt structure missing`);
     }
     if (!promptText.includes("原始臉型") || !promptText.includes("原始眼型") || !promptText.includes("原始鼻型")) {
-      throw new Error(`${viewport.name}: fixed facial identity lock missing`);
+      throw new Error(`${viewport.name}: compact facial identity lock missing`);
     }
     if (metrics.horizontalOverflow) {
       throw new Error(`${viewport.name}: horizontal overflow detected`);
