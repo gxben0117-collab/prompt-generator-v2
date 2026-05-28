@@ -145,7 +145,7 @@ try {
     await page.reload({ waitUntil: "domcontentloaded" });
 
     const title = await page.title();
-    if (title !== "出圖自組咒語生產器 v1.19") {
+    if (title !== "出圖自組咒語生產器 v1.20") {
       throw new Error(`${viewport.name}: unexpected page title ${title}`);
     }
 
@@ -153,8 +153,8 @@ try {
     if ((await page.getByRole("heading", { name: /出圖自組咒語生產器/ }).count()) !== 1) {
       throw new Error(`${viewport.name}: visible app name was not updated`);
     }
-    if ((await page.getByText("v1.19", { exact: true }).count()) < 1) {
-      throw new Error(`${viewport.name}: visible version v1.19 missing`);
+    if ((await page.getByText("v1.20", { exact: true }).count()) < 1) {
+      throw new Error(`${viewport.name}: visible version v1.20 missing`);
     }
     if ((await page.getByText("最高原則：真人鎖臉優先於所有華麗主視覺，不讓角色滑回 AI 仙女臉。", { exact: true }).count()) !== 1) {
       throw new Error(`${viewport.name}: visible product principle missing`);

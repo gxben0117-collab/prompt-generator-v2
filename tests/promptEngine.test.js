@@ -420,6 +420,41 @@ describe("prompt engine", () => {
       expect(profile.sceneLighting).toContain("臉部明亮可辨識");
     }
 
+    const secondWaveExpectations = [
+      ["wave-wuxia-", "武俠江湖 / 戰場女將", 10],
+      ["wave-xianxia-", "仙俠神話 / 古裝陸劇", 40],
+      ["wave-travel-", "世界景點旅拍", 10],
+      ["wave-modern-", "現代都市 / 街拍電影", 10],
+    ];
+    for (const [idPrefix, parentCategory, expectedCount] of secondWaveExpectations) {
+      const profiles = WORLD_LAYER_PROFILES.filter((profile) => profile.id.startsWith(idPrefix));
+      expect(profiles, idPrefix).toHaveLength(expectedCount);
+      for (const profile of profiles) {
+        expect(parentCategoryForProfile(profile)).toBe(parentCategory);
+        expect(profile.cupSize).toBe("正常比例");
+        expect(Object.keys(profile.layers)).toHaveLength(10);
+        expect(profile.costume).toContain("保留上傳人物原始臉部辨識度");
+        expect(profile.makeup).toContain("保留上傳真人原始臉型");
+        expect(profile.sceneEnvironment).toContain("背景預設不放路人");
+        expect(profile.sceneAction).toContain("手不遮臉");
+        expect(profile.sceneLighting).toContain("臉部明亮可辨識");
+      }
+    }
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toEqual(
+      expect.arrayContaining([
+        "清水鎮藥香・長相思醫女",
+        "大唐飛天・杏金伎樂",
+        "嫦娥・月宮桂影",
+        "九天玄女・雲闕兵符",
+        "七仙女・紅霞織錦",
+        "台北捷運・夜色懸疑女主",
+        "太魯閣白石峽・山風旅人",
+        "紅袖藏刀・茶樓女俠",
+      ]),
+    );
+    expect(WORLD_LAYER_PROFILES.find((profile) => profile.id === "wave-xianxia-changxiangsi-qingshui-healer")?.sceneAction).toContain("坐姿");
+    expect(WORLD_LAYER_PROFILES.find((profile) => profile.id === "wave-wuxia-red-sleeve-saber-teahouse")?.sceneAction).toContain("泡茶");
+
     const curatedProfiles = WORLD_LAYER_PROFILES.filter((profile) => BULK_PARENT_CATEGORIES.includes(profile.parentCategory));
     expect(curatedProfiles.length).toBeGreaterThanOrEqual(100);
     for (const parentCategory of BULK_PARENT_CATEGORIES) {
