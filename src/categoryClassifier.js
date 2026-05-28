@@ -171,5 +171,6 @@ export function parentCategoryForText(value) {
 }
 
 export function parentCategoryForProfile(profile) {
+  if (profile?.parentCategory) return profile.parentCategory;
   return parentCategoryForText(profileCategoryText(profile));
 }

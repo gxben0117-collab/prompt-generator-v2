@@ -20,6 +20,19 @@ import {
 } from "../src/promptEngine.js";
 import { parentCategoryForProfile } from "../src/categoryClassifier.js";
 
+const BULK_PARENT_CATEGORIES = [
+  "歷史小說名著人物",
+  "中國歷代服裝",
+  "武俠江湖 / 戰場女將",
+  "仙俠神話 / 古裝陸劇",
+  "東方異域 / 絲路西域",
+  "奇幻異世界 / 暗黑王族",
+  "西方古典 / 歐陸史詩",
+  "世界景點旅拍",
+  "現代都市 / 街拍電影",
+  "花園童話 / 自然精靈",
+];
+
 const BATCH_ROLE_LABELS = [
   "月下紅衣花神",
   "月宮白玉仙姬",
@@ -144,6 +157,16 @@ describe("prompt engine", () => {
     expect(parentCategoryForProfile(byId("changan-phoenix-candle-bride"))).toBe("中國歷代服裝");
     expect(parentCategoryForProfile(byId("sky-white-dragon-saint"))).toBe("仙俠神話 / 古裝陸劇");
     expect(parentCategoryForProfile(byId("moon-weaving-dream-enchantress"))).toBe("奇幻異世界 / 暗黑王族");
+    expect(parentCategoryForProfile(byId("jinpingmei-pan-jinlian-golden-lotus"))).toBe("歷史小說名著人物");
+    expect(parentCategoryForProfile(byId("song-tea-house-jade-lady"))).toBe("中國歷代服裝");
+    expect(parentCategoryForProfile(byId("wuxia-longmen-spear-general"))).toBe("武俠江湖 / 戰場女將");
+    expect(parentCategoryForProfile(byId("xianxia-nine-tail-moon-priestess"))).toBe("仙俠神話 / 古裝陸劇");
+    expect(parentCategoryForProfile(byId("silkroad-loulan-sand-queen"))).toBe("東方異域 / 絲路西域");
+    expect(parentCategoryForProfile(byId("dark-abyss-lilith-court-queen"))).toBe("奇幻異世界 / 暗黑王族");
+    expect(parentCategoryForProfile(byId("western-versailles-mirror-duchess"))).toBe("西方古典 / 歐陸史詩");
+    expect(parentCategoryForProfile(byId("travel-taipei-jiufen-lantern-lady"))).toBe("世界景點旅拍");
+    expect(parentCategoryForProfile(byId("modern-taipei-rain-neon-editor"))).toBe("現代都市 / 街拍電影");
+    expect(parentCategoryForProfile(byId("garden-wisteria-fairy-princess"))).toBe("花園童話 / 自然精靈");
   });
 
   it("ships built-in role and costume suggestions", () => {
@@ -154,6 +177,9 @@ describe("prompt engine", () => {
     expect(ROLE_SUGGESTIONS).toContain("貂蟬・閉月舞姬");
     expect(ROLE_SUGGESTIONS).toContain("林黛玉・瀟湘詩魂");
     expect(ROLE_SUGGESTIONS).toContain("黃蓉・桃花島俠女");
+    expect(ROLE_SUGGESTIONS).toContain("潘金蓮・金蓮繡閣");
+    expect(ROLE_SUGGESTIONS).toContain("宋韻茶樓・玉盞仕女");
+    expect(ROLE_SUGGESTIONS).toContain("深淵莉莉絲・黑玫王后");
     expect(ROLE_SUGGESTIONS).toContain("大唐飛天");
     expect(ROLE_SUGGESTIONS).toContain("長相思王姬");
     expect(ROLE_SUGGESTIONS).toContain("墮羽夜庭魔姬");
@@ -334,7 +360,7 @@ describe("prompt engine", () => {
     expect(roseFairy.layers.costumeLayer10).toContain("夢幻奢華花園精靈女王輪廓");
     expect(roseFairy.sceneLighting).toContain("luminous rose fantasy glamour lighting");
     const historicalProfiles = WORLD_LAYER_PROFILES.filter((profile) => parentCategoryForProfile(profile) === "歷史小說名著人物");
-    expect(historicalProfiles).toHaveLength(16);
+    expect(historicalProfiles).toHaveLength(26);
     expect(historicalProfiles.map((profile) => profile.title)).toEqual(
       expect.arrayContaining([
         "貂蟬・閉月舞姬",
@@ -354,6 +380,21 @@ describe("prompt engine", () => {
         "木婉清・黑紗孤刃",
       ]),
     );
+    const curatedProfiles = WORLD_LAYER_PROFILES.filter((profile) => BULK_PARENT_CATEGORIES.includes(profile.parentCategory));
+    expect(curatedProfiles).toHaveLength(100);
+    for (const parentCategory of BULK_PARENT_CATEGORIES) {
+      const profiles = curatedProfiles.filter((profile) => profile.parentCategory === parentCategory);
+      expect(profiles, parentCategory).toHaveLength(10);
+      for (const profile of profiles) {
+        expect(parentCategoryForProfile(profile)).toBe(parentCategory);
+        expect(profile.cupSize).toBe(parentCategory === "奇幻異世界 / 暗黑王族" ? "K" : "正常比例");
+        expect(profile.costume).toContain("保留上傳人物原始臉部辨識度");
+        expect(profile.makeup).toContain("保留上傳真人原始臉型");
+        expect(profile.sceneEnvironment).toContain("背景預設不放路人");
+        expect(profile.sceneAction).toContain("臉部保持正面或微側正面");
+        expect(Object.keys(profile.layers)).toHaveLength(10);
+      }
+    }
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("幽蛛夜宴魅姬");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("血月絲絨魔后");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("龍宮海國・滄海龍后");

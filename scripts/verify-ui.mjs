@@ -145,7 +145,7 @@ try {
     await page.reload({ waitUntil: "domcontentloaded" });
 
     const title = await page.title();
-    if (title !== "出圖自組咒語生產器 v1.15") {
+    if (title !== "出圖自組咒語生產器 v1.16") {
       throw new Error(`${viewport.name}: unexpected page title ${title}`);
     }
 
@@ -153,8 +153,8 @@ try {
     if ((await page.getByRole("heading", { name: /出圖自組咒語生產器/ }).count()) !== 1) {
       throw new Error(`${viewport.name}: visible app name was not updated`);
     }
-    if ((await page.getByText("v1.15", { exact: true }).count()) < 1) {
-      throw new Error(`${viewport.name}: visible version v1.15 missing`);
+    if ((await page.getByText("v1.16", { exact: true }).count()) < 1) {
+      throw new Error(`${viewport.name}: visible version v1.16 missing`);
     }
     if ((await page.getByText("最高原則：真人鎖臉優先於所有華麗主視覺，不讓角色滑回 AI 仙女臉。", { exact: true }).count()) !== 1) {
       throw new Error(`${viewport.name}: visible product principle missing`);
@@ -253,6 +253,10 @@ try {
 
     await clickSingle(page, page.locator('[data-role-parent="歷史小說名著人物"]'), "歷史小說名著人物 parent", viewport.name);
     await expectNoOldChipUi(page, viewport.name);
+    await page.locator('input[name="profileSearch"]').fill("潘金蓮");
+    if ((await page.locator('[data-world-profile="jinpingmei-pan-jinlian-golden-lotus"]').count()) !== 1) {
+      throw new Error(`${viewport.name}: historical novel parent search did not reveal Jin Ping Mei profile`);
+    }
     await page.locator('input[name="profileSearch"]').fill("黃蓉");
     if ((await page.locator('[data-world-profile="huang-rong-peach-blossom-heroine"]').count()) !== 1) {
       throw new Error(`${viewport.name}: historical novel parent search did not reveal Huang Rong profile`);
@@ -265,12 +269,20 @@ try {
 
     await clickSingle(page, page.locator('[data-role-parent="中國歷代服裝"]'), "中國歷代服裝 parent", viewport.name);
     await expectNoOldChipUi(page, viewport.name);
+    await page.locator('input[name="profileSearch"]').fill("宋韻茶樓");
+    if ((await page.locator('[data-world-profile="song-tea-house-jade-lady"]').count()) !== 1) {
+      throw new Error(`${viewport.name}: Chinese historical parent search did not reveal Song tea-house profile`);
+    }
     await page.locator('input[name="profileSearch"]').fill("書香");
     if ((await page.locator('[data-world-profile="scholar-study-calligraphy-lady"]').count()) !== 1) {
       throw new Error(`${viewport.name}: Chinese historical parent search did not reveal scholar profile`);
     }
 
     await clickSingle(page, page.locator('[data-role-parent="奇幻異世界 / 暗黑王族"]'), "dark fantasy parent", viewport.name);
+    await page.locator('input[name="profileSearch"]').fill("深淵莉莉絲");
+    if ((await page.locator('[data-world-profile="dark-abyss-lilith-court-queen"]').count()) !== 1) {
+      throw new Error(`${viewport.name}: dark fantasy parent search did not reveal new abyss queen profile`);
+    }
     await page.locator('input[name="profileSearch"]').fill("黑羽墮夜");
     if ((await page.locator('[data-world-profile="fallen-elegy-black-wing-angel"]').count()) !== 1) {
       throw new Error(`${viewport.name}: dark fantasy parent search did not reveal black-wing queen profile`);
