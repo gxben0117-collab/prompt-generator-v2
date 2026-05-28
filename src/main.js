@@ -244,10 +244,14 @@ function selectedProfileCard(state) {
       <div>
         <div class="sec-label">目前模板角色</div>
         <strong>${escapeHtml(profile.title)}</strong>
-        <small>${escapeHtml(profile.category)}</small>
+        <small>${escapeHtml(profile.category)}${state.cupSize ? `｜罩杯 ${escapeHtml(state.cupSize)}` : ""}</small>
       </div>
       <button type="button" class="secondary small-btn" data-scroll-target="template-picker">重新選模板</button>
     </div>`;
+}
+
+function profileDefaultCupSize(profile) {
+  return parentCategoryForProfile(profile) === "奇幻異世界 / 暗黑王族" ? "J" : "";
 }
 
 function profileCountText(activeParentCategory, activeCategory, searchTerm) {
@@ -340,6 +344,11 @@ function render() {
                   <input name="category" list="role-category-list" value="${escapeHtml(state.category)}" placeholder="例：仙俠修真、魅姬系列、世界地標旅拍" />
                   <datalist id="role-category-list">${categoryOptions()}</datalist>
                   <small class="field-help">可空白；空白時會依主題、服裝、場景自動推定。</small>
+                </label>
+                <label>
+                  <span>罩杯</span>
+                  <input name="cupSize" value="${escapeHtml(state.cupSize)}" placeholder="例：J" />
+                  <small class="field-help">有填才會寫入短版咒語的真實人體骨架；暗黑王族角色卡預設 J。</small>
                 </label>
               </div>
               <div class="choice-section">
@@ -616,6 +625,9 @@ function applyWorldLayerProfile(form, profileId) {
   }
   if (profile.sceneLighting && form.elements.sceneLighting) {
     form.elements.sceneLighting.value = profile.sceneLighting;
+  }
+  if (form.elements.cupSize) {
+    form.elements.cupSize.value = profile.cupSize || profileDefaultCupSize(profile);
   }
   COSTUME_LAYERS.forEach((layer) => {
     if (profile.layers[layer.id]) {

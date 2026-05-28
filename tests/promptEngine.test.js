@@ -1597,11 +1597,12 @@ describe("prompt engine", () => {
     expect(instruction).not.toContain("罩杯:J");
   });
 
-  it("keeps the mother skeleton internal but avoids cup-driven final prompts", () => {
+  it("writes cup size into the final skeleton only when the role card field has data", () => {
     const darkInstruction = buildChatGptInstruction({
       category: "奇幻異世界 / 暗黑王族",
       theme: "紫蝶夜宴魅魔",
       scene: "暗紫絲絨寢宮",
+      cupSize: "J",
     });
     const normalInstruction = buildChatGptInstruction({
       category: "中國朝代古裝 / 中國神話",
@@ -1612,9 +1613,11 @@ describe("prompt engine", () => {
     expect(getHiddenSystemPrompt()).toContain("【真實人體骨架】");
     expect(getHiddenSystemPrompt()).toContain("- 罩杯j");
     expect(darkInstruction).toContain("真實人體骨架");
+    expect(darkInstruction).toContain('胸腔厚度、罩杯 "J"、軀幹深度');
     expect(darkInstruction).toContain("不指定罩杯");
     expect(darkInstruction).not.toContain("- 罩杯:J");
     expect(darkInstruction).not.toContain("真實人體骨架追加：罩杯:J");
+    expect(normalInstruction).not.toContain('罩杯 "J"');
     expect(normalInstruction).not.toContain("- 罩杯j");
     expect(normalInstruction).not.toContain("- 罩杯:J");
   });

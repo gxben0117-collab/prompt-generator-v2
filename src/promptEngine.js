@@ -81,6 +81,7 @@ export const DEFAULT_FORM = {
   costume: "",
   ...Object.fromEntries(COSTUME_LAYERS.map((layer) => [layer.id, ""])),
   makeup: "",
+  cupSize: "",
   selectedProfileId: "",
   finalPrompt: "",
 };
@@ -154,6 +155,7 @@ export function normalizeForm(input = {}) {
     frameEvent: sanitizeInput(form.frameEvent),
     costume: sanitizeInput(form.costume),
     makeup: sanitizeInput(form.makeup),
+    cupSize: sanitizeInput(form.cupSize),
     selectedProfileId: sanitizeInput(form.selectedProfileId),
     finalPrompt: String(form.finalPrompt || ""),
   };
@@ -401,11 +403,16 @@ function compactLayerValue(value = "") {
     .trim();
 }
 
-function buildFinalIdentityText() {
+function buildCupSizeSkeletonText(form = DEFAULT_FORM) {
+  const cupSize = compactText(form.cupSize, 12);
+  return cupSize ? `、罩杯 "${cupSize}"` : "";
+}
+
+function buildFinalIdentityText(form = DEFAULT_FORM) {
   return [
     "最高優先：保留上傳照片中的原始真人臉部身份，不換臉、不美化成 AI 美女，不改變眼型、鼻型、嘴型、臉型、下顎線、成熟年齡感與皮膚質感。",
     "真人身份優先：保留原始臉型、原始眼型、原始鼻型、原始嘴型、五官比例、可辨識特徵、自然臉部不對稱與真人攝影感；臉部正面或微側正面看向鏡頭。",
-    "真實人體骨架：平衡肩寬、真實鎖骨、胸腔厚度、軀幹深度、骨盆比例、人體重心、四肢比例與脊椎結構；避免頭大、肩窄、軀幹壓縮或臉貼在服裝上的 AI 感。",
+    `真實人體骨架：平衡肩寬、真實鎖骨、胸腔厚度${buildCupSizeSkeletonText(form)}、軀幹深度、骨盆比例、人體重心、四肢比例與脊椎結構；避免頭大、肩窄、軀幹壓縮或臉貼在服裝上的 AI 感。`,
   ].join("\n");
 }
 
@@ -776,7 +783,7 @@ export function buildChatGptInstruction(input = {}) {
     `請根據上傳真人照片生成 ${ratio} 真人電影級奇幻海報。`,
     ratioNotice,
     "",
-    buildFinalIdentityText(),
+    buildFinalIdentityText(form),
     "",
     `分類：${category}`,
     `主題：${theme}`,
