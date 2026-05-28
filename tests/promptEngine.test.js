@@ -92,6 +92,7 @@ const BATCH_PROFILE_EXPECTATIONS = [
   ["qingluan-temple-hidden-saint", "青鸞神殿隱世聖女", "青鸞神殿隱世聖女電影輪廓", "青鸞神殿隱世聖女"],
   ["purple-sakura-forbidden-onmyoji", "紫櫻禁術陰陽師", "禁術系陰陽師巫女電影 silhouette", "紫櫻禁術陰陽師"],
   ["jiu-mo-crimson-phoenix-saint", "九漠沙海之赤鳳聖女", "赤鳳聖女電影輪廓", "九漠沙海之赤鳳聖女"],
+  ["water-mirror-crystal-flower-saint", "水鏡晶花聖女", "水鏡晶花聖女真人身份保留主視覺", "上方水面倒影"],
   ["tang-western-temple-dancer", "大唐西域舞姬", "西域舞姬華麗輪廓", "大唐西域舞姬"],
   ["tang-western-temple-priestess", "大唐西域神殿之祭司", "東方奇幻神職者輪廓", "敦煌神殿之黃金暮光"],
   ["exotic-sand-ancient-temple-saint", "異域沙海古殿聖女", "古殿聖女史詩輪廓", "黑夜霜穹之聖座獨思"],
@@ -205,6 +206,7 @@ describe("prompt engine", () => {
     const abyssSpider = WORLD_LAYER_PROFILES.find((profile) => profile.id === "abyss-spider-enchantress");
     const bloodMoonSpider = WORLD_LAYER_PROFILES.find((profile) => profile.id === "blood-moon-spider-empress");
     const dragonSeaEmpress = WORLD_LAYER_PROFILES.find((profile) => profile.id === "dragon-palace-sea-empress");
+    const waterMirrorCrystal = WORLD_LAYER_PROFILES.find((profile) => profile.id === "water-mirror-crystal-flower-saint");
     const xitangTravel = WORLD_LAYER_PROFILES.find((profile) => profile.id === "xitang-rain-jiangnan-travel");
     const moonQin = WORLD_LAYER_PROFILES.find((profile) => profile.id === "moon-qin-ancient-courtyard");
     const fallenJudge = WORLD_LAYER_PROFILES.find((profile) => profile.id === "fallen-ruins-winged-judge");
@@ -437,6 +439,17 @@ describe("prompt engine", () => {
     expect(dragonSeaEmpress.sceneAction).toContain("單手持龍珠");
     expect(dragonSeaEmpress.sceneAction).toContain("閉眼漂浮");
     expect(dragonSeaEmpress.sceneLighting).toContain("underwater volumetric light");
+    expect(waterMirrorCrystal.category).toBe("月光奇幻／水鏡晶花／高級寫實奇幻");
+    expect(waterMirrorCrystal.aliases).toContain("水下晶花女主視覺");
+    expect(waterMirrorCrystal.makeup).toContain("保留原始臉型");
+    expect(waterMirrorCrystal.makeup).toContain("不拉長眼型");
+    expect(waterMirrorCrystal.scene).toContain("上方水面倒影");
+    expect(waterMirrorCrystal.sceneEnvironment).toContain("深藍黑水下空間");
+    expect(waterMirrorCrystal.sceneAction).toContain("一手輕托發光透明晶花");
+    expect(waterMirrorCrystal.sceneLighting).toContain("cinematic caustics");
+    expect(waterMirrorCrystal.layers.costumeLayer4).toContain("underwater flowing silk drapery");
+    expect(waterMirrorCrystal.layers.costumeLayer8).toContain("透明發光晶花");
+    expect(waterMirrorCrystal.layers.costumeLayer10).toContain("原始臉部辨識度");
     expect(xitangTravel.category).toBe("江南古鎮／電影旅拍／寫實東方美學");
     expect(xitangTravel.layers.costumeLayer1).toContain("warm ivory cotton-linen foundation");
     expect(xitangTravel.layers.costumeLayer4).toContain("ink-wash shawl drapery");

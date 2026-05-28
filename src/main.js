@@ -24,7 +24,7 @@ const HISTORY_KEY = "hongbing-travel-prompt-history";
 const UI_PREFS_KEY = "hongbing-travel-prompt-ui-prefs";
 const HISTORY_LIMIT = 5;
 const ALL_FILTER_LABEL = "全部";
-const APP_VERSION = "v1.03";
+const APP_VERSION = "v1.04";
 const PARENT_ROLE_CATEGORIES = [
   {
     label: "中國歷代服裝",
@@ -73,6 +73,11 @@ const PARENT_ROLE_CATEGORIES = [
       "神域",
       "鳳凰",
       "白龍",
+      "水鏡",
+      "晶花",
+      "深海",
+      "水下",
+      "倒影",
       "龍宮",
       "月宮",
       "瑤池",
@@ -129,7 +134,7 @@ const PARENT_ROLE_CATEGORIES = [
   },
   {
     label: "花園童話 / 自然精靈",
-    keywords: ["花園", "花靈", "森林", "精靈", "童話", "白玫", "花神", "夢幻", "花海", "自然", "紫陽花"],
+    keywords: ["花園", "花靈", "森林", "精靈", "童話", "白玫", "花神", "夢幻", "花海", "晶花", "水鏡", "自然", "紫陽花"],
   },
 ];
 
