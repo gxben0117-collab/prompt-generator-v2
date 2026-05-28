@@ -145,7 +145,7 @@ try {
     await page.reload({ waitUntil: "domcontentloaded" });
 
     const title = await page.title();
-    if (title !== "出圖自組咒語生產器 v1.17") {
+    if (title !== "出圖自組咒語生產器 v1.18") {
       throw new Error(`${viewport.name}: unexpected page title ${title}`);
     }
 
@@ -153,8 +153,8 @@ try {
     if ((await page.getByRole("heading", { name: /出圖自組咒語生產器/ }).count()) !== 1) {
       throw new Error(`${viewport.name}: visible app name was not updated`);
     }
-    if ((await page.getByText("v1.17", { exact: true }).count()) < 1) {
-      throw new Error(`${viewport.name}: visible version v1.17 missing`);
+    if ((await page.getByText("v1.18", { exact: true }).count()) < 1) {
+      throw new Error(`${viewport.name}: visible version v1.18 missing`);
     }
     if ((await page.getByText("最高原則：真人鎖臉優先於所有華麗主視覺，不讓角色滑回 AI 仙女臉。", { exact: true }).count()) !== 1) {
       throw new Error(`${viewport.name}: visible product principle missing`);
@@ -206,6 +206,15 @@ try {
     }
     if ((await page.locator('input[name="fabricMotion"]').count()) !== 3) {
       throw new Error(`${viewport.name}: fabric motion block-grid count mismatch`);
+    }
+    if ((await page.getByRole("button", { name: "完成出圖 + 複製完整咒語" }).count()) !== 1) {
+      throw new Error(`${viewport.name}: compose-and-copy button missing`);
+    }
+    if ((await page.getByRole("button", { name: "完成出圖咒語", exact: true }).count()) !== 0) {
+      throw new Error(`${viewport.name}: old compose-only button still exists`);
+    }
+    if ((await page.getByRole("button", { name: "複製完整咒語", exact: true }).count()) !== 0) {
+      throw new Error(`${viewport.name}: old copy-only button still exists`);
     }
     if (!(await page.locator('input[name="visualMode"][value="Netflix 東方奇幻"]').isChecked())) {
       throw new Error(`${viewport.name}: Netflix eastern fantasy mode should be selected by default`);
@@ -350,6 +359,13 @@ try {
     }
 
     await page.getByRole("button", { name: "清空" }).click();
+    await page.locator('input[name="profileSearch"]').fill("白玫仙庭");
+    await clickSingle(page, page.locator('[data-world-profile="white-rose-light-flower-spirit"]'), "white-rose-light-flower-spirit", viewport.name);
+    if (await page.locator(".selected-profile-card").getByText("罩杯 正常比例", { exact: true }).isVisible()) {
+      throw new Error(`${viewport.name}: normal cup-size text should be hidden in selected template card`);
+    }
+
+    await page.getByRole("button", { name: "清空" }).click();
     await page.getByRole("button", { name: "盛唐花鈿妝，柔霧底妝，眉眼修飾但不改變骨相" }).click();
     const suggestedMakeup = await page.locator('input[name="makeup"]').inputValue();
     if (!suggestedMakeup.includes("盛唐花鈿妝")) {
@@ -403,7 +419,7 @@ try {
     const actionValue = await page.locator('textarea[name="sceneAction"]').inputValue();
     const lightingValue = await page.locator('textarea[name="sceneLighting"]').inputValue();
 
-    await page.getByRole("button", { name: "完成出圖咒語" }).click();
+    await page.getByRole("button", { name: "完成出圖 + 複製完整咒語" }).click();
     const historyItems = page.locator("[data-history-id]");
     if ((await historyItems.count()) < 1) {
       throw new Error(`${viewport.name}: prompt history was not recorded`);

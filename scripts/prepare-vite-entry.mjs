@@ -9,8 +9,8 @@ const html = `<!doctype html>
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="出圖自組咒語生產器 v1.17：母板內部治理、短版 ChatGPT 出圖咒語輸出工具" />
-    <title>出圖自組咒語生產器 v1.17</title>
+    <meta name="description" content="出圖自組咒語生產器 v1.18：母板內部治理、短版 ChatGPT 出圖咒語輸出工具" />
+    <title>出圖自組咒語生產器 v1.18</title>
   </head>
   <body>
     <div id="app"></div>

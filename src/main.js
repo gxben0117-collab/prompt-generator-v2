@@ -29,7 +29,7 @@ const STORAGE_KEY = "hongbing-travel-prompt-state";
 const HISTORY_KEY = "hongbing-travel-prompt-history";
 const UI_PREFS_KEY = "hongbing-travel-prompt-ui-prefs";
 const HISTORY_LIMIT = 5;
-const APP_VERSION = "v1.17";
+const APP_VERSION = "v1.18";
 const PRODUCT_PRINCIPLE = "最高原則：真人鎖臉優先於所有華麗主視覺，不讓角色滑回 AI 仙女臉。";
 const RATIO_LABELS = {
   "4:5": "4:5 商業海報",
@@ -238,13 +238,14 @@ function selectedProfileCard(state) {
         </div>
       </div>`;
   }
+  const cupSizeLabel = state.cupSize && state.cupSize !== "正常比例" ? `｜罩杯 ${escapeHtml(state.cupSize)}` : "";
 
   return `
     <div class="selected-profile-card">
       <div>
         <div class="sec-label">目前模板角色</div>
         <strong>${escapeHtml(profile.title)}</strong>
-        <small>${escapeHtml(profile.category)}${state.cupSize ? `｜罩杯 ${escapeHtml(state.cupSize)}` : ""}</small>
+        <small>${escapeHtml(profile.category)}${cupSizeLabel}</small>
       </div>
       <button type="button" class="secondary small-btn" data-scroll-target="template-picker">重新選模板</button>
     </div>`;
@@ -469,8 +470,7 @@ function render() {
           </section>
 
           <div class="actions">
-            <button type="button" data-action="compose">完成出圖咒語</button>
-            <button type="button" data-action="copy" class="secondary">複製完整咒語</button>
+            <button type="button" data-action="compose-copy">完成出圖 + 複製完整咒語</button>
             <button type="button" data-action="download" class="secondary">下載 .txt</button>
             <button type="button" data-action="reset" class="ghost">清空</button>
           </div>
@@ -480,7 +480,7 @@ function render() {
           <section class="output-stack" aria-label="輸出與紀錄">
             <div class="panel result">
               <div class="panel-head"><h2>上傳照片後貼給 ChatGPT 的生成層咒語</h2></div>
-              <textarea id="prompt-output" readonly placeholder="按「完成出圖咒語」後會顯示：不複製母板全文的導演式生成咒語">${escapeHtml(state.finalPrompt)}</textarea>
+              <textarea id="prompt-output" readonly placeholder="按「完成出圖 + 複製完整咒語」後會顯示並複製：不複製母板全文的導演式生成咒語">${escapeHtml(state.finalPrompt)}</textarea>
             </div>
 
             <div class="panel history-panel">
@@ -503,7 +503,7 @@ function composePrompt(form) {
   if (!state.theme) {
     setStatus("主題為必填欄位");
     form.querySelector('[name="theme"]').focus();
-    return;
+    return "";
   }
 
   const finalPrompt = buildChatGptInstruction(state);
@@ -513,6 +513,21 @@ function composePrompt(form) {
   document.querySelector("#prompt-output").value = finalPrompt;
   setStatus(`已完成組合｜${promptStats(finalPrompt)}`);
   refreshHistory();
+  return finalPrompt;
+}
+
+async function composeAndCopyPrompt(form) {
+  const finalPrompt = composePrompt(form);
+  if (!finalPrompt.trim()) return;
+
+  try {
+    await copyText(finalPrompt);
+    setStatus(`已完成並複製咒語｜${promptStats(finalPrompt)}`);
+  } catch {
+    setStatus("已完成組合，但瀏覽器封鎖剪貼簿，請手動全選複製輸出框");
+    document.querySelector("#prompt-output").focus();
+    document.querySelector("#prompt-output").select();
+  }
 }
 
 function bindEvents() {
@@ -545,23 +560,7 @@ function bindEvents() {
   });
 
   document.querySelector('[data-action="expand-scene"]').addEventListener("click", () => expandSceneFields(form));
-  document.querySelector('[data-action="compose"]').addEventListener("click", () => composePrompt(form));
-  document.querySelector('[data-action="copy"]').addEventListener("click", async () => {
-    const value = document.querySelector("#prompt-output").value;
-    if (!value.trim()) {
-      composePrompt(form);
-    }
-    const nextValue = document.querySelector("#prompt-output").value;
-    if (!nextValue.trim()) return;
-    try {
-      await copyText(nextValue);
-      setStatus(`已複製咒語｜${promptStats(nextValue)}`);
-    } catch {
-      setStatus("瀏覽器封鎖剪貼簿，請手動全選複製輸出框");
-      document.querySelector("#prompt-output").focus();
-      document.querySelector("#prompt-output").select();
-    }
-  });
+  document.querySelector('[data-action="compose-copy"]').addEventListener("click", () => composeAndCopyPrompt(form));
   document.querySelector('[data-action="download"]').addEventListener("click", () => downloadPrompt(form));
   document.querySelector('[data-action="reset"]').addEventListener("click", () => resetForm());
   document.querySelector('[data-action="clear-history"]').addEventListener("click", () => clearHistory());
