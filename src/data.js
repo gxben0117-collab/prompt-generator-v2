@@ -1,4 +1,4 @@
-export const RATIOS = ["2:3", "3:2", "4:3", "3:4", "16:9", "9:16"];
+﻿export const RATIOS = ["2:3", "3:2", "4:3", "3:4", "16:9", "9:16"];
 
 export const CAMERA_FRAMINGS = ["全身", "半身", "膝蓋以上", "胸部以上", "遠景"];
 
@@ -401,7 +401,7 @@ export const WORLD_LAYER_PROFILES = [
     scene:
       "南方水岸古鎮夜宴，人物站立於夜晚河岸石橋旁，背景為多層中式古樓與高塔建築，整體具有晚唐江南與鳳凰古城融合的 cinematic eastern riverside atmosphere。",
     sceneEnvironment:
-      "南方水岸古鎮夜宴，前景石橋欄杆、紙傘邊緣與河面暖光倒影，中景人物站立於夜晚河岸石橋旁，遠景多層中式古樓、高塔建築、窗櫺燈火與水岸人群輪廓，形成晚唐江南與鳳凰古城融合的真實空間深度。",
+      "南方水岸古鎮夜宴，前景石橋欄杆、紙傘邊緣與河面暖光倒影，中景人物站立於夜晚河岸石橋旁，遠景多層中式古樓、高塔建築、窗櫺燈火與水岸燈火與建築輪廓，形成晚唐江南與鳳凰古城融合的真實空間深度。",
     sceneAction:
       "人物採自然站姿，單手持紙傘，肩膀與脊椎維持真實平衡，臉部完整面向鏡頭，眼神帶有夜泊停留的安靜情緒，避免 cosplay 擺拍與過度戲劇化動作。",
     sceneLighting:
@@ -2155,7 +2155,7 @@ export const WORLD_LAYER_PROFILES = [
     scene:
       "古典中國書齋與中式書房，書案、書架、筆墨紙硯、牡丹屏風、青花瓷瓶、白梅枝景、庭院陽光與傳統文人環境共同形成文藝電影風。",
     sceneEnvironment:
-      "古典中國書齋與中式書房，前景毛筆、墨硯、書案紙張、青花瓷瓶與白梅枝景，中景人物坐於書桌前 holding calligraphy brush 或微側身站立雙手自然交疊於身前，遠景 bookshelves、牡丹屏風、ink painting tools、庭院陽光與木質窗格，形成 environmental storytelling composition。",
+      "古典中國書齋與中式書房，前景毛筆、墨硯、書案紙張、青花瓷瓶與白梅枝景，中景人物坐於書桌前 holding calligraphy brush 或微側身站立雙手自然交疊於身前，遠景 bookshelves、牡丹屏風、ink painting tools、庭院陽光與木質窗格，形成 single-protagonist literary atmosphere。",
     sceneAction:
       "人物採 mid-writing posture、elegant seated pose 或雙手自然交疊於身前的微側身站姿，手持毛筆正在揮毫書寫詩詞墨寶或安靜站於牡丹屏風前，眼神 gentle scholarly gaze，肩膀與脊椎維持真實坐姿或站姿平衡。",
     sceneLighting:
@@ -2654,7 +2654,7 @@ export const WORLD_LAYER_PROFILES = [
     sceneAction:
       "人物採力量感迎風站姿，右腿向前跨出一步，左腿承重，右手將 mythic dark glaive 斜插入地，左手自然垂放，面部微揚直視鏡頭，巨大羽翼與身體重心保持真實平衡。",
     sceneLighting:
-      "Volumetric Storm Light, vertical god rays, purple emberglow, cold soft edge separation light on dark wings；烏雲中神聖天光垂直打下，紫色魔法火光照亮碎石地面與黑紫羽翼，伴隨 dense smoke、burnt feathers、environmental storytelling air perspective。",
+      "Volumetric Storm Light, vertical god rays, purple emberglow, cold soft edge separation light on dark wings；烏雲中神聖天光垂直打下，紫色魔法火光照亮碎石地面與黑紫羽翼，伴隨 dense smoke、burnt feathers、single-protagonist atmospheric air perspective。",
     layers: {
       costumeLayer1:
         "dark structured silk foundation 使用深黑硬質真絲內襯，依循上半身骨架剪裁並保留安全穿著結構",
@@ -3031,13 +3031,13 @@ export const WORLD_LAYER_PROFILES = [
         "肩部牡丹刺繡、薄紗袖口與飄帶軌跡共同建立盛唐花宴主視覺，而非安靜人物設定卡",
         "金色步搖、紅玉耳墜、青玉腰佩、細金鏈與手部珠飾反射燭光與燈籠暖光",
         "半盤高髮髻搭配金色花簪、紅花細飾與自然波浪髮絲，髮絲受旋身氣流與暖光形成電影邊緣光",
-        "整體形成長安夜宴樂姬真人身份保留主視覺：紅金絲綢、飛舞披帛、花宴燈籠、群演景深與原始臉部辨識度共同構成商業奇幻電影主視覺",
+        "整體形成長安夜宴樂姬真人身份保留主視覺：紅金絲綢、飛舞披帛、花宴燈籠、燈籠景深與原始臉部辨識度共同構成商業奇幻電影主視覺",
       ],
       makeup: "高級盛唐夜宴電影妝效，保留真實面部線條、毛孔、眼周細微紋理與暖色皮膚反光；金棕眼妝、細緻眼線、絲絨紅唇、朱紅花鈿與自然波浪髮絲只改變表面色彩與光澤，不改變眼型、鼻型、下顎線或原始臉部辨識度。",
-      scene: "長安盛唐花宴主視覺，紅金宮燈、牡丹花海、祖母綠帷幕、寶石藍陰影、濕亮反射地面、宴席群演、侍女樂師與遠景宮殿木構共同形成真人身份保留的艷麗東方奇幻歷史電影主視覺場景。",
-      sceneEnvironment: "長安盛唐花宴大殿，前景飛舞桃紅披帛、牡丹花瓣、紅金燭台與濕亮地面反光，中景人物位於畫面能量中心並全身完整入鏡，遠景紅金宮燈、祖母綠帷幕、寶石藍陰影、宴席群演、侍女樂師、花樹與木質宮殿形成世界規模感與電影景深。",
+      scene: "長安盛唐花宴主視覺，紅金宮燈、牡丹花海、祖母綠帷幕、寶石藍陰影、濕亮反射地面、少量儀式剪影、宮燈層次與遠景宮殿木構共同形成真人身份保留的艷麗東方奇幻歷史電影主視覺場景。",
+      sceneEnvironment: "長安盛唐花宴大殿，前景飛舞桃紅披帛、牡丹花瓣、紅金燭台與濕亮地面反光，中景人物位於畫面能量中心並全身完整入鏡，遠景紅金宮燈、祖母綠帷幕、寶石藍陰影、少量儀式剪影、花樹、宮燈層次與木質宮殿形成世界規模感與電影景深。",
       sceneAction: "人物採旋身前行或伸手邀請式動作，眼神直接凝視鏡頭，肩膀與脊椎維持真實平衡，雙臂帶動超長披帛向畫面左右飛展，裙擺、髮絲、花瓣與飄帶形成強烈 visual flow，臉部完整可見。",
-      sceneLighting: "紅金宮燈、燭火暖光、側前方柔和主光、祖母綠帷幕反射與寶石藍陰影交織，在飄紗、金線刺繡、紅寶石珠飾、髮絲與濕亮地面形成 vivid luxury color grading、jewel-tone highlights、luminous silk sheen 與 high-end commercial fantasy cinema reflection；floating petals、warm incense haze、volumetric light haze、soft cinematic bokeh 與宴會群演景深共同建立艷麗盛唐夜宴主視覺。",
+      sceneLighting: "紅金宮燈、燭火暖光、側前方柔和主光、祖母綠帷幕反射與寶石藍陰影交織，在飄紗、金線刺繡、紅寶石珠飾、髮絲與濕亮地面形成 vivid luxury color grading、jewel-tone highlights、luminous silk sheen 與 high-end commercial fantasy cinema reflection；floating petals、warm incense haze、volumetric light haze、soft cinematic bokeh 與燈籠與花瓣景深共同建立艷麗盛唐夜宴主視覺。",
     },
     {
       id: "tang-night-banquet-chief-musician",
@@ -3053,13 +3053,13 @@ export const WORLD_LAYER_PROFILES = [
         "深藍色與褐色布條編織刺繡護臂束緊袖口，便於演奏與行動",
         "腰間精細青玉佩、黃銅細鏈與簡約仿古金屬關節戒形成低調樂姬配件",
         "全盤高髮髻與利落道髻以簡約黃銅髮簪固定，幾縷碎髮自然飛散",
-        "紅金絲綢、飛舞披帛、宴會群演與燈籠花海形成長安首席樂姬電影主視覺輪廓",
+        "紅金絲綢、飛舞披帛、燈籠花海、建築燈火與空間光影形成長安首席樂姬電影主視覺輪廓",
       ],
       makeup: "高清電影舞台妝效帶溫潤玉石質感，保留真實骨相、細微毛孔與微弱油脂反光；金棕眼妝、朱紅花鈿、絲絨紅唇與高盤髮金飾只增加盛唐首席樂姬的表面妝造氣氛，不重塑真人五官。",
-      scene: "長安夜宴之首席樂姬主視覺，古樸唐代木質神殿與盛唐花宴大殿融合，紅金宮燈、牡丹花海、宴席群演、侍女樂師、祖母綠帷幕與寶石藍陰影形成真人身份保留的艷麗東方奇幻歷史電影主視覺。",
-      sceneEnvironment: "盛唐花宴大殿，前景飛舞披帛、花瓣、古箏、紅金燭台與濕亮地面倒影形成遮擋層次，中景人物旋身站立於畫面中央且全身中遠景完整入鏡，遠景鏤空木質屏風、佛像浮雕、紙質落地燈籠、宴席人群、祖母綠帷幕與深遠木構空間。",
+      scene: "長安夜宴之首席樂姬主視覺，古樸唐代木質神殿與盛唐花宴大殿融合，紅金宮燈、牡丹花海、少量儀式剪影、祖母綠帷幕與寶石藍陰影形成真人身份保留的艷麗東方奇幻歷史電影主視覺。",
+      sceneEnvironment: "盛唐花宴大殿，前景飛舞披帛、花瓣、古箏、紅金燭台與濕亮地面倒影形成遮擋層次，中景人物旋身站立於畫面中央且全身中遠景完整入鏡，遠景鏤空木質屏風、佛像浮雕、紙質落地燈籠、少量宴席剪影、祖母綠帷幕與深遠木構空間。",
       sceneAction: "人物從樂席中央旋身回望鏡頭，一手帶動披帛向前延伸，另一手自然展開長袖，肩膀、脊椎與步伐重心保持真人平衡，表情保留原始真人臉部特徵並具有電影情緒張力。",
-      sceneLighting: "紅金燈籠暖光、燭火反射、側前方柔和主光、祖母綠環境反射與寶石藍陰影交織，勾勒面部、髮絲、飛舞披帛、紅金長袍褶皺與濕亮地面色彩倒影；vivid luxury color grading、jewel-tone highlights、floating petals、檀香煙霧、volumetric light haze、dreamy atmospheric bokeh 與宴會群演景深形成艷麗光學焦外層次。",
+      sceneLighting: "紅金燈籠暖光、燭火反射、側前方柔和主光、祖母綠環境反射與寶石藍陰影交織，勾勒面部、髮絲、飛舞披帛、紅金長袍褶皺與濕亮地面色彩倒影；vivid luxury color grading、jewel-tone highlights、floating petals、檀香煙霧、volumetric light haze、dreamy atmospheric bokeh 與燈籠與花瓣景深形成艷麗光學焦外層次。",
     },
     {
       id: "moon-weaving-dream-enchantress",
@@ -4110,7 +4110,7 @@ export const WORD_BANK = {
   scene: [
     "foreground, midground, and background depth",
     "real spatial perspective",
-    "cinematic environmental storytelling",
+    "single-protagonist cinematic atmosphere",
     "atmospheric haze and natural depth of field",
   ],
   safety: [
@@ -4144,3 +4144,4 @@ export const NEGATIVE_PROMPT = [
   "CG render look",
   "fashion editorial beauty campaign",
 ];
+

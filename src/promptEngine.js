@@ -333,11 +333,34 @@ function buildCameraFramingText(cameraFraming = DEFAULT_FORM.cameraFraming) {
   return `${FIXED_CAMERA_TEXT}，人物構圖：${cameraFraming}`;
 }
 
+function allowsBackgroundCharacters(text = "") {
+  return /宮廷宴會|王朝典禮|宗教儀式|戰場|戰爭|軍勢|軍隊|市集|街市|朝會|祭儀|大型典禮/.test(text);
+}
+
+function backgroundControlText(form = DEFAULT_FORM) {
+  const text = `${form.category} ${form.theme} ${form.scene} ${form.sceneEnvironment} ${form.frameEvent}`;
+  if (allowsBackgroundCharacters(text)) {
+    return "背景角色控制：主題允許少量 small-scale cinematic silhouettes、侍從剪影、儀式隊列或遠景軍勢輪廓；所有次要輪廓必須縮小、模糊、低存在感，主角仍佔 absolute visual priority";
+  }
+  return "背景角色控制：預設單女主電影海報構圖，畫面只保留真人主角；背景優先用建築輪廓、光影、水霧、花瓣、燈籠、布料、空氣粒子、景深、前景遮擋與空間透視建立電影感，主角佔 absolute visual priority";
+}
+
+function shouldUseCommercialGlamourLighting(form = DEFAULT_FORM) {
+  return /夜宴|魅魔|魅姬|月夜|女王|魔后|紫晶|星月|黑玫瑰|暗黑王族|商業奇幻|高級女性|滿月|骸骨權杖/.test(
+    `${form.category} ${form.theme} ${form.scene} ${form.visualMode}`,
+  );
+}
+
+function commercialGlamourLightingText(form = DEFAULT_FORM) {
+  if (!shouldUseCommercialGlamourLighting(form)) return "";
+  return "商業奇幻亮場：luminous fantasy glamour lighting、commercial fantasy beauty exposure、glowing jewel-tone atmosphere；臉部明亮可辨識並保留皮膚紋理，眼睛有 catchlight，珠寶有 sparkle highlights，黑色衣料保留刺繡與 purple shadow detail；避免 grim dark fantasy、muddy black shadows、face underexposure、heavy contrast noir lighting";
+}
+
 const VISUAL_MODE_TEXT = {
   "Netflix 東方奇幻": [
     "主視覺模式：真人身份保留的東方奇幻電影主視覺，真實上傳人物位於影集海報中心但不重塑五官",
-    "主角權重最高，畫面第一眼先看到原始真人臉部辨識度、大輪廓、飛舞披帛、紅金寶石色、燈籠花宴、群演景深與視覺流線",
-    "必須具備 preserved-real-identity eastern fantasy key visual、commercial fantasy cinema poster、high-impact real-person screen composition 與 grand oriental fantasy spectacle",
+    "主角權重最高，畫面第一眼先看到原始真人臉部辨識度、大輪廓、飛舞披帛、紅金寶石色、燈籠光影、建築景深與視覺流線",
+    "必須具備 single-protagonist cinematic composition、solo heroine visual dominance、isolated cinematic focus 與 environmental atmosphere around one protagonist",
   ],
   "暗黑夜宴": [
     "主視覺模式：暗黑夜宴電影主視覺，人物位於絲絨寢宮、燭光長廊或哥德夜宴空間中心",
@@ -345,7 +368,7 @@ const VISUAL_MODE_TEXT = {
   ],
   "商業奇幻海報": [
     "主視覺模式：商業奇幻電影海報，人物是畫面中心，保留高衝擊色彩、動態服裝與電影女主角銀幕存在感",
-    "畫面具有大色塊、大輪廓、前中遠景、群演或建築尺度與可辨識世界觀",
+    "畫面具有大色塊、大輪廓、前中遠景、建築尺度、光影空氣與可辨識世界觀，預設以建築、燈火與空氣撐場",
   ],
 };
 
@@ -376,21 +399,24 @@ function isDarkBanquetTheme(theme = "", scene = "") {
 function buildSceneVisualDetailText(form = DEFAULT_FORM) {
   const text = `${form.theme} ${form.scene} ${form.sceneEnvironment}`;
   if (form.sceneEnvironment) {
-    return "空間層級補強：近景做鏡頭遮擋與空氣粒子，中景只服務真人角色與服裝動態，遠景建立建築、群演或天光尺度；避免把環境說明重複成設定卡";
+    return "空間層級補強：近景做鏡頭遮擋與空氣粒子，中景只服務真人角色與服裝動態，遠景優先建立建築、光影、水霧、燈火或天光尺度；避免把環境說明重複成設定卡";
   }
   if (isDarkBanquetTheme(form.theme, `${form.scene} ${form.sceneEnvironment}`)) {
-    return "暗紫絲絨寢宮、哥德雕花床榻或夜宴內殿作為主空間，前景可見燭台、黑玫瑰、薄紗帷幕與玻璃酒杯柔焦遮擋，中景真人角色被絲綢睡袍式外袍與半透明夜紗包圍，遠景月光高窗、深酒紅天鵝絨窗簾、黑曜石鏡面、低位燭火與少量夜宴賓客剪影形成私密而高級的 dark romantic chamber depth";
+    return "暗紫絲絨寢宮、哥德雕花床榻或夜宴內殿作為主空間，前景可見燭台、黑玫瑰、薄紗帷幕與玻璃酒杯柔焦遮擋，中景真人角色被絲綢睡袍式外袍與半透明夜紗包圍，遠景月光高窗、深酒紅天鵝絨窗簾、黑曜石鏡面、低位燭火與建築燈影形成私密而高級的 dark romantic chamber depth";
   }
   if (/唐|長安|盛唐|宮廷|花宴|牡丹|鳳/.test(text)) {
-    return "長安宮廷花宴或紅金夜宴大殿作為主空間，前景燭火、牡丹、花瓣與半透明披帛穿過鏡頭，中景真人角色位於燈籠與群演視線中心，遠景金色廊柱、寶石色帷幕、宴會群演、侍女樂師、宴席人群與濕亮地面倒影形成盛唐商業奇幻電影規模";
+    const backgroundScale = allowsBackgroundCharacters(text)
+      ? "少量 small-scale cinematic silhouettes、宮燈層次"
+      : "宮燈層次、建築燈影";
+    return `長安宮廷花宴或紅金夜宴大殿作為主空間，前景燭火、牡丹、花瓣與半透明披帛穿過鏡頭，中景真人角色位於燈籠與光影中心，遠景金色廊柱、寶石色帷幕、${backgroundScale}與濕亮地面倒影形成盛唐商業奇幻電影規模`;
   }
   if (/墮天使|黑羽|黑翼|廢墟|神殿/.test(text)) {
     return "破碎哥德神殿或黑羽廢墟作為主空間，前景灰燼、羽毛、碎石與冷霧遮擋，中景真人角色被黑羽輪廓與破碎披風包圍，遠景斷裂石柱、月光高窗、殘破拱頂與暗紫聖光形成悲傷神性的 dark fantasy cinema depth";
   }
   if (/賽博|霓虹|都市|雨夜/.test(text)) {
-    return "雨夜霓虹街區作為主空間，前景雨滴、玻璃反光與招牌色塊遮擋，中景真人角色從濕亮地面反射中走近鏡頭，遠景高樓、車燈、人群輪廓與霓虹招牌壓成淺景深色彩層次";
+    return "雨夜霓虹街區作為主空間，前景雨滴、玻璃反光與招牌色塊遮擋，中景真人角色從濕亮地面反射中走近鏡頭，遠景高樓、車燈、霓虹招牌與雨霧光斑壓成淺景深色彩層次";
   }
-  return "場景以可拍攝的近景、中景、遠景建立電影空間：近景提供花瓣、燭火、霧氣、布料或建築遮擋，中景放置真人角色與動態服裝，遠景建立建築、天光、群演或地形輪廓，形成完整 cinematic environmental storytelling";
+  return "場景以可拍攝的近景、中景、遠景建立電影空間：近景提供花瓣、燭火、霧氣、布料或建築遮擋，中景放置真人角色與動態服裝，遠景建立建築、天光、燈火、水霧或地形輪廓，形成單女主主導的 cinematic atmosphere";
 }
 
 function buildActionCinematographyText(form = DEFAULT_FORM) {
@@ -436,7 +462,7 @@ function inferFrameEvent(theme, scene) {
     return "角色剛從絲絨陰影與燭光中轉身看向鏡頭，外袍與薄紗被室內氣流拉開，月光剛好擦過眼神與唇部邊緣，形成危險又高級的 cinematic reveal";
   }
   if (/唐|長安|盛唐|宮廷|花宴|牡丹|鳳/.test(text)) {
-    return "角色剛穿過紅金燈籠與花宴人群，披帛在空中展開，燭火與花瓣同時掠過前景，像真人身份被完整保留的東方奇幻影集主視覺出場瞬間";
+    return "角色剛穿過紅金燈籠與花瓣光影，披帛在空中展開，燭火與花瓣同時掠過前景，像真人身份被完整保留的東方奇幻影集主視覺出場瞬間";
   }
   if (/墮天使|黑羽|黑翼|廢墟|神殿/.test(text)) {
     return "角色剛從破碎聖光、灰燼與黑羽之間抬頭，披風和羽毛被冷風掀起，畫面停在悲傷神性與危險感同時爆發的一瞬間";
@@ -445,16 +471,16 @@ function inferFrameEvent(theme, scene) {
     return "角色剛停步回身，長袖和外袍因動作形成斜向流線，遠景威脅與前景風沙讓畫面像電影衝突前的一格劇照";
   }
   if (/賽博|霓虹|都市|雨夜/.test(text)) {
-    return "角色剛從雨夜霓虹反光中靠近鏡頭，外套邊緣和雨滴在光裡形成視線流線，背景招牌與人群被景深壓成電影氛圍";
+    return "角色剛從雨夜霓虹反光中靠近鏡頭，外套邊緣和雨滴在光裡形成視線流線，背景招牌、高樓燈火與雨霧被景深壓成電影氛圍";
   }
-  return "角色正在經歷一個可被電影攝影機捕捉的事件瞬間：剛轉身、剛走出煙霧、剛抬眼、布料剛被風帶起，讓畫面像 movie still 而不是站姿設定圖";
+  return "角色正在經歷一個可被電影攝影機捕捉的事件瞬間：剛轉身、剛走出煙霧、剛抬眼、布料剛被風帶起，讓畫面像 single-protagonist poster frame 而不是站姿設定圖";
 }
 
 function buildFrameEventText(form = DEFAULT_FORM) {
   const event = form.frameEvent || inferFrameEvent(form.theme, `${form.scene} ${form.sceneEnvironment}`);
   return [
     `畫面事件：${event}`,
-    "visual narrative movie still，風、光、布料、粒子、眼神與環境互動共同推動敘事",
+    "single-protagonist poster frame，風、光、布料、粒子、眼神與環境互動共同推動 visual narrative",
     "cinematic reveal、emotional tension、dangerous elegance、atmospheric depth、frame narrative 共同建立主視覺",
   ].join("；");
 }
@@ -462,13 +488,15 @@ function buildFrameEventText(form = DEFAULT_FORM) {
 function buildHeroShotText(form = DEFAULT_FORM) {
   return [
     buildStyleVisualDetailText(form),
+    backgroundControlText(form),
+    commercialGlamourLightingText(form),
     buildFrameEventText(form),
     buildActionCinematographyText(form),
     buildSceneVisualDetailText(form),
     form.sceneLighting
       ? "光影補強：沿用上方光源設定，只強化臉部可辨識、柔和分離光、自然景深與真實空氣透視"
       : "光影總控：側前方柔和主光、燭光或月光環境光、soft edge separation light、volumetric light haze、natural depth of field、realistic air perspective",
-  ].join("；");
+  ].filter(Boolean).join("；");
 }
 
 function buildScene(scene, form = DEFAULT_FORM) {
@@ -499,7 +527,7 @@ export function expandSceneToDirectorFields(input = {}) {
     ...form,
     sceneEnvironment:
       form.sceneEnvironment ||
-      `${scene}，近景加入可被鏡頭拍到的遮擋元素、花瓣、紅金燈籠、燭火、飄紗、寶石色布景、濕亮地面色彩倒影與空氣粒子，中景放置真人角色作為畫面能量中心與第一視覺焦點，遠景建立建築、宴會群演、侍女、樂師、天光或人群輪廓，形成艷麗商業奇幻電影主視覺與真實空間深度`,
+      `${scene}，近景加入可被鏡頭拍到的遮擋元素、花瓣、紅金燈籠、燭火、飄紗、寶石色布景、濕亮地面色彩倒影與空氣粒子，中景放置真人角色作為畫面能量中心與第一視覺焦點，遠景優先建立建築輪廓、燈火、水霧、天光、布料層次或空間透視；除非主題明確需要宴會、戰場、市集、宗教儀式或王朝典禮，否則畫面只保留單一真人主角，形成單女主艷麗商業奇幻電影主視覺與真實空間深度`,
     sceneAction:
       form.sceneAction ||
       `${inferEmotionalAction(theme, scene)}；${inferFrameEvent(theme, scene)}；50mm eye-level cinematic blocking，臉部完整清楚，眼神是表演核心，肩頸、胸腔、骨盆與雙腳重心符合真實成年人體結構，服裝布料跟隨動作形成 airborne translucent shawls、cinematic trailing sleeves 與視線導引流線`,

@@ -24,7 +24,7 @@ const HISTORY_KEY = "hongbing-travel-prompt-history";
 const UI_PREFS_KEY = "hongbing-travel-prompt-ui-prefs";
 const HISTORY_LIMIT = 5;
 const ALL_FILTER_LABEL = "全部";
-const APP_VERSION = "v1.07";
+const APP_VERSION = "v1.08";
 const PRODUCT_PRINCIPLE = "最高原則：真人鎖臉優先於所有華麗主視覺，不讓角色滑回 AI 仙女臉。";
 const PARENT_ROLE_CATEGORIES = [
   {
@@ -489,7 +489,7 @@ function render() {
                 </label>
                 <label>
                   <span>畫面事件</span>
-                  <textarea name="frameEvent" rows="2" placeholder="例：她剛穿過燭火與花瓣回身看向鏡頭，披帛被風掀起，群演與燈籠在遠景形成電影規模感">${escapeHtml(state.frameEvent)}</textarea>
+                  <textarea name="frameEvent" rows="2" placeholder="例：她剛穿過燭火與花瓣回身看向鏡頭，披帛被風掀起，遠景建築燈火、霧氣與空間光影襯托她出場">${escapeHtml(state.frameEvent)}</textarea>
                 </label>
                 <small class="field-help">這層比 Layer 1-10 更重要：先定第一視覺焦點、主角輪廓、動態與情緒，服裝細節只服務畫面。</small>
               </div>

@@ -281,15 +281,17 @@ not instead of the person.
 - elegant but dangerous styling around the real face
 - fantasy framing without facial redesign
 - cinematic tension between elegance and danger
-- grand cinematic color composition
+- premium cinematic color composition
 - vivid luxury cinematic color
 - jewel-tone color contrast
 - luminous silk highlights
 - rich red-gold visual impact
 - preserved-real-identity eastern fantasy key visual
-- commercial fantasy cinema poster
+- single-protagonist cinematic composition
+- solo heroine visual dominance
+- isolated cinematic focus
+- environmental atmosphere without crowd distraction
 - high-impact real-person screen composition
-- grand oriental fantasy spectacle
 
 明確避免：
 
@@ -317,6 +319,57 @@ not instead of the person.
 主角 aura、
 情緒張力、
 戲劇化構圖。
+
+【背景角色控制系統】
+
+畫面核心是：
+
+「真人女主角的銀幕存在感」
+
+不是群演場面。
+
+除非主題明確需要：
+
+- 宮廷宴會
+- 戰場
+- 市集
+- 宗教儀式
+- 王朝典禮
+
+否則避免：
+
+- 路人
+- NPC 感背景人物
+- 模糊群演
+- 隨機站立人物
+- 背景觀光客感
+- 古裝旅拍路人
+
+背景應優先使用：
+
+- 建築輪廓
+- 光影
+- 水霧
+- 花瓣
+- 燈籠
+- 布料
+- 空氣粒子
+- 景深
+- 前景遮擋
+- 空間透視
+
+建立電影空間感。
+
+若主題確實需要背景人物，
+只能作為：
+
+small-scale cinematic silhouettes
+
+且不得搶奪主角視覺焦點。
+
+主角需始終佔據：
+
+absolute visual priority。
 
 【大型動態服裝系統】
 
@@ -376,7 +429,7 @@ not instead of the person.
 光影方向、
 色彩張力、
 場景尺度、
-群演或建築、
+建築、燈火、水霧或空間光影、
 空氣粒子、
 景深層次。
 
@@ -399,14 +452,14 @@ Layer 工藝細節。
 - 披帛剛被風掀起
 - 光剛好打到眼睛
 - 花瓣、灰燼、羽毛或雨滴正在穿過前景
-- 遠景群演與燈光正在襯托她出場
+- 遠景建築燈火、霧氣與空間光影正在襯托她出場
 
 這不是姿勢說明，
 而是：
 
 visual narrative、
 cinematic reveal、
-movie still、
+single-protagonist poster frame、
 emotional tension、
 dangerous elegance、
 frame narrative。
@@ -491,6 +544,86 @@ AI 發光皮膚。
 濃烈宮燈、
 商業奇幻電影色彩、
 高級艷麗視覺衝擊。
+
+【商業奇幻亮場系統｜Commercial Fantasy Glamour Mode】
+
+若主題屬於：
+
+- 夜宴魅魔
+- 月夜女王
+- 紫晶神女
+- 星月祭司
+- 黑玫瑰女王
+- 魅姬系列
+- 商業奇幻海報
+- 高級女性主視覺
+- 暗黑王族
+
+則畫面不是低光黑暗電影，
+而是：
+
+「高亮商業奇幻女王主視覺」。
+
+禁止：
+
+- 過度電影低光
+- 過度陰影壓暗
+- grim dark fantasy
+- desaturated realism
+- muddy black shadows
+- face underexposure
+- heavy contrast noir lighting
+
+必須主動建立：
+
+- luminous fantasy glamour lighting
+- commercial fantasy beauty exposure
+- glowing jewel-tone atmosphere
+- radiant cinematic skin highlights
+- bright luxury fantasy composition
+- high-key fantasy portrait balance
+- sparkling gemstone reflections
+- cinematic beauty fill lighting
+- elegant fantasy bloom
+- vivid luxury lighting design
+- premium fantasy poster lighting
+- radiant feminine cinematic presence
+- luxury cosmetic-commercial exposure balance
+
+臉部必須：
+
+- 明亮可辨識
+- 保持真實皮膚紋理
+- 有柔和珠寶反光
+- 有高級 catchlight
+- 保有成熟感但不能灰暗
+
+服裝必須：
+
+- 黑色仍保留刺繡細節
+- 紫色與紅色保持寶石感
+- 薄紗具有透光感
+- 珠寶具有 sparkle highlights
+- 布料有 luxury sheen
+
+畫面允許：
+
+- fantasy glow
+- magical sparkle particles
+- cinematic glamour bloom
+- jewel-tone light haze
+- moonlight glow
+- reflective gemstone highlights
+- vivid purple atmosphere
+- premium commercial fantasy lighting
+
+但避免：
+
+- AI plastic glow
+- overexposed skin
+- HDR fantasy game look
+- anime glow effect
+- unreal engine render feeling
 
 【真實電影攝影感】
 
@@ -805,7 +938,7 @@ Layer 10：
 - 時間
 - 天氣
 - cinematic atmosphere
-- environmental storytelling
+- single-protagonist environmental atmosphere
 
 【負面咒語系統】
 

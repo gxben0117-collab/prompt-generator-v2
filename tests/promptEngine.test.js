@@ -1015,7 +1015,7 @@ describe("prompt engine", () => {
     expect(nightMusician.makeup).toContain("朱紅花鈿");
     expect(nightMusician.sceneLighting).toContain("volumetric light haze");
     expect(nightMusician.scene).toContain("真人身份保留");
-    expect(nightMusician.sceneEnvironment).toContain("宴席群演");
+    expect(nightMusician.sceneEnvironment).toContain("少量");
     expect(nightMusician.sceneEnvironment).toContain("祖母綠帷幕");
     expect(nightMusician.sceneLighting).toContain("vivid luxury color grading");
     expect(nightMusician.sceneLighting).toContain("jewel-tone highlights");
@@ -1107,13 +1107,16 @@ describe("prompt engine", () => {
     expect(prompt).toContain("red-gold lantern glow");
     expect(prompt).toContain("ruby red silk");
     expect(prompt).toContain("真人身份保留的東方奇幻電影主視覺");
-    expect(prompt).toContain("preserved-real-identity eastern fantasy key visual");
+    expect(prompt).toContain("single-protagonist cinematic composition");
     expect(prompt).toContain("deep garnet velvet");
     expect(prompt).toContain("emerald drapery");
     expect(prompt).toContain("wet floor color reflection");
     expect(prompt).toContain("airborne translucent shawls");
     expect(prompt).toContain("cinematic trailing sleeves");
-    expect(prompt).toContain("宴會群演");
+    expect(prompt).toContain("背景角色控制");
+    expect(prompt).toContain("預設單女主電影海報構圖");
+    expect(prompt).toContain("畫面只保留真人主角");
+    expect(prompt).toContain("absolute visual priority");
     expect(prompt).toContain("畫面事件");
     expect(prompt).toContain("動作鏡頭語言");
     expect(prompt).toContain("盛唐夜宴女主角穿過燈籠與花瓣回身");
@@ -1125,6 +1128,9 @@ describe("prompt engine", () => {
     expect(prompt).toContain("電影主視覺：");
     expect(prompt).toContain("長安宮廷花宴");
     expect(prompt).toContain("紅金夜宴大殿");
+    expect(prompt).not.toContain("宴會群演");
+    expect(prompt).not.toContain("遠景群演");
+    expect(prompt).not.toContain("群演景深");
     expect(prompt).not.toContain("Character Sheet");
     expect(prompt).not.toContain("AI 必須");
     expect(prompt).not.toContain("明確排除");
@@ -1152,6 +1158,11 @@ describe("prompt engine", () => {
     });
 
     expect(darkBanquet).toContain("主視覺模式：暗黑夜宴電影");
+    expect(darkBanquet).toContain("商業奇幻亮場");
+    expect(darkBanquet).toContain("commercial fantasy beauty exposure");
+    expect(darkBanquet).toContain("臉部明亮可辨識");
+    expect(darkBanquet).toContain("避免 grim dark fantasy");
+    expect(darkBanquet).toContain("muddy black shadows");
     expect(darkBanquet).toContain("amethyst violet atmosphere");
     expect(darkBanquet).toContain("deep wine-red silk");
     expect(darkBanquet).toContain("extra-long flowing silk drapery");
@@ -1160,8 +1171,10 @@ describe("prompt engine", () => {
     expect(darkBanquet).toContain("單手輕扶絲絨外袍");
     expect(darkBanquet).toContain("另一手自然帶起半透明薄紗");
     expect(darkBanquet).toContain("眼神越過燭光直視鏡頭");
+    expect(darkBanquet).toContain("預設單女主電影海報構圖");
+    expect(darkBanquet).not.toContain("主題允許少量 small-scale cinematic silhouettes");
     expect(netflixMode).toContain("主視覺模式：真人身份保留的東方奇幻電影主視覺");
-    expect(netflixMode).toContain("preserved-real-identity eastern fantasy key visual");
+    expect(netflixMode).toContain("single-protagonist cinematic composition");
     expect(netflixMode).toContain("peony crimson");
     expect(netflixMode).toContain("重點放在真實布料重量、絲綢反光、裙襬堆疊");
     expect(darkBanquet).toContain("分類：");
@@ -1192,13 +1205,13 @@ describe("prompt engine", () => {
       ...fullmoon.layers,
     });
 
-    expect(prompt.length).toBeLessThan(3100);
+    expect(prompt.length).toBeLessThan(3450);
     expect(prompt).toContain("空間層級補強");
     expect(prompt).toContain("動作鏡頭語言補強");
     expect(prompt).toContain("光影補強");
     expect(prompt).toContain("最高優先保留原始臉型");
     expect(prompt).toContain("不變成 AI 仙女臉");
-    expect((prompt.match(/silhouette/g) || []).length).toBeLessThanOrEqual(2);
+    expect((prompt.match(/silhouette/g) || []).length).toBeLessThanOrEqual(3);
     expect((prompt.match(/ruby/g) || []).length).toBeLessThanOrEqual(3);
     expect(prompt).not.toContain("動作鏡頭語言：人物採近景半身");
     expect(prompt).not.toContain("場景以可拍攝的近景、中景、遠景建立電影空間");
@@ -1209,17 +1222,66 @@ describe("prompt engine", () => {
       theme: "黑金盛唐夜宴女王",
       scene: "長安夜宴宮殿",
       visualFocus: "紅金披帛形成巨大 S 型流線，女主角眼神與動態袖幅是第一焦點",
-      frameEvent: "她剛穿過燭火與花瓣回身，群演與燈籠在遠景襯托她出場",
+      frameEvent: "她剛穿過燭火與花瓣回身，遠景建築燈火、霧氣與空間光影襯托她出場",
     });
 
     expect(prompt).toContain("電影主視覺：紅金披帛形成巨大 S 型流線");
     expect(prompt).toContain("畫面事件：她剛穿過燭火與花瓣回身");
     expect(prompt).toContain("動作鏡頭語言");
     expect(prompt).toContain("布料、披帛、長袖、外袍或髮絲跟隨動作產生可拍攝的 visual leading lines");
-    expect(prompt).toContain("movie still");
+    expect(prompt).toContain("single-protagonist poster frame");
     expect(prompt).not.toContain("Primary Read 70%");
     expect(prompt).not.toContain("不要把所有元素平均塞進畫面");
     expect(prompt).not.toContain("不要生成");
+  });
+
+  it("defaults to solo-protagonist background control unless the theme explicitly needs people", () => {
+    const quietRoyal = buildPrompt({
+      theme: "滿月骸骨權杖女王",
+      scene: "滿月哥德王座廳",
+      visualMode: "商業奇幻海報",
+    });
+    const ceremony = buildPrompt({
+      theme: "大唐王朝典禮女帝",
+      scene: "王朝典禮大殿",
+    });
+
+    expect(quietRoyal).toContain("預設單女主電影海報構圖");
+    expect(quietRoyal).toContain("商業奇幻亮場");
+    expect(quietRoyal).toContain("黑色衣料保留刺繡");
+    expect(quietRoyal).toContain("face underexposure");
+    expect(quietRoyal).toContain("畫面只保留真人主角");
+    expect(quietRoyal).toContain("背景優先用建築輪廓、光影、水霧");
+    expect(quietRoyal).toContain("主角佔 absolute visual priority");
+    expect(quietRoyal).not.toContain("路人");
+    expect(quietRoyal).not.toContain("NPC");
+    expect(quietRoyal).not.toContain("群演");
+    expect(quietRoyal).not.toContain("宴會群演");
+    expect(quietRoyal).not.toContain("侍女、樂師");
+    expect(quietRoyal).not.toContain("人群輪廓");
+    expect(ceremony).toContain("主題允許少量 small-scale cinematic silhouettes");
+    expect(ceremony).toContain("small-scale cinematic silhouettes");
+    expect(ceremony).toContain("主角仍佔 absolute visual priority");
+  });
+
+  it("injects background control and commercial glamour lighting into the fixed mother template", () => {
+    const instruction = buildChatGptInstruction({
+      theme: "紫蝶夜宴魅魔",
+      scene: "暗紫絲絨寢宮",
+    });
+
+    expect(instruction).toContain("【背景角色控制系統】");
+    expect(instruction).toContain("不是群演場面");
+    expect(instruction).toContain("small-scale cinematic silhouettes");
+    expect(instruction).toContain("absolute visual priority");
+    expect(instruction).toContain("【商業奇幻亮場系統｜Commercial Fantasy Glamour Mode】");
+    expect(instruction).toContain("Commercial Fantasy Glamour Mode");
+    expect(instruction).toContain("face underexposure");
+    expect(instruction).toContain("luminous fantasy glamour lighting");
+    expect(instruction).not.toContain("遠景群演與燈光正在襯托她出場");
+    expect(instruction).not.toContain("grand oriental fantasy spectacle");
+    expect(instruction).not.toContain("environmental storytelling");
+    expect(instruction).not.toContain("movie still");
   });
 
   it("adds dark royal mature body presence only for dark fantasy categories", () => {
@@ -1316,7 +1378,7 @@ describe("prompt engine", () => {
     expect(prompt).not.toContain("臉部辨識優先權：");
     expect(prompt).not.toContain("動作與鏡頭：");
     expect(prompt).toContain("服裝：霧面機能長外套");
-    expect(prompt).not.toContain("visual priority");
+    expect(prompt).not.toContain("60% visual priority");
   });
 
   it("expands short costume text into a cinematic layer system", () => {
