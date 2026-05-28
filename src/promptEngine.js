@@ -375,6 +375,9 @@ function isDarkBanquetTheme(theme = "", scene = "") {
 
 function buildSceneVisualDetailText(form = DEFAULT_FORM) {
   const text = `${form.theme} ${form.scene} ${form.sceneEnvironment}`;
+  if (form.sceneEnvironment) {
+    return "空間層級補強：近景做鏡頭遮擋與空氣粒子，中景只服務真人角色與服裝動態，遠景建立建築、群演或天光尺度；避免把環境說明重複成設定卡";
+  }
   if (isDarkBanquetTheme(form.theme, `${form.scene} ${form.sceneEnvironment}`)) {
     return "暗紫絲絨寢宮、哥德雕花床榻或夜宴內殿作為主空間，前景可見燭台、黑玫瑰、薄紗帷幕與玻璃酒杯柔焦遮擋，中景真人角色被絲綢睡袍式外袍與半透明夜紗包圍，遠景月光高窗、深酒紅天鵝絨窗簾、黑曜石鏡面、低位燭火與少量夜宴賓客剪影形成私密而高級的 dark romantic chamber depth";
   }
@@ -392,6 +395,14 @@ function buildSceneVisualDetailText(form = DEFAULT_FORM) {
 
 function buildActionCinematographyText(form = DEFAULT_FORM) {
   const action = form.sceneAction || inferEmotionalAction(form.theme, `${form.scene} ${form.sceneEnvironment}`);
+  if (form.sceneAction) {
+    return [
+      "動作鏡頭語言補強：承接上方動作，不重複姿勢描述",
+      "50mm eye-level cinematic blocking，真人臉部完整可見，眼神是表演核心",
+      "肩頸、胸腔、骨盆與雙腳重心符合真實成年人體結構，手部不遮擋臉部",
+      "布料、披帛、長袖、外袍或髮絲只作視線導引，不搶臉部辨識度",
+    ].join("；");
+  }
   return [
     `動作鏡頭語言：${action}`,
     "50mm eye-level cinematic blocking，真人臉部完整可見，眼神是表演核心",
@@ -415,7 +426,7 @@ function buildStyleVisualDetailText(form = DEFAULT_FORM) {
     `電影主視覺：${focus}`,
     colorText,
     fabricText,
-    "commercial fantasy cinema key visual built around preserved real-person identity, dominant cinematic silhouette, recognizable original face, vivid luxury color grading, jewel-tone highlights, luminous silk sheen",
+    "總控：preserved real-person identity first, recognizable original face, dominant silhouette, vivid jewel-tone grading, luxury fabric sheen",
   ].join("；");
 }
 
@@ -454,7 +465,9 @@ function buildHeroShotText(form = DEFAULT_FORM) {
     buildFrameEventText(form),
     buildActionCinematographyText(form),
     buildSceneVisualDetailText(form),
-    "側前方柔和主光、燭光或月光環境光、soft edge separation light、volumetric light haze、natural depth of field、realistic air perspective 共同建立可拍攝的電影空氣感",
+    form.sceneLighting
+      ? "光影補強：沿用上方光源設定，只強化臉部可辨識、柔和分離光、自然景深與真實空氣透視"
+      : "光影總控：側前方柔和主光、燭光或月光環境光、soft edge separation light、volumetric light haze、natural depth of field、realistic air perspective",
   ].join("；");
 }
 

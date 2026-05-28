@@ -24,7 +24,7 @@ const HISTORY_KEY = "hongbing-travel-prompt-history";
 const UI_PREFS_KEY = "hongbing-travel-prompt-ui-prefs";
 const HISTORY_LIMIT = 5;
 const ALL_FILTER_LABEL = "全部";
-const APP_VERSION = "v1.06";
+const APP_VERSION = "v1.07";
 const PRODUCT_PRINCIPLE = "最高原則：真人鎖臉優先於所有華麗主視覺，不讓角色滑回 AI 仙女臉。";
 const PARENT_ROLE_CATEGORIES = [
   {

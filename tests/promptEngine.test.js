@@ -1098,11 +1098,11 @@ describe("prompt engine", () => {
       cameraFraming: "全身",
     });
 
-    expect(prompt).toContain("commercial fantasy cinema key visual");
+    expect(prompt).toContain("總控：preserved real-person identity first");
     expect(prompt).toContain("preserved real-person identity");
     expect(prompt).toContain("recognizable original face");
-    expect(prompt).toContain("dominant cinematic silhouette");
-    expect(prompt).toContain("vivid luxury color grading");
+    expect(prompt).toContain("dominant silhouette");
+    expect(prompt).toContain("vivid jewel-tone grading");
     expect(prompt).toContain("jewel-tone highlights");
     expect(prompt).toContain("red-gold lantern glow");
     expect(prompt).toContain("ruby red silk");
@@ -1156,9 +1156,6 @@ describe("prompt engine", () => {
     expect(darkBanquet).toContain("deep wine-red silk");
     expect(darkBanquet).toContain("extra-long flowing silk drapery");
     expect(darkBanquet).toContain("暗紫絲絨寢宮");
-    expect(darkBanquet).toContain("哥德雕花床榻");
-    expect(darkBanquet).toContain("深酒紅天鵝絨窗簾");
-    expect(darkBanquet).toContain("dark romantic chamber depth");
     expect(darkBanquet).toContain("夜宴魅姬式緩慢轉身");
     expect(darkBanquet).toContain("單手輕扶絲絨外袍");
     expect(darkBanquet).toContain("另一手自然帶起半透明薄紗");
@@ -1180,6 +1177,31 @@ describe("prompt engine", () => {
     expect(darkBanquet).not.toContain("不要");
     expect(netflixMode).not.toContain("主視覺模式：電影角色設定檔");
     expect(netflixMode).not.toContain("柔和電影主調");
+  });
+
+  it("keeps template prompts concise by using supplemental director notes instead of repeating filled fields", () => {
+    const fullmoon = WORLD_LAYER_PROFILES.find((profile) => profile.id === "fullmoon-skull-scepter-queen");
+    const prompt = buildPrompt({
+      category: fullmoon.category,
+      theme: fullmoon.themeHint,
+      makeup: fullmoon.makeup,
+      scene: fullmoon.scene,
+      sceneEnvironment: fullmoon.sceneEnvironment,
+      sceneAction: fullmoon.sceneAction,
+      sceneLighting: fullmoon.sceneLighting,
+      ...fullmoon.layers,
+    });
+
+    expect(prompt.length).toBeLessThan(3100);
+    expect(prompt).toContain("空間層級補強");
+    expect(prompt).toContain("動作鏡頭語言補強");
+    expect(prompt).toContain("光影補強");
+    expect(prompt).toContain("最高優先保留原始臉型");
+    expect(prompt).toContain("不變成 AI 仙女臉");
+    expect((prompt.match(/silhouette/g) || []).length).toBeLessThanOrEqual(2);
+    expect((prompt.match(/ruby/g) || []).length).toBeLessThanOrEqual(3);
+    expect(prompt).not.toContain("動作鏡頭語言：人物採近景半身");
+    expect(prompt).not.toContain("場景以可拍攝的近景、中景、遠景建立電影空間");
   });
 
   it("allows optional director-layer fields to override visual focus and frame event", () => {
