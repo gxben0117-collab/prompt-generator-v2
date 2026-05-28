@@ -610,7 +610,7 @@ describe("prompt engine", () => {
     expect(phoenixCourt.layers.costumeLayer9).toContain("ornate flame crown");
     expect(phoenixCourt.makeup).toContain("金紅鳳羽眼尾");
     expect(phoenixCourt.sceneEnvironment).toContain("火焰神鳥");
-    expect(phoenixCourt.sceneAction).toContain("穩定女王站姿");
+    expect(phoenixCourt.sceneAction).toContain("可採站姿、端坐鳳座前緣、倚靠宮欄或緩步前行");
     expect(phoenixCourt.sceneLighting).toContain("golden halo lighting");
     expect(tangEmpress.category).toBe("盛唐宮廷／皇后／東方電影美學");
     expect(tangEmpress.layers.costumeLayer1).toContain("crimson embroidered silk foundation");
@@ -907,7 +907,7 @@ describe("prompt engine", () => {
     expect(darkNecromancer.makeup).toContain("dark queen makeup");
     expect(darkNecromancer.sceneEnvironment).toContain("undead gothic castle");
     expect(darkNecromancer.sceneAction).toContain("holding dark staff");
-    expect(darkNecromancer.sceneAction).toContain("站姿或緩步前行");
+    expect(darkNecromancer.sceneAction).toContain("站姿、坐姿、倚靠或緩步前行");
     expect(darkNecromancer.sceneLighting).toContain("blue moonlight");
     expect(fullmoonScepterQueen.category).toBe("暗黑王族｜滿月權杖｜哥德軍勢電影");
     expect(fullmoonScepterQueen.aliases).toContain("骷髏權杖女王");
@@ -1238,7 +1238,8 @@ describe("prompt engine", () => {
     expect(prompt).toContain("natural shoulder-to-head ratio");
     expect(prompt).toContain("輸出比例控制");
     expect(prompt).toContain("4:5 premium commercial fantasy poster");
-    expect(prompt).toContain("standing full-body cinematic composition");
+    expect(prompt).toContain("4:5 character-dominant cinematic composition");
+    expect(prompt).toContain("可使用站姿、坐姿、臥姿、倚靠、泡茶、持扇、持刀或道具互動");
     expect(prompt).toContain("composition must respect the specified aspect ratio");
     expect(prompt).toContain("keep the full cinematic silhouette inside frame");
     expect(prompt).toContain("face swap");
@@ -1250,7 +1251,7 @@ describe("prompt engine", () => {
     expect(prompt).toContain("盛唐夜宴女主角在燈籠與花瓣前正面或微側正面停步");
     expect(prompt).toContain("50mm eye-level cinematic blocking");
     expect(prompt).toContain("臉部完整可見");
-    expect(prompt).toContain("肩頸、胸腔、骨盆與雙腳重心符合真實成年人體結構");
+    expect(prompt).toContain("肩頸、胸腔、骨盆、四肢支撐點與身體受力符合真實成年人體結構");
     expect(prompt).toContain("cinematic reveal");
     expect(prompt).toContain("visual narrative");
     expect(prompt).toContain("電影主視覺：");
@@ -1322,9 +1323,9 @@ describe("prompt engine", () => {
     expect(darkBanquet).toContain("deep wine-red silk");
     expect(darkBanquet).toContain("extra-long flowing silk drapery");
     expect(darkBanquet).toContain("暗紫絲絨寢宮");
-    expect(darkBanquet).toContain("夜宴魅姬式正面或三分之一微側正面站姿");
-    expect(darkBanquet).toContain("雙手自然牽起深紫絲絨外袍邊緣");
-    expect(darkBanquet).toContain("緩步前行看向鏡頭");
+    expect(darkBanquet).toContain("夜宴魅姬式電影動作");
+    expect(darkBanquet).toContain("可採站姿、坐姿、倚坐、泡茶、持扇或緩步前行");
+    expect(darkBanquet).toContain("雙手可自然牽起深紫絲絨外袍、持扇、端茶盞或扶住座椅邊緣");
     expect(darkBanquet).toContain("罩杯只依角色卡欄位寫入");
     expect(darkBanquet).toContain("胸口、腰線與腿部保持電影級禮服遮覆");
     expect(darkBanquet).toContain("預設單女主電影海報構圖");
@@ -1588,11 +1589,12 @@ describe("prompt engine", () => {
     expect(form.sceneEnvironment).toContain("哥德式石柱王座廳");
     expect(form.sceneEnvironment).toContain("近景");
     expect(form.sceneEnvironment).toContain("遠景");
-    expect(form.sceneAction).toContain("夜宴魅姬式正面或三分之一微側正面站姿");
+    expect(form.sceneAction).toContain("夜宴魅姬式電影動作");
+    expect(form.sceneAction).toContain("可採站姿、坐姿、倚坐、泡茶、持扇或緩步前行");
     expect(form.sceneAction).toContain("臉部角度接近上傳照片");
     expect(form.sceneAction).toContain("50mm eye-level cinematic blocking");
     expect(form.sceneAction).toContain("臉部完整清楚");
-    expect(form.sceneAction).toContain("肩頸、胸腔、骨盆與雙腳重心符合真實成年人體結構");
+    expect(form.sceneAction).toContain("肩頸、胸腔、骨盆、四肢支撐點與身體受力符合真實成年人體結構");
     expect(form.sceneCamera).toContain("50mm");
     expect(form.sceneCamera).toContain("中遠景");
     expect(form.sceneCamera).toContain("人物構圖：膝蓋以上");
@@ -1612,7 +1614,7 @@ describe("prompt engine", () => {
     expect(form.cameraFraming).toBe("全身");
   });
 
-  it("overrides risky dark royal widescreen into 4:5 standing poster control", () => {
+  it("overrides risky dark royal widescreen into 4:5 posture-flexible poster control", () => {
     const prompt = buildPrompt({
       category: "奇幻異世界 / 暗黑王族",
       theme: "滿月骸骨權杖女王",
@@ -1623,12 +1625,32 @@ describe("prompt engine", () => {
 
     expect(prompt).toContain("暗黑王族 / 夜宴魅魔主題比例修正：由 16:9 改採 4:5");
     expect(prompt).toContain("輸出比例控制：4:5 premium commercial fantasy poster");
-    expect(prompt).toContain("standing full-body cinematic composition");
-    expect(prompt).toContain("坐姿或王座姿勢必須保留完整胸腔厚度");
+    expect(prompt).toContain("4:5 character-dominant cinematic composition");
+    expect(prompt).toContain("可使用站姿、坐姿、臥姿、倚靠、泡茶、持扇、持刀或道具互動");
+    expect(prompt).toContain("坐姿、臥姿、跪坐、倚靠、泡茶或道具互動姿勢必須保留完整胸腔厚度");
     expect(prompt).toContain("camera distance must not compress body structure");
     expect(prompt).toContain("oversized head");
     expect(prompt).toContain("compressed torso");
     expect(prompt).toContain("face pasted onto a fantasy costume");
+  });
+
+  it("preserves seated and prop-based dark royal actions when the face stays visible", () => {
+    const prompt = buildPrompt({
+      category: "奇幻異世界 / 暗黑王族",
+      theme: "紫蝶夜宴魅魔",
+      scene: "暗紫絲絨寢宮，黑曜石王座前",
+      sceneAction: "人物端坐於黑曜石王座前緣，右手持羽扇放在胸口下方不遮臉，左手端茶盞靠近膝上，臉部微側正面看向鏡頭",
+      ratio: "4:5",
+      cameraFraming: "全身",
+    });
+
+    expect(prompt).toContain("端坐於黑曜石王座前緣");
+    expect(prompt).toContain("右手持羽扇放在胸口下方不遮臉");
+    expect(prompt).toContain("左手端茶盞靠近膝上");
+    expect(prompt).toContain("手部不遮擋臉部");
+    expect(prompt).toContain("坐姿、臥姿、跪坐、倚靠、泡茶或道具互動姿勢必須保留完整胸腔厚度");
+    expect(prompt).not.toContain("人物剛從燭光與薄霧中走出");
+    expect(prompt).not.toContain("雙手自然牽起外袍或披帛");
   });
 
   it("replaces risky beauty language before prompt assembly", () => {

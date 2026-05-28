@@ -320,10 +320,10 @@ function stabilizeFaceAngleText(text = "") {
 function inferEmotionalAction(theme, scene) {
   const text = `${theme} ${scene}`;
   if (isDarkBanquetTheme(theme, scene)) {
-    return "夜宴魅姬式正面或三分之一微側正面站姿，臉部角度接近上傳照片，雙手自然牽起深紫絲絨外袍邊緣或絲綢披帛，緩步前行看向鏡頭，腰胯重心穩定、肩頸放鬆、臉部完整清楚";
+    return "夜宴魅姬式電影動作，可採站姿、坐姿、倚坐、泡茶、持扇或緩步前行；臉部角度接近上傳照片，正面或三分之一微側正面看向鏡頭，雙手可自然牽起深紫絲絨外袍、持扇、端茶盞或扶住座椅邊緣，肩頸放鬆、胸腔厚度與骨盆受力穩定、臉部完整清楚";
   }
   if (/女王|哥德|暗夜|王座|魔后|血族|冥界/.test(text)) {
-    return "女王式站姿或緩步前行，身體保持正面或三分之一微側正面，臉部穩定朝向鏡頭，雙手自然牽起外袍邊緣或垂落布料，肩線穩定，眼神具有壓迫感與情緒吸引力";
+    return "女王式電影動作，可站立、端坐王座前緣、倚坐扶手或緩步前行；臉部穩定朝向鏡頭，雙手可牽起外袍、扶住權杖、持杯、持扇或自然垂落布料，肩線、胸腔、骨盆與支撐點穩定，眼神具有壓迫感與情緒吸引力";
   }
   if (/唐|長安|盛唐|宮廷|花宴|牡丹|鳳|樂姬|舞姬/.test(text)) {
     return "盛唐夜宴女主角在燈籠與花瓣前正面或微側正面停步，單手帶動披帛或團扇，另一手自然壓住長袖，步伐停在布料揚起瞬間，長裙與飄帶形成 S 型視線流線，臉部完整面向鏡頭";
@@ -371,7 +371,7 @@ function buildAspectRatioControlText(form = DEFAULT_FORM) {
   return [
     overrideText,
     `輸出比例控制：${ratioText}`,
-    effectiveRatio === "4:5" ? "standing full-body cinematic composition，人物站姿或緩步前行，保留完整真人身體比例與電影主輪廓" : "",
+    effectiveRatio === "4:5" ? "4:5 character-dominant cinematic composition，可使用站姿、坐姿、臥姿、倚靠、泡茶、持扇、持刀或道具互動；重點是保留完整真人身體比例、臉部可辨識與電影主輪廓" : "",
     "composition must respect the specified aspect ratio and keep the full cinematic silhouette inside frame",
     "避免裁頭、裁手、截斷全身、過度留白、AI 自動特寫或自拍式構圖",
   ].filter(Boolean).join("；");
@@ -445,12 +445,9 @@ function buildFinalSceneText(form, category, theme) {
 }
 
 function buildFinalActionText(form, category, theme) {
-  if (isDarkRoyalCategory(category, theme, form.scene)) {
-    return "人物剛從燭光與薄霧中走出，微側正面停步看向鏡頭，雙手自然牽起外袍或披帛，手不遮臉，布料形成電影主視覺流線。";
-  }
   const action = compactText(stabilizeFaceAngleText(form.sceneAction), 180);
-  if (action) return `${action}。手部不遮臉，臉部正面或微側正面清楚看向鏡頭，動作需符合真實人體重心。`;
-  return `${inferEmotionalAction(theme, form.scene)}。手部不遮臉，布料跟隨動作形成自然視線流線。`;
+  if (action) return `${action}。手部不遮擋臉部；臉部正面或微側正面清楚看向鏡頭，動作符合真實重心與四肢受力。`;
+  return `${inferEmotionalAction(theme, form.scene)}。可採站姿、坐姿、臥姿、倚靠、泡茶、持扇、持刀或持傘；手部、道具、髮絲與布料不得遮臉。`;
 }
 
 function buildFinalLightingText(form, category, theme) {
@@ -507,14 +504,14 @@ function buildFinalMakeupText(form) {
 }
 
 function buildBodyProportionStabilizationText(form = DEFAULT_FORM) {
-  const seatedText = /坐|端坐|坐姿|王座|椅|榻|跪|半跪/.test(`${form.scene} ${form.sceneEnvironment} ${form.sceneAction}`)
-    ? "坐姿或王座姿勢必須保留完整胸腔厚度、自然軀幹深度與成人坐姿比例，camera distance must not compress body structure"
-    : "站姿或行走姿勢保留自然肩寬、軀幹深度、骨盆比例、四肢長度與成人重心";
+  const postureText = /坐|端坐|坐姿|王座|椅|榻|跪|半跪|臥|躺|倚|靠|泡茶|撫琴/.test(`${form.scene} ${form.sceneEnvironment} ${form.sceneAction}`)
+    ? "坐姿、臥姿、跪坐、倚靠、泡茶或道具互動姿勢必須保留完整胸腔厚度、自然軀幹深度、成人骨盆受力與四肢支撐邏輯，camera distance must not compress body structure"
+    : "站姿、行走、持刀、持扇、持傘或其他動作姿勢保留自然肩寬、軀幹深度、骨盆比例、四肢長度與成人重心";
   return [
     "真人比例穩定：full-body physical coherence has equal priority with facial identity preservation",
     "鎖臉不得造成 oversized head、compressed torso、narrow AI shoulders、portrait-only body structure 或 floating head feeling",
     "保留 balanced head size、natural shoulder-to-head ratio、realistic torso volume、proper body mass distribution",
-    seatedText,
+    postureText,
     "真人必須像 physically existing inside cinematic space 的真實演員，不像 face pasted onto a fantasy costume",
   ].join("；");
 }
@@ -611,14 +608,14 @@ function buildActionCinematographyText(form = DEFAULT_FORM) {
     return [
       "動作鏡頭語言補強：承接上方動作，不重複姿勢描述",
       "50mm eye-level cinematic blocking，真人臉部完整可見，眼神是表演核心",
-      "肩頸、胸腔、骨盆與雙腳重心符合真實成年人體結構，手部不遮擋臉部",
+      "肩頸、胸腔、骨盆、四肢支撐點與身體受力符合真實成年人體結構，手部不遮擋臉部",
       "布料、披帛、長袖、外袍或髮絲只作視線導引，不搶臉部辨識度",
     ].join("；");
   }
   return [
     `動作鏡頭語言：${action}`,
     "50mm eye-level cinematic blocking，真人臉部完整可見，眼神是表演核心",
-    "肩頸、胸腔、骨盆與雙腳重心符合真實成年人體結構，手指比例自然，手部不遮擋臉部",
+    "肩頸、胸腔、骨盆、四肢支撐點與身體受力符合真實成年人體結構，手指比例自然，手部不遮擋臉部",
     "布料、披帛、長袖、外袍或髮絲跟隨動作產生可拍攝的 visual leading lines",
   ].join("；");
 }
@@ -659,7 +656,7 @@ function inferFrameEvent(theme, scene) {
   if (/賽博|霓虹|都市|雨夜/.test(text)) {
     return "角色剛從雨夜霓虹反光中靠近鏡頭，外套邊緣和雨滴在光裡形成視線流線，背景招牌、高樓燈火與雨霧被景深壓成電影氛圍";
   }
-  return "角色正在經歷一個可被電影攝影機捕捉的事件瞬間：正面或微側正面剛停步、剛走出煙霧、眼神穩定看向鏡頭、布料剛被風帶起，讓畫面像 single-protagonist poster frame 而不是站姿設定圖";
+  return "角色正在經歷一個可被電影攝影機捕捉的事件瞬間：正面或微側正面剛停步、剛坐下泡茶、倚靠欄杆、持扇凝視、持刀收勢、臥於榻上抬眼或剛走出煙霧；眼神穩定看向鏡頭，布料剛被風帶起，讓畫面像 single-protagonist poster frame 而不是單調站姿設定圖";
 }
 
 function buildFrameEventText(form = DEFAULT_FORM) {
@@ -723,7 +720,7 @@ export function expandSceneToDirectorFields(input = {}) {
       form.sceneAction
         ? stabilizeFaceAngleText(form.sceneAction)
         :
-      `${inferEmotionalAction(theme, scene)}；${inferFrameEvent(theme, scene)}；50mm eye-level cinematic blocking，臉部完整清楚，眼神是表演核心，肩頸、胸腔、骨盆與雙腳重心符合真實成年人體結構，服裝布料跟隨動作形成 airborne translucent shawls、cinematic trailing sleeves 與視線導引流線`,
+      `${inferEmotionalAction(theme, scene)}；${inferFrameEvent(theme, scene)}；50mm eye-level cinematic blocking，臉部完整清楚，眼神是表演核心，肩頸、胸腔、骨盆、四肢支撐點與身體受力符合真實成年人體結構，服裝布料跟隨動作形成 airborne translucent shawls、cinematic trailing sleeves 與視線導引流線`,
     sceneCamera: `${buildCameraFramingText(form.cameraFraming)}，鏡頭高度接近眼平`,
     sceneLighting:
       form.sceneLighting ||

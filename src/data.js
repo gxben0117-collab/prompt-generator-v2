@@ -741,7 +741,7 @@ const BULK_CATEGORY_PROFILES = [
     ["dark-spider-silk-night-empress", "蛛絲夜庭・暗紋女帝", "暗黑王族／蛛絲夜庭", "蛛絲 暗黑 女帝", ["蛛后", "蛛絲", "暗黑"], "蛛絲夜庭女帝", "黑色、紫銀與冷白色", "蛛紋黑絲絨長袍、銀線披帛與結構腰封", "蛛網王冠、紫晶耳墜與銀鏈肩飾", "銀絲法杖與蛛網披帛", "蛛絲夜庭大廳", "蛛絲、紫晶與薄霧", "真人女帝立於夜庭王座前方", "高柱、蛛網拱頂、冷月與紫色燈火", "人物站於王座前而非坐姿，手持法杖下垂", "冷月主光、紫晶反射與銀絲高光", "高級暗黑女帝單人海報"],
     ["dark-obsidian-dragon-empress", "黑曜龍裔・魔域女皇", "暗黑王族／黑曜龍裔", "黑曜 龍裔 魔域", ["龍裔", "魔域", "暗黑王族"], "黑曜龍裔女皇", "黑曜、赤金與熔岩紅", "黑曜龍紋長袍、熔岩披風與金屬肩甲", "龍角王冠、赤金耳飾與黑曜腰飾", "龍紋權杖與熔岩碎光", "魔域黑曜龍殿", "熔岩光、黑曜碎片與披風", "真人女皇站於龍殿石橋", "龍骨拱門、熔岩河、黑曜柱與紅霧", "人物緩步走過石橋，披風形成大輪廓", "熔岩反射、面部柔光與赤金邊緣光", "暗黑魔域高亮商業奇幻海報"],
     ["dark-raven-moon-crown-queen", "鴉月王冠・夜境女王", "暗黑王族／黑鴉夜境", "黑鴉 暗黑 女王", ["黑鴉", "夜境", "暗黑"], "黑鴉夜境女王", "鴉黑、月銀與深藍色", "黑鴉羽飾長袍、月銀披肩與王族腰封", "鴉羽王冠、月銀耳墜與藍寶項鍊", "黑鴉羽扇與月印", "夜境月台", "鴉羽、月印與藍霧", "真人女王立於月台中央", "滿月、尖塔、黑鴉剪影與夜霧", "人物手持羽扇下垂，眼神直視鏡頭", "月銀主光、藍色補光與羽毛高光", "單女主暗黑夜境主視覺"],
-    ["dark-infernal-rose-succubus", "煉獄玫瑰・夜宴魅姬", "暗黑王族／夜宴魅魔", "魅魔 夜宴 暗黑", ["魅魔", "夜宴", "暗黑王族"], "煉獄玫瑰夜宴魅姬", "暗紫、玫瑰紅與香檳金", "絲絨夜宴長袍、玫瑰薄紗披帛與高訂支撐結構", "玫瑰金耳飾、紅寶腰鏈與暗紫髮冠", "玫瑰燭台與絲絨外袍", "暗紫夜宴花廳", "玫瑰、燭台與薄紗", "真人魅姬站於花廳燭光中", "紅金燈火、寶石色帷幕、花牆與霧氣", "人物站姿或緩步前行，雙手牽起外袍邊緣", "商業奇幻亮場、紅寶高光與臉部柔和補光", "高亮夜宴魅魔女主角海報"],
+    ["dark-infernal-rose-succubus", "煉獄玫瑰・夜宴魅姬", "暗黑王族／夜宴魅魔", "魅魔 夜宴 暗黑", ["魅魔", "夜宴", "暗黑王族"], "煉獄玫瑰夜宴魅姬", "暗紫、玫瑰紅與香檳金", "絲絨夜宴長袍、玫瑰薄紗披帛與高訂支撐結構", "玫瑰金耳飾、紅寶腰鏈與暗紫髮冠", "玫瑰燭台與絲絨外袍", "暗紫夜宴花廳", "玫瑰、燭台與薄紗", "真人魅姬位於花廳燭光中", "紅金燈火、寶石色帷幕、花牆與霧氣", "人物可站姿、端坐花廳長椅前緣、倚靠絲絨扶手或緩步前行，雙手可牽起外袍邊緣、持玫瑰燭台或羽扇，臉部不被道具遮擋", "商業奇幻亮場、紅寶高光與臉部柔和補光", "高亮夜宴魅魔女主角海報"],
     ["dark-plague-cathedral-countess", "疫霧聖堂・黑紗伯爵夫人", "暗黑王族／瘟疫聖堂", "暗黑 聖堂 伯爵夫人", ["暗黑", "聖堂", "伯爵夫人"], "疫霧聖堂伯爵夫人", "霧灰、黑綠與舊金色", "黑紗禮服、舊金刺繡披肩與聖堂長袍", "舊金面紗冠、綠寶耳墜與十字紋腰扣", "香爐與黑紗手套", "疫霧哥德聖堂", "香爐、黑紗與綠色霧氣", "真人伯爵夫人站於聖堂中軸", "拱窗、石像、長椅與霧光", "人物手持香爐於腰側，黑紗不遮臉", "聖堂頂光、綠霧反射與舊金高光", "哥德暗黑高級電影主視覺"],
     ["dark-amethyst-hellgate-priestess", "紫晶獄門・魔殿祭司", "暗黑王族／紫晶魔殿", "紫晶 魔殿 暗黑", ["紫晶", "魔殿", "暗黑王族"], "紫晶魔殿祭司", "紫晶、黑金與冷白色", "紫晶祭司長袍、黑金披帛與硬質腰封", "紫晶冠、黑金耳飾與符文肩鏈", "紫晶法器與魔殿卷軸", "紫晶獄門魔殿", "紫晶碎光、卷軸與黑金披帛", "真人祭司立於獄門法陣前", "魔殿石柱、紫晶門、冷霧與符文光", "人物雙手自然托住紫晶法器，不誇張施法", "紫晶主光、臉部柔補光與黑金反射", "暗黑王族商業奇幻亮場模式"],
   ].map(([id, title, series, themeHint, aliases, identity, palette, costumeCore, jewelry, prop, place, foreground, midground, background, action, lighting, atmosphere]) =>
@@ -2026,7 +2026,7 @@ export const WORLD_LAYER_PROFILES = [
     sceneEnvironment:
       "聖焰鳳凰神殿，前景金羽、火星與煙霧粒子，中景人物站於黑金王座前並被鳳羽與神焰環繞，遠景鳳凰神殿、金色光環、火焰神鳥與王庭柱廊，形成東方神話王庭空間尺度。",
     sceneAction:
-      "人物採穩定女王站姿或緩步前行，一手自然帶起鳳羽披帛，另一手垂放於長袍側邊，肩膀與脊椎維持真實平衡，視線穩定凝視鏡頭，鳳羽披帛與長袍隨熱流自然微動，避免過度性感化坐姿。",
+      "人物可採站姿、端坐鳳座前緣、倚靠宮欄或緩步前行，一手自然帶起鳳羽披帛，另一手可垂放於長袍側邊或扶住座椅扶手，肩膀、胸腔、骨盆與四肢受力維持真實平衡，視線穩定凝視鏡頭，鳳羽披帛與長袍隨熱流自然微動，避免過度性感化構圖。",
     sceneLighting:
       "golden halo lighting, sacred flame soft edge separation light, warm ember reflection, cinematic smoke glow；金色 halo 與火焰柔和邊緣分離光在髮絲、皇冠、鳳羽與黑金服裝邊緣形成真實暖金反射，呈現 golden feathers、embers、smoke haze 與 sacred flame particles。",
     layers: {
@@ -3055,7 +3055,7 @@ export const WORLD_LAYER_PROFILES = [
     sceneEnvironment:
       "血月亡靈哥德城堡，前景餘燼、黑霧與王座台階，中景人物站於死亡王座前並持黑暗法杖，遠景 undead gothic castle、blood moon night、skeleton army 剪影與 dark cathedral skyline，形成 dramatic gothic perspective。",
     sceneAction:
-      "人物 holding dark staff，採站姿或緩步前行的 queen power posture，眼神 confident dominant gaze，頭部保持正面或微側正面，另一手自然牽起厚重外袍邊緣，避免低俗 SM 化與 pin-up 坐姿。",
+      "人物 holding dark staff，可採站姿、坐姿、倚靠或緩步前行的 queen power posture，眼神 confident dominant gaze，頭部保持正面或微側正面，另一手可自然牽起厚重外袍邊緣或扶住王座扶手；臉部不可被手杖、髮絲、披風或陰影遮擋，避免低俗 SM 化與 pin-up 構圖。",
     sceneLighting:
       "blue moonlight, red ember glow, dark cinematic contrast, gothic fire reflections, cold soft edge separation lighting；藍色月光與紅色餘燼在紅寶石胸甲、黑曜石珠寶、法杖與王座披風上形成冷暖對比，呈現 embers floating、dark mist、moonlit smoke 與 gothic atmospheric depth。",
     layers: {
@@ -3094,7 +3094,7 @@ export const WORLD_LAYER_PROFILES = [
     sceneEnvironment:
       "滿月哥德王城，前景骸骨權杖、紅燭、黑金王冠碎片、柔焦火星與少量骸骨道具形成鏡頭遮擋，中景真人角色站於黑金王座前或從王座台階緩步走出，手持紅寶石骸骨權杖並與鏡頭保持可辨識臉部正面，遠景巨大滿月、哥德尖塔、亡靈軍旗、鎧甲士兵與骷髏軍勢剪影建立世界規模感，整體是 high-impact dark royal key visual 而非安靜寫實角色卡。",
     sceneAction:
-      "人物採 standing full-body cinematic composition，肩膀放鬆但脊椎穩定，一手自然握住骸骨權杖，另一手牽起黑酒紅絲絨外袍邊緣，眼神直視鏡頭並保留原始真人臉部辨識度；頭部正面或微側正面，長髮、蕾絲袖、薄紗披帛與黑金鏈飾被夜風帶出動態，手指、權杖與飾品不遮擋臉部，不做 pin-up 坐姿。",
+      "人物採 character-dominant cinematic composition，可站於王座前、端坐王座前緣、倚靠扶手或走下台階；肩膀放鬆但脊椎穩定，一手握住骸骨權杖，另一手可牽起外袍邊緣或扶住扶手，眼神直視鏡頭並保留真人臉部辨識度；頭部正面或微側正面，長髮、蕾絲袖、薄紗披帛與鏈飾被夜風帶出動態，手指、權杖與飾品不遮擋臉部，不做 pin-up 構圖。",
     sceneLighting:
       "giant full moon key light, cold blue moonlight, ruby candle glow, black-gold specular highlights, cinematic gothic depth；巨大滿月提供冷白側前方主光，紅燭火與紅寶石在黑金金屬、骸骨權杖、蕾絲袖、指甲、項鍊與王座扶手上形成高飽和紅色反光，遠景火把與軍旗產生寶石色散景，呈現 floating embers、moonlit haze、soft gothic smoke、red bokeh particles 與高級暗黑王族商業奇幻主視覺。",
     layers: {
@@ -3246,7 +3246,7 @@ export const WORLD_LAYER_PROFILES = [
     sceneEnvironment:
       "滿月幽冥亡魂夜宴，前景紫色靈煙、花瓣與鬼燈，中景人物站於骸骨王座前召喚紫焰，遠景 moonlit spirit palace、floating ghost lanterns、ancient eastern towers 與 purple soul flames，形成 epic symmetrical arrangement。",
     sceneAction:
-      "人物 standing full-body cinematic composition，summoning spirit flame，採穩定女王站姿或緩步前行，表情 controlled queen expression，手部紫焰不遮擋臉部，避免交叉腿主視覺與 pin-up 坐姿。",
+      "人物採 character-dominant cinematic composition，summoning spirit flame，可站立、端坐王座前緣、倚靠法器台或緩步前行，表情 controlled queen expression，手部紫焰與法器不遮擋臉部，避免交叉腿主視覺與 pin-up 構圖。",
     sceneLighting:
       "purple magical glow, moonlight contrast, dark neon fantasy lighting, soul flame reflections；紫色靈焰與月光在紫色法袍、骷髏寶石、秘法冠環與黑蕾絲結構上形成夜間反光，呈現 purple spirit smoke、ghost mist、magical particles 與 dark supernatural ambience。",
     layers: {
@@ -4002,7 +4002,7 @@ export const WORLD_LAYER_PROFILES = [
       makeup: "dark queen makeup、purple-black smokey eyes、cold cinematic skin、wine-red lips 與 dominant empress gaze。",
       scene: "gothic throne cathedral、raven-filled dark palace、candlelit forbidden kingdom 與黑金夜庭大廳。",
       sceneEnvironment: "哥德王座大教堂，前景烏鴉與黑羽，中景人物站於王座前或由台階緩步走出，遠景燭火與黑金廳堂。",
-      sceneAction: "人物站姿或緩步前行 confidently，雙手自然牽起外袍邊緣或讓手臂放鬆垂落，slight queen smile，黑羽包圍畫面，臉部正面或微側正面看向鏡頭。",
+      sceneAction: "人物可站姿、端坐王座前緣、倚靠扶手或緩步前行 confidently，雙手可自然牽起外袍邊緣、持羽扇或讓手臂放鬆垂落，slight queen smile，黑羽包圍畫面但不遮臉，臉部正面或微側正面看向鏡頭。",
       sceneLighting: "low-key candle lighting、cold blue-black shadows、gold soft edge separation light accents 與 cinematic gothic glow。",
     },
     {
