@@ -81,7 +81,7 @@ export const DEFAULT_FORM = {
   costume: "",
   ...Object.fromEntries(COSTUME_LAYERS.map((layer) => [layer.id, ""])),
   makeup: "",
-  cupSize: "",
+  cupSize: "正常比例",
   selectedProfileId: "",
   finalPrompt: "",
 };
@@ -155,7 +155,7 @@ export function normalizeForm(input = {}) {
     frameEvent: sanitizeInput(form.frameEvent),
     costume: sanitizeInput(form.costume),
     makeup: sanitizeInput(form.makeup),
-    cupSize: sanitizeInput(form.cupSize),
+    cupSize: sanitizeInput(form.cupSize) || DEFAULT_FORM.cupSize,
     selectedProfileId: sanitizeInput(form.selectedProfileId),
     finalPrompt: String(form.finalPrompt || ""),
   };
@@ -272,7 +272,7 @@ function buildDarkRoyalBodyPresenceText(form, category) {
 
   return [
     "暗黑王族身形安全：胸部與身形只允許依照上傳真人原始體型自然延伸",
-    "不指定罩杯、不放大胸腰比例、不製造 pin-up 坐姿，不讓腿部或胸腰成為主視覺",
+    "罩杯只依角色卡欄位寫入，不額外放大胸腰比例、不製造 pin-up 坐姿，不讓腿部或胸腰成為主視覺",
     "服裝為深紫絲絨高訂夜宴長袍與絲綢披帛，胸口、腰線與腿部保持電影級禮服遮覆與真實布料重量",
     "保留真實胸腔厚度、肩頸連接、正常腰臀比例、自然重力與高訂禮服布料張力",
     "視覺焦點集中在原始真人臉、暗黑王族氣場、絲絨高光、禮服輪廓與電影女王銀幕存在感",
@@ -418,7 +418,7 @@ function buildFinalIdentityText(form = DEFAULT_FORM) {
 
 function buildFinalCostumeText(form, category, theme) {
   if (isDarkRoyalCategory(category, theme, form.scene)) {
-    return "真人可穿戴的深紫絲絨高訂夜宴長袍，黑紫絲綢內層，流動紫色薄紗披帛，紫蝶刺繡，紅寶石與金色鏈飾。重點是大輪廓、絲絨光澤、薄紗流動與電影高訂質感；保持禮服遮覆，不指定罩杯，不放大胸腰比例。";
+    return "真人可穿戴的深紫絲絨高訂夜宴長袍，黑紫絲綢內層，流動紫色薄紗披帛，紫蝶刺繡，紅寶石與金色鏈飾。重點是大輪廓、絲絨光澤、薄紗流動與電影高訂質感；保持禮服遮覆，不額外放大胸腰比例。";
   }
 
   const layerText = [form.costumeLayer1, form.costumeLayer3, form.costumeLayer4, form.costumeLayer6, form.costumeLayer8]

@@ -251,7 +251,7 @@ function selectedProfileCard(state) {
 }
 
 function profileDefaultCupSize(profile) {
-  return parentCategoryForProfile(profile) === "奇幻異世界 / 暗黑王族" ? "J" : "";
+  return parentCategoryForProfile(profile) === "奇幻異世界 / 暗黑王族" ? "J" : "正常比例";
 }
 
 function profileCountText(activeParentCategory, activeCategory, searchTerm) {

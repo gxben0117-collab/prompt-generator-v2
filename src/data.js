@@ -285,6 +285,16 @@ export const WORLD_LAYER_PROFILES = [
       costumeLayer10:
         "整體以紫黑絲綢、蕾絲邊薄紗、絲絨睡袍式外袍、燭光寢宮與成熟電影魅力形成 cinematic dark romantic silhouette，而非遊戲 skin 或低俗性感模板",
     },
+    makeup:
+      "成熟暗黑電影妝感，保留原始真人五官與皮膚紋理；深酒紅唇色、柔和紫棕煙燻眼影、燭光下的自然 skin reflection、黑玫瑰髮飾與紫晶耳飾形成高級夜宴魅魔氣質，不改變眼型、鼻型或臉型。",
+    scene:
+      "暗紫絲絨夜宴寢宮，深酒紅帷幕、黑曜石鏡面、哥德雕花屏風、低位燭台、紫晶酒杯與月光高窗形成高級暗黑浪漫電影空間。",
+    sceneEnvironment:
+      "暗紫絲絨夜宴寢宮，前景燭台、黑玫瑰、紫晶酒杯與薄紗帷幕形成柔焦遮擋，中景真人角色站於絲絨地毯與黑曜石鏡面前，遠景月光高窗、哥德雕花屏風、深酒紅帷幕與低位燭火建立私密但高級的 dark romantic chamber depth。",
+    sceneAction:
+      "人物剛從燭光與薄霧中緩步走出，微側正面停步看向鏡頭，雙手自然牽起絲絨外袍或薄紗披帛，手不遮臉，布料被室內氣流拉開形成紫黑色電影主視覺流線。",
+    sceneLighting:
+      "soft candlelight、moonlight window glow、luminous fantasy glamour lighting、amethyst violet haze 與 warm ruby reflection；臉部明亮可辨識，眼睛有 catchlight，珠寶與絲絨有柔和高光，避免低光死黑與塑膠 HDR。",
   },
   {
     id: "ancient-fairy",
@@ -301,7 +311,19 @@ export const WORLD_LAYER_PROFILES = [
       costumeLayer6: "超長半透明披帛與薄紗拖尾，柔光外袍，建立仙氣環繞的外層氣場",
       costumeLayer7: "雲紋肩飾與輕羽披肩，東方神話披帛，建立天界身份與神性氣場",
       costumeLayer8: "玉石吊墜、金絲髮飾、珍珠步搖，細緻東方珠寶工藝與古典仙氣頭飾",
+      costumeLayer9: "金絲花冠、玉簪與珍珠流蘇，貼合原始臉型與髮際線，不遮擋五官辨識度",
+      costumeLayer10: "白玉色薄紗、披帛、流雲裙擺與柔光空氣層共同形成完整仙宮電影輪廓",
     },
+    makeup:
+      "清透古風電影妝感，保留原始真人臉部結構與自然皮膚紋理；柔和桃粉唇色、淡棕眼線、玉色珠光眼影、珍珠步搖與金絲髮飾建立東方神話仙氣，但不美化成 AI 仙女臉。",
+    scene:
+      "雲海仙宮水榭，白玉石階、流動雲霧、古典亭台、柔光天幕、玉石燈與漂浮花瓣形成東方神話古裝電影空間。",
+    sceneEnvironment:
+      "雲海仙宮水榭，前景薄霧、花瓣與半透明披帛穿過鏡頭，中景真人角色站於白玉石階與水面反光之間，遠景古典亭台、雲海山門、玉石燈與柔光天幕建立可拍攝的仙境空間透視。",
+    sceneAction:
+      "人物正面或微側正面停步看向鏡頭，單手輕抬引動披帛，另一手自然靠近腰側，長袖與薄紗在高空微風中形成柔和弧線，臉部完整清楚。",
+    sceneLighting:
+      "soft golden skylight、misty white bounce light、soft edge separation light、dreamy atmospheric bokeh 與真實水面反光；臉部明亮自然，保留皮膚紋理與空氣透視。",
   },
   {
     id: "tang-feitian",
@@ -318,7 +340,19 @@ export const WORLD_LAYER_PROFILES = [
       costumeLayer6: "超長絲綢披帛與敦煌飛帶，從肩臂延伸到畫面空間",
       costumeLayer7: "刺繡肩披與飛天飄袖，建立神聖舞蹈感與身份氣場",
       costumeLayer8: "金絲髮飾、步搖、額飾與珍珠吊飾，建立盛唐高級電影珠寶層次",
+      costumeLayer9: "敦煌額飾、金冠小飾與珠串流蘇，沿髮髻自然垂落，不改變真人臉部輪廓",
+      costumeLayer10: "金紅披帛、飛天飄帶、長裙與沙塵光束共同形成盛唐壁畫式電影大輪廓",
     },
+    makeup:
+      "盛唐飛天電影妝感，保留真人五官比例；金棕眼影、朱紅唇色、敦煌額飾、珍珠步搖與柔和舞台底妝建立宗教壁畫與盛唐舞姬氣質，不改變臉型與眼型。",
+    scene:
+      "敦煌石窟金色壁畫神殿，斑駁佛像浮雕、青銅聖火燈台、金色壁畫石柱、飛天壁畫與沙塵光束形成盛唐宗教電影空間。",
+    sceneEnvironment:
+      "敦煌石窟金色壁畫神殿，前景青銅聖火燈台、沙塵粒子與飄帶遮擋，中景真人角色位於壁畫與石階前，遠景斑駁佛像浮雕、飛天壁畫、金色石柱與斜上方天窗建立神聖縱深。",
+    sceneAction:
+      "人物正面或微側正面停在舞步轉折瞬間，雙手帶動超長披帛與敦煌飛帶，裙片與飄帶形成大 S 型流線，臉部完整看向鏡頭，動作符合真實人體重心。",
+    sceneLighting:
+      "golden temple skylight、warm sacred fire glow、dusty volumetric beams、silk highlight 與 soft edge separation light；臉部清楚可辨識，金飾與飄帶有真實反光。",
   },
   {
     id: "wuxia-heroine",
@@ -335,7 +369,19 @@ export const WORLD_LAYER_PROFILES = [
       costumeLayer6: "旅行斗篷或短披風，建立風塵感與場景互動",
       costumeLayer7: "肩部布披與輕型護肩，建立女俠身份但不厚重",
       costumeLayer8: "低調髮簪、布帶、劍鞘與江湖配飾，建立角色高級感",
+      costumeLayer9: "束髮布帶、木簪與小型護符，保持江湖實用感並讓臉部完整露出",
+      costumeLayer10: "斗篷、窄袖長袍、腰帶、劍鞘與風沙共同形成俐落可行動的武俠電影輪廓",
     },
+    makeup:
+      "自然武俠電影妝感，保留原始真人骨相與皮膚細節；乾淨霧面底妝、淡紅唇色、細緻眼線與束髮布帶形成江湖女俠氣質，不做網美妝或動漫化五官。",
+    scene:
+      "山道古驛江湖場景，風沙石階、古木牌樓、遠山薄霧、破舊酒旗、石牆與斜陽形成武俠電影旅途空間。",
+    sceneEnvironment:
+      "山道古驛江湖場景，前景風沙、披風邊緣與草葉遮擋，中景真人角色站於石階或古道中央，遠景古木牌樓、破舊酒旗、石牆、遠山薄霧與斜陽建立江湖旅途尺度。",
+    sceneAction:
+      "人物以三分之一微側但臉部正向鏡頭的姿態停步，單手自然靠近腰帶或劍鞘，另一手牽動斗篷邊緣，衣料受風形成斜向流線，眼神越過鏡頭看向遠方威脅。",
+    sceneLighting:
+      "low golden sunset key light、dust haze、cool mountain shadow、soft rim light on hair and cloak；臉部清楚、布料與劍鞘有自然反光，保持真實武俠電影攝影感。",
   },
   {
     id: "fallen-angel",
@@ -352,7 +398,19 @@ export const WORLD_LAYER_PROFILES = [
       costumeLayer6: "燒灼感大教堂外袍與長拖尾，建立神聖破碎氣場",
       costumeLayer7: "黑羽肩飾與殘翼披掛，建立墮天使身份，不遮擋臉部",
       costumeLayer8: "銀色聖物珠寶、黑珍珠鏈條與破碎光環頭飾",
+      costumeLayer9: "破碎銀色光環、黑羽髮飾與細鏈流蘇，沿頭部外輪廓延展但不遮擋臉部",
+      costumeLayer10: "黑白聖袍拖尾、殘翼披掛、灰燼與月光共同形成墮天使出場的神聖破碎 silhouette",
     },
+    makeup:
+      "冷白神聖破碎電影妝感，保留真人臉部結構；灰棕煙燻眼影、低飽和玫瑰唇、銀色聖物耳飾、破碎光環髮飾與黑羽陰影建立墮天使女王氣質，不重塑五官。",
+    scene:
+      "破碎哥德大教堂廢墟，月光高窗、斷裂石柱、燒灼聖袍布料、黑羽、灰燼與破碎祭壇形成神聖破碎的 dark fantasy cinema 空間。",
+    sceneEnvironment:
+      "破碎哥德大教堂廢墟，前景黑羽、灰燼、碎石與冷霧遮擋，中景真人角色站於破碎祭壇前，遠景月光高窗、斷裂石柱、殘破拱頂與燒灼聖袍布料形成悲傷神性的空間深度。",
+    sceneAction:
+      "人物正面或微側正面站於破碎祭壇前，外袍與黑羽肩飾被冷風掀起，單手自然牽起長拖尾或觸碰破碎聖物，臉部完整看向鏡頭，形成墮落神性出場瞬間。",
+    sceneLighting:
+      "cold moonlight through cathedral windows、soft silver rim light、ash haze、black feather shadow 與 subtle sacred bloom；臉部可辨識，銀色聖甲與珠寶保留真實高光，避免遊戲引擎感。",
   },
   {
     id: "fallen-feather-night-court",

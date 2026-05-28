@@ -1237,7 +1237,7 @@ describe("prompt engine", () => {
     expect(darkBanquet).toContain("夜宴魅姬式正面或三分之一微側正面站姿");
     expect(darkBanquet).toContain("雙手自然牽起深紫絲絨外袍邊緣");
     expect(darkBanquet).toContain("緩步前行看向鏡頭");
-    expect(darkBanquet).toContain("不指定罩杯");
+    expect(darkBanquet).toContain("罩杯只依角色卡欄位寫入");
     expect(darkBanquet).toContain("胸口、腰線與腿部保持電影級禮服遮覆");
     expect(darkBanquet).toContain("預設單女主電影海報構圖");
     expect(darkBanquet).not.toContain("主題允許少量 small-scale cinematic silhouettes");
@@ -1372,13 +1372,13 @@ describe("prompt engine", () => {
 
     expect(darkRoyal).toContain("暗黑王族身形安全");
     expect(darkRoyal).toContain("依照上傳真人原始體型自然延伸");
-    expect(darkRoyal).toContain("不指定罩杯");
-    expect(darkRoyal).toContain("不放大胸腰比例");
+    expect(darkRoyal).toContain("罩杯只依角色卡欄位寫入");
+    expect(darkRoyal).toContain("不額外放大胸腰比例");
     expect(darkRoyal).toContain("不製造 pin-up 坐姿");
     expect(darkRoyal).toContain("深紫絲絨高訂夜宴長袍");
     expect(darkRoyal).toContain("真實胸腔厚度");
     expect(darkRoyal).toContain("視覺焦點集中在原始真人臉");
-    expect(inferredDarkRoyal).toContain("不指定罩杯");
+    expect(inferredDarkRoyal).toContain("罩杯只依角色卡欄位寫入");
     expect(inferredDarkRoyal).toContain("分類：夜宴魅魔／高訂睡袍電影");
     expect(inferredDarkRoyal).toContain("輸出比例控制：4:5 premium commercial fantasy poster");
     expect(darkRoyal).not.toContain("不做動漫誇張身材");
@@ -1597,7 +1597,7 @@ describe("prompt engine", () => {
     expect(instruction).not.toContain("罩杯:J");
   });
 
-  it("writes cup size into the final skeleton only when the role card field has data", () => {
+  it("writes cup size into the final skeleton from the role card field or normal default", () => {
     const darkInstruction = buildChatGptInstruction({
       category: "奇幻異世界 / 暗黑王族",
       theme: "紫蝶夜宴魅魔",
@@ -1609,14 +1609,21 @@ describe("prompt engine", () => {
       theme: "長安夜宴樂姬",
       scene: "長安宮廷花宴",
     });
+    const emptyCupInstruction = buildChatGptInstruction({
+      category: "世界地標旅拍 / 都市時尚",
+      theme: "巴黎黃昏旅拍女主",
+      cupSize: "",
+    });
 
     expect(getHiddenSystemPrompt()).toContain("【真實人體骨架】");
     expect(getHiddenSystemPrompt()).toContain("- 罩杯j");
     expect(darkInstruction).toContain("真實人體骨架");
     expect(darkInstruction).toContain('胸腔厚度、罩杯 "J"、軀幹深度');
-    expect(darkInstruction).toContain("不指定罩杯");
+    expect(darkInstruction).toContain("不額外放大胸腰比例");
     expect(darkInstruction).not.toContain("- 罩杯:J");
     expect(darkInstruction).not.toContain("真實人體骨架追加：罩杯:J");
+    expect(normalInstruction).toContain('胸腔厚度、罩杯 "正常比例"、軀幹深度');
+    expect(emptyCupInstruction).toContain('胸腔厚度、罩杯 "正常比例"、軀幹深度');
     expect(normalInstruction).not.toContain('罩杯 "J"');
     expect(normalInstruction).not.toContain("- 罩杯j");
     expect(normalInstruction).not.toContain("- 罩杯:J");
