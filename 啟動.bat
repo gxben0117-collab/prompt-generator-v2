@@ -20,7 +20,8 @@ start "" "index.html"
 
 echo [成功] 應用程式已在瀏覽器中打開
 echo.
-echo 提示：如需使用本地伺服器，請執行：
-echo   npm run dev
+echo 提示：本專案目前走單檔 HTML，直接開 index.html 即可。
+echo 如需重新建置，請執行：
+echo   npm.cmd run check
 echo.
 pause

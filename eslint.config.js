@@ -3,7 +3,18 @@ import js from "@eslint/js";
 export default [
   js.configs.recommended,
   {
-    ignores: ["dist/**", "coverage/**", "node_modules/**"],
+    ignores: [
+      "**/*",
+      "!src/**",
+      "!tests/**",
+      "!scripts/create_standalone_html.mjs",
+      "!scripts/prepare-vite-entry.mjs",
+      "!scripts/sync-core-spec-module.mjs",
+      "!scripts/verify-ui.mjs",
+      "dist/**",
+      "coverage/**",
+      "node_modules/**",
+    ],
   },
   {
     files: ["src/**/*.js"],
@@ -23,7 +34,13 @@ export default [
     },
   },
   {
-    files: ["tests/**/*.js", "scripts/**/*.mjs"],
+    files: [
+      "tests/**/*.js",
+      "scripts/create_standalone_html.mjs",
+      "scripts/prepare-vite-entry.mjs",
+      "scripts/sync-core-spec-module.mjs",
+      "scripts/verify-ui.mjs",
+    ],
     languageOptions: {
       ecmaVersion: 2024,
       sourceType: "module",
