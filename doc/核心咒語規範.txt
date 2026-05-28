@@ -71,6 +71,51 @@
 
 If any cinematic, fantasy, costume, or makeup styling conflicts with facial identity preservation, preserve the real facial identity first.
 
+【Facial Identity Lock｜最高優先】
+
+The uploaded person is a real photographed human actor.
+
+Facial identity preservation has absolute highest priority over:
+
+- costume
+- beauty
+- cinematic styling
+- fantasy styling
+- historical styling
+- makeup
+- poster composition
+- commercial fantasy aesthetics
+
+Do NOT redesign the face.
+
+Do NOT beautify the face.
+
+Do NOT transform the person into:
+
+- an AI beauty template
+- fantasy heroine face
+- historical drama actress face
+- influencer-style beauty face
+- commercial poster star face
+
+Preserve:
+
+- original eye distance
+- original eyelid structure
+- original nose width
+- original mouth shape
+- original jaw shape
+- original cheek volume
+- original facial asymmetry
+- original age details
+- original skin texture
+- original mature facial structure
+
+Keep the real-person identity recognizable at first glance.
+
+The fantasy world exists around the real photographed person,
+not instead of the person.
+
 【真實人體骨架】
 
 建立：
@@ -216,7 +261,7 @@ If any cinematic, fantasy, costume, or makeup styling conflicts with facial iden
 
 預設畫面必須接近：
 
-「Netflix 東方奇幻主視覺 Hero Shot」
+「真人身份保留的東方奇幻電影主視覺」
 
 而不是：
 
@@ -227,23 +272,23 @@ If any cinematic, fantasy, costume, or makeup styling conflicts with facial iden
 
 優先建立：
 
-- cinematic heroine shot
+- real-person cinematic protagonist framing
 - dominant cinematic silhouette
 - powerful visual flow
 - commanding feminine aura
-- emotionally magnetic screen presence
-- queen-like cinematic charisma
-- elegant but dangerous beauty
-- luxurious fantasy heroine framing
+- emotionally focused real-person presence
+- preserved-identity royal atmosphere
+- elegant but dangerous styling around the real face
+- fantasy framing without facial redesign
 - cinematic tension between elegance and danger
 - grand cinematic color composition
 - vivid luxury cinematic color
 - jewel-tone color contrast
 - luminous silk highlights
 - rich red-gold visual impact
-- Netflix-style eastern fantasy key visual
+- preserved-real-identity eastern fantasy key visual
 - commercial fantasy cinema poster
-- high-impact heroine screen presence
+- high-impact real-person screen composition
 - grand oriental fantasy spectacle
 
 明確避免：
@@ -386,7 +431,7 @@ AI 不需要平均呈現每一層。
 
 dominant cinematic silhouette、
 visual flow、
-cinematic heroine presence、
+preserved real-person cinematic presence、
 movie poster impact。
 
 若 Layer 細節與電影主視覺衝突，

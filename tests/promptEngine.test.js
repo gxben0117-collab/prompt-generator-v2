@@ -67,7 +67,7 @@ const BATCH_PROFILE_EXPECTATIONS = [
   ["jiangnan-water-pavilion-cyan-fairy", "水榭青衣仙子", "江南古裝輪廓", "江南水榭"],
   ["western-border-riding-consort", "西域邊關皇妃", "沙漠邊關皇妃", "夕陽沙漠邊城"],
   ["purple-moon-night-court-empress", "紫月夜庭魔后", "紫月古堡王座魔后", "紫月古堡王座"],
-  ["changan-night-banquet-musician", "長安夜宴樂姬", "長安夜宴樂姬 Hero Shot", "長安盛唐花宴主視覺"],
+  ["changan-night-banquet-musician", "長安夜宴樂姬", "長安夜宴樂姬真人身份保留主視覺", "長安盛唐花宴主視覺"],
   ["moon-weaving-dream-enchantress", "月紗織夢魅姬", "月光絲絨寢宮", "月光絲絨織夢寢宮"],
   ["fallen-wing-holy-city-heiress", "墮翼聖城遺女", "墮翼剪影", "崩壞聖城"],
   ["tang-night-banquet-chief-musician", "長安夜宴之首席樂姬", "長安首席樂姬電影主視覺輪廓", "長安夜宴之首席樂姬主視覺"],
@@ -981,7 +981,7 @@ describe("prompt engine", () => {
     expect(nightMusician.layers.costumeLayer7).toContain("盛唐花宴主視覺");
     expect(nightMusician.makeup).toContain("朱紅花鈿");
     expect(nightMusician.sceneLighting).toContain("volumetric light haze");
-    expect(nightMusician.scene).toContain("Hero Shot");
+    expect(nightMusician.scene).toContain("真人身份保留");
     expect(nightMusician.sceneEnvironment).toContain("宴席群演");
     expect(nightMusician.sceneEnvironment).toContain("祖母綠帷幕");
     expect(nightMusician.sceneLighting).toContain("vivid luxury color grading");
@@ -1058,7 +1058,7 @@ describe("prompt engine", () => {
     expect(blackWing.layers.costumeLayer10).toContain("非夜宴魅魔線");
   });
 
-  it("raises generated prompts from character sheet to commercial fantasy hero shot language", () => {
+  it("raises generated prompts from character sheet to preserved-identity commercial fantasy visual language", () => {
     const prompt = buildPrompt({
       theme: "長安夜宴樂姬",
       scene: "長安盛唐花宴大殿",
@@ -1066,14 +1066,15 @@ describe("prompt engine", () => {
     });
 
     expect(prompt).toContain("commercial fantasy cinema key visual");
-    expect(prompt).toContain("Hero Shot");
+    expect(prompt).toContain("preserved real-person identity");
+    expect(prompt).toContain("recognizable original face");
     expect(prompt).toContain("dominant cinematic silhouette");
     expect(prompt).toContain("vivid luxury color grading");
     expect(prompt).toContain("jewel-tone highlights");
     expect(prompt).toContain("red-gold lantern glow");
     expect(prompt).toContain("ruby red silk");
-    expect(prompt).toContain("Netflix 東方奇幻主視覺 Hero Shot");
-    expect(prompt).toContain("Netflix-style eastern fantasy key visual");
+    expect(prompt).toContain("真人身份保留的東方奇幻電影主視覺");
+    expect(prompt).toContain("preserved-real-identity eastern fantasy key visual");
     expect(prompt).toContain("deep garnet velvet");
     expect(prompt).toContain("emerald drapery");
     expect(prompt).toContain("wet floor color reflection");
@@ -1095,6 +1096,8 @@ describe("prompt engine", () => {
     expect(prompt).not.toContain("AI 必須");
     expect(prompt).not.toContain("明確排除");
     expect(prompt).not.toContain("Primary Read 70%");
+    expect(prompt).not.toContain("Hero Shot");
+    expect(prompt).not.toContain("heroine screen presence");
     expect(prompt).not.toContain("暗紫絲絨寢宮");
     expect(prompt).not.toContain("不要");
   });
@@ -1127,8 +1130,8 @@ describe("prompt engine", () => {
     expect(darkBanquet).toContain("單手輕扶絲絨外袍");
     expect(darkBanquet).toContain("另一手自然帶起半透明薄紗");
     expect(darkBanquet).toContain("眼神越過燭光直視鏡頭");
-    expect(netflixMode).toContain("主視覺模式：Netflix 東方奇幻主視覺 Hero Shot");
-    expect(netflixMode).toContain("Netflix-style eastern fantasy key visual");
+    expect(netflixMode).toContain("主視覺模式：真人身份保留的東方奇幻電影主視覺");
+    expect(netflixMode).toContain("preserved-real-identity eastern fantasy key visual");
     expect(netflixMode).toContain("peony crimson");
     expect(netflixMode).toContain("重點放在真實布料重量、絲綢反光、裙襬堆疊");
     expect(darkBanquet).toContain("分類：");
@@ -1356,6 +1359,11 @@ describe("prompt engine", () => {
     expect(instruction).toContain("原始臉型");
     expect(instruction).toContain("原始眼型");
     expect(instruction).toContain("原始鼻型");
+    expect(instruction).toContain("【Facial Identity Lock｜最高優先】");
+    expect(instruction).toContain("Do NOT redesign the face.");
+    expect(instruction).toContain("Do NOT beautify the face.");
+    expect(instruction).toContain("original eyelid structure");
+    expect(instruction).toContain("The fantasy world exists around the real photographed person");
     expect(instruction).toContain("50mm 全片幅中遠景電影構圖");
     expect(instruction).toContain("【輸出格式】");
     expect(instruction).toContain("分類：");

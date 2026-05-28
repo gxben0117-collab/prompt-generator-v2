@@ -335,9 +335,9 @@ function buildCameraFramingText(cameraFraming = DEFAULT_FORM.cameraFraming) {
 
 const VISUAL_MODE_TEXT = {
   "Netflix 東方奇幻": [
-    "主視覺模式：Netflix 東方奇幻主視覺 Hero Shot，真人女主角位於東方奇幻影集海報中心",
-    "主角權重最高，畫面第一眼先看到真人女主角、大輪廓、飛舞披帛、紅金寶石色、燈籠花宴、群演景深與視覺流線",
-    "必須具備 Netflix-style eastern fantasy key visual、commercial fantasy cinema poster、high-impact heroine screen presence 與 grand oriental fantasy spectacle",
+    "主視覺模式：真人身份保留的東方奇幻電影主視覺，真實上傳人物位於影集海報中心但不重塑五官",
+    "主角權重最高，畫面第一眼先看到原始真人臉部辨識度、大輪廓、飛舞披帛、紅金寶石色、燈籠花宴、群演景深與視覺流線",
+    "必須具備 preserved-real-identity eastern fantasy key visual、commercial fantasy cinema poster、high-impact real-person screen composition 與 grand oriental fantasy spectacle",
   ],
   "暗黑夜宴": [
     "主視覺模式：暗黑夜宴電影主視覺，人物位於絲絨寢宮、燭光長廊或哥德夜宴空間中心",
@@ -415,7 +415,7 @@ function buildStyleVisualDetailText(form = DEFAULT_FORM) {
     `電影主視覺：${focus}`,
     colorText,
     fabricText,
-    "commercial fantasy cinema key visual, Hero Shot, dominant cinematic silhouette, emotionally magnetic screen presence, vivid luxury color grading, jewel-tone highlights, luminous silk sheen",
+    "commercial fantasy cinema key visual built around preserved real-person identity, dominant cinematic silhouette, recognizable original face, vivid luxury color grading, jewel-tone highlights, luminous silk sheen",
   ].join("；");
 }
 
@@ -425,7 +425,7 @@ function inferFrameEvent(theme, scene) {
     return "角色剛從絲絨陰影與燭光中轉身看向鏡頭，外袍與薄紗被室內氣流拉開，月光剛好擦過眼神與唇部邊緣，形成危險又高級的 cinematic reveal";
   }
   if (/唐|長安|盛唐|宮廷|花宴|牡丹|鳳/.test(text)) {
-    return "角色剛穿過紅金燈籠與花宴人群，披帛在空中展開，燭火與花瓣同時掠過前景，像東方奇幻影集女主角出場的 Hero Shot";
+    return "角色剛穿過紅金燈籠與花宴人群，披帛在空中展開，燭火與花瓣同時掠過前景，像真人身份被完整保留的東方奇幻影集主視覺出場瞬間";
   }
   if (/墮天使|黑羽|黑翼|廢墟|神殿/.test(text)) {
     return "角色剛從破碎聖光、灰燼與黑羽之間抬頭，披風和羽毛被冷風掀起，畫面停在悲傷神性與危險感同時爆發的一瞬間";
