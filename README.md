@@ -1,8 +1,10 @@
-﻿# 出圖自組咒語生產器 v1.04
+﻿# 出圖自組咒語生產器 v1.05
 
 真人電影級出圖咒語表單工具。主入口是可直接開啟的單檔 `index.html`，用來把使用者輸入的主題、服裝 Layer、妝容、場景、常用圖片尺寸與人物構圖組成「導演式生成層咒語」。
 
 ## 核心理念
+
+最高原則：真人鎖臉優先於所有華麗主視覺，不讓角色滑回 AI 仙女臉。
 
 人物必須是「真人演員被拍進奇幻電影世界」，不是重新設計 AI 美女角色。
 
@@ -103,6 +105,7 @@ versions/index_v1.00_before_v1.01.html
 versions/index_v1.01_before_v1.02.html
 versions/index_v1.02_before_v1.03.html
 versions/index_v1.03_before_v1.04.html
+versions/index_v1.04_before_v1.05.html
 ```
 
 建置驗證通過後，再保存當前正式版：
@@ -122,6 +125,7 @@ versions/index_v1.01.html
 versions/index_v1.02.html
 versions/index_v1.03.html
 versions/index_v1.04.html
+versions/index_v1.05.html
 ```
 
 ## 目前輸出架構

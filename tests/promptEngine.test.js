@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import fs from "node:fs";
+import { URL } from "node:url";
 import {
   COSTUME_SUGGESTIONS,
   LAYER_SUGGESTIONS,
@@ -111,6 +113,12 @@ const BATCH_PROFILE_EXPECTATIONS = [
 ];
 
 describe("prompt engine", () => {
+  it("keeps real-face lock as the visible product principle", () => {
+    const mainSource = fs.readFileSync(new URL("../src/main.js", import.meta.url), "utf8");
+    expect(mainSource).toContain("最高原則：真人鎖臉優先於所有華麗主視覺，不讓角色滑回 AI 仙女臉。");
+    expect(mainSource).toContain("const PRODUCT_PRINCIPLE");
+  });
+
   it("ships built-in role and costume suggestions", () => {
     expect(ROLE_SUGGESTIONS).toContain("大唐公主");
     expect(ROLE_SUGGESTIONS).toContain("大唐飛天");

@@ -24,7 +24,8 @@ const HISTORY_KEY = "hongbing-travel-prompt-history";
 const UI_PREFS_KEY = "hongbing-travel-prompt-ui-prefs";
 const HISTORY_LIMIT = 5;
 const ALL_FILTER_LABEL = "全部";
-const APP_VERSION = "v1.04";
+const APP_VERSION = "v1.05";
+const PRODUCT_PRINCIPLE = "最高原則：真人鎖臉優先於所有華麗主視覺，不讓角色滑回 AI 仙女臉。";
 const PARENT_ROLE_CATEGORIES = [
   {
     label: "中國歷代服裝",
@@ -401,6 +402,7 @@ function render() {
             <div class="eyebrow">CINEMATIC PROMPT BUILDER</div>
             <h1>出圖自組咒語生產器 <span class="version-mark">${APP_VERSION}</span></h1>
             <p>填少量關鍵資訊，輸出可貼給 ChatGPT 的真人電影級生成層咒語。</p>
+            <p class="principle-line">${PRODUCT_PRINCIPLE}</p>
           </div>
           <div class="status-chip">單檔 HTML｜${APP_VERSION}</div>
         </header>

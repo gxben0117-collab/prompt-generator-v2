@@ -66,6 +66,13 @@ textarea {
   line-height: 1.65;
 }
 
+.app-header .principle-line {
+  max-width: 760px;
+  color: #ead7b8;
+  font-size: 0.92rem;
+  font-weight: 800;
+}
+
 .eyebrow {
   margin-bottom: 8px;
   color: var(--accent-strong);
