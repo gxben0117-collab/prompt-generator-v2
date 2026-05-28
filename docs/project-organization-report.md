@@ -2,7 +2,7 @@
 
 更新日期：2026-05-29
 
-本文件記錄 `出圖自組咒語生產器` 目前結構、混亂點、建議整理方向與後續搬移清單。第一階段只做文件與維護規則整理，不刪除、不搬移原始檔案。
+本文件記錄 `出圖自組咒語生產器` 目前結構、混亂點、已完成整理、建議保留清單與後續改善方向。
 
 ## 專案定位
 
@@ -22,9 +22,10 @@
 | `核心資料/` | 大型規範、風格範例、服飾結構資料 | 建議整理到 `docs/core/` 或保持為資料庫資料夾 |
 | `versions/` | 歷史單檔 `index.html` 快照 | 保留，release archive |
 | `backups/` | 手動備份資料 | 保留，manual backup |
+| `archive/` | legacy、experimental、misc 保留區 | 保留，不作為正式入口 |
 | `dist/` | Vite build 輸出 | 不追蹤，output |
 | `node_modules/` | npm 安裝依賴 | 不追蹤，dependency cache |
-| `docs/` | 第一階段新增正式整理文件 | 建議作為正式文件入口 |
+| `docs/` | 正式文件、部署文件、報告與 task 文件 | 文件入口 |
 
 ## 根目錄混亂點
 
@@ -45,16 +46,16 @@
 
 | 檔案 / 資料夾 | 觀察 | 建議 |
 | --- | --- | --- |
-| `debug.log` | log 暫存，已由 `.gitignore` 忽略 | 可移到 `tmp/` 或保留本機，不提交 |
-| `test.txt` | 小型測試檔 | 建議移到 `tmp/` 或刪除前先確認 |
-| `AITask.md` | 空檔案 | 建議移到 `docs/tasks/` 或移除前確認 |
-| `core.js` | 舊版或 legacy 單檔核心，未在目前 Vite app 被引用 | 建議標記為 legacy，後續移至 `archive/legacy/` |
-| `GitHub部署說明.md` | 部署文件，未追蹤 | 建議移到 `docs/deployment/` 後再提交 |
-| `上架成功報告.md` | 上架報告，未追蹤 | 建議移到 `docs/reports/` |
-| `部署問題排查.md` | 部署排查文件，未追蹤 | 建議移到 `docs/reports/` 或 `docs/deployment/` |
-| `修復完成報告.md` | 修復報告，已追蹤 | 建議移到 `docs/reports/` |
-| `專案分析報告.md` | 舊分析報告，已追蹤 | 建議移到 `docs/reports/` |
-| `scripts/add_*.mjs`, `scripts/update_*.mjs`, `scripts/*dark*.mjs` | 多數是一階段資料批次修改腳本 | 建議移到 `scripts/maintenance/` |
+| `debug.log` | log 暫存，已由 `.gitignore` 忽略 | 保留本機，不提交 |
+| `archive/misc/test.txt` | 小型測試檔 | 已移至 archive 保留 |
+| `docs/tasks/AITask.md` | 空 task 檔案 | 已移至 tasks |
+| `archive/legacy/core.js` | 舊版或 legacy 單檔核心，未在目前 Vite app 被引用 | 已移至 legacy |
+| `docs/deployment/GitHub部署說明.md` | 部署文件 | 已移至 deployment |
+| `docs/reports/上架成功報告.md` | 上架報告 | 已移至 reports |
+| `docs/deployment/部署問題排查.md` | 部署排查文件 | 已移至 deployment |
+| `docs/reports/修復完成報告.md` | 修復報告 | 已移至 reports |
+| `docs/reports/專案分析報告.md` | 舊分析報告 | 已移至 reports |
+| `scripts/maintenance/*.mjs` | 歷史批次修改腳本與舊式檢查腳本 | 已移至 maintenance |
 | `scripts/create_standalone_html.mjs`, `prepare-vite-entry.mjs`, `sync-core-spec-module.mjs`, `verify-ui.mjs` | 正式 build/check 流程使用 | 保留在 `scripts/` |
 
 ## 建議正式資料夾架構
@@ -80,6 +81,10 @@
 ├─ 核心資料/
 ├─ versions/
 ├─ backups/
+├─ archive/
+│  ├─ legacy/
+│  ├─ experimental/
+│  └─ misc/
 ├─ tmp/              # local only, ignored
 ├─ output/           # local only, ignored
 ├─ dist/             # generated, ignored
@@ -121,9 +126,9 @@ Python 專案：
 
 本階段先不改部署流程，避免影響已正常運作的 Pages。
 
-## 建議搬移清單
+## 已完成搬移清單
 
-第一階段不搬移。第二階段可考慮：
+第二階段已完成下列搬移，全部保留原始內容，沒有刪除檔案：
 
 | 來源 | 目的地 |
 | --- | --- |
@@ -132,10 +137,20 @@ Python 專案：
 | `上架成功報告.md` | `docs/reports/上架成功報告.md` |
 | `修復完成報告.md` | `docs/reports/修復完成報告.md` |
 | `專案分析報告.md` | `docs/reports/專案分析報告.md` |
-| `AITask.md` | `docs/tasks/AITask.md` 或移除前確認 |
-| `test.txt` | `tmp/test.txt` 或移除前確認 |
+| `AITask.md` | `docs/tasks/AITask.md` |
+| `test.txt` | `archive/misc/test.txt` |
 | `core.js` | `archive/legacy/core.js` |
 | 一次性 `scripts/*.mjs` | `scripts/maintenance/` |
+| `src/userLibrary.js` | `archive/experimental/userLibrary.js` |
+
+## 待整合項目
+
+| 路徑 | 狀態 |
+| --- | --- |
+| `archive/experimental/userLibrary.js` | localStorage 自訂角色 / 服裝庫模組，目前沒有被 UI import；正式啟用前需要補 UI 串接與測試 |
+| `scripts/maintenance/lint.mjs` | 舊式檢查腳本，引用 legacy `core.js` / `prompt_governance.js`，不屬於目前正式流程 |
+| `scripts/maintenance/test.mjs` | 舊式 smoke test，引用 legacy `core.js` / `prompt_governance.js`，不屬於目前正式流程 |
+| `scripts/maintenance/*.mjs` | 多數為一次性資料批次工具，部分含舊專案硬編碼路徑，重跑前需先審查 |
 
 ## 建議保留 / 忽略清單
 

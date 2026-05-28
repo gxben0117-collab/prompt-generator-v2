@@ -80,10 +80,12 @@ src/styles.css                     # UI 樣式與 responsive
 doc/核心咒語規範.txt                # 固定母板來源
 src/coreSpec.js                    # 由 doc/核心咒語規範.txt 同步產生
 scripts/                           # 建置、同步、驗證與資料維護腳本
+scripts/maintenance/               # 歷史批次維護腳本，重跑前需審查
 tests/promptEngine.test.js         # prompt engine 測試
 versions/                          # 舊版 index.html release 快照
 backups/                           # 手動備份
 docs/                              # 專案文件與整理報告
+archive/                           # legacy / experimental / temp 保留區
 核心資料/                           # 大型規範與風格資料
 dist/                              # Vite build 暫存輸出，不追蹤
 ```
@@ -107,7 +109,9 @@ doc/核心咒語規範.txt
 - `versions/` 是單檔 release archive，保留歷史快照。
 - `backups/` 是手動備份，保留但不作為主要開發入口。
 - `scripts/create_standalone_html.mjs`、`prepare-vite-entry.mjs`、`sync-core-spec-module.mjs`、`verify-ui.mjs` 是正式流程腳本。
-- 其他批次修改資料的 `scripts/*.mjs` 多屬 maintenance 腳本，重跑前需先讀內容與確認用途。
+- 其他批次修改資料的舊腳本已移至 `scripts/maintenance/`，重跑前需先讀內容、確認硬編碼路徑與用途。
+- `archive/legacy/core.js` 是舊版單檔核心保留，不是目前 Vite app 入口。
+- `archive/experimental/userLibrary.js` 是尚未整合進 UI 的 localStorage 自訂資料模組，正式使用前需補測試與 import。
 - `package-lock.json` 應保留在版本控制中，確保 Node 依賴可重現。
 - GitHub Pages 目前部署整個 repo 根目錄，新增大型暫存或報告前要先判斷是否應被追蹤。
 
