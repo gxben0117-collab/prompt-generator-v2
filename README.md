@@ -1,4 +1,4 @@
-﻿# 出圖自組咒語生產器 v1.08
+﻿# 出圖自組咒語生產器 v1.09
 
 真人電影級出圖咒語表單工具。主入口是可直接開啟的單檔 `index.html`，用來把使用者輸入的主題、服裝 Layer、妝容、場景、常用圖片尺寸與人物構圖組成「導演式生成層咒語」。
 
@@ -130,10 +130,13 @@ versions/index_v1.05.html
 versions/index_v1.06.html
 versions/index_v1.07.html
 versions/index_v1.08.html
+versions/index_v1.09.html
 ```
 
 ## 版本重點
 
+- `v1.09`：重整角色大分類 mapping。大分類只看模板標題、主題、分類、id 與別名，不再掃服裝 Layer / 場景全文，避免西方、暗黑、世界景點模板被「古裝」「神話」「花園」等泛詞誤吸。
+- `v1.09`：修正 `中國歷代服裝` 不再顯示墮羽夜庭魔姬、凡爾賽花庭公主；`仙俠神話 / 古裝陸劇` 不再顯示雅典神殿祭儀。
 - `v1.08`：新增背景角色控制與商業奇幻亮場系統。生成層預設為單女主電影海報，背景以建築、光影、水霧、燈籠、布料與空間透視撐場；只有宮廷宴會、戰場、市集、宗教儀式、王朝典禮等必要主題才允許少量 `small-scale cinematic silhouettes`。
 - `v1.08`：暗黑王族、夜宴魅魔、月夜女王、紫晶神女、黑玫瑰女王等主題會自動加入 `Commercial Fantasy Glamour Lighting`，避免臉部壓暗、黑色服裝死黑、珠寶無高光。
 - `v1.08`：清理容易造成背景路人與設定卡感的觸發詞，生成層不再用 `movie still`、`grand oriental fantasy spectacle`、`environmental storytelling`、`遠景群演` 等舊語意。

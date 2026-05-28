@@ -17,6 +17,7 @@ import {
   sanitizeInput,
   suggestThemeRewrite,
 } from "../src/promptEngine.js";
+import { parentCategoryForProfile } from "../src/categoryClassifier.js";
 
 const BATCH_ROLE_LABELS = [
   "月下紅衣花神",
@@ -118,6 +119,25 @@ describe("prompt engine", () => {
     const mainSource = fs.readFileSync(new URL("../src/main.js", import.meta.url), "utf8");
     expect(mainSource).toContain("最高原則：真人鎖臉優先於所有華麗主視覺，不讓角色滑回 AI 仙女臉。");
     expect(mainSource).toContain("const PRODUCT_PRINCIPLE");
+  });
+
+  it("uses explicit defaults for the three director weight controls", () => {
+    const form = normalizeForm({});
+
+    expect(form.visualMode).toBe("Netflix 東方奇幻");
+    expect(form.colorIntensity).toBe("紅金寶石");
+    expect(form.fabricMotion).toBe("大動態飄紗");
+  });
+
+  it("maps world templates into the correct parent role categories", () => {
+    const byId = (id) => WORLD_LAYER_PROFILES.find((profile) => profile.id === id);
+
+    expect(parentCategoryForProfile(byId("fallen-feather-night-court"))).toBe("奇幻異世界 / 暗黑王族");
+    expect(parentCategoryForProfile(byId("versailles-garden-princess"))).toBe("西方古典 / 歐陸史詩");
+    expect(parentCategoryForProfile(byId("athens-temple-ritual"))).toBe("西方古典 / 歐陸史詩");
+    expect(parentCategoryForProfile(byId("changan-phoenix-candle-bride"))).toBe("中國歷代服裝");
+    expect(parentCategoryForProfile(byId("sky-white-dragon-saint"))).toBe("仙俠神話 / 古裝陸劇");
+    expect(parentCategoryForProfile(byId("moon-weaving-dream-enchantress"))).toBe("奇幻異世界 / 暗黑王族");
   });
 
   it("ships built-in role and costume suggestions", () => {

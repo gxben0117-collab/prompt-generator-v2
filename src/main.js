@@ -18,127 +18,19 @@ import {
   expandSceneToDirectorFields,
   normalizeForm,
 } from "./promptEngine.js";
+import {
+  ALL_FILTER_LABEL,
+  PARENT_ROLE_CATEGORIES,
+  normalizeSearchText,
+  parentCategoryForProfile,
+} from "./categoryClassifier.js";
 
 const STORAGE_KEY = "hongbing-travel-prompt-state";
 const HISTORY_KEY = "hongbing-travel-prompt-history";
 const UI_PREFS_KEY = "hongbing-travel-prompt-ui-prefs";
 const HISTORY_LIMIT = 5;
-const ALL_FILTER_LABEL = "全部";
-const APP_VERSION = "v1.08";
+const APP_VERSION = "v1.09";
 const PRODUCT_PRINCIPLE = "最高原則：真人鎖臉優先於所有華麗主視覺，不讓角色滑回 AI 仙女臉。";
-const PARENT_ROLE_CATEGORIES = [
-  {
-    label: "中國歷代服裝",
-    keywords: [
-      "中國朝代",
-      "大唐",
-      "盛唐",
-      "唐代",
-      "長安",
-      "大周",
-      "清宮",
-      "故宮",
-      "宮廷",
-      "皇后",
-      "貴妃",
-      "王姬",
-      "民國",
-      "江南",
-      "書香",
-      "仕女",
-      "水榭",
-      "水鄉",
-      "古鎮",
-      "荷塘",
-      "牡丹",
-      "中式",
-      "古裝",
-    ],
-  },
-  {
-    label: "武俠江湖 / 戰場女將",
-    keywords: ["武俠", "江湖", "女俠", "劍", "戰場", "女將", "長城", "邊關", "血色江湖", "劍門", "華山"],
-  },
-  {
-    label: "仙俠神話 / 古裝陸劇",
-    keywords: [
-      "仙俠",
-      "修真",
-      "神話",
-      "飛天",
-      "聖女",
-      "神女",
-      "仙姬",
-      "天界",
-      "仙宮",
-      "神域",
-      "鳳凰",
-      "白龍",
-      "水鏡",
-      "晶花",
-      "深海",
-      "水下",
-      "倒影",
-      "龍宮",
-      "月宮",
-      "瑤池",
-      "九尾",
-      "狐仙",
-      "陰陽",
-      "紫櫻",
-      "古裝陸劇",
-    ],
-  },
-  {
-    label: "東方異域 / 絲路西域",
-    keywords: ["西域", "絲路", "大漠", "沙漠", "樓蘭", "敦煌", "莫高窟", "波斯", "中亞", "沙海", "赤砂", "駱駝"],
-  },
-  {
-    label: "奇幻異世界 / 暗黑王族",
-    keywords: [
-      "魅魔",
-      "魔姬",
-      "魔后",
-      "魔王",
-      "魔殿",
-      "暗黑",
-      "黑暗",
-      "哥德",
-      "墮天使",
-      "墮羽",
-      "黑羽",
-      "黑翼",
-      "冥界",
-      "幽冥",
-      "亡靈",
-      "血族",
-      "吸血鬼",
-      "夜庭",
-      "黑鴉",
-      "亡魂",
-      "紫晶",
-      "骸骨",
-      "奇幻魔法",
-    ],
-  },
-  {
-    label: "西方古典 / 歐陸史詩",
-    keywords: ["雅典", "希臘", "奧林匹斯", "神諭", "巴洛克", "歐陸", "文藝復興", "古堡", "聖殿", "凡爾賽", "歌劇"],
-  },
-  {
-    label: "世界景點旅拍",
-    keywords: ["世界地標", "世界旅拍", "歐洲", "巴黎", "威尼斯", "首爾", "北境", "水城", "古橋", "海岸", "旅拍", "水巷"],
-  },
-  {
-    label: "現代都市 / 街拍電影",
-    keywords: ["現代", "都市", "都會", "city pop", "霓虹", "街頭", "街拍", "韓系", "賽博", "電競", "格鬥", "未來"],
-  },
-  {
-    label: "花園童話 / 自然精靈",
-    keywords: ["花園", "花靈", "森林", "精靈", "童話", "白玫", "花神", "夢幻", "花海", "晶花", "水鏡", "自然", "紫陽花"],
-  },
-];
-
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -273,10 +165,6 @@ function allRoleCategories() {
   ].filter((category) => category && category !== ALL_FILTER_LABEL);
 }
 
-function normalizeSearchText(value) {
-  return String(value || "").toLowerCase();
-}
-
 function parentCategoryButtons(activeParentCategory) {
   return [ALL_FILTER_LABEL, ...PARENT_ROLE_CATEGORIES.map((category) => category.label)]
     .map(
@@ -286,19 +174,12 @@ function parentCategoryButtons(activeParentCategory) {
     .join("");
 }
 
-function parentCategoryForText(value) {
-  const haystack = normalizeSearchText(value);
-  return PARENT_ROLE_CATEGORIES.find((parent) =>
-    parent.keywords.some((keyword) => haystack.includes(normalizeSearchText(keyword))),
-  )?.label;
-}
-
 function worldProfileSearchText(profile) {
   return `${profile.title} ${profile.themeHint} ${profile.category} ${profile.id} ${(profile.aliases || []).join(" ")} ${Object.values(profile.layers || {}).join(" ")} ${profile.makeup || ""} ${profile.scene || ""} ${profile.sceneEnvironment || ""} ${profile.sceneAction || ""} ${profile.sceneLighting || ""}`;
 }
 
 function profileMatchesParent(profile, activeParentCategory) {
-  return activeParentCategory === ALL_FILTER_LABEL || parentCategoryForText(worldProfileSearchText(profile)) === activeParentCategory;
+  return activeParentCategory === ALL_FILTER_LABEL || parentCategoryForProfile(profile) === activeParentCategory;
 }
 
 function profileMatchesFineCategory(profile, activeCategory) {
