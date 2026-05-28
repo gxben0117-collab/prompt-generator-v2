@@ -285,6 +285,19 @@ try {
     }
     await page.locator('input[name="profileSearch"]').fill("");
 
+    await clickSingle(page, page.locator('[data-world-profile="crimson-gold-secret-temple-priestess"]'), "crimson-gold-secret-temple-priestess", viewport.name);
+    if (!(await page.locator('textarea[name="scene"]').inputValue()).includes("赤金古文明秘殿")) {
+      throw new Error(`${viewport.name}: setup profile did not fill 赤金古文明秘殿`);
+    }
+    await page.locator('input[name="profileSearch"]').fill("紫蝶夜宴魅魔");
+    await clickSingle(page, page.locator('[data-world-profile="dark-succubus"]'), "dark-succubus", viewport.name);
+    const staleScene = await page.locator('textarea[name="scene"]').inputValue();
+    const staleEnvironment = await page.locator('textarea[name="sceneEnvironment"]').inputValue();
+    if (staleScene.includes("赤金古文明秘殿") || staleEnvironment.includes("赤金古文明秘殿")) {
+      throw new Error(`${viewport.name}: previous profile scene leaked into scene-less profile`);
+    }
+    await page.locator('input[name="profileSearch"]').fill("");
+
     for (const profile of profileChecks) {
       await page.getByRole("button", { name: "清空" }).click();
       await page.getByLabel("主題（必填）").fill("舊角色主題");

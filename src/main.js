@@ -605,33 +605,33 @@ function applyWorldLayerProfile(form, profileId) {
   const profile = WORLD_LAYER_PROFILES.find((item) => item.id === profileId);
   if (!profile) return;
 
-  if (profile.category && form.elements.category) {
-    form.elements.category.value = profile.category;
+  if (form.elements.category) {
+    form.elements.category.value = profile.category || "";
   }
   if (form.elements.theme) {
-    form.elements.theme.value = profile.themeHint;
+    form.elements.theme.value = profile.themeHint || "";
   }
-  if (profile.makeup && form.elements.makeup) {
-    form.elements.makeup.value = profile.makeup;
+  if (form.elements.makeup) {
+    form.elements.makeup.value = profile.makeup || "";
   }
-  if (profile.scene && form.elements.scene) {
-    form.elements.scene.value = profile.scene;
+  if (form.elements.scene) {
+    form.elements.scene.value = profile.scene || "";
   }
-  if (profile.sceneEnvironment && form.elements.sceneEnvironment) {
-    form.elements.sceneEnvironment.value = profile.sceneEnvironment;
+  if (form.elements.sceneEnvironment) {
+    form.elements.sceneEnvironment.value = profile.sceneEnvironment || "";
   }
-  if (profile.sceneAction && form.elements.sceneAction) {
-    form.elements.sceneAction.value = profile.sceneAction;
+  if (form.elements.sceneAction) {
+    form.elements.sceneAction.value = profile.sceneAction || "";
   }
-  if (profile.sceneLighting && form.elements.sceneLighting) {
-    form.elements.sceneLighting.value = profile.sceneLighting;
+  if (form.elements.sceneLighting) {
+    form.elements.sceneLighting.value = profile.sceneLighting || "";
   }
   if (form.elements.cupSize) {
     form.elements.cupSize.value = profile.cupSize || profileDefaultCupSize(profile);
   }
   COSTUME_LAYERS.forEach((layer) => {
-    if (profile.layers[layer.id]) {
-      form.elements[layer.id].value = profile.layers[layer.id];
+    if (form.elements[layer.id]) {
+      form.elements[layer.id].value = profile.layers?.[layer.id] || "";
     }
   });
   if (form.elements.selectedProfileId) {
