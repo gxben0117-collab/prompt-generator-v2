@@ -1081,6 +1081,11 @@ describe("prompt engine", () => {
     expect(prompt).toContain("cinematic trailing sleeves");
     expect(prompt).toContain("宴會群演");
     expect(prompt).toContain("畫面事件");
+    expect(prompt).toContain("動作鏡頭語言");
+    expect(prompt).toContain("盛唐夜宴女主角穿過燈籠與花瓣回身");
+    expect(prompt).toContain("50mm eye-level cinematic blocking");
+    expect(prompt).toContain("臉部完整可見");
+    expect(prompt).toContain("肩頸、胸腔、骨盆與雙腳重心符合真實成年人體結構");
     expect(prompt).toContain("cinematic reveal");
     expect(prompt).toContain("visual narrative");
     expect(prompt).toContain("電影主視覺：");
@@ -1118,6 +1123,10 @@ describe("prompt engine", () => {
     expect(darkBanquet).toContain("哥德雕花床榻");
     expect(darkBanquet).toContain("深酒紅天鵝絨窗簾");
     expect(darkBanquet).toContain("dark romantic chamber depth");
+    expect(darkBanquet).toContain("夜宴魅姬式緩慢轉身");
+    expect(darkBanquet).toContain("單手輕扶絲絨外袍");
+    expect(darkBanquet).toContain("另一手自然帶起半透明薄紗");
+    expect(darkBanquet).toContain("眼神越過燭光直視鏡頭");
     expect(netflixMode).toContain("主視覺模式：Netflix 東方奇幻主視覺 Hero Shot");
     expect(netflixMode).toContain("Netflix-style eastern fantasy key visual");
     expect(netflixMode).toContain("peony crimson");
@@ -1147,6 +1156,8 @@ describe("prompt engine", () => {
 
     expect(prompt).toContain("電影主視覺：紅金披帛形成巨大 S 型流線");
     expect(prompt).toContain("畫面事件：她剛穿過燭火與花瓣回身");
+    expect(prompt).toContain("動作鏡頭語言");
+    expect(prompt).toContain("布料、披帛、長袖、外袍或髮絲跟隨動作產生可拍攝的 visual leading lines");
     expect(prompt).toContain("movie still");
     expect(prompt).not.toContain("Primary Read 70%");
     expect(prompt).not.toContain("不要把所有元素平均塞進畫面");
@@ -1286,8 +1297,11 @@ describe("prompt engine", () => {
     expect(form.sceneEnvironment).toContain("哥德式石柱王座廳");
     expect(form.sceneEnvironment).toContain("近景");
     expect(form.sceneEnvironment).toContain("遠景");
-    expect(form.sceneAction).toContain("克制壓迫感");
-    expect(form.sceneAction).toContain("手部不遮臉");
+    expect(form.sceneAction).toContain("夜宴魅姬式緩慢轉身");
+    expect(form.sceneAction).toContain("身體三分之一側向鏡頭");
+    expect(form.sceneAction).toContain("50mm eye-level cinematic blocking");
+    expect(form.sceneAction).toContain("臉部完整清楚");
+    expect(form.sceneAction).toContain("肩頸、胸腔、骨盆與雙腳重心符合真實成年人體結構");
     expect(form.sceneCamera).toContain("50mm");
     expect(form.sceneCamera).toContain("中遠景");
     expect(form.sceneCamera).toContain("人物構圖：膝蓋以上");

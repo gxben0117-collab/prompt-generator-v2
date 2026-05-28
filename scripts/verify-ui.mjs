@@ -144,7 +144,7 @@ try {
     await page.reload({ waitUntil: "domcontentloaded" });
 
     const title = await page.title();
-    if (title !== "出圖自組咒語生產器 v0.98") {
+    if (title !== "出圖自組咒語生產器 v0.99") {
       throw new Error(`${viewport.name}: unexpected page title ${title}`);
     }
 
@@ -152,8 +152,8 @@ try {
     if ((await page.getByRole("heading", { name: /出圖自組咒語生產器/ }).count()) !== 1) {
       throw new Error(`${viewport.name}: visible app name was not updated`);
     }
-    if ((await page.getByText("v0.98", { exact: true }).count()) < 1) {
-      throw new Error(`${viewport.name}: visible version v0.98 missing`);
+    if ((await page.getByText("v0.99", { exact: true }).count()) < 1) {
+      throw new Error(`${viewport.name}: visible version v0.99 missing`);
     }
     if ((await page.getByText("HONGBING CINEMATIC PROMPT", { exact: true }).count()) !== 0) {
       throw new Error(`${viewport.name}: old English app header still visible`);

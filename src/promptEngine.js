@@ -295,19 +295,25 @@ function buildDarkRoyalBodyPresenceText(form, category) {
 
 function inferEmotionalAction(theme, scene) {
   const text = `${theme} ${scene}`;
-  if (/魅魔|女王|哥德|暗夜|王座/.test(text)) {
-    return "帶有克制壓迫感的停留凝視，肩線穩定，呼吸很輕，手指自然掠過垂落布料或王座扶手，情緒像正在掌控整個空間";
+  if (isDarkBanquetTheme(theme, scene)) {
+    return "夜宴魅姬式緩慢轉身，身體三分之一側向鏡頭，單手輕扶絲絨外袍或黑曜石床柱，另一手自然帶起半透明薄紗，眼神越過燭光直視鏡頭，腰胯重心穩定、肩頸放鬆、臉部完整清楚";
+  }
+  if (/女王|哥德|暗夜|王座|魔后|血族|冥界/.test(text)) {
+    return "女王式低速起身或倚靠王座扶手，身體微向鏡頭旋轉，手指自然掠過扶手、珠寶鏈或垂落布料，肩線穩定，眼神具有壓迫感與情緒吸引力";
+  }
+  if (/唐|長安|盛唐|宮廷|花宴|牡丹|鳳|樂姬|舞姬/.test(text)) {
+    return "盛唐夜宴女主角穿過燈籠與花瓣回身，單手帶動披帛或團扇，另一手自然壓住長袖，步伐停在轉身瞬間，長裙與飄帶形成 S 型視線流線，臉部完整面向鏡頭";
   }
   if (/飛天|仙|瑤池|雲海|神族|聖女|月白/.test(text)) {
-    return "帶有清冷神性的緩慢旋身或停步回望，長袖、飛帶與披帛被動作帶出柔和弧線，眼神安靜但有情緒牽引";
+    return "清冷神性的緩慢旋身或停步回望，單手輕抬引動長袖與披帛，另一手自然靠近腰側或道具，脊椎挺直但不僵硬，衣料在高空風或神域氣流中形成柔和弧線";
   }
   if (/武俠|女俠|江湖|邊關|劍/.test(text)) {
-    return "帶有警覺與故事感的停步側身，手部自然靠近腰帶或劍鞘，眼神越過鏡頭看向遠方威脅";
+    return "江湖女俠停步側身回望，前腳穩定踩地，手部自然靠近腰帶、劍鞘或披風邊緣，長袍受風形成斜向流線，眼神越過鏡頭看向遠方威脅";
   }
   if (/賽博|霓虹|都市|特工|雨夜/.test(text)) {
-    return "帶有任務感的緩慢前行，肩頸放鬆但目光專注，手部自然收在身側或輕觸外套邊緣";
+    return "雨夜任務式緩慢前行，肩頸放鬆但目光專注，單手輕觸外套邊緣或耳側通訊裝置，另一手自然垂落，濕地反光與外套下擺跟隨步伐形成動態線條";
   }
-  return "帶有角色情緒的自然電影動作，停留凝視、緩慢行走、微微回身或與場景道具互動，動作來自角色故事而不是擺拍";
+  return "帶有角色情緒的自然電影動作，角色在緩慢行走、停步回身、抬眼凝視或觸碰場景道具的瞬間被拍下，手部與布料互動自然，臉部完整清楚，動作來自角色故事";
 }
 
 const FIXED_CAMERA_TEXT = "50mm 全片幅中遠景電影構圖，人物完整入鏡，真實人像拍攝距離，近景 / 中景 / 遠景分層清楚";
@@ -373,6 +379,16 @@ function buildSceneVisualDetailText(form = DEFAULT_FORM) {
   return "場景以可拍攝的近景、中景、遠景建立電影空間：近景提供花瓣、燭火、霧氣、布料或建築遮擋，中景放置真人角色與動態服裝，遠景建立建築、天光、群演或地形輪廓，形成完整 cinematic environmental storytelling";
 }
 
+function buildActionCinematographyText(form = DEFAULT_FORM) {
+  const action = form.sceneAction || inferEmotionalAction(form.theme, `${form.scene} ${form.sceneEnvironment}`);
+  return [
+    `動作鏡頭語言：${action}`,
+    "50mm eye-level cinematic blocking，真人臉部完整可見，眼神是表演核心",
+    "肩頸、胸腔、骨盆與雙腳重心符合真實成年人體結構，手指比例自然，手部不遮擋臉部",
+    "布料、披帛、長袖、外袍或髮絲跟隨動作產生可拍攝的 visual leading lines",
+  ].join("；");
+}
+
 function buildStyleVisualDetailText(form = DEFAULT_FORM) {
   const visualModeText = VISUAL_MODE_TEXT[form.visualMode] || VISUAL_MODE_TEXT[DEFAULT_FORM.visualMode];
   const colorText = COLOR_INTENSITY_TEXT[form.colorIntensity] || COLOR_INTENSITY_TEXT[DEFAULT_FORM.colorIntensity];
@@ -425,6 +441,7 @@ function buildHeroShotText(form = DEFAULT_FORM) {
   return [
     buildStyleVisualDetailText(form),
     buildFrameEventText(form),
+    buildActionCinematographyText(form),
     buildSceneVisualDetailText(form),
     "側前方柔和主光、燭光或月光環境光、soft edge separation light、volumetric light haze、natural depth of field、realistic air perspective 共同建立可拍攝的電影空氣感",
   ].join("；");
@@ -461,7 +478,7 @@ export function expandSceneToDirectorFields(input = {}) {
       `${scene}，近景加入可被鏡頭拍到的遮擋元素、花瓣、紅金燈籠、燭火、飄紗、寶石色布景、濕亮地面色彩倒影與空氣粒子，中景放置真人角色作為畫面能量中心與 Primary Read，遠景建立建築、宴會群演、侍女、樂師、天光或人群輪廓，形成艷麗商業奇幻電影主視覺與真實空間深度`,
     sceneAction:
       form.sceneAction ||
-      `${inferEmotionalAction(theme, scene)}；${inferFrameEvent(theme, scene)}；肩頸放鬆，手部不遮臉，臉部完整可見，角色具主角 aura 與銀幕存在感，服裝布料跟隨動作形成 airborne translucent shawls、cinematic trailing sleeves 與視線導引流線`,
+      `${inferEmotionalAction(theme, scene)}；${inferFrameEvent(theme, scene)}；50mm eye-level cinematic blocking，臉部完整清楚，眼神是表演核心，肩頸、胸腔、骨盆與雙腳重心符合真實成年人體結構，服裝布料跟隨動作形成 airborne translucent shawls、cinematic trailing sleeves 與視線導引流線`,
     sceneCamera: `${buildCameraFramingText(form.cameraFraming)}，鏡頭高度接近眼平`,
     sceneLighting:
       form.sceneLighting ||
