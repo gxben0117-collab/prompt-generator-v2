@@ -1080,16 +1080,18 @@ describe("prompt engine", () => {
     expect(prompt).toContain("airborne translucent shawls");
     expect(prompt).toContain("cinematic trailing sleeves");
     expect(prompt).toContain("宴會群演");
-    expect(prompt).toContain("不要灰藍低飽和");
-    expect(prompt).toContain("電影主視覺導演層");
-    expect(prompt).toContain("Primary Read 70%");
-    expect(prompt).toContain("Secondary Read 20%");
-    expect(prompt).toContain("Tertiary Read 10%");
     expect(prompt).toContain("畫面事件");
     expect(prompt).toContain("cinematic reveal");
     expect(prompt).toContain("visual narrative");
-    expect(prompt).toContain("創作自由");
+    expect(prompt).toContain("電影主視覺：");
+    expect(prompt).toContain("長安宮廷花宴");
+    expect(prompt).toContain("紅金夜宴大殿");
     expect(prompt).not.toContain("Character Sheet");
+    expect(prompt).not.toContain("AI 必須");
+    expect(prompt).not.toContain("明確排除");
+    expect(prompt).not.toContain("Primary Read 70%");
+    expect(prompt).not.toContain("暗紫絲絨寢宮");
+    expect(prompt).not.toContain("不要");
   });
 
   it("supports vivid visual weight controls without changing the five-field output shape", () => {
@@ -1112,10 +1114,13 @@ describe("prompt engine", () => {
     expect(darkBanquet).toContain("amethyst violet atmosphere");
     expect(darkBanquet).toContain("deep wine-red silk");
     expect(darkBanquet).toContain("extra-long flowing silk drapery");
+    expect(darkBanquet).toContain("暗紫絲絨寢宮");
+    expect(darkBanquet).toContain("哥德雕花床榻");
+    expect(darkBanquet).toContain("深酒紅天鵝絨窗簾");
+    expect(darkBanquet).toContain("dark romantic chamber depth");
     expect(netflixMode).toContain("主視覺模式：Netflix 東方奇幻主視覺 Hero Shot");
     expect(netflixMode).toContain("Netflix-style eastern fantasy key visual");
     expect(netflixMode).toContain("peony crimson");
-    expect(netflixMode).toContain("不要灰藍低飽和");
     expect(netflixMode).toContain("重點放在真實布料重量、絲綢反光、裙襬堆疊");
     expect(darkBanquet).toContain("分類：");
     expect(darkBanquet).toContain("主題：");
@@ -1123,6 +1128,11 @@ describe("prompt engine", () => {
     expect(darkBanquet).toContain("妝容：");
     expect(darkBanquet).toContain("場景：");
     expect(darkBanquet).not.toContain("角色定位：");
+    expect(darkBanquet).not.toContain("AI 必須");
+    expect(darkBanquet).not.toContain("明確排除安靜寫實路線");
+    expect(darkBanquet).not.toContain("不要灰藍低飽和");
+    expect(darkBanquet).not.toContain("場景可加入");
+    expect(darkBanquet).not.toContain("不要");
     expect(netflixMode).not.toContain("主視覺模式：電影角色設定檔");
     expect(netflixMode).not.toContain("柔和電影主調");
   });
@@ -1135,11 +1145,12 @@ describe("prompt engine", () => {
       frameEvent: "她剛穿過燭火與花瓣回身，群演與燈籠在遠景襯托她出場",
     });
 
-    expect(prompt).toContain("電影主視覺導演層：紅金披帛形成巨大 S 型流線");
+    expect(prompt).toContain("電影主視覺：紅金披帛形成巨大 S 型流線");
     expect(prompt).toContain("畫面事件：她剛穿過燭火與花瓣回身");
-    expect(prompt).toContain("Primary Read 70%");
-    expect(prompt).toContain("不要把所有元素平均塞進畫面");
     expect(prompt).toContain("movie still");
+    expect(prompt).not.toContain("Primary Read 70%");
+    expect(prompt).not.toContain("不要把所有元素平均塞進畫面");
+    expect(prompt).not.toContain("不要生成");
   });
 
   it("adds dark royal mature body presence only for dark fantasy categories", () => {
@@ -1158,9 +1169,10 @@ describe("prompt engine", () => {
     expect(darkRoyal).toContain("成熟豐滿但真實的成年女性體積感");
     expect(darkRoyal).toContain("couture support");
     expect(darkRoyal).toContain("真實胸腔厚度");
-    expect(darkRoyal).toContain("不做動漫誇張身材或低俗身體焦點");
+    expect(darkRoyal).toContain("視覺焦點集中在黑暗王族氣場");
     expect(darkRoyal).not.toContain("J");
     expect(darkRoyal).not.toContain("罩杯");
+    expect(darkRoyal).not.toContain("不做動漫誇張身材");
     expect(changan).not.toContain("暗黑王族身形預設");
   });
 
@@ -1209,7 +1221,7 @@ describe("prompt engine", () => {
     expect(prompt).toContain("服裝：");
     expect(prompt).toContain("dark romantic gothic couture");
     expect(prompt).toContain("服裝 Layer 參考");
-    expect(prompt).toContain("Layer list is reference, not equal-priority checklist");
+    expect(prompt).toContain("服裝主視覺集中在主輪廓");
     expect(prompt).toContain("L1: skin-tight black silk inner lining");
     expect(prompt).toContain("L8: luxury gemstone chains and gothic jewelry");
     expect(prompt).not.toContain("L2: lace-trim couture support");
@@ -1246,7 +1258,7 @@ describe("prompt engine", () => {
     expect(form.costumeLayer8).toContain("鍊條");
     expect(prompt).toContain("L1:");
     expect(prompt).not.toContain("L10:");
-    expect(prompt).toContain("不要平均展示每一層細節");
+    expect(prompt).toContain("Layer 細節自然融入高訂戲服");
   });
 
   it("overwrites stale costume layers with Tang dynasty layer expansion", () => {

@@ -237,9 +237,9 @@ function buildCostumeLayerText(form, theme) {
   return [
     form.costume || `依據「${theme}」建立電影級可穿戴戲服`,
     layerSummary ? `服裝 Layer 參考：${layerSummary}` : "",
-    "Layer list is reference, not equal-priority checklist；服裝只需保留主輪廓、主材質、主色彩與一到兩個記憶點，不要平均展示每一層細節。",
-    "AI director 可依電影主視覺自由整合 Layer，讓絲綢、薄紗、披帛、珠寶或羽飾服務 dominant cinematic silhouette、visual flow 與角色銀幕存在感。",
-    "真實布料重量、真實縫製、電影高訂質感；避免 costume catalog、cosplay、game skin、anime outfit。",
+    "服裝主視覺集中在主輪廓、主材質、主色彩與一到兩個記憶點，Layer 細節自然融入高訂戲服而不搶畫面焦點。",
+    "絲綢、薄紗、披帛、珠寶或羽飾共同服務 dominant cinematic silhouette、visual flow 與角色銀幕存在感。",
+    "真實布料重量、真實縫製、電影高訂質感，整體呈現真人演員可穿戴的 cinematic couture costume。",
   ]
     .filter(Boolean)
     .join(" ");
@@ -289,7 +289,7 @@ function buildDarkRoyalBodyPresenceText(form, category) {
     "暗黑王族身形預設：成熟豐滿但真實的成年女性體積感",
     "上身輪廓需由 couture support、structured silk gown、velvet robe drapery 與真實胸腰支撐結構承托",
     "保留真實胸腔厚度、自然重力、肩頸連接、正常腰臀比例與高訂禮服布料張力",
-    "視覺焦點是黑暗王族氣場、絲綢高光、禮服支撐與電影女王銀幕存在感，不做動漫誇張身材或低俗身體焦點",
+    "視覺焦點集中在黑暗王族氣場、絲綢高光、禮服支撐、真實人體重心與電影女王銀幕存在感",
   ].join("；");
 }
 
@@ -318,17 +318,17 @@ function buildCameraFramingText(cameraFraming = DEFAULT_FORM.cameraFraming) {
 
 const VISUAL_MODE_TEXT = {
   "Netflix 東方奇幻": [
-    "主視覺模式：Netflix 東方奇幻主視覺 Hero Shot，人物不是安靜寫實紀錄，也不是角色設定卡，而是東方奇幻影集女主角海報中心",
+    "主視覺模式：Netflix 東方奇幻主視覺 Hero Shot，真人女主角位於東方奇幻影集海報中心",
     "主角權重最高，畫面第一眼先看到真人女主角、大輪廓、飛舞披帛、紅金寶石色、燈籠花宴、群演景深與視覺流線",
     "必須具備 Netflix-style eastern fantasy key visual、commercial fantasy cinema poster、high-impact heroine screen presence 與 grand oriental fantasy spectacle",
   ],
   "暗黑夜宴": [
-    "主視覺模式：暗黑夜宴電影主視覺，人物位於絲絨寢宮、燭光長廊或哥德夜宴空間中心，不走安靜寫實",
+    "主視覺模式：暗黑夜宴電影主視覺，人物位於絲絨寢宮、燭光長廊或哥德夜宴空間中心",
     "保留成熟暗黑浪漫氣質、危險感、柔和皮膚反光、紫黑酒紅絲綢、動態外袍與女王式銀幕存在感",
   ],
   "商業奇幻海報": [
     "主視覺模式：商業奇幻電影海報，人物是畫面中心，保留高衝擊色彩、動態服裝與電影女主角銀幕存在感",
-    "畫面需具有大色塊、大輪廓、前中遠景、群演或建築尺度與可辨識世界觀，不要退成安靜寫實人物照",
+    "畫面具有大色塊、大輪廓、前中遠景、群演或建築尺度與可辨識世界觀",
   ],
 };
 
@@ -352,23 +352,49 @@ const FABRIC_MOTION_TEXT = {
     "布料動態：靜態垂墜，重點放在真實布料重量、絲綢反光、裙襬堆疊與高訂戲服結構，不做過度飛散",
 };
 
-function buildVisualPriorityText(form = DEFAULT_FORM) {
+function isDarkBanquetTheme(theme = "", scene = "") {
+  return /魅魔|魅姬|寢宮|絲絨|暗紫|哥德|黑玫瑰|黑曜|暗黑夜宴/.test(`${theme} ${scene}`);
+}
+
+function buildSceneVisualDetailText(form = DEFAULT_FORM) {
+  const text = `${form.theme} ${form.scene} ${form.sceneEnvironment}`;
+  if (isDarkBanquetTheme(form.theme, `${form.scene} ${form.sceneEnvironment}`)) {
+    return "暗紫絲絨寢宮、哥德雕花床榻或夜宴內殿作為主空間，前景可見燭台、黑玫瑰、薄紗帷幕與玻璃酒杯柔焦遮擋，中景真人角色被絲綢睡袍式外袍與半透明夜紗包圍，遠景月光高窗、深酒紅天鵝絨窗簾、黑曜石鏡面、低位燭火與少量夜宴賓客剪影形成私密而高級的 dark romantic chamber depth";
+  }
+  if (/唐|長安|盛唐|宮廷|花宴|牡丹|鳳/.test(text)) {
+    return "長安宮廷花宴或紅金夜宴大殿作為主空間，前景燭火、牡丹、花瓣與半透明披帛穿過鏡頭，中景真人角色位於燈籠與群演視線中心，遠景金色廊柱、寶石色帷幕、宴會群演、侍女樂師、宴席人群與濕亮地面倒影形成盛唐商業奇幻電影規模";
+  }
+  if (/墮天使|黑羽|黑翼|廢墟|神殿/.test(text)) {
+    return "破碎哥德神殿或黑羽廢墟作為主空間，前景灰燼、羽毛、碎石與冷霧遮擋，中景真人角色被黑羽輪廓與破碎披風包圍，遠景斷裂石柱、月光高窗、殘破拱頂與暗紫聖光形成悲傷神性的 dark fantasy cinema depth";
+  }
+  if (/賽博|霓虹|都市|雨夜/.test(text)) {
+    return "雨夜霓虹街區作為主空間，前景雨滴、玻璃反光與招牌色塊遮擋，中景真人角色從濕亮地面反射中走近鏡頭，遠景高樓、車燈、人群輪廓與霓虹招牌壓成淺景深色彩層次";
+  }
+  return "場景以可拍攝的近景、中景、遠景建立電影空間：近景提供花瓣、燭火、霧氣、布料或建築遮擋，中景放置真人角色與動態服裝，遠景建立建築、天光、群演或地形輪廓，形成完整 cinematic environmental storytelling";
+}
+
+function buildStyleVisualDetailText(form = DEFAULT_FORM) {
+  const visualModeText = VISUAL_MODE_TEXT[form.visualMode] || VISUAL_MODE_TEXT[DEFAULT_FORM.visualMode];
+  const colorText = COLOR_INTENSITY_TEXT[form.colorIntensity] || COLOR_INTENSITY_TEXT[DEFAULT_FORM.colorIntensity];
+  const fabricText = FABRIC_MOTION_TEXT[form.fabricMotion] || FABRIC_MOTION_TEXT[DEFAULT_FORM.fabricMotion];
   const focus =
     form.visualFocus ||
-    "主角大型 silhouette、動態布料流線、情緒凝視、紅金或暗紫寶石色光影，以及能讓觀眾第一眼停住的電影主視覺";
+    (isDarkBanquetTheme(form.theme, `${form.scene} ${form.sceneEnvironment}`)
+      ? "女主角的暗紫絲綢輪廓、燭光中的眼神、深酒紅薄紗與絲絨外袍形成第一視覺焦點"
+      : "真人女主角的大型 silhouette、動態布料流線、情緒凝視與寶石色光影形成第一視覺焦點");
 
   return [
-    `電影主視覺導演層：${focus}`,
-    "Primary Read 70%：先讓觀眾讀到真人女主角、巨大輪廓、畫面事件與情緒吸引力",
-    "Secondary Read 20%：再讀到光影方向、布料運動、色彩衝擊、群演或建築尺度",
-    "Tertiary Read 10%：最後才讀到珠寶、刺繡、髮飾與 Layer 工藝細節",
-    "不要把所有元素平均塞進畫面；每個細節都必須服務 Primary Read、visual narrative 與 cinematic heroine presence",
+    visualModeText.join("；"),
+    `電影主視覺：${focus}`,
+    colorText,
+    fabricText,
+    "commercial fantasy cinema key visual, Hero Shot, dominant cinematic silhouette, emotionally magnetic screen presence, vivid luxury color grading, jewel-tone highlights, luminous silk sheen",
   ].join("；");
 }
 
 function inferFrameEvent(theme, scene) {
   const text = `${theme} ${scene}`;
-  if (/魅魔|魅姬|夜宴|寢宮|絲絨|暗紫|哥德/.test(text)) {
+  if (isDarkBanquetTheme(theme, scene)) {
     return "角色剛從絲絨陰影與燭光中轉身看向鏡頭，外袍與薄紗被室內氣流拉開，月光剛好擦過眼神與唇部邊緣，形成危險又高級的 cinematic reveal";
   }
   if (/唐|長安|盛唐|宮廷|花宴|牡丹|鳳/.test(text)) {
@@ -390,36 +416,22 @@ function buildFrameEventText(form = DEFAULT_FORM) {
   const event = form.frameEvent || inferFrameEvent(form.theme, `${form.scene} ${form.sceneEnvironment}`);
   return [
     `畫面事件：${event}`,
-    "這不是姿勢說明，而是 visual narrative；畫面必須像電影事件中的一瞬間 movie still，有風、光、布料、粒子、眼神與環境互動共同推動敘事",
-    "以 cinematic reveal、emotional tension、dangerous elegance、atmospheric depth、frame narrative 建立主視覺，不要生成靜態角色卡或服裝展示照",
+    "visual narrative movie still，風、光、布料、粒子、眼神與環境互動共同推動敘事",
+    "cinematic reveal、emotional tension、dangerous elegance、atmospheric depth、frame narrative 共同建立主視覺",
   ].join("；");
 }
 
 function buildHeroShotText(form = DEFAULT_FORM) {
-  const visualModeText = VISUAL_MODE_TEXT[form.visualMode] || VISUAL_MODE_TEXT[DEFAULT_FORM.visualMode];
-  const colorText = COLOR_INTENSITY_TEXT[form.colorIntensity] || COLOR_INTENSITY_TEXT[DEFAULT_FORM.colorIntensity];
-  const fabricText = FABRIC_MOTION_TEXT[form.fabricMotion] || FABRIC_MOTION_TEXT[DEFAULT_FORM.fabricMotion];
-
   return [
-    ...visualModeText,
-    "主視覺權重：以 commercial fantasy cinema key visual / Hero Shot 建立畫面",
-    "真人角色必須是畫面能量中心，具 emotionally magnetic screen presence、commanding feminine aura、dominant cinematic silhouette 與 queen-like cinematic charisma",
-    buildVisualPriorityText(form),
+    buildStyleVisualDetailText(form),
     buildFrameEventText(form),
-    colorText,
-    "色彩必須具高級艷麗視覺衝擊，使用 vivid luxury color grading、rich cinematic color contrast、jewel-tone highlights、red-gold lantern glow、luminous silk sheen 與 saturated but realistic cinematic palette",
-    fabricText,
-    "服裝布料需參與構圖運動，使用 extra-long flowing silk drapery、airborne translucent shawls、cinematic trailing sleeves、floating ceremonial ribbons 與 movement-driven fabric silhouette 形成視線導引",
-    "場景可加入宴會群演、侍女、樂師、紅金燈籠、寶石色帷幕、花瓣、燭火與遠景人群輪廓，讓世界規模感與艷麗色彩服務主角，而不是讓主角退成設定卡",
-    "明確排除安靜寫實路線：不要灰藍低飽和、不要文藝紀錄片、不要安靜端坐資料卡、不要像普通古裝旅拍",
-    "創作自由：服裝與場景只提供方向，不是逐項填表；AI 必須像電影美術指導與攝影導演一樣重新組織構圖、光線、色彩、事件與視線流向",
-    "允許紅金華麗、寶石色高光、濃烈宮燈、絲綢反射、濕亮地面色彩倒影與高級商業奇幻電影色彩；避免螢光色、塑膠 HDR 與假濾鏡",
-    "保留真人身份與真實骨架，同時保留電影女主角魅力、情緒張力與高級商業奇幻攝影感",
+    buildSceneVisualDetailText(form),
+    "側前方柔和主光、燭光或月光環境光、soft edge separation light、volumetric light haze、natural depth of field、realistic air perspective 共同建立可拍攝的電影空氣感",
   ].join("；");
 }
 
 function buildScene(scene, form = DEFAULT_FORM) {
-  return `${scene}；${buildHeroShotText(form)}；AI 必須主動電影化擴寫空間細節，不可只重複使用者輸入。場景需包含真實攝影機可拍攝的近景 / 中景 / 遠景：近景提供空氣遮擋與鏡頭層次，中景放置真人角色、動作與服裝動態，遠景建立世界觀建築、天光、地形或人群輪廓。場景還需包含角色情緒動作、真實環境互動、空氣透視、電影美術置景感、景深分離與可理解的世界觀細節。`;
+  return `${scene}；${buildHeroShotText(form)}`;
 }
 
 function buildSceneInput(form, theme) {
