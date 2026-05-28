@@ -24,7 +24,7 @@ const HISTORY_KEY = "hongbing-travel-prompt-history";
 const UI_PREFS_KEY = "hongbing-travel-prompt-ui-prefs";
 const HISTORY_LIMIT = 5;
 const ALL_FILTER_LABEL = "全部";
-const APP_VERSION = "v1.01";
+const APP_VERSION = "v1.02";
 const PARENT_ROLE_CATEGORIES = [
   {
     label: "中國歷代服裝",
@@ -484,7 +484,7 @@ function render() {
                   <span>畫面事件</span>
                   <textarea name="frameEvent" rows="2" placeholder="例：她剛穿過燭火與花瓣回身看向鏡頭，披帛被風掀起，群演與燈籠在遠景形成電影規模感">${escapeHtml(state.frameEvent)}</textarea>
                 </label>
-                <small class="field-help">這層比 Layer 1-10 更重要：Primary Read 先定主角、輪廓、動態與情緒，服裝細節只服務畫面。</small>
+                <small class="field-help">這層比 Layer 1-10 更重要：先定第一視覺焦點、主角輪廓、動態與情緒，服裝細節只服務畫面。</small>
               </div>
               <div class="theme-stack">
                 <small class="field-help">主題是最高方向控制器。請寫「角色身份 + 世界觀定位」，避免美女、女神、完美五官、網紅感、動漫、Vogue、純欲、白月光、抽象氣質或只有風格沒有角色的詞。</small>

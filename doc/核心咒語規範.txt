@@ -315,9 +315,11 @@ If any cinematic, fantasy, costume, or makeup styling conflicts with facial iden
 - visual narrative
 - cinematic reveal
 
-畫面必須有明確的視覺優先權：
+畫面必須有明確的視覺優先權，
+像創意總監 brief，
+不是平均填寫服裝設定表。
 
-Primary Read 70%：
+第一眼必須先看到：
 真人女主角、
 大型 silhouette、
 動態布料、
@@ -325,7 +327,7 @@ Primary Read 70%：
 畫面事件、
 銀幕存在感。
 
-Secondary Read 20%：
+第二層再看到：
 光影方向、
 色彩張力、
 場景尺度、
@@ -333,7 +335,7 @@ Secondary Read 20%：
 空氣粒子、
 景深層次。
 
-Tertiary Read 10%：
+最後才看到：
 珠寶、
 刺繡、
 頭飾、

@@ -1367,6 +1367,7 @@ describe("prompt engine", () => {
     expect(instruction).not.toContain("==================================================");
     expect(instruction).not.toContain("********** 使用規範 **********");
     expect(instruction).not.toContain("### Layer 1");
+    expect(instruction).not.toContain("Primary Read");
     expect(instruction).toContain("雲海仙門旅拍");
     expect(instruction).not.toContain("罩杯:J");
   });
