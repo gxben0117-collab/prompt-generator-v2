@@ -360,7 +360,7 @@ describe("prompt engine", () => {
     expect(roseFairy.layers.costumeLayer10).toContain("夢幻奢華花園精靈女王輪廓");
     expect(roseFairy.sceneLighting).toContain("luminous rose fantasy glamour lighting");
     const historicalProfiles = WORLD_LAYER_PROFILES.filter((profile) => parentCategoryForProfile(profile) === "歷史小說名著人物");
-    expect(historicalProfiles).toHaveLength(26);
+    expect(historicalProfiles.length).toBeGreaterThanOrEqual(65);
     expect(historicalProfiles.map((profile) => profile.title)).toEqual(
       expect.arrayContaining([
         "貂蟬・閉月舞姬",
@@ -380,11 +380,56 @@ describe("prompt engine", () => {
         "木婉清・黑紗孤刃",
       ]),
     );
+    const requestedHistoricalCounts = {
+      "金瓶梅／歷史小說名著人物": 10,
+      "金庸／歷史小說名著人物": 10,
+      "三國／歷史小說名著人物": 10,
+      "西遊記／歷史小說名著人物": 10,
+    };
+    for (const [category, minCount] of Object.entries(requestedHistoricalCounts)) {
+      const profiles = WORLD_LAYER_PROFILES.filter((profile) => profile.category === category);
+      expect(profiles, category).toHaveLength(minCount);
+      for (const profile of profiles) {
+        expect(parentCategoryForProfile(profile)).toBe("歷史小說名著人物");
+        expect(profile.cupSize).toBe("正常比例");
+        expect(Object.keys(profile.layers)).toHaveLength(10);
+        expect(profile.makeup).toContain("保留上傳真人原始臉型");
+        expect(profile.sceneEnvironment).toContain("背景預設不放路人");
+      }
+    }
+
+    const requestedDynastyProfiles = WORLD_LAYER_PROFILES.filter((profile) => profile.id.startsWith("dynasty-"));
+    expect(requestedDynastyProfiles).toHaveLength(100);
+    expect(requestedDynastyProfiles.filter((profile) => profile.id.startsWith("dynasty-han-")).length).toBeGreaterThan(0);
+    expect(requestedDynastyProfiles.filter((profile) => profile.id.startsWith("dynasty-tang-")).length).toBeGreaterThan(0);
+    expect(requestedDynastyProfiles.filter((profile) => profile.id.startsWith("dynasty-song-")).length).toBeGreaterThan(0);
+    for (const role of ["empress", "imperial-consort", "princess", "noble-daughter", "minister-daughter", "courtesan"]) {
+      expect(requestedDynastyProfiles.some((profile) => profile.id.includes(`-${role}-`)), role).toBe(true);
+    }
+
+    const requestedDarkRoyalProfiles = WORLD_LAYER_PROFILES.filter((profile) => profile.id.startsWith("darkroyal-"));
+    expect(requestedDarkRoyalProfiles).toHaveLength(40);
+    expect(requestedDarkRoyalProfiles.filter((profile) => profile.id.startsWith("darkroyal-succubus-"))).toHaveLength(20);
+    expect(requestedDarkRoyalProfiles.filter((profile) => profile.id.startsWith("darkroyal-dark-"))).toHaveLength(10);
+    expect(requestedDarkRoyalProfiles.filter((profile) => profile.id.startsWith("darkroyal-fallen-"))).toHaveLength(10);
+    for (const profile of requestedDarkRoyalProfiles) {
+      expect(parentCategoryForProfile(profile)).toBe("奇幻異世界 / 暗黑王族");
+      expect(profile.cupSize).toBe("K");
+      expect(Object.keys(profile.layers)).toHaveLength(10);
+      expect(profile.sceneAction).toContain("手不遮臉");
+      expect(profile.sceneLighting).toContain("臉部明亮可辨識");
+    }
+
     const curatedProfiles = WORLD_LAYER_PROFILES.filter((profile) => BULK_PARENT_CATEGORIES.includes(profile.parentCategory));
-    expect(curatedProfiles).toHaveLength(100);
+    expect(curatedProfiles.length).toBeGreaterThanOrEqual(100);
     for (const parentCategory of BULK_PARENT_CATEGORIES) {
       const profiles = curatedProfiles.filter((profile) => profile.parentCategory === parentCategory);
-      expect(profiles, parentCategory).toHaveLength(10);
+      const expectedMinimum = {
+        "歷史小說名著人物": 50,
+        "中國歷代服裝": 100,
+        "奇幻異世界 / 暗黑王族": 50,
+      }[parentCategory] || 10;
+      expect(profiles.length, parentCategory).toBeGreaterThanOrEqual(expectedMinimum);
       for (const profile of profiles) {
         expect(parentCategoryForProfile(profile)).toBe(parentCategory);
         expect(profile.cupSize).toBe(parentCategory === "奇幻異世界 / 暗黑王族" ? "K" : "正常比例");
