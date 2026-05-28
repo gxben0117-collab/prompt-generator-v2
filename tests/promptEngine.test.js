@@ -134,6 +134,9 @@ describe("prompt engine", () => {
   it("maps world templates into the correct parent role categories", () => {
     const byId = (id) => WORLD_LAYER_PROFILES.find((profile) => profile.id === id);
 
+    expect(parentCategoryForProfile(byId("diaochan-moon-palace-beauty"))).toBe("歷史小說名著人物");
+    expect(parentCategoryForProfile(byId("lin-daiyu-xiaoxiang-poet"))).toBe("歷史小說名著人物");
+    expect(parentCategoryForProfile(byId("huang-rong-peach-blossom-heroine"))).toBe("歷史小說名著人物");
     expect(parentCategoryForProfile(byId("xiao-qiao-three-kingdoms-beauty"))).toBe("歷史小說名著人物");
     expect(parentCategoryForProfile(byId("fallen-feather-night-court"))).toBe("奇幻異世界 / 暗黑王族");
     expect(parentCategoryForProfile(byId("versailles-garden-princess"))).toBe("西方古典 / 歐陸史詩");
@@ -145,7 +148,12 @@ describe("prompt engine", () => {
 
   it("ships built-in role and costume suggestions", () => {
     expect(ROLE_SUGGESTIONS).toContain("大唐公主");
+    expect(ROLE_SUGGESTIONS).toContain("多肉花房・緞粉女神");
+    expect(ROLE_SUGGESTIONS).toContain("玫瑰晶翼・花園精靈女王");
     expect(ROLE_SUGGESTIONS).toContain("小喬・傾國佳人");
+    expect(ROLE_SUGGESTIONS).toContain("貂蟬・閉月舞姬");
+    expect(ROLE_SUGGESTIONS).toContain("林黛玉・瀟湘詩魂");
+    expect(ROLE_SUGGESTIONS).toContain("黃蓉・桃花島俠女");
     expect(ROLE_SUGGESTIONS).toContain("大唐飛天");
     expect(ROLE_SUGGESTIONS).toContain("長相思王姬");
     expect(ROLE_SUGGESTIONS).toContain("墮羽夜庭魔姬");
@@ -294,6 +302,8 @@ describe("prompt engine", () => {
     const tangConsort = WORLD_LAYER_PROFILES.find((profile) => profile.id === "tang-peony-imperial-consort");
 
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("電影古裝仙女 Layer");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("多肉花房・緞粉女神");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("玫瑰晶翼・花園精靈女王");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("小喬・傾國佳人");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("墮羽夜庭魔姬");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("夜泊鳳凰樓主");
@@ -317,6 +327,33 @@ describe("prompt engine", () => {
     expect(xiaoQiao.layers.costumeLayer10).toContain("三國名姬電影主視覺輪廓");
     expect(xiaoQiao.makeup).toContain("小喬溫婉傾國氣質");
     expect(xiaoQiao.scene).toContain("三國演義電影空間");
+    const succulentGoddess = WORLD_LAYER_PROFILES.find((profile) => profile.id === "succulent-greenhouse-goddess");
+    expect(succulentGoddess.layers.costumeLayer10).toContain("自然奢華電影 silhouette");
+    expect(succulentGoddess.scene).toContain("多肉主題玻璃花房");
+    const roseFairy = WORLD_LAYER_PROFILES.find((profile) => profile.id === "rose-crystal-fairy-queen");
+    expect(roseFairy.layers.costumeLayer10).toContain("夢幻奢華花園精靈女王輪廓");
+    expect(roseFairy.sceneLighting).toContain("luminous rose fantasy glamour lighting");
+    const historicalProfiles = WORLD_LAYER_PROFILES.filter((profile) => parentCategoryForProfile(profile) === "歷史小說名著人物");
+    expect(historicalProfiles).toHaveLength(16);
+    expect(historicalProfiles.map((profile) => profile.title)).toEqual(
+      expect.arrayContaining([
+        "貂蟬・閉月舞姬",
+        "大喬・江東雅姬",
+        "孫尚香・弓腰姬",
+        "林黛玉・瀟湘詩魂",
+        "薛寶釵・金鎖名媛",
+        "王熙鳳・鳳辣管家",
+        "史湘雲・醉臥芍藥",
+        "妙玉・櫳翠雪茶",
+        "黃蓉・桃花島俠女",
+        "小龍女・古墓仙影",
+        "趙敏・汝陽郡主",
+        "任盈盈・竹林聖姑",
+        "王語嫣・琅嬛書影",
+        "周芷若・峨眉月劍",
+        "木婉清・黑紗孤刃",
+      ]),
+    );
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("幽蛛夜宴魅姬");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("血月絲絨魔后");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("龍宮海國・滄海龍后");

@@ -145,7 +145,7 @@ try {
     await page.reload({ waitUntil: "domcontentloaded" });
 
     const title = await page.title();
-    if (title !== "出圖自組咒語生產器 v1.13") {
+    if (title !== "出圖自組咒語生產器 v1.15") {
       throw new Error(`${viewport.name}: unexpected page title ${title}`);
     }
 
@@ -153,8 +153,8 @@ try {
     if ((await page.getByRole("heading", { name: /出圖自組咒語生產器/ }).count()) !== 1) {
       throw new Error(`${viewport.name}: visible app name was not updated`);
     }
-    if ((await page.getByText("v1.13", { exact: true }).count()) < 1) {
-      throw new Error(`${viewport.name}: visible version v1.13 missing`);
+    if ((await page.getByText("v1.15", { exact: true }).count()) < 1) {
+      throw new Error(`${viewport.name}: visible version v1.15 missing`);
     }
     if ((await page.getByText("最高原則：真人鎖臉優先於所有華麗主視覺，不讓角色滑回 AI 仙女臉。", { exact: true }).count()) !== 1) {
       throw new Error(`${viewport.name}: visible product principle missing`);
@@ -250,6 +250,18 @@ try {
     if (directorPanelOpen) {
       throw new Error(`${viewport.name}: advanced director panel should be collapsed by default`);
     }
+
+    await clickSingle(page, page.locator('[data-role-parent="歷史小說名著人物"]'), "歷史小說名著人物 parent", viewport.name);
+    await expectNoOldChipUi(page, viewport.name);
+    await page.locator('input[name="profileSearch"]').fill("黃蓉");
+    if ((await page.locator('[data-world-profile="huang-rong-peach-blossom-heroine"]').count()) !== 1) {
+      throw new Error(`${viewport.name}: historical novel parent search did not reveal Huang Rong profile`);
+    }
+    await page.locator('input[name="profileSearch"]').fill("紅樓夢");
+    if ((await page.locator('[data-world-profile="lin-daiyu-xiaoxiang-poet"]').count()) !== 1) {
+      throw new Error(`${viewport.name}: historical novel parent search did not reveal Lin Daiyu profile`);
+    }
+    await page.locator('input[name="profileSearch"]').fill("");
 
     await clickSingle(page, page.locator('[data-role-parent="中國歷代服裝"]'), "中國歷代服裝 parent", viewport.name);
     await expectNoOldChipUi(page, viewport.name);
