@@ -308,11 +308,10 @@ function faceMasterControlText() {
   return [
     "臉部主控：以上傳照片中的臉部作為唯一身份來源",
     "先鎖定原始真人臉，再讓身體、服裝、姿勢、髮型、妝容、光影與場景配合這張臉",
-    "臉部不可重畫、不可美化、不可換成古裝女主角臉或商業海報明星臉",
-    "保留原始臉型、眼距、眼型、眼皮結構、鼻翼寬度、嘴唇形狀、下顎線、臉頰肉感、成熟年齡感、自然不對稱與皮膚質感",
+    "不可重畫、美化或換成古裝女主角臉；保留原始臉型、眼距、眼型、眼皮結構、鼻翼寬度、嘴唇形狀、下顎線、臉頰肉感、成熟年齡感、自然不對稱與皮膚質感",
     "臉部角度保持接近原圖，正面或微側正面，雙眼清楚看向鏡頭",
-    "若動作、髮型、妝容、光影或構圖會降低臉部相似度，放棄該元素並優先保留臉",
-    "負面鎖臉：face swap、different face、new actress face、historical drama actress face、younger face、slimmer face、altered jawline、altered eyes、altered nose、altered lips、side profile、covered face、identity-changing makeup",
+    "若動作、髮型、妝容、光影或構圖會降低相似度，放棄該元素並優先保留臉",
+    "負面鎖臉：face swap、different face、new actress face、altered jawline、altered eyes、altered nose、altered lips、side profile、covered face",
   ].join("；");
 }
 
@@ -370,6 +369,40 @@ const FIXED_CAMERA_TEXT = "50mm 全片幅中遠景電影構圖，人物完整入
 
 function buildCameraFramingText(cameraFraming = DEFAULT_FORM.cameraFraming) {
   return `${FIXED_CAMERA_TEXT}，人物構圖：${cameraFraming}`;
+}
+
+const RATIO_COMPOSITION_TEXT = {
+  "9:16": "9:16 cinematic mobile wallpaper，直式手機海報構圖，full-body preserved inside frame",
+  "4:5": "4:5 premium commercial fantasy poster，商業奇幻肖像海報構圖，人物與服裝比例最平衡",
+  "3:4": "3:4 vertical cinematic portrait，直式電影肖像構圖，保留上半身到全身空間",
+  "2:3": "2:3 classic vertical movie poster，經典直式電影海報構圖",
+  "1:1": "1:1 square poster composition，方形主視覺構圖，避免自動特寫",
+  "16:9": "16:9 epic cinematic frame，橫式電影場景構圖，保留環境尺度與人物全身輪廓",
+  "2.39:1": "2.39:1 anamorphic movie frame，寬銀幕電影畫幅，強調場景史詩感與空間層次",
+  "3:2": "3:2 cinematic photography frame，電影攝影橫幅構圖",
+  "4:3": "4:3 classic cinematic frame，經典電影畫幅構圖",
+};
+
+function buildAspectRatioControlText(form = DEFAULT_FORM) {
+  const ratioText = RATIO_COMPOSITION_TEXT[form.ratio] || RATIO_COMPOSITION_TEXT[DEFAULT_FORM.ratio];
+  return [
+    `輸出比例控制：${ratioText}`,
+    "composition must respect the specified aspect ratio and keep the full cinematic silhouette inside frame",
+    "避免裁頭、裁手、截斷全身、過度留白、AI 自動特寫或自拍式構圖",
+  ].join("；");
+}
+
+function buildBodyProportionStabilizationText(form = DEFAULT_FORM) {
+  const seatedText = /坐|端坐|坐姿|王座|椅|榻|跪|半跪/.test(`${form.scene} ${form.sceneEnvironment} ${form.sceneAction}`)
+    ? "坐姿或王座姿勢必須保留完整胸腔厚度、自然軀幹深度與成人坐姿比例，camera distance must not compress body structure"
+    : "站姿或行走姿勢保留自然肩寬、軀幹深度、骨盆比例、四肢長度與成人重心";
+  return [
+    "真人比例穩定：full-body physical coherence has equal priority with facial identity preservation",
+    "鎖臉不得造成 oversized head、compressed torso、narrow AI shoulders、portrait-only body structure 或 floating head feeling",
+    "保留 balanced head size、natural shoulder-to-head ratio、realistic torso volume、proper body mass distribution",
+    seatedText,
+    "真人必須像 physically existing inside cinematic space 的真實演員，不像 face pasted onto a fantasy costume",
+  ].join("；");
 }
 
 function allowsBackgroundCharacters(text = "") {
@@ -527,6 +560,8 @@ function buildFrameEventText(form = DEFAULT_FORM) {
 function buildHeroShotText(form = DEFAULT_FORM) {
   return [
     faceMasterControlText(),
+    buildBodyProportionStabilizationText(form),
+    buildAspectRatioControlText(form),
     buildStyleVisualDetailText(form),
     backgroundControlText(form),
     commercialGlamourLightingText(form),

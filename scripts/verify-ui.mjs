@@ -144,7 +144,7 @@ try {
     await page.reload({ waitUntil: "domcontentloaded" });
 
     const title = await page.title();
-    if (title !== "出圖自組咒語生產器 v1.10") {
+    if (title !== "出圖自組咒語生產器 v1.11") {
       throw new Error(`${viewport.name}: unexpected page title ${title}`);
     }
 
@@ -152,8 +152,8 @@ try {
     if ((await page.getByRole("heading", { name: /出圖自組咒語生產器/ }).count()) !== 1) {
       throw new Error(`${viewport.name}: visible app name was not updated`);
     }
-    if ((await page.getByText("v1.10", { exact: true }).count()) < 1) {
-      throw new Error(`${viewport.name}: visible version v1.10 missing`);
+    if ((await page.getByText("v1.11", { exact: true }).count()) < 1) {
+      throw new Error(`${viewport.name}: visible version v1.11 missing`);
     }
     if ((await page.getByText("最高原則：真人鎖臉優先於所有華麗主視覺，不讓角色滑回 AI 仙女臉。", { exact: true }).count()) !== 1) {
       throw new Error(`${viewport.name}: visible product principle missing`);
@@ -185,7 +185,7 @@ try {
     if ((await page.locator('select[name="cameraFraming"]').count()) !== 0 || (await page.locator('textarea[name="sceneCamera"]').count()) !== 0) {
       throw new Error(`${viewport.name}: camera controls should be fixed and hidden from UI`);
     }
-    if ((await page.locator('input[name="ratio"]').count()) !== 6) {
+    if ((await page.locator('input[name="ratio"]').count()) !== 9) {
       throw new Error(`${viewport.name}: ratio block-grid count mismatch`);
     }
     if ((await page.locator('input[name="cameraFraming"]').count()) !== 5) {

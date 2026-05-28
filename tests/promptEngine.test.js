@@ -1140,6 +1140,14 @@ describe("prompt engine", () => {
     expect(prompt).toContain("臉部主控");
     expect(prompt).toContain("先鎖定原始真人臉");
     expect(prompt).toContain("正面或微側正面");
+    expect(prompt).toContain("真人比例穩定");
+    expect(prompt).toContain("full-body physical coherence has equal priority with facial identity preservation");
+    expect(prompt).toContain("balanced head size");
+    expect(prompt).toContain("natural shoulder-to-head ratio");
+    expect(prompt).toContain("輸出比例控制");
+    expect(prompt).toContain("9:16 cinematic mobile wallpaper");
+    expect(prompt).toContain("composition must respect the specified aspect ratio");
+    expect(prompt).toContain("keep the full cinematic silhouette inside frame");
     expect(prompt).toContain("face swap");
     expect(prompt).toContain("different face");
     expect(prompt).toContain("new actress face");
@@ -1259,13 +1267,13 @@ describe("prompt engine", () => {
       ...fullmoon.layers,
     });
 
-    expect(prompt.length).toBeLessThan(3850);
+    expect(prompt.length).toBeLessThan(4550);
     expect(prompt).toContain("空間層級補強");
     expect(prompt).toContain("動作鏡頭語言補強");
     expect(prompt).toContain("光影補強");
     expect(prompt).toContain("最高優先保留原始臉型");
     expect(prompt).toContain("不變成 AI 仙女臉");
-    expect((prompt.match(/silhouette/g) || []).length).toBeLessThanOrEqual(3);
+    expect((prompt.match(/silhouette/g) || []).length).toBeLessThanOrEqual(4);
     expect((prompt.match(/ruby/g) || []).length).toBeLessThanOrEqual(3);
     expect(prompt).not.toContain("動作鏡頭語言：人物採近景半身");
     expect(prompt).not.toContain("場景以可拍攝的近景、中景、遠景建立電影空間");
@@ -1370,7 +1378,7 @@ describe("prompt engine", () => {
     const prompt = buildPrompt({
       category: "世界地標旅拍",
       theme: "巴黎黃昏旅拍女主",
-      ratio: "9:16",
+      ratio: "4:5",
     });
 
     expect(prompt).toContain("【輸出格式】");
@@ -1385,7 +1393,10 @@ describe("prompt engine", () => {
     expect(prompt).not.toContain("臉部辨識優先權：");
     expect(prompt).not.toContain("動作與鏡頭：");
     expect(prompt).not.toContain("光影與攝影：");
-    expect(prompt).not.toContain("輸出比例：");
+    expect(prompt).toContain("輸出比例控制：4:5 premium commercial fantasy poster");
+    expect(prompt).toContain("composition must respect the specified aspect ratio");
+    expect(prompt).toContain("full-body physical coherence has equal priority with facial identity preservation");
+    expect(prompt).toContain("balanced head size");
     expect(prompt).not.toContain("負面規則：");
     expect(prompt).not.toContain("【真人電影級 AI 咒語建檔系統｜完整版母板 V2.0】");
     expect(prompt).not.toContain("【真人身份鎖定】");
@@ -1500,6 +1511,24 @@ describe("prompt engine", () => {
     expect(form.cameraFraming).toBe("全身");
   });
 
+  it("adds widescreen and seated body proportion controls when requested", () => {
+    const prompt = buildPrompt({
+      category: "奇幻異世界 / 暗黑王族",
+      theme: "滿月骸骨權杖女王",
+      scene: "哥德王座廳，人物坐於黑曜石王座",
+      ratio: "16:9",
+      cameraFraming: "全身",
+    });
+
+    expect(prompt).toContain("輸出比例控制：16:9 epic cinematic frame");
+    expect(prompt).toContain("保留環境尺度與人物全身輪廓");
+    expect(prompt).toContain("坐姿或王座姿勢必須保留完整胸腔厚度");
+    expect(prompt).toContain("camera distance must not compress body structure");
+    expect(prompt).toContain("oversized head");
+    expect(prompt).toContain("compressed torso");
+    expect(prompt).toContain("face pasted onto a fantasy costume");
+  });
+
   it("replaces risky beauty language before prompt assembly", () => {
     expect(sanitizeInput("絕美女神 網紅感 少女感")).toBe("真人電影角色真人電影角色 真人電影角色 真人電影角色");
     expect(sanitizeInput("精緻五官 大眼睛 小V臉")).toBe("原始真人五官 原始真人五官 原始真人五官");
@@ -1537,6 +1566,10 @@ describe("prompt engine", () => {
     expect(instruction).toContain("先鎖定原始真人臉");
     expect(instruction).toContain("臉部角度需接近上傳照片");
     expect(instruction).toContain("face swap");
+    expect(instruction).toContain("【真人比例穩定系統｜Body Proportion Stabilization】");
+    expect(instruction).toContain("full-body physical coherence has equal priority with facial identity preservation");
+    expect(instruction).toContain("【輸出比例控制系統】");
+    expect(instruction).toContain("composition must respect the specified aspect ratio");
     expect(instruction).toContain("original eyelid structure");
     expect(instruction).toContain("The fantasy world exists around the real photographed person");
     expect(instruction).toContain("50mm 全片幅中遠景電影構圖");

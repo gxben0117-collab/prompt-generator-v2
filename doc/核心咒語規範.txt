@@ -210,6 +210,53 @@ not instead of the person.
 - 壓縮上半身
 - 卡通化人體
 
+【真人比例穩定系統｜Body Proportion Stabilization】
+
+Facial identity preservation must NOT distort:
+
+- head-to-body ratio
+- shoulder width
+- torso depth
+- chest structure
+- adult body proportions
+- natural cinematic framing
+
+full-body physical coherence has equal priority with facial identity preservation.
+
+The character must preserve:
+
+- realistic adult human proportions
+- balanced head size
+- natural shoulder-to-head ratio
+- realistic torso volume
+- proper body mass distribution
+- cinematic full-body coherence
+
+避免：
+
+- oversized head
+- compressed torso
+- narrow AI shoulders
+- portrait-only body structure
+- floating head feeling
+- beauty-app proportions
+- AI fashion anatomy
+- selfie-like body compression
+
+坐姿控制：
+
+seated posture must preserve full torso depth and natural adult body proportions.
+
+camera distance must not compress body structure.
+
+真人必須像：
+
+"a real actor physically existing inside cinematic space"
+
+不是：
+
+"a face pasted onto a fantasy costume"
+
 【成熟成年女性體積感】
 
 維持：
@@ -320,6 +367,36 @@ not instead of the person.
 - 誇張透視
 - 超廣角變形
 - 臉部主導畫面
+
+【輸出比例控制系統】
+
+輸出畫面比例必須明確指定。
+
+禁止 AI 自行猜測畫幅。
+
+根據輸出用途建立：
+
+- 9:16 cinematic mobile wallpaper
+- 4:5 premium commercial fantasy poster
+- 16:9 cinematic widescreen frame
+- 2.39:1 anamorphic movie frame
+- square poster composition
+
+人物與場景構圖需服從：
+
+「指定畫幅」。
+
+composition must respect the specified aspect ratio and keep the full cinematic silhouette inside frame.
+
+避免：
+
+- 頭部被裁切
+- 手部超出畫面
+- 全身被截斷
+- 過度留白
+- AI 自動特寫
+- 自拍式構圖
+- 臉部佔據整個畫面
 
 【電影主視覺權重系統】
 
