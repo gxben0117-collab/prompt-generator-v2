@@ -9,4 +9,10 @@ dist/
 *~
 .env
 .env.local
-package-lock.json
+tmp/
+temp/
+output/
+.cache/
+coverage/
+playwright-report/
+test-results/

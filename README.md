@@ -70,17 +70,51 @@ npm.cmd run build
 ## 專案結構
 
 ```text
-index.html                         # 可直接開啟的單檔成品
-versions/                          # 舊版 index.html 快照
+index.html                         # 可直接開啟的單檔成品，也是目前 Pages 入口
+src/                               # Vite app 原始碼
 src/main.js                        # UI 表單與互動
-src/promptEngine.js                # 咒語生成架構
-src/data.js                        # 常用尺寸、人物構圖、服裝 Layer、模板資料
+src/promptEngine.js                # 短版咒語生成架構
+src/data.js                        # 常用尺寸、人物構圖、服裝 Layer、角色卡資料
+src/categoryClassifier.js          # 角色大分類判斷
 src/styles.css                     # UI 樣式與 responsive
-doc/核心咒語規範.txt                # 隱藏核心規則來源
-scripts/prepare-vite-entry.mjs     # build 前還原 Vite 入口
-scripts/create_standalone_html.mjs # build 後內嵌 JS/CSS
-scripts/verify-ui.mjs              # file:// HTML UI 驗證
+doc/核心咒語規範.txt                # 固定母板來源
+src/coreSpec.js                    # 由 doc/核心咒語規範.txt 同步產生
+scripts/                           # 建置、同步、驗證與資料維護腳本
 tests/promptEngine.test.js         # prompt engine 測試
+versions/                          # 舊版 index.html release 快照
+backups/                           # 手動備份
+docs/                              # 專案文件與整理報告
+核心資料/                           # 大型規範與風格資料
+dist/                              # Vite build 暫存輸出，不追蹤
+```
+
+重要來源關係：
+
+```text
+doc/核心咒語規範.txt
+  -> npm.cmd run sync:spec
+  -> src/coreSpec.js
+  -> npm.cmd run build
+  -> index.html
+```
+
+`index.html` 是成品，不是主要開發入口。日常修改應優先改 `src/`、`doc/`、`tests/`，再用 build 重新產生 `index.html`。
+
+## 維護規則
+
+- 不要直接手改 `dist/`，它是 Vite build 輸出。
+- 不要手改 `src/coreSpec.js`，請改 `doc/核心咒語規範.txt` 後執行 `npm.cmd run sync:spec` 或 `npm.cmd run check`。
+- `versions/` 是單檔 release archive，保留歷史快照。
+- `backups/` 是手動備份，保留但不作為主要開發入口。
+- `scripts/create_standalone_html.mjs`、`prepare-vite-entry.mjs`、`sync-core-spec-module.mjs`、`verify-ui.mjs` 是正式流程腳本。
+- 其他批次修改資料的 `scripts/*.mjs` 多屬 maintenance 腳本，重跑前需先讀內容與確認用途。
+- `package-lock.json` 應保留在版本控制中，確保 Node 依賴可重現。
+- GitHub Pages 目前部署整個 repo 根目錄，新增大型暫存或報告前要先判斷是否應被追蹤。
+
+更完整的整理與搬移建議見：
+
+```text
+docs/project-organization-report.md
 ```
 
 ## 版本控制規範
