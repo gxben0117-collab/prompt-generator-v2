@@ -1,4 +1,4 @@
-﻿# 出圖自組咒語生產器 v1.05
+﻿# 出圖自組咒語生產器 v1.06
 
 真人電影級出圖咒語表單工具。主入口是可直接開啟的單檔 `index.html`，用來把使用者輸入的主題、服裝 Layer、妝容、場景、常用圖片尺寸與人物構圖組成「導演式生成層咒語」。
 
@@ -106,6 +106,7 @@ versions/index_v1.01_before_v1.02.html
 versions/index_v1.02_before_v1.03.html
 versions/index_v1.03_before_v1.04.html
 versions/index_v1.04_before_v1.05.html
+versions/index_v1.05_before_v1.06.html
 ```
 
 建置驗證通過後，再保存當前正式版：
@@ -126,6 +127,7 @@ versions/index_v1.02.html
 versions/index_v1.03.html
 versions/index_v1.04.html
 versions/index_v1.05.html
+versions/index_v1.06.html
 ```
 
 ## 目前輸出架構
@@ -153,3 +155,4 @@ versions/index_v1.05.html
 - mobile UI 驗證
 - `file:// index.html` 直接開啟驗證
 - console error 檢查
+

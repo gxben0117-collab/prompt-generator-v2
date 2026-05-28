@@ -100,6 +100,7 @@ export const ROLE_SUGGESTION_ITEMS = [
   { id: "fallen-black-feather-enchantress", label: "墮羽黑翼王女", category: "黑暗墮天使／黑羽史詩電影" },
   { id: "frost-succubus-gothic-queen", label: "冰霜夜宴魅姬", category: "冰霜夜宴魅姬｜哥德寢宮電影" },
   { id: "dark-necromancer-throne-queen", label: "暗黑魔后・亡靈王座", category: "暗黑魔后｜亡靈王座｜哥德奇幻電影" },
+  { id: "fullmoon-skull-scepter-queen", label: "滿月骸骨權杖女王", category: "暗黑王族｜滿月權杖｜哥德軍勢電影" },
   { id: "purple-moon-night-court-empress", label: "紫月夜庭魔后", category: "黑暗奇幻／夜庭王座／魔后" },
   { id: "raven-throne-night-empress", label: "黑鴉王座暗夜魔后", category: "黑羽魔后｜哥德暗黑｜烏鴉王座電影" },
   { id: "dark-domain-ancient-temple-queen", label: "暗夜魔域古殿女王", category: "奇幻／歌德電影美術場景" },
@@ -2332,6 +2333,45 @@ export const WORLD_LAYER_PROFILES = [
         "crimson crystal jewelry 分布於頭飾、耳飾與手部，呼應血月紅光",
       costumeLayer10:
         "整體服裝以黑色哥德女王甲、紅寶石胸甲、黑曜石法杖與王座披風形成 cinematic necromancer queen costume",
+    },
+  },
+  {
+    id: "fullmoon-skull-scepter-queen",
+    title: "滿月骸骨權杖女王",
+    themeHint: "滿月骸骨權杖女王",
+    category: "暗黑王族｜滿月權杖｜哥德軍勢電影",
+    aliases: ["滿月暗黑女王", "骷髏權杖女王", "紅寶石亡靈女王", "月下哥德軍勢"],
+    makeup:
+      "妝容建立在上傳角色原始五官身份與真人電影攝影結構之上，最高優先保留原始臉型、眼距、眼皮結構、鼻翼寬度、嘴型、下顎線、臉頰體積、真實年齡感與皮膚紋理。妝容只作表面色彩與光影修飾：低飽和冷月光底妝、深紅霧面唇、黑灰哥德眼妝與少量紅寶石高光，不重塑五官，不變成 AI 仙女臉、遊戲女王臉或模板美女臉。",
+    scene:
+      "滿月哥德亡靈王城主視覺，巨大冷白滿月、暗黑尖塔、骸骨軍旗、遠景骷髏軍勢、紅燭火與黑金王座共同形成暗黑王族電影海報級場景；主角以真人身份保留的近景女王構圖成為畫面第一焦點。",
+    sceneEnvironment:
+      "滿月哥德王城，前景骸骨權杖、紅燭、黑金王冠碎片、柔焦火星與少量骷髏道具形成鏡頭遮擋，中景真人角色坐於黑金王座或王座扶手邊，手持紅寶石骸骨權杖並與鏡頭保持可辨識臉部正面，遠景巨大滿月、哥德尖塔、亡靈軍旗、鎧甲士兵與骷髏軍勢剪影建立世界規模感，整體是 high-impact dark royal key visual 而非安靜寫實角色卡。",
+    sceneAction:
+      "人物採近景半身或膝上女王坐姿，肩膀放鬆但脊椎穩定，一手自然握住骸骨權杖，另一手以手背輕托下顎或停在王座扶手上，眼神直視鏡頭並保留原始真人臉部辨識度；頭部微微傾斜，長髮、蕾絲袖、薄紗披帛與黑金鏈飾被夜風帶出動態，手指、權杖與飾品不遮擋臉部，不做 pin-up 姿勢。",
+    sceneLighting:
+      "giant full moon key light, cold blue moonlight, ruby candle glow, black-gold specular highlights, cinematic gothic depth；巨大滿月提供冷白側前方主光，紅燭火與紅寶石在黑金金屬、骸骨權杖、蕾絲袖、指甲、項鍊與王座扶手上形成高飽和紅色反光，遠景火把與軍旗產生寶石色散景，呈現 floating embers、moonlit haze、soft gothic smoke、red bokeh particles 與高級暗黑王族商業奇幻主視覺。",
+    layers: {
+      costumeLayer1:
+        "黑色高訂絲緞貼身基底作為內層，使用 black luxury satin foundation 與 matte silk lining 貼合真實胸腔厚度、肩頸連接與成熟成年人體積感，由 couture support 自然承托而非誇張變形",
+      costumeLayer2:
+        "黑金哥德胸腰支撐結構採 black-gold gothic bodice support、structured couture corset lines 與 ruby gemstone centerpiece，建立王族上身重心與紅寶石視覺焦點，但妝造與服裝不得重塑真人臉部",
+      costumeLayer3:
+        "主體禮服使用 deep wine velvet gown、black lace couture 與 dark royal brocade，深酒紅、黑色與暗金形成華麗暗黑王族主色塊",
+      costumeLayer4:
+        "半透明黑蕾絲袖層與破碎薄紗披帛使用 sheer black lace sleeves、transparent gothic chiffon 與 floating dark veil，讓手臂、肩部與髮絲周圍有真實空氣層與夜風動態",
+      costumeLayer5:
+        "黑金紅寶石腰封與多層鏈飾採 ruby chain waist ornament、obsidian gemstone belt 與 antique gold filigree，連接禮服、權杖與王座的金屬語言",
+      costumeLayer6:
+        "黑酒紅絲絨王座披風與長裙拖尾採 heavy velvet royal train，布料在王座與腿側自然堆疊，形成厚重可穿戴的暗黑女王輪廓",
+      costumeLayer7:
+        "哥德骸骨肩飾與黑金護腕使用 sculptural skull filigree shoulder piece、antique gold bracer 與 lace glove integration，身份象徵集中於肩手，不壓過臉部辨識度",
+      costumeLayer8:
+        "大型紅寶石骸骨權杖作為畫面第二焦點，採 skull scepter、blood ruby core、antique gold claw setting 與 dangling ruby crystals，需有真實道具重量與手部握持邏輯",
+      costumeLayer9:
+        "紅寶石項鍊、哥德耳墜、黑金戒指、黑色蕾絲手套與冷月光下的自然長髮形成精緻暗黑王族妝髮配件，不改變原始臉部骨相",
+      costumeLayer10:
+        "整體形成滿月暗黑王族近景主視覺：巨大滿月、骸骨權杖、紅寶石黑金珠寶、哥德蕾絲、王座披風、遠景軍勢與真人鎖臉共同構成 high-impact cinematic dark royal queen silhouette",
     },
   },
   {

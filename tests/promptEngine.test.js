@@ -91,6 +91,7 @@ const BATCH_PROFILE_EXPECTATIONS = [
   ["moon-forest-nine-tail-fox-princess", "月夜禁林九尾狐姬", "東方九尾狐姬輪廓", "moonlit ancient forest"],
   ["spirit-fox-domain-nine-tail-empress", "靈狐神域九尾妖后", "九尾妖后史詩輪廓", "moonlit sacred forest"],
   ["dark-domain-ancient-temple-queen", "暗夜魔域古殿女王", "歌德王座輪廓", "月夜暗黑宮廷王座"],
+  ["fullmoon-skull-scepter-queen", "滿月骸骨權杖女王", "大型紅寶石骸骨權杖", "巨大冷白滿月"],
   ["qingluan-temple-hidden-saint", "青鸞神殿隱世聖女", "青鸞神殿隱世聖女電影輪廓", "青鸞神殿隱世聖女"],
   ["purple-sakura-forbidden-onmyoji", "紫櫻禁術陰陽師", "禁術系陰陽師巫女電影 silhouette", "紫櫻禁術陰陽師"],
   ["jiu-mo-crimson-phoenix-saint", "九漠沙海之赤鳳聖女", "赤鳳聖女電影輪廓", "九漠沙海之赤鳳聖女"],
@@ -174,6 +175,7 @@ describe("prompt engine", () => {
     expect(ROLE_SUGGESTIONS).toContain("夜宴貴姬・燭廊花箋");
     expect(ROLE_SUGGESTIONS).toContain("海棠仙旅・海岸花亭");
     expect(ROLE_SUGGESTIONS).toContain("暗黑魔后・亡靈王座");
+    expect(ROLE_SUGGESTIONS).toContain("滿月骸骨權杖女王");
     expect(ROLE_SUGGESTIONS).toContain("荷塘仕女・蓮池紙傘");
     expect(ROLE_SUGGESTIONS).toContain("墮羽黑翼王女");
     expect(ROLE_SUGGESTIONS).toContain("聖域天使・天空神國");
@@ -225,6 +227,7 @@ describe("prompt engine", () => {
     const blackWingAngel = WORLD_LAYER_PROFILES.find((profile) => profile.id === "fallen-elegy-black-wing-angel");
     const darkWingPrincess = WORLD_LAYER_PROFILES.find((profile) => profile.id === "fallen-ruins-dark-wing-princess");
     const vampireCountess = WORLD_LAYER_PROFILES.find((profile) => profile.id === "blood-amber-vampire-countess");
+    const fullmoonScepterQueen = WORLD_LAYER_PROFILES.find((profile) => profile.id === "fullmoon-skull-scepter-queen");
     const peachFlowerGirl = WORLD_LAYER_PROFILES.find((profile) => profile.id === "peach-medicine-garden-flower-girl");
     const waterPavilionLady = WORLD_LAYER_PROFILES.find((profile) => profile.id === "pink-sakura-water-pavilion-lady");
     const dragonCourtEmpress = WORLD_LAYER_PROFILES.find((profile) => profile.id === "dragon-court-ninefold-empress");
@@ -318,6 +321,7 @@ describe("prompt engine", () => {
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("夜宴貴姬・燭廊花箋");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("海棠仙旅・海岸花亭");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("暗黑魔后・亡靈王座");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("滿月骸骨權杖女王");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("荷塘仕女・蓮池紙傘");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("墮羽黑翼王女");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("聖域天使・天空神國");
@@ -794,6 +798,14 @@ describe("prompt engine", () => {
     expect(darkNecromancer.sceneEnvironment).toContain("undead gothic castle");
     expect(darkNecromancer.sceneAction).toContain("holding dark staff");
     expect(darkNecromancer.sceneLighting).toContain("blue moonlight");
+    expect(fullmoonScepterQueen.category).toBe("暗黑王族｜滿月權杖｜哥德軍勢電影");
+    expect(fullmoonScepterQueen.aliases).toContain("骷髏權杖女王");
+    expect(fullmoonScepterQueen.makeup).toContain("不變成 AI 仙女臉");
+    expect(fullmoonScepterQueen.layers.costumeLayer8).toContain("大型紅寶石骸骨權杖");
+    expect(fullmoonScepterQueen.layers.costumeLayer10).toContain("滿月暗黑王族近景主視覺");
+    expect(fullmoonScepterQueen.sceneEnvironment).toContain("巨大滿月");
+    expect(fullmoonScepterQueen.sceneAction).toContain("不遮擋臉部");
+    expect(fullmoonScepterQueen.sceneLighting).toContain("ruby candle glow");
     expect(lotusPondLady.category).toBe("荷塘仕女｜江南園林｜古風生活電影");
     expect(lotusPondLady.layers.costumeLayer1).toContain("pink silk inner robe");
     expect(lotusPondLady.layers.costumeLayer6).toContain("lotus floral hair ornaments");
