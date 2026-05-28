@@ -144,7 +144,7 @@ try {
     await page.reload({ waitUntil: "domcontentloaded" });
 
     const title = await page.title();
-    if (title !== "出圖自組咒語生產器 v1.11") {
+    if (title !== "出圖自組咒語生產器 v1.12") {
       throw new Error(`${viewport.name}: unexpected page title ${title}`);
     }
 
@@ -152,8 +152,8 @@ try {
     if ((await page.getByRole("heading", { name: /出圖自組咒語生產器/ }).count()) !== 1) {
       throw new Error(`${viewport.name}: visible app name was not updated`);
     }
-    if ((await page.getByText("v1.11", { exact: true }).count()) < 1) {
-      throw new Error(`${viewport.name}: visible version v1.11 missing`);
+    if ((await page.getByText("v1.12", { exact: true }).count()) < 1) {
+      throw new Error(`${viewport.name}: visible version v1.12 missing`);
     }
     if ((await page.getByText("最高原則：真人鎖臉優先於所有華麗主視覺，不讓角色滑回 AI 仙女臉。", { exact: true }).count()) !== 1) {
       throw new Error(`${viewport.name}: visible product principle missing`);
@@ -187,6 +187,12 @@ try {
     }
     if ((await page.locator('input[name="ratio"]').count()) !== 9) {
       throw new Error(`${viewport.name}: ratio block-grid count mismatch`);
+    }
+    if ((await page.getByText("4:5 商業海報", { exact: true }).count()) !== 1) {
+      throw new Error(`${viewport.name}: common ratio label for 4:5 missing`);
+    }
+    if ((await page.getByText("9:16 手機桌布", { exact: true }).count()) !== 1) {
+      throw new Error(`${viewport.name}: mobile wallpaper ratio label missing`);
     }
     if ((await page.locator('input[name="cameraFraming"]').count()) !== 5) {
       throw new Error(`${viewport.name}: camera framing block-grid count mismatch`);
@@ -335,7 +341,7 @@ try {
     await page.getByRole("button", { name: "黑色絲綢內襯" }).click();
     await page.getByRole("button", { name: "長安宮廷夜宴，前景燭火，中景角色，遠景宮殿廊柱" }).click();
     await page.getByText("進階導演欄位").click();
-    await page.getByRole("button", { name: "哥德石柱王座廳，前景燭台，中景王座，遠景彩窗與黑色旗幟" }).click();
+    await page.getByRole("button", { name: "哥德石柱夜宴廳，前景燭台，中景人物站於石階前，遠景彩窗與黑色旗幟" }).click();
     await page.getByRole("button", { name: "停留凝視鏡頭，身體重心穩定，布料隨空氣微微流動" }).click();
     await page
       .getByRole("button", { name: "燭火暖光與冷色月光交錯，真實光源邏輯，紅寶石、暗金、絲絨與珠寶反光自然分層" })
@@ -374,7 +380,7 @@ try {
     if (layerValue !== "黑色絲綢內襯") {
       throw new Error(`${viewport.name}: layer chip did not fill layer field`);
     }
-    if (!environmentValue.includes("哥德石柱王座廳") || !environmentValue.includes("前景") || !environmentValue.includes("遠景")) {
+    if (!environmentValue.includes("哥德石柱夜宴廳") || !environmentValue.includes("前景") || !environmentValue.includes("遠景")) {
       throw new Error(`${viewport.name}: scene depth layers missing`);
     }
     if (!actionValue.includes("停留凝視")) {

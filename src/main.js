@@ -29,8 +29,19 @@ const STORAGE_KEY = "hongbing-travel-prompt-state";
 const HISTORY_KEY = "hongbing-travel-prompt-history";
 const UI_PREFS_KEY = "hongbing-travel-prompt-ui-prefs";
 const HISTORY_LIMIT = 5;
-const APP_VERSION = "v1.11";
+const APP_VERSION = "v1.12";
 const PRODUCT_PRINCIPLE = "最高原則：真人鎖臉優先於所有華麗主視覺，不讓角色滑回 AI 仙女臉。";
+const RATIO_LABELS = {
+  "4:5": "4:5 商業海報",
+  "1:1": "1:1 方形貼文",
+  "3:4": "3:4 直式肖像",
+  "2:3": "2:3 電影直幅",
+  "9:16": "9:16 手機桌布",
+  "16:9": "16:9 橫式電影",
+  "3:2": "3:2 攝影橫幅",
+  "4:3": "4:3 經典畫幅",
+  "2.39:1": "2.39:1 寬銀幕",
+};
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -334,7 +345,7 @@ function render() {
               <div class="choice-section">
                 <div>
                   <div class="sec-label">常用圖片尺寸</div>
-                  <div class="choice-grid ratio-choice-grid">${choiceCards("ratio", RATIOS, state.ratio)}</div>
+                  <div class="choice-grid ratio-choice-grid">${choiceCards("ratio", RATIOS, state.ratio, RATIO_LABELS)}</div>
                 </div>
                 <div>
                   <div class="sec-label">人物鏡頭</div>

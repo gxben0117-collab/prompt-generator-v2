@@ -4,6 +4,7 @@
   --surface: rgba(255, 255, 255, 0.055);
   --surface-strong: rgba(255, 255, 255, 0.09);
   --ink: #f4ece0;
+  --text: var(--ink);
   --muted: #b0a090;
   --quiet: #655850;
   --line: rgba(255, 255, 255, 0.075);

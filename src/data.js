@@ -1,4 +1,4 @@
-﻿export const RATIOS = ["9:16", "4:5", "3:4", "2:3", "1:1", "16:9", "2.39:1", "3:2", "4:3"];
+﻿export const RATIOS = ["4:5", "1:1", "3:4", "2:3", "9:16", "16:9", "3:2", "4:3", "2.39:1"];
 
 export const CAMERA_FRAMINGS = ["全身", "半身", "膝蓋以上", "胸部以上", "遠景"];
 
@@ -187,7 +187,7 @@ export const COSTUME_SUGGESTIONS = COSTUME_SUGGESTION_ITEMS.map((item) => item.l
 export const LAYER_SUGGESTIONS = {
   costumeLayer1: ["絲綢貼身內襯", "月白內層長裙", "黑色絲綢內襯", "高訂絲綢貼身襯裙", "霧面機能貼身基底"],
   costumeLayer2: ["唐風刺繡襦裙基礎", "神族長袍基礎結構", "蕾絲邊胸腰支撐結構", "哥德刺繡胸衣骨架", "透明防水外殼層"],
-  costumeLayer3: ["金絲腰封支撐", "玉扣腰帶結構", "絲絨束腰支撐", "半透明馬甲式垂褶", "機能腰部束帶"],
+  costumeLayer3: ["金絲腰封支撐", "玉扣腰帶結構", "絲絨禮服胸腰支撐", "深紫高訂禮服垂褶", "機能腰部束帶"],
   costumeLayer4: ["多層絲綢裙片", "不對稱薄紗裙片", "黑色蕾絲邊裙片", "流動雪紡夜紗", "戰術長外套裙擺"],
   costumeLayer5: ["玉石腰墜", "金屬腰鏈", "黑曜石腰鏈與珠寶扣", "霧面金屬扣件"],
   costumeLayer6: ["半透明長披帛", "雲紋外袍拖尾", "絲絨睡袍式外袍", "雨夜長風衣"],
@@ -207,20 +207,20 @@ export const FIELD_SUGGESTIONS = {
   scene: [
     "長安宮廷夜宴，前景燭火，中景角色，遠景宮殿廊柱",
     "敦煌石窟外黃昏風沙，前景飄帶，中景人物，遠景山壁與落日",
-    "黑暗歌德王座廳，前景燭台，中景王座，遠景高窗與旗幟",
+    "黑暗歌德長廊，前景燭台，中景人物緩步前行，遠景高窗與旗幟",
     "賽納河畔黃昏石橋，前景欄杆，中景行人虛化，遠景巴黎天際線",
   ],
   sceneEnvironment: [
     "長安宮廷大殿，前景燭火與紗幔，中景人物與石階，遠景宮門與夜色",
     "雲海仙門石階，前景白霧，中景角色，遠景山門與雲層",
-    "哥德石柱王座廳，前景燭台，中景王座，遠景彩窗與黑色旗幟",
+    "哥德石柱夜宴廳，前景燭台，中景人物站於石階前，遠景彩窗與黑色旗幟",
     "雨夜霓虹街道，前景雨滴，中景人物，遠景招牌與高樓反光",
   ],
   sceneAction: [
     "站在場景中央自然回身三分之一，臉部完整面向鏡頭",
     "緩慢前行，肩頸放鬆，手部自然帶動衣料，不遮擋臉部",
     "停留凝視鏡頭，身體重心穩定，布料隨空氣微微流動",
-    "坐在王座或石階邊緣，姿勢端正，手自然放置，臉部清楚可見",
+    "站於王座前或石階前方，姿勢端正，雙手自然牽起外袍邊緣，臉部清楚可見",
   ],
   sceneLighting: [
     "紅金宮燈與側前方柔和主光交錯，絲綢高光、寶石色陰影與濕亮地面倒影形成高級艷麗電影色彩",
@@ -269,13 +269,13 @@ export const WORLD_LAYER_PROFILES = [
       costumeLayer2:
         "蕾絲邊胸腰支撐結構採 lace-trim couture support，不走私密服飾方向，以柔性骨架承托上身與腰線，保留真實胸腔厚度與自然呼吸感",
       costumeLayer3:
-        "半透明馬甲式垂褶使用 semi-transparent corset drapery 與 translucent layered fabric，讓紫黑薄紗在燭光中形成若隱若現的電影布料層次",
+        "深紫高訂禮服垂褶使用 couture velvet bodice drapery 與 layered silk fabric，讓紫黑布料在燭光中形成高級夜宴禮服層次，胸口、腰線與腿部保持電影級禮服遮覆",
       costumeLayer4:
         "流動雪紡夜紗與紫蝶紋薄紗外罩採 flowing chiffon night veil，覆於肩臂與裙側，形成柔軟空氣感與暗黑浪漫輪廓",
       costumeLayer5:
         "黑曜石腰鏈、暗銀珠寶扣與細緻腰飾固定於真實裙身結構上，低調反射燭光，建立高級哥德夜宴細節",
       costumeLayer6:
-        "深紫絲絨睡袍式外袍採 velvet side-draped robe，長版布料自然垂落於地面，形成成熟夜宴女王的電影級主輪廓",
+        "深紫絲絨高訂夜宴長袍採 velvet couture evening robe，長版布料自然垂落於地面，形成暗黑夜宴女王的電影級主輪廓",
       costumeLayer7:
         "羽毛邊肩紗與暗紫披肩採 feather-edged shoulder veil，只作柔和肩頸身份象徵，維持室內夜宴、高訂睡袍式禮服與暗黑浪漫輪廓",
       costumeLayer8:
@@ -1278,9 +1278,9 @@ export const WORLD_LAYER_PROFILES = [
     scene:
       "聖焰鳳凰神殿，金色光環、火焰神鳥、黑金王座與鳳羽環繞共同形成高級東方神話電影感。",
     sceneEnvironment:
-      "聖焰鳳凰神殿，前景金羽、火星與煙霧粒子，中景人物坐於黑金王座並被鳳羽與神焰環繞，遠景鳳凰神殿、金色光環、火焰神鳥與王庭柱廊，形成東方神話王庭空間尺度。",
+      "聖焰鳳凰神殿，前景金羽、火星與煙霧粒子，中景人物站於黑金王座前並被鳳羽與神焰環繞，遠景鳳凰神殿、金色光環、火焰神鳥與王庭柱廊，形成東方神話王庭空間尺度。",
     sceneAction:
-      "人物採王座式坐姿，單手托臉但不遮擋臉部，肩膀與脊椎維持真實平衡，視線穩定凝視鏡頭，鳳羽披帛與長袍隨熱流自然微動，避免過度性感化坐姿。",
+      "人物採穩定女王站姿或緩步前行，一手自然帶起鳳羽披帛，另一手垂放於長袍側邊，肩膀與脊椎維持真實平衡，視線穩定凝視鏡頭，鳳羽披帛與長袍隨熱流自然微動，避免過度性感化坐姿。",
     sceneLighting:
       "golden halo lighting, sacred flame soft edge separation light, warm ember reflection, cinematic smoke glow；金色 halo 與火焰柔和邊緣分離光在髮絲、皇冠、鳳羽與黑金服裝邊緣形成真實暖金反射，呈現 golden feathers、embers、smoke haze 與 sacred flame particles。",
     layers: {
@@ -1736,7 +1736,7 @@ export const WORLD_LAYER_PROFILES = [
     sceneEnvironment:
       "赤金古文明秘殿，前景玻璃櫥櫃、金屬聖器與高密度前景虛化，中景人物坐於古老秘殿座椅，遠景古器收藏架、祭典火光、金屬柱與占星符號，形成神秘古文明空間。",
     sceneAction:
-      "人物單手托臉，眼神直視鏡頭，帶有神秘凝視感，另一手自然垂落或貼近祭司長袍，肩膀與脊椎維持真實平衡，避免過度性感化坐姿。",
+      "人物採神秘祭司站姿，眼神直視鏡頭，帶有神秘凝視感，一手自然靠近金屬聖器或祭司長袍，另一手垂落帶動長袖，肩膀與脊椎維持真實平衡，避免過度性感化坐姿。",
     sceneLighting:
       "warm golden flame light, localized specular highlights, temple dust glow；祭典火光在金屬聖器、珠寶鏈條與紅寶石頭飾上形成局部高光反射，呈現 golden particles、warm mist、spatial dust light 與 shallow depth separation。",
     layers: {
@@ -2307,26 +2307,26 @@ export const WORLD_LAYER_PROFILES = [
     scene:
       "血月亡靈哥德城堡，undead gothic castle、blood moon night、skeleton army、dark cathedral skyline 與 fantasy necromancer kingdom 共同形成暗黑魔后王座場景。",
     sceneEnvironment:
-      "血月亡靈哥德城堡，前景餘燼、黑霧與王座台階，中景人物坐鎮死亡王座並持黑暗法杖，遠景 undead gothic castle、blood moon night、skeleton army 剪影與 dark cathedral skyline，形成 dramatic throne perspective。",
+      "血月亡靈哥德城堡，前景餘燼、黑霧與王座台階，中景人物站於死亡王座前並持黑暗法杖，遠景 undead gothic castle、blood moon night、skeleton army 剪影與 dark cathedral skyline，形成 dramatic gothic perspective。",
     sceneAction:
-      "人物 holding dark staff，採 queen throne posture，眼神 confident dominant gaze，頭部 slight head tilt，手部 controlled power pose，重型披風自然壓落於王座，避免低俗 SM 化。",
+      "人物 holding dark staff，採站姿或緩步前行的 queen power posture，眼神 confident dominant gaze，頭部保持正面或微側正面，另一手自然牽起厚重外袍邊緣，避免低俗 SM 化與 pin-up 坐姿。",
     sceneLighting:
       "blue moonlight, red ember glow, dark cinematic contrast, gothic fire reflections, cold soft edge separation lighting；藍色月光與紅色餘燼在紅寶石胸甲、黑曜石珠寶、法杖與王座披風上形成冷暖對比，呈現 embers floating、dark mist、moonlit smoke 與 gothic atmospheric depth。",
     layers: {
       costumeLayer1:
-        "black corset structure 作為黑色哥德束腰結構，支撐王座坐姿與長袍重量",
+        "black couture inner structure 作為黑色哥德禮服內層結構，支撐站姿、胸腔厚度與長袍重量",
       costumeLayer2:
         "ruby gemstone armor 以紅寶石胸甲與暗色金屬建立魔后權力核心",
       costumeLayer3:
         "lace gothic sleeves 使用蕾絲哥德長袖，冷光下呈現細緻暗紋而不內衣化",
       costumeLayer4:
-        "dark royal outer robe 採暗黑王族外袍，厚重布料沿王座自然垂落",
+        "dark royal outer robe 採暗黑王族外袍，厚重布料沿身體兩側與台階自然垂落",
       costumeLayer5:
         "obsidian jewelry layers 以黑曜石珠寶層、紅水晶與冷銀飾件增加王族細節",
       costumeLayer6:
         "crystal royal staff 作為黑暗法杖道具，與手部姿態自然互動",
       costumeLayer7:
-        "dark throne cape 使用深色王座披風，鋪展於台階形成死亡王座輪廓",
+        "dark royal cape 使用深色王族披風，隨站姿在台階後方鋪展形成暗黑女王輪廓",
       costumeLayer8:
         "black gothic queen armor 結合 dark fantasy royal styling 與哥德護肩結構",
       costumeLayer9:
@@ -2346,9 +2346,9 @@ export const WORLD_LAYER_PROFILES = [
     scene:
       "滿月哥德亡靈王城主視覺，巨大冷白滿月、暗黑尖塔、骸骨軍旗、遠景骷髏軍勢、紅燭火與黑金王座共同形成暗黑王族電影海報級場景；主角以真人身份保留的近景女王構圖成為畫面第一焦點。",
     sceneEnvironment:
-      "滿月哥德王城，前景骸骨權杖、紅燭、黑金王冠碎片、柔焦火星與少量骷髏道具形成鏡頭遮擋，中景真人角色坐於黑金王座或王座扶手邊，手持紅寶石骸骨權杖並與鏡頭保持可辨識臉部正面，遠景巨大滿月、哥德尖塔、亡靈軍旗、鎧甲士兵與骷髏軍勢剪影建立世界規模感，整體是 high-impact dark royal key visual 而非安靜寫實角色卡。",
+      "滿月哥德王城，前景骸骨權杖、紅燭、黑金王冠碎片、柔焦火星與少量骸骨道具形成鏡頭遮擋，中景真人角色站於黑金王座前或從王座台階緩步走出，手持紅寶石骸骨權杖並與鏡頭保持可辨識臉部正面，遠景巨大滿月、哥德尖塔、亡靈軍旗、鎧甲士兵與骷髏軍勢剪影建立世界規模感，整體是 high-impact dark royal key visual 而非安靜寫實角色卡。",
     sceneAction:
-      "人物採近景半身或膝上女王坐姿，肩膀放鬆但脊椎穩定，一手自然握住骸骨權杖，另一手以手背輕托下顎或停在王座扶手上，眼神直視鏡頭並保留原始真人臉部辨識度；頭部微微傾斜，長髮、蕾絲袖、薄紗披帛與黑金鏈飾被夜風帶出動態，手指、權杖與飾品不遮擋臉部，不做 pin-up 姿勢。",
+      "人物採 standing full-body cinematic composition，肩膀放鬆但脊椎穩定，一手自然握住骸骨權杖，另一手牽起黑酒紅絲絨外袍邊緣，眼神直視鏡頭並保留原始真人臉部辨識度；頭部正面或微側正面，長髮、蕾絲袖、薄紗披帛與黑金鏈飾被夜風帶出動態，手指、權杖與飾品不遮擋臉部，不做 pin-up 坐姿。",
     sceneLighting:
       "giant full moon key light, cold blue moonlight, ruby candle glow, black-gold specular highlights, cinematic gothic depth；巨大滿月提供冷白側前方主光，紅燭火與紅寶石在黑金金屬、骸骨權杖、蕾絲袖、指甲、項鍊與王座扶手上形成高飽和紅色反光，遠景火把與軍旗產生寶石色散景，呈現 floating embers、moonlit haze、soft gothic smoke、red bokeh particles 與高級暗黑王族商業奇幻主視覺。",
     layers: {
@@ -2363,7 +2363,7 @@ export const WORLD_LAYER_PROFILES = [
       costumeLayer5:
         "黑金紅寶石腰封與多層鏈飾採 ruby chain waist ornament、obsidian gemstone belt 與 antique gold filigree，連接禮服、權杖與王座的金屬語言",
       costumeLayer6:
-        "黑酒紅絲絨王座披風與長裙拖尾採 heavy velvet royal train，布料在王座與腿側自然堆疊，形成厚重可穿戴的暗黑女王輪廓",
+        "黑酒紅絲絨披風與長裙拖尾採 heavy velvet royal train，布料沿站姿兩側與台階自然垂落，形成厚重可穿戴的暗黑女王輪廓",
       costumeLayer7:
         "哥德骸骨肩飾與黑金護腕使用 sculptural skull filigree shoulder piece、antique gold bracer 與 lace glove integration，身份象徵集中於肩手，不壓過臉部辨識度",
       costumeLayer8:
@@ -2371,7 +2371,7 @@ export const WORLD_LAYER_PROFILES = [
       costumeLayer9:
         "紅寶石項鍊、哥德耳墜、黑金戒指、黑色蕾絲手套與冷月光下的自然長髮形成精緻暗黑王族妝髮配件，不改變原始臉部骨相",
       costumeLayer10:
-        "整體形成滿月暗黑王族近景主視覺：巨大滿月、骸骨權杖、紅寶石黑金珠寶、哥德蕾絲、王座披風、遠景軍勢與真人鎖臉共同構成 high-impact cinematic dark royal queen silhouette",
+        "整體形成滿月暗黑王族站姿主視覺：巨大滿月、骸骨權杖、紅寶石黑金珠寶、哥德蕾絲、絲絨披風、遠景軍勢與真人鎖臉共同構成 high-impact cinematic dark royal queen silhouette",
     },
   },
   {
@@ -2498,14 +2498,14 @@ export const WORLD_LAYER_PROFILES = [
     scene:
       "滿月幽冥亡魂夜宴，moonlit spirit palace、floating ghost lanterns、ancient eastern towers、purple soul flames 與 undead throne environment 共同形成東方暗黑奇幻王座。",
     sceneEnvironment:
-      "滿月幽冥亡魂夜宴，前景紫色靈煙、花瓣與鬼燈，中景人物坐於骸骨王座召喚紫焰，遠景 moonlit spirit palace、floating ghost lanterns、ancient eastern towers 與 purple soul flames，形成 epic symmetrical arrangement。",
+      "滿月幽冥亡魂夜宴，前景紫色靈煙、花瓣與鬼燈，中景人物站於骸骨王座前召喚紫焰，遠景 moonlit spirit palace、floating ghost lanterns、ancient eastern towers 與 purple soul flames，形成 epic symmetrical arrangement。",
     sceneAction:
-      "人物 sitting on skull throne，summoning spirit flame，採 crossed-leg dominant pose 但維持真實坐姿重心，表情 controlled queen expression，手部紫焰不遮擋臉部。",
+      "人物 standing full-body cinematic composition，summoning spirit flame，採穩定女王站姿或緩步前行，表情 controlled queen expression，手部紫焰不遮擋臉部，避免交叉腿主視覺與 pin-up 坐姿。",
     sceneLighting:
       "purple magical glow, moonlight contrast, dark neon fantasy lighting, soul flame reflections；紫色靈焰與月光在紫色法袍、骷髏寶石、秘法冠環與黑蕾絲結構上形成夜間反光，呈現 purple spirit smoke、ghost mist、magical particles 與 dark supernatural ambience。",
     layers: {
       costumeLayer1:
-        "dark corset foundation 作為暗色束腰基底，支撐王座坐姿與長裙重量",
+        "dark couture foundation 作為暗色禮服基底，支撐站姿、真實胸腔厚度與長裙重量",
       costumeLayer2:
         "purple embroidered chest layer 使用紫色刺繡胸層，建立幽冥法術符號",
       costumeLayer3:
@@ -3000,21 +3000,21 @@ export const WORLD_LAYER_PROFILES = [
       title: "紫月夜庭魔后",
       category: "黑暗奇幻／夜庭王座／魔后",
       layers: [
-        "黑色貼身內襯與黑紫貼身內襯建立深色宮廷基底，保留真人骨架比例",
-        "紫晶馬甲結構與胸腰支撐馬甲以金屬骨架包覆胸腰，穩定坐姿與長袍重量",
+      "黑色貼身內襯與黑紫貼身內襯建立深色宮廷基底，保留真人骨架比例",
+        "紫晶禮服胸腰支撐結構以柔性金屬骨架承托長袍重量，保留真實胸腔厚度與正常腰臀比例",
         "深紫主體長袍與黑紫刺繡禮服主體加入宇宙紋路刺繡，形成夜庭王后輪廓",
         "透明星紗披風、能量薄紗與半透明紫紗披帛覆於肩背與手臂",
         "暗金腰甲、紫晶符文結構、暗金腰封與水晶鏈固定腰線",
-        "大型王座拖尾、披肩與拖尾王袍於王座兩側自然堆疊",
-        "肩部金屬尖刺、宇宙符文、王座肩飾與暗夜權力符號形成統治者身份",
+        "大型拖尾、披肩與拖尾王袍於站姿兩側和地面自然垂落",
+        "肩部金屬尖刺、宇宙符文、王族肩飾與暗夜權力符號形成統治者身份",
         "紫晶吊鏈、能量寶石、紫水晶珠鏈、戒飾與魔法吊墜反射紫月光",
-        "尖刺王冠、暗紫頭飾與黑曜王冠建立月下王座頭部剪影",
-        "整體形成宇宙魔后壓迫式 silhouette 與紫月古堡王座魔后的真人電影輪廓",
+        "尖刺王冠、暗紫頭飾與黑曜王冠建立月下魔后頭部剪影",
+        "整體形成宇宙魔后壓迫式 silhouette 與紫月古堡魔后的真人電影輪廓",
       ],
       makeup: "冷調底妝、深紫眼妝、紫黑眼影、暗色唇彩與深紅唇，保留真人臉部比例、成熟感與皮膚反光。",
-      scene: "紫月古堡王座與星淵紫庭魔后，漂浮星界王座、宇宙裂縫、黑曜石尖塔、黑色大理石、燭火與玫瑰花瓣形成黑暗宇宙奇幻王權場景。",
-      sceneEnvironment: "紫月古堡王座與漂浮星界王座，前景星塵、漂浮碎石、花瓣與燭火，中景人物居中端坐，遠景宇宙裂縫、黑曜石尖塔、黑色大理石與對稱王座布景。",
-      sceneAction: "人物坐姿穩定，可一手扶椅一手伸出召喚魔法，或雙手操控紫色能量球，肩膀與脊椎保持平衡。",
+      scene: "紫月古堡星淵夜庭魔后，漂浮星界王座作為遠景權力符號，宇宙裂縫、黑曜石尖塔、黑色大理石、燭火與玫瑰花瓣形成黑暗宇宙奇幻王權場景。",
+      sceneEnvironment: "紫月古堡與漂浮星界王座，前景星塵、漂浮碎石、花瓣與燭火，中景人物站於王座台階前或緩步走出，遠景宇宙裂縫、黑曜石尖塔、黑色大理石與對稱王座布景。",
+      sceneAction: "人物站姿穩定，可一手自然牽起外袍邊緣一手伸出召喚魔法，或雙手操控紫色能量球，肩膀與脊椎保持平衡，臉部正面或微側正面看向鏡頭。",
       sceneLighting: "紫色月光、紫色能量光、宇宙 soft edge separation light、燭火暖光與低調高反差 soft edge separation light，伴隨紫色霧氣、星塵、漂浮碎石與微光粒子，避免遊戲引擎特效感與過度 HDR。",
     },
     {
@@ -3247,16 +3247,16 @@ export const WORLD_LAYER_PROFILES = [
         "dark feather layered skirt 形成羽片層疊裙身",
         "gothic long gloves 延伸哥德手部輪廓",
         "black gemstone royal jewelry 形成王族珠寶系統",
-        "shadow-reactive velvet train 在王座周圍鋪展",
+        "shadow-reactive velvet train 在站姿後方與台階周圍鋪展",
         "raven-wing shoulder armor 作黑鴉軍團身份象徵",
         "黑寶石、戒飾與項鍊反射燭光",
         "dark queen crown 建立暗夜魔后頭部剪影",
-        "整體形成禁忌王座中的黑羽哥德女王輪廓",
+        "整體形成禁忌夜庭中的黑羽哥德女王輪廓",
       ],
       makeup: "dark queen makeup、purple-black smokey eyes、cold cinematic skin、wine-red lips 與 dominant empress gaze。",
-      scene: "gothic throne cathedral、raven-filled dark palace、candlelit forbidden kingdom 與黑金王座廳。",
-      sceneEnvironment: "哥德王座大教堂，前景烏鴉與黑羽，中景人物坐王座，遠景燭火與黑金廳堂。",
-      sceneAction: "人物 sitting on throne confidently，arms resting naturally，slight queen smile，黑羽包圍畫面。",
+      scene: "gothic throne cathedral、raven-filled dark palace、candlelit forbidden kingdom 與黑金夜庭大廳。",
+      sceneEnvironment: "哥德王座大教堂，前景烏鴉與黑羽，中景人物站於王座前或由台階緩步走出，遠景燭火與黑金廳堂。",
+      sceneAction: "人物站姿或緩步前行 confidently，雙手自然牽起外袍邊緣或讓手臂放鬆垂落，slight queen smile，黑羽包圍畫面，臉部正面或微側正面看向鏡頭。",
       sceneLighting: "low-key candle lighting、cold blue-black shadows、gold soft edge separation light accents 與 cinematic gothic glow。",
     },
     {
@@ -3431,8 +3431,8 @@ export const WORLD_LAYER_PROFILES = [
       ],
       makeup: "高清冷調電影妝感，保留毛孔、真人年齡感與自然反光；大地色眼妝疊加深紫煙燻或冷大地色暈染，裸粉至裸烏紅半啞光唇，額心紫水晶圖騰，自然披肩或全盤髮端莊。",
       scene: "月夜暗黑宮廷王座、長安夜宴暗影刺客與月蝕古殿不朽聖女／不朽祭司，紫水晶簾幕、蠟燭、落花、巨型滿月、黑色巨石石柱與風化圖騰壁畫形成歌德電影美術場景。",
-      sceneEnvironment: "月蝕古殿王座夜宴，前景花瓣、燭台與冷霧，中景人物坐於黑色雕花寶座或挺拔站於石質地面並全身完整入鏡，遠景巨型月亮、黑色巨石石柱、風化圖騰壁畫與垂吊水晶自然虛化。",
-      sceneAction: "人物可沉穩端坐，左手輕托下頜，右手向前平伸承載紫色魔法能量；也可雙腳平穩著地挺拔站立，雙手自然垂於身體兩側，肩膀與脊椎平衡。",
+      sceneEnvironment: "月蝕古殿夜宴，前景花瓣、燭台與冷霧，中景人物挺拔站於石質地面並全身完整入鏡，遠景巨型月亮、黑色巨石石柱、風化圖騰壁畫、黑色雕花寶座與垂吊水晶自然虛化。",
+      sceneAction: "人物雙腳平穩著地挺拔站立，右手向前平伸承載紫色魔法能量，左手自然牽起外袍邊緣或垂於身側，肩膀與脊椎平衡，臉部正面或微側正面看向鏡頭。",
       sceneLighting: "紫色月光與冷藍色月光作 cinematic soft edge separation light，蠟燭提供暖光，掌心紫色魔法微光成主戲劇光源並具物理衰減，冷霧與 floating dust particles 產生 volumetric light haze。",
     },
     {

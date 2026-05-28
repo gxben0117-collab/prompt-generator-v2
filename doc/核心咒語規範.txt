@@ -197,6 +197,7 @@ not instead of the person.
 - 真實人體重心
 - 真實四肢比例
 - 真實脊椎結構
+- 罩杯j
 
 禁止：
 
@@ -279,6 +280,16 @@ camera distance must not compress body structure.
 
 人物體積感需優先於性感誇張。
 
+暗黑王族、夜宴魅魔、魅姬、魔后等分類不得指定罩杯。
+
+胸部與身形只允許依照上傳真人原始體型自然延伸。
+
+不得放大胸腰比例。
+
+不得製造 pin-up 坐姿。
+
+不得讓腿部、胸部或腰臀成為主視覺。
+
 【夜宴魅魔安全風格系統】
 
 夜宴魅魔、夜宴魅姬、暗黑女王等角色，
@@ -325,6 +336,28 @@ camera distance must not compress body structure.
 成熟電影魅力、
 克制危險感、
 暗黑浪漫氣氛。
+
+夜宴魅魔與暗黑王族的穩定構圖優先採：
+
+4:5 premium commercial fantasy poster。
+
+人物動作優先：
+
+standing full-body cinematic composition。
+
+可使用：
+
+人物站姿或緩步前行，
+雙手自然牽起外袍邊緣，
+臉部正面或微側正面看向鏡頭。
+
+避免：
+
+- 16:9 橫式性感王座場景
+- 坐於王座作為預設動作
+- 單手托臉
+- 半透明馬甲式垂褶
+- 腿部成為主視覺
 
 避免：
 

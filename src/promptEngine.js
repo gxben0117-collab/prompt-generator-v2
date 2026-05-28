@@ -66,7 +66,7 @@ const THEME_REWRITE_HINTS = [
 export const DEFAULT_FORM = {
   category: "",
   theme: "",
-  ratio: "9:16",
+  ratio: "4:5",
   cameraFraming: "全身",
   visualMode: "Netflix 東方奇幻",
   colorIntensity: "紅金寶石",
@@ -253,16 +253,6 @@ function getFixedCorePrompt() {
   return CORE_SPEC_TEXT.split("********** 使用規範 **********")[0].trim();
 }
 
-function injectDarkRoyalBodyPreset(corePrompt, form, category) {
-  if (!isDarkRoyalCategory(category, form.theme, form.scene)) return corePrompt;
-  if (corePrompt.includes("罩杯:J")) return corePrompt;
-
-  return corePrompt.replace(
-    "- 真實胸腔厚度",
-    "- 真實胸腔厚度\n- 罩杯:J（僅限奇幻異世界 / 暗黑王族分類，需由真實成年人體骨架、胸腔厚度、couture support 與高訂禮服布料張力自然承托）",
-  );
-}
-
 function findAfterOutputFormatSection(text) {
   const candidates = ["【最終核心】", "【負面規則】", "【負面咒語系統】"];
   const outputStart = text.indexOf("【輸出格式】");
@@ -278,9 +268,9 @@ function findAfterOutputFormatSection(text) {
 
 function inferCategory(theme, costume, scene) {
   const text = `${theme} ${costume} ${scene}`;
-  if (/唐|漢|宋|明|清|飛天|敦煌|長安|大周|故宮|宮廷/.test(text)) return "中國朝代古裝 / 中國神話";
   if (/魅魔|魅姬|睡袍式|絲絨寢宮|暗黑浪漫/.test(text)) return "夜宴魅魔／高訂睡袍電影";
   if (/惡魔|哥德|女王|暗夜/.test(text)) return "奇幻異世界 / 暗黑王族";
+  if (/唐|漢代|宋代|明代|清宮|清朝|飛天|敦煌|長安|大周|故宮|宮廷/.test(text)) return "中國朝代古裝 / 中國神話";
   if (/仙|修真|雲海|山門/.test(text)) return "仙俠修真";
   if (/賽博|霓虹|機械|未來/.test(text)) return "科幻賽博";
   if (/巴黎|東京|地標|旅拍|都市/.test(text)) return "世界地標旅拍 / 都市時尚";
@@ -296,11 +286,11 @@ function buildDarkRoyalBodyPresenceText(form, category) {
   if (!isDarkRoyalCategory(category, form.theme, form.scene)) return "";
 
   return [
-    "暗黑王族身形預設：成熟豐滿但真實的成年女性體積感",
-    "真實人體骨架追加：罩杯:J，需由真實胸腔厚度、couture support 與高訂禮服布料張力自然承托",
-    "上身輪廓需由 couture support、structured silk gown、velvet robe drapery 與真實胸腰支撐結構承托",
-    "保留真實胸腔厚度、自然重力、肩頸連接、正常腰臀比例與高訂禮服布料張力",
-    "視覺焦點集中在黑暗王族氣場、絲綢高光、禮服支撐、真實人體重心與電影女王銀幕存在感",
+    "暗黑王族身形安全：胸部與身形只允許依照上傳真人原始體型自然延伸",
+    "不指定罩杯、不放大胸腰比例、不製造 pin-up 坐姿，不讓腿部或胸腰成為主視覺",
+    "服裝為深紫絲絨高訂夜宴長袍與絲綢披帛，胸口、腰線與腿部保持電影級禮服遮覆與真實布料重量",
+    "保留真實胸腔厚度、肩頸連接、正常腰臀比例、自然重力與高訂禮服布料張力",
+    "視覺焦點集中在原始真人臉、暗黑王族氣場、絲絨高光、禮服輪廓與電影女王銀幕存在感",
   ].join("；");
 }
 
@@ -345,10 +335,10 @@ function stabilizeFaceAngleText(text = "") {
 function inferEmotionalAction(theme, scene) {
   const text = `${theme} ${scene}`;
   if (isDarkBanquetTheme(theme, scene)) {
-    return "夜宴魅姬式正面或三分之一微側正面站姿，臉部角度接近上傳照片，單手輕扶絲絨外袍或黑曜石床柱，另一手自然帶起半透明薄紗，雙眼越過燭光直視鏡頭，腰胯重心穩定、肩頸放鬆、臉部完整清楚";
+    return "夜宴魅姬式正面或三分之一微側正面站姿，臉部角度接近上傳照片，雙手自然牽起深紫絲絨外袍邊緣或絲綢披帛，緩步前行看向鏡頭，腰胯重心穩定、肩頸放鬆、臉部完整清楚";
   }
   if (/女王|哥德|暗夜|王座|魔后|血族|冥界/.test(text)) {
-    return "女王式低速起身或倚靠王座扶手，身體保持正面或三分之一微側正面，臉部穩定朝向鏡頭，手指自然掠過扶手、珠寶鏈或垂落布料，肩線穩定，眼神具有壓迫感與情緒吸引力";
+    return "女王式站姿或緩步前行，身體保持正面或三分之一微側正面，臉部穩定朝向鏡頭，雙手自然牽起外袍邊緣或垂落布料，肩線穩定，眼神具有壓迫感與情緒吸引力";
   }
   if (/唐|長安|盛唐|宮廷|花宴|牡丹|鳳|樂姬|舞姬/.test(text)) {
     return "盛唐夜宴女主角在燈籠與花瓣前正面或微側正面停步，單手帶動披帛或團扇，另一手自然壓住長袖，步伐停在布料揚起瞬間，長裙與飄帶形成 S 型視線流線，臉部完整面向鏡頭";
@@ -384,12 +374,22 @@ const RATIO_COMPOSITION_TEXT = {
 };
 
 function buildAspectRatioControlText(form = DEFAULT_FORM) {
-  const ratioText = RATIO_COMPOSITION_TEXT[form.ratio] || RATIO_COMPOSITION_TEXT[DEFAULT_FORM.ratio];
+  const effectiveRatio =
+    isDarkRoyalCategory(form.category, form.theme, form.scene) && ["9:16", "16:9"].includes(form.ratio)
+      ? "4:5"
+      : form.ratio;
+  const ratioText = RATIO_COMPOSITION_TEXT[effectiveRatio] || RATIO_COMPOSITION_TEXT[DEFAULT_FORM.ratio];
+  const overrideText =
+    effectiveRatio !== form.ratio
+      ? `暗黑王族 / 夜宴魅魔主題比例修正：由 ${form.ratio} 改採 4:5 premium cinematic fantasy poster，避免橫式王座或手機直式性感寫真構圖`
+      : "";
   return [
+    overrideText,
     `輸出比例控制：${ratioText}`,
+    effectiveRatio === "4:5" ? "standing full-body cinematic composition，人物站姿或緩步前行，保留完整真人身體比例與電影主輪廓" : "",
     "composition must respect the specified aspect ratio and keep the full cinematic silhouette inside frame",
     "避免裁頭、裁手、截斷全身、過度留白、AI 自動特寫或自拍式構圖",
-  ].join("；");
+  ].filter(Boolean).join("；");
 }
 
 function buildBodyProportionStabilizationText(form = DEFAULT_FORM) {
@@ -649,11 +649,8 @@ export function buildPrompt(input = {}) {
 }
 
 export function buildChatGptInstruction(input = {}) {
-  const form = normalizeForm(input);
   const prompt = buildPrompt(input);
-  const categoryMatch = prompt.match(/分類：(.+)/);
-  const category = categoryMatch?.[1]?.trim() || inferCategory(form.theme, buildCostumeLayerText(form, form.theme), buildSceneInput(form, form.theme));
-  const fixedCore = injectDarkRoyalBodyPreset(getFixedCorePrompt(), form, category);
+  const fixedCore = getFixedCorePrompt();
   const { outputStart, nextStart } = findAfterOutputFormatSection(fixedCore);
 
   if (outputStart === -1 || nextStart === -1 || nextStart <= outputStart) {

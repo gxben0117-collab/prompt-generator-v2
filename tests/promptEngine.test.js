@@ -69,7 +69,7 @@ const BATCH_PROFILE_EXPECTATIONS = [
   ["moon-palace-white-jade-fairy", "月宮白玉仙姬", "月光流動", "白玉月宮"],
   ["jiangnan-water-pavilion-cyan-fairy", "水榭青衣仙子", "江南古裝輪廓", "江南水榭"],
   ["western-border-riding-consort", "西域邊關皇妃", "沙漠邊關皇妃", "夕陽沙漠邊城"],
-  ["purple-moon-night-court-empress", "紫月夜庭魔后", "紫月古堡王座魔后", "紫月古堡王座"],
+  ["purple-moon-night-court-empress", "紫月夜庭魔后", "紫月古堡魔后", "紫月古堡與漂浮星界王座"],
   ["changan-night-banquet-musician", "長安夜宴樂姬", "長安夜宴樂姬真人身份保留主視覺", "長安盛唐花宴主視覺"],
   ["moon-weaving-dream-enchantress", "月紗織夢魅姬", "月光絲絨寢宮", "月光絲絨織夢寢宮"],
   ["fallen-wing-holy-city-heiress", "墮翼聖城遺女", "墮翼剪影", "崩壞聖城"],
@@ -124,6 +124,7 @@ describe("prompt engine", () => {
   it("uses explicit defaults for the three director weight controls", () => {
     const form = normalizeForm({});
 
+    expect(form.ratio).toBe("4:5");
     expect(form.visualMode).toBe("Netflix 東方奇幻");
     expect(form.colorIntensity).toBe("紅金寶石");
     expect(form.fabricMotion).toBe("大動態飄紗");
@@ -520,7 +521,7 @@ describe("prompt engine", () => {
     expect(phoenixCourt.layers.costumeLayer9).toContain("ornate flame crown");
     expect(phoenixCourt.makeup).toContain("金紅鳳羽眼尾");
     expect(phoenixCourt.sceneEnvironment).toContain("火焰神鳥");
-    expect(phoenixCourt.sceneAction).toContain("單手托臉但不遮擋臉部");
+    expect(phoenixCourt.sceneAction).toContain("穩定女王站姿");
     expect(phoenixCourt.sceneLighting).toContain("golden halo lighting");
     expect(tangEmpress.category).toBe("盛唐宮廷／皇后／東方電影美學");
     expect(tangEmpress.layers.costumeLayer1).toContain("crimson embroidered silk foundation");
@@ -659,7 +660,7 @@ describe("prompt engine", () => {
     expect(templePriestess.layers.costumeLayer10).toContain("golden hand-chain armor");
     expect(templePriestess.makeup).toContain("星紋寶石額鏈");
     expect(templePriestess.sceneEnvironment).toContain("玻璃櫥櫃");
-    expect(templePriestess.sceneAction).toContain("單手托臉");
+    expect(templePriestess.sceneAction).toContain("神秘祭司站姿");
     expect(templePriestess.sceneLighting).toContain("warm golden flame light");
     expect(silverMoon.category).toBe("月光奇幻／銀河神話／東方精靈");
     expect(silverMoon.layers.costumeLayer1).toContain("silver-white silk foundation");
@@ -811,18 +812,19 @@ describe("prompt engine", () => {
     expect(coastalBegonia.sceneAction).toContain("touching cherry blossoms");
     expect(coastalBegonia.sceneLighting).toContain("bright spring daylight");
     expect(darkNecromancer.category).toBe("暗黑魔后｜亡靈王座｜哥德奇幻電影");
-    expect(darkNecromancer.layers.costumeLayer1).toContain("black corset structure");
+    expect(darkNecromancer.layers.costumeLayer1).toContain("black couture inner structure");
     expect(darkNecromancer.layers.costumeLayer6).toContain("crystal royal staff");
     expect(darkNecromancer.layers.costumeLayer10).toContain("cinematic necromancer queen costume");
     expect(darkNecromancer.makeup).toContain("dark queen makeup");
     expect(darkNecromancer.sceneEnvironment).toContain("undead gothic castle");
     expect(darkNecromancer.sceneAction).toContain("holding dark staff");
+    expect(darkNecromancer.sceneAction).toContain("站姿或緩步前行");
     expect(darkNecromancer.sceneLighting).toContain("blue moonlight");
     expect(fullmoonScepterQueen.category).toBe("暗黑王族｜滿月權杖｜哥德軍勢電影");
     expect(fullmoonScepterQueen.aliases).toContain("骷髏權杖女王");
     expect(fullmoonScepterQueen.makeup).toContain("不變成 AI 仙女臉");
     expect(fullmoonScepterQueen.layers.costumeLayer8).toContain("大型紅寶石骸骨權杖");
-    expect(fullmoonScepterQueen.layers.costumeLayer10).toContain("滿月暗黑王族近景主視覺");
+    expect(fullmoonScepterQueen.layers.costumeLayer10).toContain("滿月暗黑王族站姿主視覺");
     expect(fullmoonScepterQueen.sceneEnvironment).toContain("巨大滿月");
     expect(fullmoonScepterQueen.sceneAction).toContain("不遮擋臉部");
     expect(fullmoonScepterQueen.sceneLighting).toContain("ruby candle glow");
@@ -851,7 +853,7 @@ describe("prompt engine", () => {
     expect(holySkyPaladin.sceneAction).toContain("holding holy sword");
     expect(holySkyPaladin.sceneLighting).toContain("bright heavenly sunlight");
     expect(spiritBanquetEmpress.category).toBe("幽冥妖后｜亡魂夜宴｜東方暗黑奇幻");
-    expect(spiritBanquetEmpress.layers.costumeLayer1).toContain("dark corset foundation");
+    expect(spiritBanquetEmpress.layers.costumeLayer1).toContain("dark couture foundation");
     expect(spiritBanquetEmpress.layers.costumeLayer6).toContain("arcane crown halo");
     expect(spiritBanquetEmpress.layers.costumeLayer10).toContain("cinematic spirit queen costume");
     expect(spiritBanquetEmpress.makeup).toContain("purple fantasy makeup");
@@ -1002,9 +1004,10 @@ describe("prompt engine", () => {
     const purpleMoonProfile = WORLD_LAYER_PROFILES.find((profile) => profile.id === "purple-moon-night-court-empress");
     const tangFlowerFestivalProfile = WORLD_LAYER_PROFILES.find((profile) => profile.id === "tang-flower-festival-noble-lady");
 
-    expect(purpleMoonProfile.scene).toContain("星淵紫庭魔后");
-    expect(purpleMoonProfile.layers.costumeLayer2).toContain("紫晶馬甲結構");
+    expect(purpleMoonProfile.scene).toContain("星淵夜庭魔后");
+    expect(purpleMoonProfile.layers.costumeLayer2).toContain("紫晶禮服胸腰支撐結構");
     expect(purpleMoonProfile.layers.costumeLayer10).toContain("宇宙魔后壓迫式 silhouette");
+    expect(purpleMoonProfile.sceneAction).toContain("人物站姿穩定");
     expect(purpleMoonProfile.sceneAction).toContain("雙手操控紫色能量球");
     expect(purpleMoonProfile.sceneLighting).toContain("宇宙 soft edge separation light");
     expect(tangFlowerFestivalProfile.scene).toContain("大唐春殿樂姬");
@@ -1145,7 +1148,8 @@ describe("prompt engine", () => {
     expect(prompt).toContain("balanced head size");
     expect(prompt).toContain("natural shoulder-to-head ratio");
     expect(prompt).toContain("輸出比例控制");
-    expect(prompt).toContain("9:16 cinematic mobile wallpaper");
+    expect(prompt).toContain("4:5 premium commercial fantasy poster");
+    expect(prompt).toContain("standing full-body cinematic composition");
     expect(prompt).toContain("composition must respect the specified aspect ratio");
     expect(prompt).toContain("keep the full cinematic silhouette inside frame");
     expect(prompt).toContain("face swap");
@@ -1230,9 +1234,10 @@ describe("prompt engine", () => {
     expect(darkBanquet).toContain("extra-long flowing silk drapery");
     expect(darkBanquet).toContain("暗紫絲絨寢宮");
     expect(darkBanquet).toContain("夜宴魅姬式正面或三分之一微側正面站姿");
-    expect(darkBanquet).toContain("單手輕扶絲絨外袍");
-    expect(darkBanquet).toContain("另一手自然帶起半透明薄紗");
-    expect(darkBanquet).toContain("雙眼越過燭光直視鏡頭");
+    expect(darkBanquet).toContain("雙手自然牽起深紫絲絨外袍邊緣");
+    expect(darkBanquet).toContain("緩步前行看向鏡頭");
+    expect(darkBanquet).toContain("不指定罩杯");
+    expect(darkBanquet).toContain("胸口、腰線與腿部保持電影級禮服遮覆");
     expect(darkBanquet).toContain("預設單女主電影海報構圖");
     expect(darkBanquet).not.toContain("主題允許少量 small-scale cinematic silhouettes");
     expect(netflixMode).toContain("主視覺模式：真人身份保留的東方奇幻電影主視覺");
@@ -1250,6 +1255,8 @@ describe("prompt engine", () => {
     expect(darkBanquet).not.toContain("不要灰藍低飽和");
     expect(darkBanquet).not.toContain("場景可加入");
     expect(darkBanquet).not.toContain("不要");
+    expect(darkBanquet).not.toContain("單手輕扶絲絨外袍");
+    expect(darkBanquet).not.toContain("半透明馬甲式垂褶");
     expect(netflixMode).not.toContain("主視覺模式：電影角色設定檔");
     expect(netflixMode).not.toContain("柔和電影主調");
   });
@@ -1346,7 +1353,7 @@ describe("prompt engine", () => {
     expect(instruction).not.toContain("movie still");
   });
 
-  it("adds dark royal mature body presence only for dark fantasy categories", () => {
+  it("adds dark royal original-body safety only for dark fantasy categories", () => {
     const darkRoyal = buildPrompt({
       category: "奇幻異世界 / 暗黑王族",
       theme: "暗夜王座女王",
@@ -1362,15 +1369,20 @@ describe("prompt engine", () => {
       scene: "暗紫絲絨寢宮",
     });
 
-    expect(darkRoyal).toContain("暗黑王族身形預設");
-    expect(darkRoyal).toContain("成熟豐滿但真實的成年女性體積感");
-    expect(darkRoyal).toContain("真實人體骨架追加：罩杯:J");
-    expect(darkRoyal).toContain("couture support");
+    expect(darkRoyal).toContain("暗黑王族身形安全");
+    expect(darkRoyal).toContain("依照上傳真人原始體型自然延伸");
+    expect(darkRoyal).toContain("不指定罩杯");
+    expect(darkRoyal).toContain("不放大胸腰比例");
+    expect(darkRoyal).toContain("不製造 pin-up 坐姿");
+    expect(darkRoyal).toContain("深紫絲絨高訂夜宴長袍");
     expect(darkRoyal).toContain("真實胸腔厚度");
-    expect(darkRoyal).toContain("視覺焦點集中在黑暗王族氣場");
-    expect(inferredDarkRoyal).toContain("真實人體骨架追加：罩杯:J");
+    expect(darkRoyal).toContain("視覺焦點集中在原始真人臉");
+    expect(inferredDarkRoyal).toContain("不指定罩杯");
+    expect(inferredDarkRoyal).toContain("分類：夜宴魅魔／高訂睡袍電影");
+    expect(inferredDarkRoyal).toContain("輸出比例控制：4:5 premium commercial fantasy poster");
     expect(darkRoyal).not.toContain("不做動漫誇張身材");
-    expect(changan).not.toContain("暗黑王族身形預設");
+    expect(darkRoyal).not.toContain("罩杯:J");
+    expect(changan).not.toContain("暗黑王族身形安全");
     expect(changan).not.toContain("罩杯:J");
   });
 
@@ -1507,11 +1519,11 @@ describe("prompt engine", () => {
     const form = normalizeForm({ theme: "絕美女神", scene: "雨夜街道", ratio: "bad-ratio", cameraFraming: "超近臉部" });
     expect(form.theme).toBe("真人電影角色真人電影角色");
     expect(form.scene).toBe("雨夜街道");
-    expect(form.ratio).toBe("9:16");
+    expect(form.ratio).toBe("4:5");
     expect(form.cameraFraming).toBe("全身");
   });
 
-  it("adds widescreen and seated body proportion controls when requested", () => {
+  it("overrides risky dark royal widescreen into 4:5 standing poster control", () => {
     const prompt = buildPrompt({
       category: "奇幻異世界 / 暗黑王族",
       theme: "滿月骸骨權杖女王",
@@ -1520,8 +1532,9 @@ describe("prompt engine", () => {
       cameraFraming: "全身",
     });
 
-    expect(prompt).toContain("輸出比例控制：16:9 epic cinematic frame");
-    expect(prompt).toContain("保留環境尺度與人物全身輪廓");
+    expect(prompt).toContain("暗黑王族 / 夜宴魅魔主題比例修正：由 16:9 改採 4:5");
+    expect(prompt).toContain("輸出比例控制：4:5 premium commercial fantasy poster");
+    expect(prompt).toContain("standing full-body cinematic composition");
     expect(prompt).toContain("坐姿或王座姿勢必須保留完整胸腔厚度");
     expect(prompt).toContain("camera distance must not compress body structure");
     expect(prompt).toContain("oversized head");
@@ -1570,6 +1583,7 @@ describe("prompt engine", () => {
     expect(instruction).toContain("full-body physical coherence has equal priority with facial identity preservation");
     expect(instruction).toContain("【輸出比例控制系統】");
     expect(instruction).toContain("composition must respect the specified aspect ratio");
+    expect(instruction).toContain("- 罩杯j");
     expect(instruction).toContain("original eyelid structure");
     expect(instruction).toContain("The fantasy world exists around the real photographed person");
     expect(instruction).toContain("50mm 全片幅中遠景電影構圖");
@@ -1588,7 +1602,7 @@ describe("prompt engine", () => {
     expect(instruction).not.toContain("罩杯:J");
   });
 
-  it("injects the dark royal cup preset into the fixed skeleton section only for dark fantasy instructions", () => {
+  it("does not inject dark royal cup presets into the fixed skeleton section", () => {
     const darkInstruction = buildChatGptInstruction({
       category: "奇幻異世界 / 暗黑王族",
       theme: "紫蝶夜宴魅魔",
@@ -1601,9 +1615,12 @@ describe("prompt engine", () => {
     });
 
     expect(darkInstruction).toContain("【真實人體骨架】");
-    expect(darkInstruction).toContain("- 罩杯:J（僅限奇幻異世界 / 暗黑王族分類");
-    expect(darkInstruction.indexOf("- 罩杯:J")).toBeGreaterThan(darkInstruction.indexOf("【真實人體骨架】"));
-    expect(darkInstruction.indexOf("- 罩杯:J")).toBeLessThan(darkInstruction.indexOf("【成熟成年女性體積感】"));
+    expect(darkInstruction).toContain("- 罩杯j");
+    expect(darkInstruction).toContain("不指定罩杯");
+    expect(darkInstruction).toContain("依照上傳真人原始體型自然延伸");
+    expect(darkInstruction).not.toContain("- 罩杯:J");
+    expect(darkInstruction).not.toContain("真實人體骨架追加：罩杯:J");
+    expect(normalInstruction).toContain("- 罩杯j");
     expect(normalInstruction).not.toContain("- 罩杯:J");
   });
 });
