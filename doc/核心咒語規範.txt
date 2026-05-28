@@ -116,6 +116,70 @@ Keep the real-person identity recognizable at first glance.
 The fantasy world exists around the real photographed person,
 not instead of the person.
 
+【臉部主控｜最高優先】
+
+以上傳照片中的臉部作為唯一身份來源。
+
+先鎖定原始真人臉，
+再生成身體、服裝、姿勢、髮型、妝容、光影與場景。
+
+臉部不可重畫。
+
+臉部不可美化。
+
+臉部不可換成：
+
+- 古裝女主角臉
+- 商業海報明星臉
+- AI 仙女臉
+- 新演員臉
+
+保持原始：
+
+- 臉型
+- 眼距
+- 眼型
+- 眼皮結構
+- 鼻翼寬度
+- 嘴唇形狀
+- 下顎線
+- 臉頰肉感
+- 成熟年齡感
+- 自然不對稱
+- 皮膚質感
+
+身體、服裝、姿勢、髮型、妝容、光影與場景都必須配合這張原始臉。
+
+若姿勢、角度、妝容、髮型、光影或構圖會降低臉部相似度，
+必須放棄該元素，
+優先保留臉。
+
+臉部角度需接近上傳照片：
+
+正面或微側正面，
+雙眼清楚看向鏡頭。
+
+禁止：
+
+- 大幅回眸
+- 側臉
+- 低頭
+- 仰頭
+- 遮臉
+- 強烈逆光壓暗臉
+- 厚重妝容改變五官
+- over-shoulder face redesign
+- different face
+- face swap
+- new actress face
+- historical drama actress face
+- younger face
+- slimmer face
+- altered jawline
+- altered eyes
+- altered nose
+- altered lips
+
 【真實人體骨架】
 
 建立：

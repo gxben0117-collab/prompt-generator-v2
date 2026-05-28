@@ -1137,9 +1137,16 @@ describe("prompt engine", () => {
     expect(prompt).toContain("預設單女主電影海報構圖");
     expect(prompt).toContain("畫面只保留真人主角");
     expect(prompt).toContain("absolute visual priority");
+    expect(prompt).toContain("臉部主控");
+    expect(prompt).toContain("先鎖定原始真人臉");
+    expect(prompt).toContain("正面或微側正面");
+    expect(prompt).toContain("face swap");
+    expect(prompt).toContain("different face");
+    expect(prompt).toContain("new actress face");
+    expect(prompt).toContain("altered jawline");
     expect(prompt).toContain("畫面事件");
     expect(prompt).toContain("動作鏡頭語言");
-    expect(prompt).toContain("盛唐夜宴女主角穿過燈籠與花瓣回身");
+    expect(prompt).toContain("盛唐夜宴女主角在燈籠與花瓣前正面或微側正面停步");
     expect(prompt).toContain("50mm eye-level cinematic blocking");
     expect(prompt).toContain("臉部完整可見");
     expect(prompt).toContain("肩頸、胸腔、骨盆與雙腳重心符合真實成年人體結構");
@@ -1157,8 +1164,35 @@ describe("prompt engine", () => {
     expect(prompt).not.toContain("Primary Read 70%");
     expect(prompt).not.toContain("Hero Shot");
     expect(prompt).not.toContain("heroine screen presence");
+    expect(prompt).not.toMatch(/over-shoulder|側身回眸|微微回眸|大幅回眸|回眸動作/i);
     expect(prompt).not.toContain("暗紫絲絨寢宮");
     expect(prompt).not.toContain("不要");
+  });
+
+  it("prioritizes face lock over risky over-shoulder profile actions", () => {
+    const profile = WORLD_LAYER_PROFILES.find((item) => item.id === "peach-river-fairy-over-shoulder");
+    const prompt = buildPrompt({
+      category: profile.category,
+      theme: profile.themeHint,
+      makeup: profile.makeup,
+      scene: profile.scene,
+      sceneEnvironment: profile.sceneEnvironment,
+      sceneAction: profile.sceneAction,
+      sceneLighting: profile.sceneLighting,
+      ...profile.layers,
+    });
+
+    expect(prompt).toContain("臉部主控");
+    expect(prompt).toContain("以上傳照片中的臉部作為唯一身份來源");
+    expect(prompt).toContain("先鎖定原始真人臉");
+    expect(prompt).toContain("正面或微側正面");
+    expect(prompt).toContain("雙眼清楚看向鏡頭");
+    expect(prompt).toContain("front-facing or slight three-quarter direct gaze");
+    expect(prompt).toContain("face swap");
+    expect(prompt).toContain("different face");
+    expect(prompt).toContain("new actress face");
+    expect(prompt).toContain("altered jawline");
+    expect(prompt).not.toMatch(/over-shoulder|gentle over-shoulder|側身回眸|微微回眸|大幅回眸|回眸動作/i);
   });
 
   it("supports vivid visual weight controls without changing the five-field output shape", () => {
@@ -1187,10 +1221,10 @@ describe("prompt engine", () => {
     expect(darkBanquet).toContain("deep wine-red silk");
     expect(darkBanquet).toContain("extra-long flowing silk drapery");
     expect(darkBanquet).toContain("暗紫絲絨寢宮");
-    expect(darkBanquet).toContain("夜宴魅姬式緩慢轉身");
+    expect(darkBanquet).toContain("夜宴魅姬式正面或三分之一微側正面站姿");
     expect(darkBanquet).toContain("單手輕扶絲絨外袍");
     expect(darkBanquet).toContain("另一手自然帶起半透明薄紗");
-    expect(darkBanquet).toContain("眼神越過燭光直視鏡頭");
+    expect(darkBanquet).toContain("雙眼越過燭光直視鏡頭");
     expect(darkBanquet).toContain("預設單女主電影海報構圖");
     expect(darkBanquet).not.toContain("主題允許少量 small-scale cinematic silhouettes");
     expect(netflixMode).toContain("主視覺模式：真人身份保留的東方奇幻電影主視覺");
@@ -1225,7 +1259,7 @@ describe("prompt engine", () => {
       ...fullmoon.layers,
     });
 
-    expect(prompt.length).toBeLessThan(3450);
+    expect(prompt.length).toBeLessThan(3850);
     expect(prompt).toContain("空間層級補強");
     expect(prompt).toContain("動作鏡頭語言補強");
     expect(prompt).toContain("光影補強");
@@ -1442,8 +1476,8 @@ describe("prompt engine", () => {
     expect(form.sceneEnvironment).toContain("哥德式石柱王座廳");
     expect(form.sceneEnvironment).toContain("近景");
     expect(form.sceneEnvironment).toContain("遠景");
-    expect(form.sceneAction).toContain("夜宴魅姬式緩慢轉身");
-    expect(form.sceneAction).toContain("身體三分之一側向鏡頭");
+    expect(form.sceneAction).toContain("夜宴魅姬式正面或三分之一微側正面站姿");
+    expect(form.sceneAction).toContain("臉部角度接近上傳照片");
     expect(form.sceneAction).toContain("50mm eye-level cinematic blocking");
     expect(form.sceneAction).toContain("臉部完整清楚");
     expect(form.sceneAction).toContain("肩頸、胸腔、骨盆與雙腳重心符合真實成年人體結構");
@@ -1497,8 +1531,12 @@ describe("prompt engine", () => {
     expect(instruction).toContain("原始眼型");
     expect(instruction).toContain("原始鼻型");
     expect(instruction).toContain("【Facial Identity Lock｜最高優先】");
+    expect(instruction).toContain("【臉部主控｜最高優先】");
     expect(instruction).toContain("Do NOT redesign the face.");
     expect(instruction).toContain("Do NOT beautify the face.");
+    expect(instruction).toContain("先鎖定原始真人臉");
+    expect(instruction).toContain("臉部角度需接近上傳照片");
+    expect(instruction).toContain("face swap");
     expect(instruction).toContain("original eyelid structure");
     expect(instruction).toContain("The fantasy world exists around the real photographed person");
     expect(instruction).toContain("50mm 全片幅中遠景電影構圖");

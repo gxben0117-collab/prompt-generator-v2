@@ -226,7 +226,7 @@ function buildCostumeLayerText(form, theme) {
   const filledLayers = COSTUME_LAYERS.map((layer, index) => ({
     index: index + 1,
     ...layer,
-    value: form[layer.id],
+    value: stabilizeFaceAngleText(form[layer.id]),
   })).filter((layer) => layer.value);
 
   const keyLayers = [1, 3, 4, 6, 8]
@@ -235,7 +235,7 @@ function buildCostumeLayerText(form, theme) {
     .slice(0, 4);
   const layerSummary = keyLayers.map((layer) => `L${layer.index}: ${layer.value}`).join("；");
   return [
-    form.costume || `依據「${theme}」建立電影級可穿戴戲服`,
+    stabilizeFaceAngleText(form.costume) || `依據「${theme}」建立電影級可穿戴戲服`,
     layerSummary ? `服裝 Layer 參考：${layerSummary}` : "",
     "服裝主視覺集中在主輪廓、主材質、主色彩與一到兩個記憶點，Layer 細節自然融入高訂戲服而不搶畫面焦點。",
     "絲綢、薄紗、披帛、珠寶或羽飾共同服務 dominant cinematic silhouette、visual flow 與角色銀幕存在感。",
@@ -304,27 +304,66 @@ function buildDarkRoyalBodyPresenceText(form, category) {
   ].join("；");
 }
 
+function faceMasterControlText() {
+  return [
+    "臉部主控：以上傳照片中的臉部作為唯一身份來源",
+    "先鎖定原始真人臉，再讓身體、服裝、姿勢、髮型、妝容、光影與場景配合這張臉",
+    "臉部不可重畫、不可美化、不可換成古裝女主角臉或商業海報明星臉",
+    "保留原始臉型、眼距、眼型、眼皮結構、鼻翼寬度、嘴唇形狀、下顎線、臉頰肉感、成熟年齡感、自然不對稱與皮膚質感",
+    "臉部角度保持接近原圖，正面或微側正面，雙眼清楚看向鏡頭",
+    "若動作、髮型、妝容、光影或構圖會降低臉部相似度，放棄該元素並優先保留臉",
+    "負面鎖臉：face swap、different face、new actress face、historical drama actress face、younger face、slimmer face、altered jawline、altered eyes、altered nose、altered lips、side profile、covered face、identity-changing makeup",
+  ].join("；");
+}
+
+function stabilizeFaceAngleText(text = "") {
+  return String(text)
+    .replace(/gentle over-shoulder gaze/gi, "front-facing or slight three-quarter direct gaze")
+    .replace(/over-shoulder gaze/gi, "front-facing or slight three-quarter direct gaze")
+    .replace(/over-shoulder face redesign/gi, "front-facing preserved-identity gaze")
+    .replace(/over-shoulder/gi, "front-facing")
+    .replace(/背身回望/g, "正面或微側正面凝視鏡頭")
+    .replace(/肩背回眸/g, "微側正面凝視鏡頭")
+    .replace(/身體微側回眸/g, "身體微側但臉部正向鏡頭")
+    .replace(/側身回眸/g, "微側正面凝視鏡頭")
+    .replace(/轉身回眸/g, "正面或微側正面停步凝視鏡頭")
+    .replace(/回眸一笑/g, "正面或微側正面自然凝視")
+    .replace(/微笑回眸/g, "微笑正向鏡頭")
+    .replace(/微微回眸/g, "微側正面凝視鏡頭")
+    .replace(/回眸凝視鏡頭/g, "正面或微側正面凝視鏡頭")
+    .replace(/回眸直視鏡頭/g, "正面或微側正面直視鏡頭")
+    .replace(/頭部微回望鏡頭/g, "頭部自然正向鏡頭")
+    .replace(/自然回望鏡頭/g, "自然正向鏡頭")
+    .replace(/停步回望/g, "停步正面或微側正面凝視")
+    .replace(/側身回望/g, "微側正面凝視")
+    .replace(/回身/g, "停步微側正面")
+    .replace(/回眸/g, "微側正面凝視")
+    .replace(/回望/g, "正向凝視")
+    .replace(/側臉/g, "微側正面")
+    .replace(/低頭|仰頭/g, "頭部自然端正");
+}
+
 function inferEmotionalAction(theme, scene) {
   const text = `${theme} ${scene}`;
   if (isDarkBanquetTheme(theme, scene)) {
-    return "夜宴魅姬式緩慢轉身，身體三分之一側向鏡頭，單手輕扶絲絨外袍或黑曜石床柱，另一手自然帶起半透明薄紗，眼神越過燭光直視鏡頭，腰胯重心穩定、肩頸放鬆、臉部完整清楚";
+    return "夜宴魅姬式正面或三分之一微側正面站姿，臉部角度接近上傳照片，單手輕扶絲絨外袍或黑曜石床柱，另一手自然帶起半透明薄紗，雙眼越過燭光直視鏡頭，腰胯重心穩定、肩頸放鬆、臉部完整清楚";
   }
   if (/女王|哥德|暗夜|王座|魔后|血族|冥界/.test(text)) {
-    return "女王式低速起身或倚靠王座扶手，身體微向鏡頭旋轉，手指自然掠過扶手、珠寶鏈或垂落布料，肩線穩定，眼神具有壓迫感與情緒吸引力";
+    return "女王式低速起身或倚靠王座扶手，身體保持正面或三分之一微側正面，臉部穩定朝向鏡頭，手指自然掠過扶手、珠寶鏈或垂落布料，肩線穩定，眼神具有壓迫感與情緒吸引力";
   }
   if (/唐|長安|盛唐|宮廷|花宴|牡丹|鳳|樂姬|舞姬/.test(text)) {
-    return "盛唐夜宴女主角穿過燈籠與花瓣回身，單手帶動披帛或團扇，另一手自然壓住長袖，步伐停在轉身瞬間，長裙與飄帶形成 S 型視線流線，臉部完整面向鏡頭";
+    return "盛唐夜宴女主角在燈籠與花瓣前正面或微側正面停步，單手帶動披帛或團扇，另一手自然壓住長袖，步伐停在布料揚起瞬間，長裙與飄帶形成 S 型視線流線，臉部完整面向鏡頭";
   }
   if (/飛天|仙|瑤池|雲海|神族|聖女|月白/.test(text)) {
-    return "清冷神性的緩慢旋身或停步回望，單手輕抬引動長袖與披帛，另一手自然靠近腰側或道具，脊椎挺直但不僵硬，衣料在高空風或神域氣流中形成柔和弧線";
+    return "清冷神性的正面或微側正面停步，臉部穩定朝向鏡頭，單手輕抬引動長袖與披帛，另一手自然靠近腰側或道具，脊椎挺直但不僵硬，衣料在高空風或神域氣流中形成柔和弧線";
   }
   if (/武俠|女俠|江湖|邊關|劍/.test(text)) {
-    return "江湖女俠停步側身回望，前腳穩定踩地，手部自然靠近腰帶、劍鞘或披風邊緣，長袍受風形成斜向流線，眼神越過鏡頭看向遠方威脅";
+    return "江湖女俠以三分之一微側但臉部正向鏡頭的姿態停步，前腳穩定踩地，手部自然靠近腰帶、劍鞘或披風邊緣，長袍受風形成斜向流線，眼神越過鏡頭看向遠方威脅";
   }
   if (/賽博|霓虹|都市|特工|雨夜/.test(text)) {
     return "雨夜任務式緩慢前行，肩頸放鬆但目光專注，單手輕觸外套邊緣或耳側通訊裝置，另一手自然垂落，濕地反光與外套下擺跟隨步伐形成動態線條";
   }
-  return "帶有角色情緒的自然電影動作，角色在緩慢行走、停步回身、抬眼凝視或觸碰場景道具的瞬間被拍下，手部與布料互動自然，臉部完整清楚，動作來自角色故事";
+  return "帶有角色情緒的自然電影動作，角色在緩慢行走、正面或微側正面停步、穩定抬眼凝視或觸碰場景道具的瞬間被拍下，手部與布料互動自然，臉部完整清楚，動作來自角色故事";
 }
 
 const FIXED_CAMERA_TEXT = "50mm 全片幅中遠景電影構圖，人物完整入鏡，真實人像拍攝距離，近景 / 中景 / 遠景分層清楚";
@@ -459,21 +498,21 @@ function buildStyleVisualDetailText(form = DEFAULT_FORM) {
 function inferFrameEvent(theme, scene) {
   const text = `${theme} ${scene}`;
   if (isDarkBanquetTheme(theme, scene)) {
-    return "角色剛從絲絨陰影與燭光中轉身看向鏡頭，外袍與薄紗被室內氣流拉開，月光剛好擦過眼神與唇部邊緣，形成危險又高級的 cinematic reveal";
+    return "角色剛從絲絨陰影與燭光中正面或微側正面停步看向鏡頭，外袍與薄紗被室內氣流拉開，月光剛好擦過眼神與唇部邊緣，形成危險又高級的 cinematic reveal";
   }
   if (/唐|長安|盛唐|宮廷|花宴|牡丹|鳳/.test(text)) {
     return "角色剛穿過紅金燈籠與花瓣光影，披帛在空中展開，燭火與花瓣同時掠過前景，像真人身份被完整保留的東方奇幻影集主視覺出場瞬間";
   }
   if (/墮天使|黑羽|黑翼|廢墟|神殿/.test(text)) {
-    return "角色剛從破碎聖光、灰燼與黑羽之間抬頭，披風和羽毛被冷風掀起，畫面停在悲傷神性與危險感同時爆發的一瞬間";
+    return "角色剛從破碎聖光、灰燼與黑羽之間正面凝視鏡頭，披風和羽毛被冷風掀起，畫面停在悲傷神性與危險感同時爆發的一瞬間";
   }
   if (/武俠|女俠|劍|江湖|戰場/.test(text)) {
-    return "角色剛停步回身，長袖和外袍因動作形成斜向流線，遠景威脅與前景風沙讓畫面像電影衝突前的一格劇照";
+    return "角色剛以正面或微側正面停步，長袖和外袍因動作形成斜向流線，遠景威脅與前景風沙讓畫面像電影衝突前的一格劇照";
   }
   if (/賽博|霓虹|都市|雨夜/.test(text)) {
     return "角色剛從雨夜霓虹反光中靠近鏡頭，外套邊緣和雨滴在光裡形成視線流線，背景招牌、高樓燈火與雨霧被景深壓成電影氛圍";
   }
-  return "角色正在經歷一個可被電影攝影機捕捉的事件瞬間：剛轉身、剛走出煙霧、剛抬眼、布料剛被風帶起，讓畫面像 single-protagonist poster frame 而不是站姿設定圖";
+  return "角色正在經歷一個可被電影攝影機捕捉的事件瞬間：正面或微側正面剛停步、剛走出煙霧、眼神穩定看向鏡頭、布料剛被風帶起，讓畫面像 single-protagonist poster frame 而不是站姿設定圖";
 }
 
 function buildFrameEventText(form = DEFAULT_FORM) {
@@ -487,6 +526,7 @@ function buildFrameEventText(form = DEFAULT_FORM) {
 
 function buildHeroShotText(form = DEFAULT_FORM) {
   return [
+    faceMasterControlText(),
     buildStyleVisualDetailText(form),
     backgroundControlText(form),
     commercialGlamourLightingText(form),
@@ -508,11 +548,11 @@ function buildSceneInput(form, theme) {
     form.scene ||
     `依據「${theme}」建立電影場景，包含近景 / 中景 / 遠景、環境、燈光、角色情緒動作、構圖、空氣感與電影攝影描述，但不要重複服裝與妝容`;
   const segments = [
-    baseScene,
-    form.sceneEnvironment ? `環境：${form.sceneEnvironment}` : "",
-    form.sceneAction ? `動作：${form.sceneAction}` : "",
+    stabilizeFaceAngleText(baseScene),
+    form.sceneEnvironment ? `環境：${stabilizeFaceAngleText(form.sceneEnvironment)}` : "",
+    form.sceneAction ? `動作：${stabilizeFaceAngleText(form.sceneAction)}` : "",
     `鏡頭：${form.sceneCamera || buildCameraFramingText(form.cameraFraming)}`,
-    form.sceneLighting ? `光影：${form.sceneLighting}` : "",
+    form.sceneLighting ? `光影：${stabilizeFaceAngleText(form.sceneLighting)}` : "",
   ].filter(Boolean);
 
   return segments.join("；");
@@ -526,10 +566,14 @@ export function expandSceneToDirectorFields(input = {}) {
   return {
     ...form,
     sceneEnvironment:
-      form.sceneEnvironment ||
+      form.sceneEnvironment
+        ? stabilizeFaceAngleText(form.sceneEnvironment)
+        :
       `${scene}，近景加入可被鏡頭拍到的遮擋元素、花瓣、紅金燈籠、燭火、飄紗、寶石色布景、濕亮地面色彩倒影與空氣粒子，中景放置真人角色作為畫面能量中心與第一視覺焦點，遠景優先建立建築輪廓、燈火、水霧、天光、布料層次或空間透視；除非主題明確需要宴會、戰場、市集、宗教儀式或王朝典禮，否則畫面只保留單一真人主角，形成單女主艷麗商業奇幻電影主視覺與真實空間深度`,
     sceneAction:
-      form.sceneAction ||
+      form.sceneAction
+        ? stabilizeFaceAngleText(form.sceneAction)
+        :
       `${inferEmotionalAction(theme, scene)}；${inferFrameEvent(theme, scene)}；50mm eye-level cinematic blocking，臉部完整清楚，眼神是表演核心，肩頸、胸腔、骨盆與雙腳重心符合真實成年人體結構，服裝布料跟隨動作形成 airborne translucent shawls、cinematic trailing sleeves 與視線導引流線`,
     sceneCamera: `${buildCameraFramingText(form.cameraFraming)}，鏡頭高度接近眼平`,
     sceneLighting:
@@ -548,7 +592,7 @@ export function buildPrompt(input = {}) {
   const scene = buildSceneInput(form, theme);
   const costume = buildCostumeLayerText(form, theme);
   const makeup =
-    form.makeup ||
+    stabilizeFaceAngleText(form.makeup) ||
     `配合「${theme}」人物角色的電影級藝人妝容，只限表面妝容、真實電影妝感、中性神態，不改變骨相、不改變五官比例、不重塑真人身份`;
   const category = form.category || inferCategory(theme, costume, scene);
   const bodyPresence = buildDarkRoyalBodyPresenceText(form, category);
