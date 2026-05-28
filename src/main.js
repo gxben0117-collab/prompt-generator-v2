@@ -251,7 +251,7 @@ function selectedProfileCard(state) {
 }
 
 function profileDefaultCupSize(profile) {
-  return parentCategoryForProfile(profile) === "奇幻異世界 / 暗黑王族" ? "J" : "正常比例";
+  return parentCategoryForProfile(profile) === "奇幻異世界 / 暗黑王族" ? "K" : "正常比例";
 }
 
 function profileCountText(activeParentCategory, activeCategory, searchTerm) {
@@ -347,8 +347,8 @@ function render() {
                 </label>
                 <label>
                   <span>罩杯</span>
-                  <input name="cupSize" value="${escapeHtml(state.cupSize)}" placeholder="例：J" />
-                  <small class="field-help">有填才會寫入短版咒語的真實人體骨架；暗黑王族角色卡預設 J。</small>
+                  <input name="cupSize" value="${escapeHtml(state.cupSize)}" placeholder="例：K" />
+                  <small class="field-help">有填才會寫入短版咒語的真實人體骨架；暗黑王族角色卡預設 K。</small>
                 </label>
               </div>
               <div class="choice-section">

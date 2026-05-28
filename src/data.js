@@ -11,6 +11,7 @@ export const FABRIC_MOTIONS = ["大動態飄紗", "中度流動", "靜態垂墜"
 export const ROLE_CATEGORIES = ["全部", "古裝", "中國朝代古裝", "大唐宮廷／盛世貴妃系列", "盛唐宮廷／皇后／東方電影美學", "盛唐宮廷／春日旅拍／東方電影美學", "盛唐宮姬｜牡丹庭院｜宮廷旅拍", "大唐花朝｜宮廷貴姬｜盛世古風電影", "故宮古風／宮廷電影／盛世王朝", "宮廷古裝／東方寫實電影／故宮美學", "夜宴貴姬｜古風宮廷｜夜景電影旅拍", "中國田園旅拍", "江南古鎮／電影旅拍／寫實東方美學", "江南古風／桃花庭院／春日寫實電影", "江南園林／古風仕女／東方旅拍電影", "荷塘仕女｜江南園林｜古風生活電影", "江南水鄉／寫實旅拍／東方電影感", "江南水鄉｜古風生活旅拍｜療癒系電影", "海棠仙旅｜東方旅拍｜古風電影感", "江南花渡｜水鄉古風｜東方電影旅拍", "桃花庭院／東方電影／古風仕女", "桃花仙境｜江南仙姬｜古風電影旅拍", "桃花女俠｜江湖旅拍｜仙俠動作電影風", "書香才女｜古典文人｜文藝電影風", "日式庭園／紫陽花海／初夏和服", "神話", "中國神話", "東方神話／飛天系列", "上古神話／鳳凰戰姬／仙俠史詩", "仙俠神話／白龍神域／天空聖女", "東方神話／深海龍宮／龍族王后／海國奇幻電影", "東方神話／鳳凰神女／王庭奇幻", "天界神女｜仙宮神域｜東方神話電影", "月下仙姬｜桂花宮苑｜中秋神話電影", "聖域天使｜天空神國｜史詩奇幻電影", "東方奇幻／陰陽術法／紫櫻巫女", "東方奇幻／異域神殿／神秘祭司", "絲路奇幻／大漠王族／電影級旅拍", "絲路旅人｜西域長歌｜大漠電影旅拍", "月光奇幻／銀河神話／東方精靈", "月光奇幻／水鏡晶花／高級寫實奇幻", "花園奇幻／森林精靈／電影童話", "夢幻電影／花靈仙境／高級寫實奇幻", "東方古風／月夜庭院／琴師仙姬", "聊齋志異／幽冥系列", "聊齋志異／狐仙系列", "仙俠修真", "仙俠修真／月夜劍修", "月下飛仙｜古風舞姬｜仙俠奇幻電影", "雲巔仙宗｜修真古境｜仙俠電影", "夜宴魅魔／高訂睡袍電影", "夜宴魅姬／暗黑浪漫電影", "黑暗墮天使／黑羽史詩電影", "冰霜夜宴魅姬｜哥德寢宮電影", "暗黑魔后｜亡靈王座｜哥德奇幻電影", "幽冥妖后｜亡魂夜宴｜東方暗黑奇幻", "黑暗奇幻／冥界妖后", "黑暗奇幻／墮天使／史詩電影", "黑暗奇幻／墮天使／哥德電影／廢墟神殿", "墮落天使｜末日神話｜魔幻史詩電影", "血族神話｜哥德歌劇｜吸血鬼暗黑電影", "東方戰爭電影／女帝／古代戰場", "帝王宮廷／東方史詩電影／皇后", "大周女帝｜皇朝史詩｜宮廷電影風", "歐陸密教｜近代奇幻｜暮色懸疑電影", "古典神話｜希臘史詩｜神諭史詩電影", "神話紀實｜歷史史詩｜文藝復興電影", "室內宮廷｜古典懸疑｜巴洛克黑色電影", "都市", "科幻", "西方奇幻", "都市電影／City Pop／霓虹街拍", "電影旅拍／北境海岸／現代文藝", "現代都會／韓系夜景／高級名媛", "歐洲旅拍／威尼斯夜景／電影寫實", "武俠奇幻／血色江湖／劍門聖女", "世界地標旅拍", "世界花園旅拍", "世界旅拍／歐洲古城／異域貴婦"];
 
 export const ROLE_SUGGESTION_ITEMS = [
+  { id: "xiao-qiao-three-kingdoms-beauty", label: "小喬・傾國佳人", category: "三國演義／東吳名姬／歷史小說名著人物" },
   { id: "tang-princess", label: "大唐公主", category: "古裝" },
   { id: "tang-feitian", label: "大唐飛天", category: "神話" },
   { id: "lost-you-forever-princess", label: "長相思王姬", category: "神話" },
@@ -256,6 +257,48 @@ function createLayerProfile({
 }
 
 export const WORLD_LAYER_PROFILES = [
+  {
+    id: "xiao-qiao-three-kingdoms-beauty",
+    title: "小喬・傾國佳人",
+    themeHint: "小喬 傾國佳人 三國演義",
+    category: "三國演義／東吳名姬／歷史小說名著人物",
+    aliases: ["小喬", "周瑜夫人", "東吳名姬", "三國演義", "傾國佳人"],
+    cupSize: "正常比例",
+    costume:
+      "東漢末年東吳名姬電影戲服，淡粉與玉白絲綢襦裙、江東水榭披帛、低調金玉珠飾、琴案與羽扇意象共同建立三國演義小喬的溫婉名姬氣質，真人可穿戴而不做仙女模板。",
+    layers: {
+      costumeLayer1:
+        "玉白真絲貼身內襯作為東漢末年女性服裝基底，貼合真人肩頸、胸腔與自然軀幹厚度",
+      costumeLayer2:
+        "淡粉交領襦裙基礎結構，柔和包覆上身與腰線，保持歷史小說人物的端莊穿著邏輯",
+      costumeLayer3:
+        "淺金細繡腰封與玉扣固定裙身重心，形成東吳貴族名姬的精緻比例",
+      costumeLayer4:
+        "薄霧粉色外層紗裙與透明披帛，隨江風產生中度流動，不遮擋臉部辨識度",
+      costumeLayer5:
+        "小型玉佩、金線穗帶與琴紋腰飾，呼應江東文雅、琴案與周郎故事背景",
+      costumeLayer6:
+        "輕柔長袖與水榭拖尾外袍，布料自然垂落於木廊與水面反光之間",
+      costumeLayer7:
+        "淡金肩紗與桃粉披帛作身份象徵，輪廓柔和但不變成仙俠浮誇造型",
+      costumeLayer8:
+        "珍珠耳墜、白玉髮簪、細金鏈與小型步搖形成東吳名姬的低調珠寶層次",
+      costumeLayer9:
+        "簡雅雲鬢、玉簪與珍珠流蘇沿髮髻自然垂落，完整露出原始真人臉型與五官",
+      costumeLayer10:
+        "淡粉襦裙、玉白披帛、江東水霧、琴案與水榭欄杆共同形成三國名姬電影主視覺輪廓",
+    },
+    makeup:
+      "東漢末年名姬電影妝感，保留上傳真人原始臉型、眼型、鼻型、嘴型與成熟皮膚質感；柔霧底妝、淡桃唇色、細緻眉形、低飽和粉棕眼影與珍珠髮飾建立小喬溫婉傾國氣質，不重塑成古裝 AI 仙女臉。",
+    scene:
+      "江東水榭夜宴前的赤壁江風庭院，木質水榭、青銅燈、琴案、竹影、江面月光、遠處戰船燈火與東吳府邸廊柱形成三國演義電影空間。",
+    sceneEnvironment:
+      "江東水榭夜宴庭院，前景薄紗、燭火、竹葉與琴弦柔焦遮擋，中景真人小喬立於木廊與琴案旁，遠景江面月光、赤壁前夜戰船燈火、東吳府邸廊柱與水霧建立歷史小說電影縱深；不加入隨機路人，遠景只可有極淡戰船燈影。",
+    sceneAction:
+      "人物正面或微側正面停步看向鏡頭，一手自然扶住披帛邊緣，另一手輕觸琴案或玉佩，長袖與粉色披帛被江風輕微帶起，臉部完整清楚，動作溫婉但有電影主角存在感。",
+    sceneLighting:
+      "moonlit river glow、warm bronze lantern key light、soft peach silk reflection、water surface bounce light 與 subtle mist bokeh；臉部明亮可辨識，珍珠、玉簪、金線刺繡與水面反射形成柔和高級光點，避免灰暗紀錄片與過度仙氣濾鏡。",
+  },
   {
     id: "dark-succubus",
     title: "紫蝶夜宴魅魔",
@@ -3957,6 +4000,34 @@ export const WORLD_LAYER_PROFILES = [
     },
   ].map(createLayerProfile),
 ];
+
+export const DARK_ROYAL_PROFILE_IDS = [
+  "dark-succubus",
+  "fallen-angel",
+  "fallen-feather-night-court",
+  "abyss-spider-enchantress",
+  "blood-moon-spider-empress",
+  "cold-river-lantern-spirit",
+  "violet-underworld-bone-empress",
+  "fallen-elegy-black-wing-angel",
+  "frost-succubus-gothic-queen",
+  "dark-necromancer-throne-queen",
+  "fullmoon-skull-scepter-queen",
+  "underworld-spirit-banquet-empress",
+  "blood-amber-vampire-countess",
+  "purple-moon-night-court-empress",
+  "moon-weaving-dream-enchantress",
+  "raven-throne-night-empress",
+  "amethyst-temple-black-wing-queen",
+  "dark-domain-ancient-temple-queen",
+  "marionette-theater-soul-dominion",
+];
+
+WORLD_LAYER_PROFILES.forEach((profile) => {
+  if (DARK_ROYAL_PROFILE_IDS.includes(profile.id)) {
+    profile.cupSize = "K";
+  }
+});
 
 export const DISTANCES = [
   { id: "full", label: "全身照", prompt: "full body cinematic portrait, complete figure visible" },

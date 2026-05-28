@@ -134,6 +134,7 @@ describe("prompt engine", () => {
   it("maps world templates into the correct parent role categories", () => {
     const byId = (id) => WORLD_LAYER_PROFILES.find((profile) => profile.id === id);
 
+    expect(parentCategoryForProfile(byId("xiao-qiao-three-kingdoms-beauty"))).toBe("歷史小說名著人物");
     expect(parentCategoryForProfile(byId("fallen-feather-night-court"))).toBe("奇幻異世界 / 暗黑王族");
     expect(parentCategoryForProfile(byId("versailles-garden-princess"))).toBe("西方古典 / 歐陸史詩");
     expect(parentCategoryForProfile(byId("athens-temple-ritual"))).toBe("西方古典 / 歐陸史詩");
@@ -144,6 +145,7 @@ describe("prompt engine", () => {
 
   it("ships built-in role and costume suggestions", () => {
     expect(ROLE_SUGGESTIONS).toContain("大唐公主");
+    expect(ROLE_SUGGESTIONS).toContain("小喬・傾國佳人");
     expect(ROLE_SUGGESTIONS).toContain("大唐飛天");
     expect(ROLE_SUGGESTIONS).toContain("長相思王姬");
     expect(ROLE_SUGGESTIONS).toContain("墮羽夜庭魔姬");
@@ -292,6 +294,7 @@ describe("prompt engine", () => {
     const tangConsort = WORLD_LAYER_PROFILES.find((profile) => profile.id === "tang-peony-imperial-consort");
 
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("電影古裝仙女 Layer");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("小喬・傾國佳人");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("墮羽夜庭魔姬");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("夜泊鳳凰樓主");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("雅典神殿祭儀");
@@ -307,6 +310,13 @@ describe("prompt engine", () => {
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("紫冥骸骨妖后");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("寒林白狐仙姬");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("盛唐牡丹貴妃");
+
+    const xiaoQiao = WORLD_LAYER_PROFILES.find((profile) => profile.id === "xiao-qiao-three-kingdoms-beauty");
+    expect(xiaoQiao.category).toBe("三國演義／東吳名姬／歷史小說名著人物");
+    expect(xiaoQiao.cupSize).toBe("正常比例");
+    expect(xiaoQiao.layers.costumeLayer10).toContain("三國名姬電影主視覺輪廓");
+    expect(xiaoQiao.makeup).toContain("小喬溫婉傾國氣質");
+    expect(xiaoQiao.scene).toContain("三國演義電影空間");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("幽蛛夜宴魅姬");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("血月絲絨魔后");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("龍宮海國・滄海龍后");
@@ -1602,7 +1612,7 @@ describe("prompt engine", () => {
       category: "奇幻異世界 / 暗黑王族",
       theme: "紫蝶夜宴魅魔",
       scene: "暗紫絲絨寢宮",
-      cupSize: "J",
+      cupSize: "K",
     });
     const normalInstruction = buildChatGptInstruction({
       category: "中國朝代古裝 / 中國神話",
@@ -1618,13 +1628,13 @@ describe("prompt engine", () => {
     expect(getHiddenSystemPrompt()).toContain("【真實人體骨架】");
     expect(getHiddenSystemPrompt()).toContain("- 罩杯j");
     expect(darkInstruction).toContain("真實人體骨架");
-    expect(darkInstruction).toContain('胸腔厚度、罩杯 "J"、軀幹深度');
+    expect(darkInstruction).toContain('胸腔厚度、罩杯 "K"、軀幹深度');
     expect(darkInstruction).toContain("不額外放大胸腰比例");
     expect(darkInstruction).not.toContain("- 罩杯:J");
     expect(darkInstruction).not.toContain("真實人體骨架追加：罩杯:J");
     expect(normalInstruction).toContain('胸腔厚度、罩杯 "正常比例"、軀幹深度');
     expect(emptyCupInstruction).toContain('胸腔厚度、罩杯 "正常比例"、軀幹深度');
-    expect(normalInstruction).not.toContain('罩杯 "J"');
+    expect(normalInstruction).not.toContain('罩杯 "K"');
     expect(normalInstruction).not.toContain("- 罩杯j");
     expect(normalInstruction).not.toContain("- 罩杯:J");
   });

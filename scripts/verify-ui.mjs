@@ -9,6 +9,7 @@ const viewports = [
 ];
 
 const parentCategories = [
+  "歷史小說名著人物",
   "中國歷代服裝",
   "武俠江湖 / 戰場女將",
   "仙俠神話 / 古裝陸劇",
@@ -315,10 +316,10 @@ try {
       }
       if (profile.id === "fallen-feather-night-court") {
         const cupSize = await page.locator('input[name="cupSize"]').inputValue();
-        if (cupSize !== "J") {
-          throw new Error(`${viewport.name}: dark royal profile did not set cup size J`);
+        if (cupSize !== "K") {
+          throw new Error(`${viewport.name}: dark royal profile did not set cup size K`);
         }
-        if (!(await page.locator(".selected-profile-card").getByText("罩杯 J").isVisible())) {
+        if (!(await page.locator(".selected-profile-card").getByText("罩杯 K").isVisible())) {
           throw new Error(`${viewport.name}: selected dark royal card did not show cup size`);
         }
       }
@@ -359,7 +360,7 @@ try {
       throw new Error(`${viewport.name}: visual mode block-grid card did not select 暗黑夜宴`);
     }
     await page.locator('input[name="category"]').fill("測試分類");
-    await page.locator('input[name="cupSize"]').fill("J");
+    await page.locator('input[name="cupSize"]').fill("K");
     await page.getByLabel("主題（必填）").fill(typedTheme);
     await page.getByRole("button", { name: "黑色絲綢內襯" }).click();
     await page.getByRole("button", { name: "長安宮廷夜宴，前景燭火，中景角色，遠景宮殿廊柱" }).click();
@@ -451,7 +452,7 @@ try {
     if (!promptText.includes("原始臉型") || !promptText.includes("原始眼型") || !promptText.includes("原始鼻型")) {
       throw new Error(`${viewport.name}: compact facial identity lock missing`);
     }
-    if (!promptText.includes('胸腔厚度、罩杯 "J"、軀幹深度')) {
+    if (!promptText.includes('胸腔厚度、罩杯 "K"、軀幹深度')) {
       throw new Error(`${viewport.name}: cup size field did not enter skeleton prompt`);
     }
     if (metrics.horizontalOverflow) {
