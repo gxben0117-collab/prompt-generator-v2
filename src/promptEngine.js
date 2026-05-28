@@ -253,6 +253,16 @@ function getFixedCorePrompt() {
   return CORE_SPEC_TEXT.split("********** 使用規範 **********")[0].trim();
 }
 
+function injectDarkRoyalBodyPreset(corePrompt, form, category) {
+  if (!isDarkRoyalCategory(category, form.theme, form.scene)) return corePrompt;
+  if (corePrompt.includes("罩杯:J")) return corePrompt;
+
+  return corePrompt.replace(
+    "- 真實胸腔厚度",
+    "- 真實胸腔厚度\n- 罩杯:J（僅限奇幻異世界 / 暗黑王族分類，需由真實成年人體骨架、胸腔厚度、couture support 與高訂禮服布料張力自然承托）",
+  );
+}
+
 function findAfterOutputFormatSection(text) {
   const candidates = ["【最終核心】", "【負面規則】", "【負面咒語系統】"];
   const outputStart = text.indexOf("【輸出格式】");
@@ -476,7 +486,7 @@ export function expandSceneToDirectorFields(input = {}) {
     ...form,
     sceneEnvironment:
       form.sceneEnvironment ||
-      `${scene}，近景加入可被鏡頭拍到的遮擋元素、花瓣、紅金燈籠、燭火、飄紗、寶石色布景、濕亮地面色彩倒影與空氣粒子，中景放置真人角色作為畫面能量中心與 Primary Read，遠景建立建築、宴會群演、侍女、樂師、天光或人群輪廓，形成艷麗商業奇幻電影主視覺與真實空間深度`,
+      `${scene}，近景加入可被鏡頭拍到的遮擋元素、花瓣、紅金燈籠、燭火、飄紗、寶石色布景、濕亮地面色彩倒影與空氣粒子，中景放置真人角色作為畫面能量中心與第一視覺焦點，遠景建立建築、宴會群演、侍女、樂師、天光或人群輪廓，形成艷麗商業奇幻電影主視覺與真實空間深度`,
     sceneAction:
       form.sceneAction ||
       `${inferEmotionalAction(theme, scene)}；${inferFrameEvent(theme, scene)}；50mm eye-level cinematic blocking，臉部完整清楚，眼神是表演核心，肩頸、胸腔、骨盆與雙腳重心符合真實成年人體結構，服裝布料跟隨動作形成 airborne translucent shawls、cinematic trailing sleeves 與視線導引流線`,
@@ -519,8 +529,11 @@ export function buildPrompt(input = {}) {
 }
 
 export function buildChatGptInstruction(input = {}) {
+  const form = normalizeForm(input);
   const prompt = buildPrompt(input);
-  const fixedCore = getFixedCorePrompt();
+  const categoryMatch = prompt.match(/分類：(.+)/);
+  const category = categoryMatch?.[1]?.trim() || inferCategory(form.theme, buildCostumeLayerText(form, form.theme), buildSceneInput(form, form.theme));
+  const fixedCore = injectDarkRoyalBodyPreset(getFixedCorePrompt(), form, category);
   const { outputStart, nextStart } = findAfterOutputFormatSection(fixedCore);
 
   if (outputStart === -1 || nextStart === -1 || nextStart <= outputStart) {

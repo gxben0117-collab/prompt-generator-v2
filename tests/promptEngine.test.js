@@ -1368,5 +1368,25 @@ describe("prompt engine", () => {
     expect(instruction).not.toContain("********** 使用規範 **********");
     expect(instruction).not.toContain("### Layer 1");
     expect(instruction).toContain("雲海仙門旅拍");
+    expect(instruction).not.toContain("罩杯:J");
+  });
+
+  it("injects the dark royal cup preset into the fixed skeleton section only for dark fantasy instructions", () => {
+    const darkInstruction = buildChatGptInstruction({
+      category: "奇幻異世界 / 暗黑王族",
+      theme: "紫蝶夜宴魅魔",
+      scene: "暗紫絲絨寢宮",
+    });
+    const normalInstruction = buildChatGptInstruction({
+      category: "中國朝代古裝 / 中國神話",
+      theme: "長安夜宴樂姬",
+      scene: "長安宮廷花宴",
+    });
+
+    expect(darkInstruction).toContain("【真實人體骨架】");
+    expect(darkInstruction).toContain("- 罩杯:J（僅限奇幻異世界 / 暗黑王族分類");
+    expect(darkInstruction.indexOf("- 罩杯:J")).toBeGreaterThan(darkInstruction.indexOf("【真實人體骨架】"));
+    expect(darkInstruction.indexOf("- 罩杯:J")).toBeLessThan(darkInstruction.indexOf("【成熟成年女性體積感】"));
+    expect(normalInstruction).not.toContain("- 罩杯:J");
   });
 });
