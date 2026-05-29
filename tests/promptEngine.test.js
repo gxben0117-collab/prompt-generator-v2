@@ -408,8 +408,8 @@ describe("prompt engine", () => {
     }
 
     const requestedDarkRoyalProfiles = WORLD_LAYER_PROFILES.filter((profile) => profile.id.startsWith("darkroyal-"));
-    expect(requestedDarkRoyalProfiles).toHaveLength(50);
-    expect(requestedDarkRoyalProfiles.filter((profile) => profile.id.startsWith("darkroyal-succubus-"))).toHaveLength(30);
+    expect(requestedDarkRoyalProfiles).toHaveLength(60);
+    expect(requestedDarkRoyalProfiles.filter((profile) => profile.id.startsWith("darkroyal-succubus-"))).toHaveLength(40);
     expect(requestedDarkRoyalProfiles.filter((profile) => profile.id.startsWith("darkroyal-dark-"))).toHaveLength(10);
     expect(requestedDarkRoyalProfiles.filter((profile) => profile.id.startsWith("darkroyal-fallen-"))).toHaveLength(10);
     for (const profile of requestedDarkRoyalProfiles) {
