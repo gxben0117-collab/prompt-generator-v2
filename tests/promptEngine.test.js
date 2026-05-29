@@ -399,7 +399,7 @@ describe("prompt engine", () => {
     }
 
     const requestedDynastyProfiles = WORLD_LAYER_PROFILES.filter((profile) => profile.id.startsWith("dynasty-"));
-    expect(requestedDynastyProfiles).toHaveLength(100);
+    expect(requestedDynastyProfiles).toHaveLength(104);
     expect(requestedDynastyProfiles.filter((profile) => profile.id.startsWith("dynasty-han-")).length).toBeGreaterThan(0);
     expect(requestedDynastyProfiles.filter((profile) => profile.id.startsWith("dynasty-tang-")).length).toBeGreaterThan(0);
     expect(requestedDynastyProfiles.filter((profile) => profile.id.startsWith("dynasty-song-")).length).toBeGreaterThan(0);
@@ -432,6 +432,26 @@ describe("prompt engine", () => {
       for (const profile of profiles) {
         expect(parentCategoryForProfile(profile)).toBe(parentCategory);
         expect(profile.cupSize).toBe("正常比例");
+        expect(Object.keys(profile.layers)).toHaveLength(10);
+        expect(profile.costume).toContain("保留上傳人物原始臉部辨識度");
+        expect(profile.makeup).toContain("保留上傳真人原始臉型");
+        expect(profile.sceneEnvironment).toContain("背景預設不放路人");
+        expect(profile.sceneAction).toContain("手不遮臉");
+        expect(profile.sceneLighting).toContain("臉部明亮可辨識");
+      }
+    }
+    const thirdWaveExpectations = [
+      ["expand-dynasty-", "中國歷代服裝", 6],
+      ["expand-xianxia-", "仙俠神話 / 古裝陸劇", 6],
+      ["expand-darkroyal-", "奇幻異世界 / 暗黑王族", 6],
+      ["expand-travel-", "世界景點旅拍", 6],
+      ["expand-modern-", "現代都市 / 街拍電影", 6],
+    ];
+    for (const [idPrefix, parentCategory, expectedCount] of thirdWaveExpectations) {
+      const profiles = WORLD_LAYER_PROFILES.filter((profile) => profile.id.startsWith(idPrefix));
+      expect(profiles, idPrefix).toHaveLength(expectedCount);
+      for (const profile of profiles) {
+        expect(parentCategoryForProfile(profile)).toBe(parentCategory);
         expect(Object.keys(profile.layers)).toHaveLength(10);
         expect(profile.costume).toContain("保留上傳人物原始臉部辨識度");
         expect(profile.makeup).toContain("保留上傳真人原始臉型");
@@ -526,6 +546,31 @@ describe("prompt engine", () => {
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("絲路旅人・西域旅卷女史");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("月下飛仙・古城舞姬");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("雲巔仙宗・天機女修");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("漢闕流燈・水宴皇后");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("唐闕珠輝・夜宴貴妃");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("宋庭點雪・茶屏帝姬");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("月殿琴影・霜弦神后");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("星汀羽闕・流光天姝");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("桃闕回雪・劍歌仙姬");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("絲絨權庭・玫冠女皇");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("薔夜迷庭・柔燼魔妃");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("金帳微醺・綺榻女王");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("布拉格燈橋・霧河旅人");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("威尼斯水巷・金面旅人");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("京都燈町・花徑旅人");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("巴黎地鐵・深夜主編");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("首爾霓庭・午夜策展人");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("上海灘影・流光監製");
+    expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "expand-dynasty-han-water-banquet-empress"))).toBe("中國歷代服裝");
+    expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "expand-dynasty-tang-jewel-lantern-consort"))).toBe("中國歷代服裝");
+    expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "expand-xianxia-moon-hall-qin-empress"))).toBe("仙俠神話 / 古裝陸劇");
+    expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "expand-xianxia-starglade-feather-goddess"))).toBe("仙俠神話 / 古裝陸劇");
+    expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "expand-darkroyal-velvet-throne-rose-queen"))).toBe("奇幻異世界 / 暗黑王族");
+    expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "expand-darkroyal-rose-banquet-succubus"))).toBe("奇幻異世界 / 暗黑王族");
+    expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "expand-travel-prague-lantern-bridge"))).toBe("世界景點旅拍");
+    expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "expand-travel-venice-canal-mask-evening"))).toBe("世界景點旅拍");
+    expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "expand-modern-paris-metro-mystery-editor"))).toBe("現代都市 / 街拍電影");
+    expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "expand-modern-seoul-neon-lounge-curator"))).toBe("現代都市 / 街拍電影");
     expect(fairy.themeHint).toBe("古裝仙女");
     expect(fairy.layers.costumeLayer1).toContain("貼身柔白絲綢內襯");
     expect(fairy.layers.costumeLayer8).toContain("珍珠步搖");
