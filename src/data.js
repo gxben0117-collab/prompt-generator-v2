@@ -728,6 +728,32 @@ const REQUESTED_DYNASTY_PROFILES = (() => {
     ["minister-daughter", "大官之女", "朱門", "玉簪與官家腰佩", "人物立於府邸屏風前，雙手自然交疊"],
     ["courtesan", "歌伎", "夜宴", "琵琶與金簫", "人物站於樂案旁，手持樂器但不遮臉"],
   ];
+  const roleTitleConfig = {
+    empress: {
+      displayRole: "皇后",
+      variants: ["鳳冕垂璽", "珠旒定影", "丹墀承光", "雲章正位", "瑤階靜臨", "金闕凝威"],
+    },
+    "imperial-consort": {
+      displayRole: "宮妃",
+      variants: ["步搖映月", "團扇凝香", "綺袖停雲", "香階照影", "珠帷承露", "金篆流霞"],
+    },
+    princess: {
+      displayRole: "帝姬",
+      variants: ["佩蘭曳裾", "花枝照水", "翠佩臨風", "瑤階緩步", "羅帔含煙", "玉階停鸞"],
+    },
+    "noble-daughter": {
+      displayRole: "閨秀",
+      variants: ["錦園披書", "珠簾聽雨", "羅衫映竹", "金閨捧卷", "綺窗凝思", "繡閣含章"],
+    },
+    "minister-daughter": {
+      displayRole: "門秀",
+      variants: ["朱門佩玉", "屏前整珮", "繡袂端儀", "玉簪持禮", "華堂靜立", "金階含章"],
+    },
+    courtesan: {
+      displayRole: "樂伎",
+      variants: ["琵琶映燭", "金簫回雪", "綺席停歌", "珠簾按拍", "華燈弄影", "錦筵流音"],
+    },
+  };
   return dynasties.flatMap(([dynastyId, dynastyShort, dynastyName, placeBase, palette, costumeBase, visualBase], dynastyIndex) =>
     roles.flatMap(([roleId, roleName, poetic, prop, actionBase], roleIndex) => {
       const sequenceIndex = dynastyIndex * roles.length + roleIndex;
@@ -735,7 +761,9 @@ const REQUESTED_DYNASTY_PROFILES = (() => {
       return Array.from({ length: cardCount }, (_, index) => {
         const number = index + 1;
         const id = `dynasty-${dynastyId}-${roleId}-${number}`;
-        const title = `${dynastyShort}${poetic}${number}・${roleName}`;
+        const legacyTitle = `${dynastyShort}${poetic}${number}・${roleName}`;
+        const config = roleTitleConfig[roleId];
+        const title = `${dynastyShort}${config.displayRole}・${config.variants[index]}`;
         const series = `${dynastyName}皇朝／${roleName}`;
         const place = `${placeBase}${roleName}主視覺${number}`;
         return createCuratedRoleProfile({
@@ -743,8 +771,8 @@ const REQUESTED_DYNASTY_PROFILES = (() => {
           title,
           parentCategory: "中國歷代服裝",
           series,
-          themeHint: `${dynastyName} ${roleName} ${poetic} ${number}`,
-          aliases: [dynastyName, dynastyShort, roleName, "皇朝宮廷", "漢唐宋"],
+          themeHint: `${dynastyName} ${roleName} ${config.variants[index]} ${poetic} ${number}`,
+          aliases: [dynastyName, dynastyShort, roleName, config.displayRole, legacyTitle, poetic, "皇朝宮廷", "漢唐宋"],
           identity: `${dynastyName}${roleName}`,
           palette,
           costumeCore: `${costumeBase}，依${roleName}身份加入高級宮廷剪裁與真實布料重量`,
@@ -765,22 +793,74 @@ const REQUESTED_DYNASTY_PROFILES = (() => {
 
 const REQUESTED_DARK_ROYAL_PROFILES = (() => {
   const groups = [
-    ["succubus", "魅魔", 20, "夜宴魅魔／高訂暗黑王族", "紫蝶", "黑紫、酒紅與暗金色", "深紫絲絨高訂夜宴長袍、絲綢披帛與王族腰封", "黑曜石王冠、紅寶耳墜與暗金鏈飾", "黑玫權杖與絲絨披帛", "暗紫夜宴宮殿", "紫紅寶石光、燭火補光與高亮商業奇幻女王曝光"],
+    ["succubus", "魅魔", 30, "夜宴魅魔／高訂暗黑王族", "紫蝶", "黑紫、酒紅與暗金色", "深紫真絲睡袍式長裙、晨袍式外層、薄紗罩裙與柔性垂墜腰鏈，裸肩低領剪裁在步伐間形成流線", "黑曜石額冠、紅寶耳墜、鎖骨鏈、腰鍊與大腿飾鏈", "黑玫酒杯、細鍊長手套與垂墜披紗", "暗紫夜宴宮殿", "紫紅寶石光、燭火補光與高亮商業奇幻女王曝光"],
     ["dark", "暗黑王族", 10, "暗黑系列／王族魔殿", "冥殿", "黑金、紫晶與冷銀色", "暗黑王族長袍、硬質披風與符文腰封", "紫晶冠、黑金肩鏈與骸骨寶石", "權杖與古卷", "黑曜石魔殿", "紫晶主光、臉部柔補光與黑金反射"],
     ["fallen", "墮天使", 10, "墮天使／黑羽史詩", "墮羽", "黑羽、月銀與深紫色", "黑羽史詩長袍、破碎披風與銀線腰封", "黑銀冠、羽形耳飾與暗紫吊墜", "黑羽披風與月銀長劍", "破碎哥德神殿", "冷月束光、黑羽 rim light 與暗紫霧氣"],
   ];
+  const succubusConfigs = [
+    ["噬魂女皇・蝶魘裁心", "人物斜倚王座前緣，一手輕搭扶手，一手撩起薄紗罩裙，眼神直視鏡頭，晨袍式外層沿椅側自然垂落"],
+    ["幽夜冕下・星鏈低垂", "人物立於月光窗紗前回眸，指尖輕觸鎖骨鏈，晨袍薄紗自肩後低垂，肩頸線條清楚且不僵硬"],
+    ["緋焰權座・金縷鎖霞", "人物倚坐夜宴長椅前端，一手扶住酒杯杯腳，另一手整理垂墜腰鏈，姿態像剛從臥榻起身"],
+    ["詭咒帝女・紫綃誘月", "人物側倚石柱微微回身，單手撩起紫紗外層，另一手沿腿側放鬆垂落，身體形成柔和 S 曲線"],
+    ["燼霜圣后・琉夜凝脂", "人物自宮殿臥榻旁緩步走下石階，晨袍式外層在身後拖行，手背輕擦過腰鏈，冷艷而有流動感"],
+    ["魅影女公・燭綺啜香", "人物扶著高背椅側身停步，低頭聞近處香氣，手持酒杯靠近腰側，燭影帷幕在身後搖曳"],
+    ["千織魔姬・夜紗奪魄", "人物倚坐絲絨軟榻側邊，一腿前伸一腿收起，雙手輕牽夜紗，像從夜宴床幔間剛醒來的瞬間"],
+    ["絕色裁魂・暗蕾回眸", "人物自花廳長廊掠步而過後回眸，單手扶住肩側薄紗，另一手低垂持黑玫花枝，臉完整可見"],
+    ["血綾囚徒・霧綾侵夜", "人物側身逼近鏡頭，雙腕自然交錯抬至腰前，霧綾從臂間垂下，像在月下帷幕中緩慢靠近"],
+    ["幻絲縛靈・薔燼纏夢", "人物側躺於花牆前低矮長椅，單手撐住椅面穩住身體，另一手牽起玫瑰薄紗，姿態慵懶而有戒心"],
+    ["禁製繡娘・花燼照骨", "人物立於鏡前扶住椅背整理手套邊緣，肩線微轉，薄紗罩裙與晨袍外層在走動中露出層次"],
+    ["魔線執刑・玫焰垂歌", "人物倚在夜宴長桌邊，指尖沿酒杯邊緣滑過，另一手扶住垂墜腰鏈，像審視全場般看向鏡頭"],
+    ["緋霧妖姬・緋霧流焰", "人物在霧中旋身停步，披紗從手臂後方帶出弧線，腳步牽動睡袍式裙擺形成流線"],
+    ["毒瓣魅使・紅瓣懸宵", "人物倚坐月窗石台邊緣，單手捻起紅花瓣，另一手撐在身後，窗紗與夜色把姿態襯得更危險"],
+    ["燼花魔女・玫焰垂歌", "人物立於花牆與燭影帷幕之間，手持羽扇垂在腿側，身體前傾半步，晨袍外層向後展開"],
+    ["夢魘蝕蝶・蝶魘裁心", "人物側坐王座扶手邊，一手輕托頰側下方但不遮臉，另一手停在腰鏈附近，畫面帶挑釁感與臥榻餘溫"],
+    ["枯骨幽蘭・暗蕾回眸", "人物倚靠黑色拱門回眸，手指輕撫耳墜與頸側，晨袍外層沿身側垂墜，姿態纖長冷冽"],
+    ["極夜寒蟬・琉夜凝脂", "人物從月光長廊深處走來，薄紗晨袍與長手套形成縱向輪廓，雙手在腰際前後錯開擺動"],
+    ["虛空祭司・燭綺啜香", "人物半跪於低台邊緣舉起酒杯至胸口下方，另一手向後牽住披紗，像在燭影帷幕前進行靜默儀式"],
+    ["星鏈守靈・星鏈低垂", "人物立於月台中央抬手整理額冠垂鏈，另一手扶住腰鏈，背後窗紗與帷幕把站姿撐出層次"],
+    ["斷魂伶人・魅羽停燈", "人物坐在舞台邊緣準備起身，單腳點地，手持羽扇停在膝側，像剛從夜宴床幔後謝幕而出"],
+    ["咒燼祭女・薔燼纏夢", "人物在祭壇階前緩慢跪坐，雙手捧起薄紗與花瓣於腰前下方，姿態穩定，身後帷幕與燭火形成包圍感"],
+    ["沉夢引路・紅瓣懸宵", "人物立於長廊轉角回首招手，另一手持花瓣酒杯，裙擺像剛掠過地面，月光窗紗在後方透亮"],
+    ["鎖霞咒巫・金縷鎖霞", "人物站在高背椅後方，雙手交疊扶住椅背上緣，肩頸前探，像從臥榻與帷幕之間掌控整場夜宴"],
+    ["蝕骨魔劍・花燼照骨", "人物手持細劍下垂貼近腿側，另一手牽起花燼披紗，步伐像要從宮殿臥榻區跨下階梯"],
+    ["幽影奪魄・夜紗奪魄", "人物側倚窗框，一腿微屈，單手將夜紗披回肩後，另一手垂落貼近裙擺開線，月色照出睡袍布光"],
+    ["鋒芒流焰・緋霧流焰", "人物在殿中旋步停格，手臂帶動披紗向後揚起，腰胯角度鮮明，晨袍外層與薄紗罩裙同步飛展"],
+    ["破夜剪影・霧綾侵夜", "人物半蹲於階前低重心回望，雙手把霧綾收在身側下方，像從床幔陰影中突然逼近"],
+    ["殘月魅影・紫綃誘月", "人物倚坐月窗前石台側邊，單手輕托下巴下方，另一手放在膝上牽住紫紗，神情冷魅，窗紗微亮"],
+    ["絕境蝶鋒・蝶魘裁心", "人物立於破碎花窗前前腳跨出一步，雙手一前一後帶出披紗與裙擺，像自燭影帷幕後逼近鏡頭"],
+  ];
+  const titleVariants = {
+    succubus: succubusConfigs.map(([title]) => title.split("・")[1]),
+    dark: ["冥火臨階", "黑曜承徽", "紫璽懸光", "骨冠聽令", "魔紋鎮夜", "玄座凝霜", "幽殿執印", "獄門含焰", "寒燭照璽", "王庭垂律"],
+    fallen: ["墮羽裁月", "殘翼聖哀", "黑穹聽判", "霜刃巡天", "夜翎折光", "廢壇懸誓", "銀羽禁章", "暗穹獻祭", "斷翼臨淵", "審焰歸城"],
+  };
+  const displayRoles = {
+    succubus: "魅魔",
+    dark: "魔后",
+    fallen: "墮天使",
+  };
   return groups.flatMap(([kind, roleName, count, series, prefix, palette, costumeCore, jewelry, prop, placeBase, lighting]) =>
     Array.from({ length: count }, (_, index) => {
       const number = index + 1;
       const id = `darkroyal-${kind}-${number}`;
-      const title = `${prefix}${number}・${roleName}`;
+      const legacyTitle = `${prefix}${number}・${roleName}`;
+      const title = kind === "succubus" ? succubusConfigs[index][0] : `${prefix}${displayRoles[kind]}・${titleVariants[kind][index]}`;
+      const succubusAliasParts = kind === "succubus" ? title.split("・") : [];
+      const action =
+        kind === "succubus"
+          ? succubusConfigs[index][1]
+          : "人物可站姿、坐姿、倚靠或緩步前行；雙手自然牽起外袍、持權杖或扶住座椅邊緣，手部不遮臉";
+      const atmosphere =
+        kind === "succubus"
+          ? "高亮商業奇幻夜宴魅惑主視覺，成熟、華麗、危險感鮮明且保持真人可穿戴"
+          : "高亮商業奇幻暗黑女王主視覺，艷麗但真實攝影可存在";
       return createCuratedRoleProfile({
         id,
         title,
         parentCategory: "奇幻異世界 / 暗黑王族",
         series,
-        themeHint: `${roleName} ${prefix} ${number} 暗黑王族`,
-        aliases: [roleName, prefix, "暗黑王族", "哥德", "高亮商業奇幻"],
+        themeHint: `${roleName} ${prefix} ${titleVariants[kind][index]} ${number} 暗黑王族`,
+        aliases: [roleName, prefix, displayRoles[kind], legacyTitle, ...succubusAliasParts, "暗黑王族", "哥德", "高亮商業奇幻"],
         identity: `${roleName}${prefix}${number}`,
         palette,
         costumeCore,
@@ -790,9 +870,9 @@ const REQUESTED_DARK_ROYAL_PROFILES = (() => {
         foreground: `${prop}、燭火、霧氣與布料前景遮擋`,
         midground: `真人${roleName}站立、端坐或緩步於主視覺中心，臉部完整清楚`,
         background: `${placeBase}尖拱、石階、月光高窗、寶石色霧氣與遠景燈火`,
-        action: "人物可站姿、坐姿、倚靠或緩步前行；雙手自然牽起外袍、持權杖或扶住座椅邊緣，手部不遮臉",
+        action,
         lighting,
-        atmosphere: "高亮商業奇幻暗黑女王主視覺，艷麗但真實攝影可存在",
+        atmosphere,
         cupSize: "K",
       });
     }),
@@ -4939,10 +5019,71 @@ export const DARK_ROYAL_PROFILE_IDS = [
   ...REQUESTED_DARK_ROYAL_PROFILES.map((profile) => profile.id),
 ];
 
+function inferActionCueTexts(profile) {
+  const haystack = `${profile.title} ${profile.category} ${profile.scene} ${profile.sceneEnvironment} ${profile.costume} ${profile.sceneAction}`;
+  const cues = [];
+  const addCue = (pattern, text) => {
+    if (pattern.test(haystack) && !cues.includes(text)) {
+      cues.push(text);
+    }
+  };
+
+  addCue(/扇|羽扇/, "持扇回眸");
+  addCue(/劍|刀|槍|弓|箭|劍門|戰袍|戰甲/, "按兵器借勢");
+  addCue(/琴|箜篌|琵琶|鼓|樂器/, "扶琴或停拍");
+  addCue(/茶|茶盞|藥|藥盞|藥籃|藥方/, "端盞低坐");
+  addCue(/書|卷|奏摺|地圖|帳冊|畫布|畫筆/, "執卷倚案");
+  addCue(/花|花枝|花瓣|桃|蓮|玫瑰|白玫|桂花|梅枝/, "拈花聞香");
+  addCue(/燈|燭|燭台|宮燈|火|香爐/, "提燈轉肩");
+  addCue(/傘|披紗|披帛|長袖|水袖|飄帶|披肩/, "牽紗借風");
+  addCue(/欄|橋|欄杆|窗|窗台|門|石柱|拱門/, "扶欄倚窗");
+  addCue(/王座|石階|階梯|台階|高台|祭壇/, "踏階或前緣端坐");
+  addCue(/船|畫舫|湖|河|水岸|湖畔|碼頭/, "臨水緩步");
+  addCue(/馬|騎|馬背|駝隊/, "扶鞍回望");
+  addCue(/龍|虎|狐|鳳凰|白龍|神獸/, "觸碰靈獸");
+  addCue(/魔法|法器|法鈴|權杖|術法|祭司|聖女|巫祝/, "托法器引光");
+  addCue(/旅拍|街拍|夜景|城市|咖啡|手包|地圖|相機/, "街角抓拍");
+
+  return cues.slice(0, 2);
+}
+
+function fallbackActionDirection(parentCategory) {
+  const byCategory = {
+    "歷史小說名著人物": "回眸停步或低案端坐",
+    "中國歷代服裝": "踏階緩步或提袖整佩",
+    "武俠江湖 / 戰場女將": "回身按兵器或低重心借勢",
+    "仙俠神話 / 古裝陸劇": "托法器引光或拂袖轉身",
+    "東方異域 / 絲路西域": "提裙踏沙或借風轉肩",
+    "奇幻異世界 / 暗黑王族": "斜坐倚靠或踏階逼近",
+    "西方古典 / 歐陸史詩": "提裙扶欄或椅前端坐",
+    "世界景點旅拍": "扶欄回望或持物抓拍",
+    "現代都市 / 街拍電影": "街角回身或步行抓拍",
+    "花園童話 / 自然精靈": "拈花聞香或扶藤回眸",
+  };
+  return byCategory[parentCategory] || "回身停步、扶物互動、坐靠場景邊緣或緩步抓拍";
+}
+
+function needsActionUpgrade(sceneAction) {
+  const dynamicPattern = /(坐|倚|靠|扶|持|托|捧|回眸|回身|旋|緩步|前行|走|跑|跪|半蹲|蹲|俯|抬手|舞|撫|泡茶|撫琴|牽|搭|整理|觸|指|邀請|騎|端坐|盤腿|停步|提|按|執)/;
+  const stiffPattern = /(站姿|站立|站於|站在|直視鏡頭|凝視鏡頭|面向鏡頭)/;
+  return stiffPattern.test(sceneAction) && !dynamicPattern.test(sceneAction);
+}
+
+function enrichSceneAction(profile) {
+  if (profile.sceneAction.includes("避免筆直呆站") || !needsActionUpgrade(profile.sceneAction)) {
+    return profile.sceneAction;
+  }
+
+  const cues = inferActionCueTexts(profile);
+  const cueText = cues.length ? cues.join("、") : fallbackActionDirection(profile.parentCategory);
+  return `${profile.sceneAction}；避免筆直呆站，改採 ${cueText} 等互動姿態。`;
+}
+
 WORLD_LAYER_PROFILES.forEach((profile) => {
   if (DARK_ROYAL_PROFILE_IDS.includes(profile.id)) {
     profile.cupSize = "K";
   }
+  profile.sceneAction = enrichSceneAction(profile);
 });
 
 export const DISTANCES = [

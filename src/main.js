@@ -42,6 +42,76 @@ const RATIO_LABELS = {
   "4:3": "4:3 經典畫幅",
   "2.39:1": "2.39:1 寬銀幕",
 };
+
+function templateDirectionForProfile(profile) {
+  const text = `${profile.title} ${profile.category} ${profile.scene} ${profile.sceneEnvironment} ${profile.sceneAction}`;
+  if (/魅魔|魅姬|暗黑夜宴|絲絨|王座|紫晶|占星|哥德/.test(text)) {
+    return {
+      environment: "前景優先酒杯、燭台、垂鏈、帷幕或蝶翼貼鏡，中景讓角色和王座、扶手、座椅互動，遠景保留高窗、圓盤、鏡面與燈影深度。",
+      action: "姿態優先王座前緣端坐、倚扶手、扶椅背、單腿前伸、由座起身或踏階逼近，不採正中站姿。",
+    };
+  }
+  if (/飛天|敦煌|伎樂|舞姬|洞窟/.test(text)) {
+    return {
+      environment: "前景優先飄帶、香煙、洞壁殘框穿鏡，中景保留石階與舞台空間，遠景保留壁畫、佛龕與天窗光。",
+      action: "姿態優先舞步停格、手臂弧線、腰胯轉折、半轉身與披帛大動態，不採平直站姿。",
+    };
+  }
+  if (/唐|長安|盛唐|宮廷|花宴|牡丹|鳳|皇后|宮妃|帝姬/.test(text)) {
+    return {
+      environment: "前景優先花枝、屏風、燈器、欄杆或披帛壓鏡，中景讓角色貼近台階、桌案、宮欄或器物，遠景保留廊柱、帷幕與深層殿階。",
+      action: "姿態優先踏階、扶欄、托器物、提袖、持團扇或轉肩停步，避免站在中軸立正。",
+    };
+  }
+  if (/武俠|女俠|戰場|江湖|劍|刀|槍|弓|邊關/.test(text)) {
+    return {
+      environment: "前景優先竹葉、風沙、橋欄、軍旗或茶案遮擋，中景讓角色靠近兵器、坐騎、石階或欄杆，遠景保留山門、城關與地形壓力。",
+      action: "姿態優先按兵器借勢、低重心停步、回身收勢、扶鞍回望或臨案坐姿，不採制式站姿。",
+    };
+  }
+  if (/仙俠|神話|聖女|神姬|龍宮|雲海|月宮|巫祝|祭司|法器/.test(text)) {
+    return {
+      environment: "前景優先法器、雲霧、水紗、光粒或神殿構件貼鏡，中景保留雲階、水殿、祭台或橋面，遠景建立天光、神像與世界縱深。",
+      action: "姿態優先托法器引光、拂袖轉身、踏階緩行、臨水停步或端坐祭儀，不採平面站姿。",
+    };
+  }
+  if (/西域|絲路|大漠|旅人|異域/.test(text)) {
+    return {
+      environment: "前景優先紗幕、駝具、石柱、地毯或器皿壓鏡，中景讓角色貼近欄杆、坐具、階台或樂器，遠景保留沙丘、拱門與火光。",
+      action: "姿態優先提裙踏沙、扶駝具回望、抱樂器停拍、倚柱轉肩或低位端坐。",
+    };
+  }
+  if (/旅拍|地標|古城|湖畔|山城|外灘|九份|西湖|威尼斯/.test(text)) {
+    return {
+      environment: "前景優先欄杆、窗框、枝葉、傘面或桌角貼鏡，中景讓角色坐靠場景邊緣或沿路徑移動，遠景保留地標、天光與城市深度。",
+      action: "姿態優先扶欄回望、邊走邊整理衣襬、坐靠窗台、持物抓拍或轉身停步，避免旅遊宣傳式站正中。",
+    };
+  }
+  if (/都市|街拍|夜景|商務|咖啡|首爾|台北|上海|香港/.test(text)) {
+    return {
+      environment: "前景優先玻璃反光、欄杆、桌面、車流或櫥窗遮擋，中景讓角色靠近座椅、窗邊、街角或門框，遠景保留燈海、招牌與透視線。",
+      action: "姿態優先走動抓拍、倚窗、扶包、整理外套、坐靠桌邊或街角回身，不採櫥窗模特站姿。",
+    };
+  }
+  if (/花園|精靈|花靈|白玫|藤蔓|森林/.test(text)) {
+    return {
+      environment: "前景優先花拱、藤蔓、枝葉與露珠貼鏡，中景讓角色貼近花徑、座椅或石欄，遠景保留花棚、林光與層層植物空間。",
+      action: "姿態優先拈花聞香、扶藤回眸、坐靠石欄、提裙穿花或伸手觸葉，不採呆站。",
+    };
+  }
+  return {
+    environment: "前景加入可壓鏡的道具或建築構件，中景讓角色和欄杆、座椅、台階或器物互動，遠景保留建築與天光深度。",
+    action: "姿態優先回身停步、扶物互動、坐靠場景邊緣或緩步抓拍，避免站正中。",
+  };
+}
+
+function mergeTemplateDirection(baseText, addition) {
+  if (!addition) return baseText || "";
+  if (!baseText) return addition;
+  if (baseText.includes(addition)) return baseText;
+  return `${baseText}；模板加強：${addition}`;
+}
+
 function escapeHtml(value) {
   return String(value)
     .replaceAll("&", "&amp;")
@@ -603,6 +673,7 @@ function refreshProfileLibrary(form) {
 function applyWorldLayerProfile(form, profileId) {
   const profile = WORLD_LAYER_PROFILES.find((item) => item.id === profileId);
   if (!profile) return;
+  const direction = templateDirectionForProfile(profile);
 
   if (form.elements.category) {
     form.elements.category.value = profile.category || "";
@@ -617,10 +688,10 @@ function applyWorldLayerProfile(form, profileId) {
     form.elements.scene.value = profile.scene || "";
   }
   if (form.elements.sceneEnvironment) {
-    form.elements.sceneEnvironment.value = profile.sceneEnvironment || "";
+    form.elements.sceneEnvironment.value = mergeTemplateDirection(profile.sceneEnvironment || "", direction.environment);
   }
   if (form.elements.sceneAction) {
-    form.elements.sceneAction.value = profile.sceneAction || "";
+    form.elements.sceneAction.value = mergeTemplateDirection(profile.sceneAction || "", direction.action);
   }
   if (form.elements.sceneLighting) {
     form.elements.sceneLighting.value = profile.sceneLighting || "";

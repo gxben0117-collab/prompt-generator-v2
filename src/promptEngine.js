@@ -523,9 +523,9 @@ function allowsBackgroundCharacters(text = "") {
 function backgroundControlText(form = DEFAULT_FORM) {
   const text = `${form.category} ${form.theme} ${form.scene} ${form.sceneEnvironment} ${form.frameEvent}`;
   if (allowsBackgroundCharacters(text)) {
-    return "背景角色控制：主題允許少量 small-scale cinematic silhouettes、侍從剪影、儀式隊列或遠景軍勢輪廓；所有次要輪廓必須縮小、模糊、低存在感，主角仍佔 absolute visual priority";
+    return "背景角色控制：主題允許少量 small-scale cinematic silhouettes、侍從剪影或遠景軍勢輪廓；所有次要輪廓必須縮小、模糊、低存在感，主角仍佔 absolute visual priority";
   }
-  return "背景角色控制：預設單女主電影海報構圖，畫面只保留真人主角；背景優先用建築輪廓、光影、水霧、花瓣、燈籠、布料、空氣粒子、景深、前景遮擋與空間透視建立電影感，主角佔 absolute visual priority";
+  return "背景角色控制：預設單女主電影海報構圖，畫面只保留真人主角；背景優先用建築輪廓、光影、水霧、燈籠、布料、前景遮擋與空間透視建立電影感，主角佔 absolute visual priority";
 }
 
 function shouldUseCommercialGlamourLighting(form = DEFAULT_FORM) {
@@ -536,7 +536,7 @@ function shouldUseCommercialGlamourLighting(form = DEFAULT_FORM) {
 
 function commercialGlamourLightingText(form = DEFAULT_FORM) {
   if (!shouldUseCommercialGlamourLighting(form)) return "";
-  return "商業奇幻亮場：luminous fantasy glamour lighting、commercial fantasy beauty exposure、glowing jewel-tone atmosphere；臉部明亮可辨識並保留皮膚紋理，眼睛有 catchlight，珠寶有 sparkle highlights，黑色衣料保留刺繡與 purple shadow detail；避免 grim dark fantasy、muddy black shadows、face underexposure、heavy contrast noir lighting";
+  return "商業奇幻亮場：luminous fantasy glamour lighting、commercial fantasy beauty exposure、glowing jewel-tone atmosphere；臉部明亮可辨識並保留皮膚紋理，眼睛有 catchlight，珠寶有 sparkle highlights，黑色衣料保留刺繡與細節；避免 grim dark fantasy、muddy black shadows、face underexposure";
 }
 
 const VISUAL_MODE_TEXT = {
@@ -579,25 +579,48 @@ function isDarkBanquetTheme(theme = "", scene = "") {
   return /魅魔|魅姬|寢宮|絲絨|暗紫|哥德|黑玫瑰|黑曜|暗黑夜宴/.test(`${theme} ${scene}`);
 }
 
+function actionStagingBiasText(form = DEFAULT_FORM) {
+  const text = `${form.category} ${form.theme} ${form.scene} ${form.sceneEnvironment}`;
+  if (isDarkBanquetTheme(form.theme, `${form.scene} ${form.sceneEnvironment}`)) {
+    return "避免正中立正；優先王座前緣端坐、倚扶手、持酒杯或起身";
+  }
+  if (/女王|哥德|暗夜|王座|魔后|血族|冥界/.test(text)) {
+    return "避免閱兵式站姿；優先踏階逼近、倚欄、扶權杖或高背椅前緣坐姿";
+  }
+  if (/飛天|敦煌|伎樂|舞姬|洞窟/.test(text)) {
+    return "避免平直站姿；優先舞步停格、手臂弧線、披帛穿鏡與半轉身";
+  }
+  if (/唐|長安|盛唐|宮廷|花宴|牡丹|鳳/.test(text)) {
+    return "避免證件照式站正中；優先踏階、扶欄、托器物、持團扇或轉肩停步";
+  }
+  if (/賽博|霓虹|都市|特工|雨夜/.test(text)) {
+    return "避免櫥窗模特式站姿；優先走動抓拍、倚窗、扶欄或街角回身";
+  }
+  return "避免筆直站正中；優先讓手部、欄杆、座椅、台階、道具或布料和場景發生互動";
+}
+
 function buildSceneVisualDetailText(form = DEFAULT_FORM) {
   const text = `${form.theme} ${form.scene} ${form.sceneEnvironment}`;
-  if (form.sceneEnvironment) {
-    return "空間層級補強：近景做鏡頭遮擋與空氣粒子，中景只服務真人角色與服裝動態，遠景優先建立建築、光影、水霧、燈火或天光尺度；避免把環境說明重複成設定卡";
-  }
   if (isDarkBanquetTheme(form.theme, `${form.scene} ${form.sceneEnvironment}`)) {
-    return "暗紫絲絨寢宮、哥德雕花床榻或夜宴內殿作為主空間，前景可見燭台、黑玫瑰、薄紗帷幕與玻璃酒杯柔焦遮擋，中景真人角色被絲綢睡袍式外袍與半透明夜紗包圍，遠景月光高窗、深酒紅天鵝絨窗簾、黑曜石鏡面、低位燭火與建築燈影形成私密而高級的 dark romantic chamber depth";
+    return "空間層級補強：暗紫絲絨夜宴寢宮、占星圓盤內殿或高背王座廳作為主空間，前景燭台、玻璃酒杯、紫晶垂鏈與薄紗帷幕貼近鏡頭，中景角色與王座扶手、披紗和珠寶形成權力中心，遠景月輪高窗、酒紅窗簾、黑曜石鏡面、燭火與建築燈影疊出 dark romantic chamber depth";
+  }
+  if (/飛天|敦煌|伎樂|舞姬|洞窟/.test(text)) {
+    return "空間層級補強：敦煌洞窟、壁畫佛龕或高聳石窟台階作為主空間，前景飄帶、紗幕、香煙與石壁殘片穿過鏡頭，中景真人角色以舞姿和披帛成為畫面流線核心，遠景壁畫、佛像、洞窟高窗天光、石階與塵粒建立可探索的神祕深度";
   }
   if (/唐|長安|盛唐|宮廷|花宴|牡丹|鳳/.test(text)) {
     const backgroundScale = allowsBackgroundCharacters(text)
       ? "少量 small-scale cinematic silhouettes、宮燈層次"
       : "宮燈層次、建築燈影";
-    return `長安宮廷花宴或紅金夜宴大殿作為主空間，前景燭火、牡丹、花瓣與半透明披帛穿過鏡頭，中景真人角色位於燈籠與光影中心，遠景金色廊柱、寶石色帷幕、${backgroundScale}與濕亮地面倒影形成盛唐商業奇幻電影規模`;
+    return `空間層級補強：長安宮廷花宴、王座前廳或紅金夜宴大殿作為主空間，前景燭火、牡丹、花枝、屏風邊框與半透明披帛穿過鏡頭，中景真人角色可與欄杆、石階、桌案或器物形成互動，遠景金色廊柱、寶石色帷幕、深層台階、${backgroundScale}與濕亮地面倒影形成盛唐商業奇幻電影規模`;
   }
   if (/墮天使|黑羽|黑翼|廢墟|神殿/.test(text)) {
-    return "破碎哥德神殿或黑羽廢墟作為主空間，前景灰燼、羽毛、碎石與冷霧遮擋，中景真人角色被黑羽輪廓與破碎披風包圍，遠景斷裂石柱、月光高窗、殘破拱頂與暗紫聖光形成悲傷神性的 dark fantasy cinema depth";
+    return "空間層級補強：破碎哥德神殿或黑羽廢墟作為主空間，前景灰燼、羽毛、碎石與冷霧遮擋，中景真人角色被黑羽輪廓與破碎披風包圍，遠景斷裂石柱、月光高窗、殘破拱頂與暗紫聖光形成悲傷神性的 dark fantasy cinema depth";
   }
   if (/賽博|霓虹|都市|雨夜/.test(text)) {
-    return "雨夜霓虹街區作為主空間，前景雨滴、玻璃反光與招牌色塊遮擋，中景真人角色從濕亮地面反射中走近鏡頭，遠景高樓、車燈、霓虹招牌與雨霧光斑壓成淺景深色彩層次";
+    return "空間層級補強：雨夜霓虹街區作為主空間，前景雨滴、玻璃反光與招牌色塊遮擋，中景真人角色從濕亮地面反射中走近鏡頭，遠景高樓、車燈、霓虹招牌與雨霧光斑壓成淺景深色彩層次";
+  }
+  if (form.sceneEnvironment) {
+    return "空間層級補強：近景要有遮擋，中景讓真人角色和欄杆、座椅、階梯或器物互動，遠景建立建築、光影、水霧、燈火或天光尺度。";
   }
   return "場景以可拍攝的近景、中景、遠景建立電影空間：近景提供花瓣、燭火、霧氣、布料或建築遮擋，中景放置真人角色與動態服裝，遠景建立建築、天光、燈火、水霧或地形輪廓，形成單女主主導的 cinematic atmosphere";
 }
@@ -607,15 +630,17 @@ function buildActionCinematographyText(form = DEFAULT_FORM) {
   if (form.sceneAction) {
     return [
       "動作鏡頭語言補強：承接上方動作，不重複姿勢描述",
-      "50mm eye-level cinematic blocking，真人臉部完整可見，眼神是表演核心",
+      actionStagingBiasText(form),
+      "50mm eye-level cinematic blocking，臉部完整可見，眼神是表演核心",
       "肩頸、胸腔、骨盆、四肢支撐點與身體受力符合真實成年人體結構，手部不遮擋臉部",
       "布料、披帛、長袖、外袍或髮絲只作視線導引，不搶臉部辨識度",
     ].join("；");
   }
   return [
     `動作鏡頭語言：${action}`,
-    "50mm eye-level cinematic blocking，真人臉部完整可見，眼神是表演核心",
-    "肩頸、胸腔、骨盆、四肢支撐點與身體受力符合真實成年人體結構，手指比例自然，手部不遮擋臉部",
+    actionStagingBiasText(form),
+    "50mm eye-level cinematic blocking，臉部完整可見，眼神是表演核心",
+    "肩頸、胸腔、骨盆、四肢支撐點與身體受力符合真實成年人體結構，手部不遮擋臉部",
     "布料、披帛、長袖、外袍或髮絲跟隨動作產生可拍攝的 visual leading lines",
   ].join("；");
 }
@@ -642,10 +667,13 @@ function buildStyleVisualDetailText(form = DEFAULT_FORM) {
 function inferFrameEvent(theme, scene) {
   const text = `${theme} ${scene}`;
   if (isDarkBanquetTheme(theme, scene)) {
-    return "角色剛從絲絨陰影與燭光中正面或微側正面停步看向鏡頭，外袍與薄紗被室內氣流拉開，月光剛好擦過眼神與唇部邊緣，形成危險又高級的 cinematic reveal";
+    return "角色剛在王座前緣坐定、由扶手起身或倚著高背椅停住看向鏡頭，外袍與薄紗被室內氣流拉開，月光與燭火同時擦過眼神、鎖骨與手部珠寶，形成危險又高級的 cinematic reveal";
+  }
+  if (/飛天|敦煌|伎樂|舞姬|洞窟/.test(text)) {
+    return "角色剛在洞窟台階間完成一個舞步停格，手臂弧線、披帛與腰胯轉折同時定住，天窗光從上方切進來，讓畫面像被電影攝影機抓住的一瞬";
   }
   if (/唐|長安|盛唐|宮廷|花宴|牡丹|鳳/.test(text)) {
-    return "角色剛穿過紅金燈籠與花瓣光影，披帛在空中展開，燭火與花瓣同時掠過前景，像真人身份被完整保留的東方奇幻影集主視覺出場瞬間";
+    return "角色剛踏下宮階、扶過欄杆或托著器物停步，披帛在空中展開，燭火與花瓣同時掠過前景，像真人身份被完整保留的東方奇幻影集主視覺出場瞬間";
   }
   if (/墮天使|黑羽|黑翼|廢墟|神殿/.test(text)) {
     return "角色剛從破碎聖光、灰燼與黑羽之間正面凝視鏡頭，披風和羽毛被冷風掀起，畫面停在悲傷神性與危險感同時爆發的一瞬間";
@@ -663,8 +691,8 @@ function buildFrameEventText(form = DEFAULT_FORM) {
   const event = form.frameEvent || inferFrameEvent(form.theme, `${form.scene} ${form.sceneEnvironment}`);
   return [
     `畫面事件：${event}`,
-    "single-protagonist poster frame，風、光、布料、粒子、眼神與環境互動共同推動 visual narrative",
-    "cinematic reveal、emotional tension、dangerous elegance、atmospheric depth、frame narrative 共同建立主視覺",
+    "single-protagonist poster frame，風、光、眼神推動 visual narrative",
+    "cinematic reveal、dangerous elegance 與 atmospheric depth 建立主視覺",
   ].join("；");
 }
 
