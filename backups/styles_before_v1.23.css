@@ -160,16 +160,6 @@ h2 {
   gap: 10px;
 }
 
-.template-grid-toolbar {
-  margin-bottom: 0;
-}
-
-.template-grid-note {
-  color: var(--muted);
-  font-size: 0.78rem;
-  line-height: 1.5;
-}
-
 .detail-section {
   gap: 14px;
 }
@@ -324,10 +314,10 @@ textarea:focus {
 
 .profile-row {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
-  margin-top: 4px;
-  max-height: 420px;
+  margin-top: 10px;
+  max-height: 332px;
   overflow: auto;
   padding: 8px;
   border: 1px solid var(--line);
@@ -336,7 +326,7 @@ textarea:focus {
 }
 
 .template-profile-row {
-  max-height: 460px;
+  max-height: 360px;
   margin-top: 0;
 }
 
@@ -410,29 +400,26 @@ textarea:focus {
 
 .profile-chip {
   display: grid;
-  gap: 3px;
-  min-height: 56px;
+  gap: 4px;
+  min-height: 64px;
   justify-items: start;
-  align-content: start;
+  align-content: center;
   border: 1px solid rgba(201, 146, 42, 0.2);
   background: rgba(201, 146, 42, 0.07);
   color: var(--ink);
   text-align: left;
-  padding: 9px 10px;
 }
 
-.profile-chip-title {
-  font-size: 0.92rem;
-  line-height: 1.22;
-  font-weight: 800;
+.profile-chip span {
+  font-size: 1.02rem;
+  line-height: 1.25;
 }
 
-.profile-chip-meta {
+.profile-chip small {
   color: var(--muted);
-  font-size: 0.62rem;
+  font-size: 0.68rem;
   font-weight: 700;
-  line-height: 1.2;
-  letter-spacing: 0.4px;
+  line-height: 1.25;
 }
 
 .profile-chip:hover {
@@ -445,12 +432,6 @@ textarea:focus {
   color: var(--accent-strong);
   background: rgba(201, 146, 42, 0.13);
   box-shadow: 0 0 16px rgba(201, 146, 42, 0.1);
-}
-
-@media (max-width: 900px) {
-  .profile-row {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
 }
 
 .layer-suggestions {
@@ -898,7 +879,7 @@ button.ghost {
   }
 
   .profile-row {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
   }
 
   .layer-grid {

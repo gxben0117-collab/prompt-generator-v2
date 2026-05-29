@@ -29,7 +29,7 @@ const STORAGE_KEY = "hongbing-travel-prompt-state";
 const HISTORY_KEY = "hongbing-travel-prompt-history";
 const UI_PREFS_KEY = "hongbing-travel-prompt-ui-prefs";
 const HISTORY_LIMIT = 5;
-const APP_VERSION = "v1.23";
+const APP_VERSION = "v1.22";
 const PRODUCT_PRINCIPLE = "最高原則：真人鎖臉優先於所有華麗主視覺，不讓角色滑回 AI 仙女臉。";
 const RATIO_LABELS = {
   "4:5": "4:5 商業海報",
@@ -311,8 +311,8 @@ function worldLayerProfileButtons(activeParentCategory, activeCategory, searchTe
   return profiles.map(
     (profile) =>
       `<button type="button" class="profile-chip ${selectedProfileId === profile.id ? "active" : ""}" data-world-profile="${escapeHtml(profile.id)}" aria-label="${escapeHtml(`${profile.title} ${profile.themeHint}`)}">
-        <span class="profile-chip-title">${escapeHtml(profile.title)}</span>
-        <small class="profile-chip-meta">${escapeHtml(parentCategoryForProfile(profile) || profile.category || "未分類")}</small>
+        <span>${escapeHtml(profile.title)}</span>
+        <small>${escapeHtml(profile.category)}</small>
       </button>`,
   ).join("");
 }
@@ -430,7 +430,7 @@ function render() {
               <div class="filter-row parent-filter-row" aria-label="角色大分類篩選">${parentCategoryButtons(activeParentCategory)}</div>
 
               <div class="template-picker">
-                <div class="library-toolbar template-grid-toolbar">
+                <div class="library-toolbar">
                   <div>
                     <div class="sec-label">選擇模板</div>
                     <small data-profile-count>${escapeHtml(profileCountText(activeParentCategory, activeCategory, profileSearch))}</small>
@@ -442,7 +442,6 @@ function render() {
                     </label>
                   </div>
                 </div>
-                <div class="template-grid-note">直接點小格選模板；我把它維持在頁面格狀排列，方便快速掃描，不再走下拉式挑選。</div>
                 <div class="profile-row template-profile-row">${worldLayerProfileButtons(activeParentCategory, activeCategory, profileSearch, state.selectedProfileId)}</div>
               </div>
             </section>
