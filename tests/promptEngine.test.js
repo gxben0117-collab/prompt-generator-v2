@@ -591,6 +591,13 @@ describe("prompt engine", () => {
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("威城金幕・歌劇女公");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("樓蘭月幕・金砂王姬");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("蘭霧花亭・幽香精靈");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("晨窗柔棚・都會寫真");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("桃亭團扇・春水仕女");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("冷月白裳・朱鈿幽姬");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("九尾天狐・月城海報");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("星海水母・靈珠神女");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("月湖九尾・靈狐水榭");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("藍金王帳・寶石舞姬");
     expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "expand-dynasty-han-water-banquet-empress"))).toBe("中國歷代服裝");
     expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "expand-dynasty-tang-jewel-lantern-consort"))).toBe("中國歷代服裝");
     expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "expand-xianxia-moon-hall-qin-empress"))).toBe("仙俠神話 / 古裝陸劇");
@@ -604,6 +611,12 @@ describe("prompt engine", () => {
     expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "wave4-western-venetian-opera-duchess"))).toBe("西方古典 / 歐陸史詩");
     expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "wave4-silkroad-loulan-moon-queen"))).toBe("東方異域 / 絲路西域");
     expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "wave4-garden-orchid-mist-spirit"))).toBe("花園童話 / 自然精靈");
+    expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "ref-modern-softbox-lounge-portrait"))).toBe("現代都市 / 街拍電影");
+    expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "ref-moonlit-nine-tail-fox-poster"))).toBe("仙俠神話 / 古裝陸劇");
+    expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "ref-sapphire-gold-palace-dancer"))).toBe("東方異域 / 絲路西域");
+    expect(WORLD_LAYER_PROFILES.find((profile) => profile.id === "ref-sapphire-gold-palace-dancer")?.cupSize).toBe("正常比例");
+    expect(WORLD_LAYER_PROFILES.find((profile) => profile.id === "ref-starlit-jellyfish-oracle")?.sceneAction).toContain("雙手在胸前下方托住靈珠");
+    expect(WORLD_LAYER_PROFILES.find((profile) => profile.id === "ref-moonlake-nine-tail-fox-spirit")?.sceneAction).toContain("胸腔與骨盆受力合理");
     expect(fairy.themeHint).toBe("古裝仙女");
     expect(fairy.layers.costumeLayer1).toContain("貼身柔白絲綢內襯");
     expect(fairy.layers.costumeLayer8).toContain("珍珠步搖");
