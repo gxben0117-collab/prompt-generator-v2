@@ -422,7 +422,7 @@ describe("prompt engine", () => {
 
     const secondWaveExpectations = [
       ["wave-wuxia-", "武俠江湖 / 戰場女將", 10],
-      ["wave-xianxia-", "仙俠神話 / 古裝陸劇", 40],
+      ["wave-xianxia-", "仙俠神話 / 古裝陸劇", 45],
       ["wave-travel-", "世界景點旅拍", 10],
       ["wave-modern-", "現代都市 / 街拍電影", 10],
     ];
