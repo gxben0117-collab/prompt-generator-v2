@@ -159,9 +159,6 @@ try {
     if ((await page.getByText("最高原則：真人鎖臉優先於所有華麗主視覺，不讓角色滑回 AI 仙女臉。", { exact: true }).count()) !== 1) {
       throw new Error(`${viewport.name}: visible product principle missing`);
     }
-    if ((await page.getByRole("button", { name: "拉滿角色" }).count()) !== 1) {
-      throw new Error(`${viewport.name}: role-max button missing`);
-    }
     if ((await page.getByText("HONGBING CINEMATIC PROMPT", { exact: true }).count()) !== 0) {
       throw new Error(`${viewport.name}: old English app header still visible`);
     }
@@ -307,17 +304,6 @@ try {
     await clickSingle(page, page.locator('[data-role-parent="全部"]'), "全部 parent", viewport.name);
     await page.locator('input[name="profileSearch"]').fill("");
 
-    await page.getByRole("button", { name: "拉滿角色" }).click();
-    if (!(await page.locator('input[name="posterOnly"]').isChecked())) {
-      throw new Error(`${viewport.name}: role-max did not force poster-only mode`);
-    }
-    if ((await page.locator('input[name="cameraFraming"]:checked').inputValue()) !== "膝蓋以上") {
-      throw new Error(`${viewport.name}: role-max did not set camera framing`);
-    }
-    if ((await page.locator('input[name="visualMode"]:checked').inputValue()) !== "商業奇幻海報") {
-      throw new Error(`${viewport.name}: role-max did not set poster visual mode`);
-    }
-
     const aliasProfileSearches = [
       ["白牡丹", "scholar-study-calligraphy-lady"],
       ["花靈公主", "white-rose-light-flower-spirit"],
@@ -362,7 +348,7 @@ try {
         throw new Error(`${viewport.name}: selected template chip was not highlighted for ${profile.title}`);
       }
       if (profile.id === "fallen-feather-night-court") {
-        const cupSize = await page.locator('input[name="cupSize"]').inputValue();
+        const cupSize = await page.locator('select[name="cupSize"]').inputValue();
         if (cupSize !== "K") {
           throw new Error(`${viewport.name}: dark royal profile did not set cup size K`);
         }
@@ -375,6 +361,9 @@ try {
     await page.getByRole("button", { name: "清空" }).click();
     await page.locator('input[name="profileSearch"]').fill("白玫仙庭");
     await clickSingle(page, page.locator('[data-world-profile="white-rose-light-flower-spirit"]'), "white-rose-light-flower-spirit", viewport.name);
+    if ((await page.locator('select[name="cupSize"]').inputValue()) !== "預設") {
+      throw new Error(`${viewport.name}: default cup-size select should show 預設`);
+    }
     if (await page.locator(".selected-profile-card").getByText("罩杯 正常比例", { exact: true }).isVisible()) {
       throw new Error(`${viewport.name}: normal cup-size text should be hidden in selected template card`);
     }
@@ -414,7 +403,7 @@ try {
       throw new Error(`${viewport.name}: visual mode block-grid card did not select 暗黑夜宴`);
     }
     await page.locator('input[name="category"]').fill("測試分類");
-    await page.locator('input[name="cupSize"]').fill("K");
+    await page.locator('select[name="cupSize"]').selectOption("K");
     await page.getByLabel("主題（必填）").fill(typedTheme);
     await page.getByRole("button", { name: "黑色絲綢內襯" }).click();
     await page.getByRole("button", { name: "長安宮廷夜宴，前景燭火，中景角色，遠景宮殿廊柱" }).click();
@@ -506,7 +495,7 @@ try {
     if (!promptText.includes("原始臉型") || !promptText.includes("原始眼型") || !promptText.includes("原始鼻型")) {
       throw new Error(`${viewport.name}: compact facial identity lock missing`);
     }
-    if (!promptText.includes('胸腔厚度、罩杯 "K"、軀幹深度')) {
+    if (!promptText.includes('胸腔厚度、罩杯 "K" 對應的自然胸型量感、軀幹深度')) {
       throw new Error(`${viewport.name}: cup size field did not enter skeleton prompt`);
     }
     if (metrics.horizontalOverflow) {

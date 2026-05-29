@@ -42,6 +42,17 @@ const RATIO_LABELS = {
   "4:3": "4:3 經典畫幅",
   "2.39:1": "2.39:1 寬銀幕",
 };
+const CUP_SIZE_OPTIONS = ["預設", "D", "F", "K"];
+
+function cupSizeSelectValue(value) {
+  return !value || value === "正常比例" ? "預設" : value;
+}
+
+function cupSizeSelectOptions(activeValue) {
+  return CUP_SIZE_OPTIONS.map(
+    (value) => `<option value="${escapeHtml(value)}" ${activeValue === value ? "selected" : ""}>${escapeHtml(value)}</option>`,
+  ).join("");
+}
 
 function templateDirectionForProfile(profile) {
   const text = `${profile.title} ${profile.category} ${profile.scene} ${profile.sceneEnvironment} ${profile.sceneAction}`;
@@ -153,12 +164,10 @@ function loadUiPrefs() {
       roleParentCategory: ALL_FILTER_LABEL,
       roleCategory: ALL_FILTER_LABEL,
       profileSearch: "",
-      posterOnly: false,
-      randomPreviewIds: [],
       ...(JSON.parse(localStorage.getItem(UI_PREFS_KEY)) || {}),
     };
   } catch {
-    return { roleParentCategory: ALL_FILTER_LABEL, roleCategory: ALL_FILTER_LABEL, profileSearch: "", posterOnly: false, randomPreviewIds: [] };
+    return { roleParentCategory: ALL_FILTER_LABEL, roleCategory: ALL_FILTER_LABEL, profileSearch: "" };
   }
 }
 
@@ -283,19 +292,18 @@ function categoryOptions() {
   return allRoleCategories().map((category) => `<option value="${escapeHtml(category)}"></option>`).join("");
 }
 
-function filteredWorldLayerProfiles(activeParentCategory, activeCategory, searchTerm, posterOnly = false) {
+function filteredWorldLayerProfiles(activeParentCategory, activeCategory, searchTerm) {
   const keyword = normalizeSearchText(searchTerm).trim();
   return WORLD_LAYER_PROFILES.filter((profile) => {
     const categoryMatched = profileMatchesParent(profile, activeParentCategory) && profileMatchesFineCategory(profile, activeCategory);
     if (!categoryMatched) return false;
-    if (posterOnly && !parentCategoryForProfile(profile)) return false;
     if (!keyword) return true;
     return normalizeSearchText(worldProfileSearchText(profile)).includes(keyword);
   });
 }
 
-function worldLayerProfileButtons(activeParentCategory, activeCategory, searchTerm, selectedProfileId = "", posterOnly = false) {
-  const profiles = filteredWorldLayerProfiles(activeParentCategory, activeCategory, searchTerm, posterOnly);
+function worldLayerProfileButtons(activeParentCategory, activeCategory, searchTerm, selectedProfileId = "") {
+  const profiles = filteredWorldLayerProfiles(activeParentCategory, activeCategory, searchTerm);
   if (profiles.length === 0) {
     return `<p class="empty-inline profile-empty">找不到符合條件的世界觀模板</p>`;
   }
@@ -307,50 +315,6 @@ function worldLayerProfileButtons(activeParentCategory, activeCategory, searchTe
         <small>${escapeHtml(profile.category)}</small>
       </button>`,
   ).join("");
-}
-
-function shuffleList(list) {
-  const cloned = [...list];
-  for (let index = cloned.length - 1; index > 0; index -= 1) {
-    const swapIndex = Math.floor(Math.random() * (index + 1));
-    [cloned[index], cloned[swapIndex]] = [cloned[swapIndex], cloned[index]];
-  }
-  return cloned;
-}
-
-function randomProfileIds(activeParentCategory, activeCategory, searchTerm, posterOnly, count = 6) {
-  return shuffleList(filteredWorldLayerProfiles(activeParentCategory, activeCategory, searchTerm, posterOnly))
-    .slice(0, count)
-    .map((profile) => profile.id);
-}
-
-function randomProfilePreviewMarkup(randomPreviewIds = [], selectedProfileId = "", searchTerm = "") {
-  if (String(searchTerm || "").trim()) return "";
-  const profiles = randomPreviewIds
-    .map((id) => WORLD_LAYER_PROFILES.find((profile) => profile.id === id))
-    .filter(Boolean);
-  if (profiles.length === 0) return "";
-
-  return `
-    <div class="random-preview-block">
-      <div class="library-toolbar">
-        <div>
-          <div class="sec-label">分類隨機推薦</div>
-          <small>依目前大分類、搜尋條件與海報篩選抽樣，可直接點選套用。</small>
-        </div>
-      </div>
-      <div class="profile-row random-preview-row">
-        ${profiles
-          .map(
-            (profile) => `
-              <button type="button" class="profile-chip ${selectedProfileId === profile.id ? "active" : ""}" data-world-profile="${escapeHtml(profile.id)}" aria-label="${escapeHtml(`${profile.title} ${profile.themeHint}`)}">
-                <span>${escapeHtml(profile.title)}</span>
-                <small>${escapeHtml(profile.category)}</small>
-              </button>`,
-          )
-          .join("")}
-      </div>
-    </div>`;
 }
 
 function selectedProfileCard(state) {
@@ -404,56 +368,10 @@ function profileDefaultCupSize(profile) {
   return parentCategoryForProfile(profile) === "奇幻異世界 / 暗黑王族" ? "K" : "正常比例";
 }
 
-function roleMaxPresetForProfile(profile) {
-  const parentCategory = parentCategoryForProfile(profile);
-  const basePreset = {
-    ratio: "4:5",
-    cameraFraming: "膝蓋以上",
-    visualMode: "商業奇幻海報",
-    colorIntensity: "高級艷麗",
-    fabricMotion: "大動態飄紗",
-    sceneCamera: "50mm 電影人像鏡頭，膝上至全身之間的海報構圖，臉部需保有清楚存在感，角色優先於背景。",
-    visualFocus: "Visual Priority System：40% 真人身份辨識度，30% 華麗服裝與珠寶，20% 前景壓鏡與場景道具，10% 建築或世界觀背景。",
-    frameEvent: "畫面維持高密度、角色主導、避免空景、避免背景吃掉主角、避免站在畫面中央發呆。",
-  };
-
-  if (parentCategory === "奇幻異世界 / 暗黑王族") {
-    return {
-      ...basePreset,
-      visualMode: "暗黑夜宴",
-      colorIntensity: "暗紫酒紅",
-      visualFocus: "Visual Priority System：40% 真人身份辨識度，30% 夜宴服裝與權力珠寶，20% 帷幕燭影與前景壓鏡，10% 王座、神殿或夜宴背景。",
-      frameEvent: "角色需主導畫面，保留高密度夜宴層次、成熟權力感與戲劇姿態，避免正面呆站與背景過空。",
-    };
-  }
-
-  if (["中國歷代服裝", "歷史小說名著人物", "仙俠神話 / 古裝陸劇"].includes(parentCategory)) {
-    return {
-      ...basePreset,
-      colorIntensity: "盛唐花宴",
-      visualFocus: "Visual Priority System：40% 真人身份辨識度，30% 華麗服裝與珠寶，20% 花卉、宮燈、前景壓鏡，10% 殿閣、水榭或花庭背景。",
-      frameEvent: "高密度亮場華麗海報感，人物與服裝必須壓住畫面，避免暗、空、普通古裝站姿。",
-    };
-  }
-
-  if (["現代都市 / 街拍電影", "世界景點旅拍", "西方古典 / 歐陸史詩"].includes(parentCategory)) {
-    return {
-      ...basePreset,
-      colorIntensity: "高級艷麗",
-      frameEvent: "角色需保持主導視線，服裝、配件、場景前景都要有存在感，避免旅拍式空景與路人感。",
-    };
-  }
-
-  return {
-    ...basePreset,
-    colorIntensity: "紅金寶石",
-  };
-}
-
-function profileCountText(activeParentCategory, activeCategory, searchTerm, posterOnly = false) {
-  const count = filteredWorldLayerProfiles(activeParentCategory, activeCategory, searchTerm, posterOnly).length;
+function profileCountText(activeParentCategory, activeCategory, searchTerm) {
+  const count = filteredWorldLayerProfiles(activeParentCategory, activeCategory, searchTerm).length;
   const total = WORLD_LAYER_PROFILES.length;
-  return `${count.toLocaleString("zh-Hant")} / ${total.toLocaleString("zh-Hant")} 組模板${posterOnly ? "｜海報系" : ""}`;
+  return `${count.toLocaleString("zh-Hant")} / ${total.toLocaleString("zh-Hant")} 組模板`;
 }
 
 function promptStats(prompt) {
@@ -485,11 +403,6 @@ function render() {
   const activeParentCategory = uiPrefs.roleParentCategory || ALL_FILTER_LABEL;
   const activeCategory = ALL_FILTER_LABEL;
   const profileSearch = uiPrefs.profileSearch || "";
-  const posterOnly = Boolean(uiPrefs.posterOnly);
-  const randomPreviewIds =
-    Array.isArray(uiPrefs.randomPreviewIds) && uiPrefs.randomPreviewIds.length > 0
-      ? uiPrefs.randomPreviewIds
-      : randomProfileIds(activeParentCategory, activeCategory, profileSearch, posterOnly);
 
   document.querySelector("#app").innerHTML = `
     <main class="shell">
@@ -520,25 +433,16 @@ function render() {
                 <div class="library-toolbar">
                   <div>
                     <div class="sec-label">選擇模板</div>
-                    <small data-profile-count>${escapeHtml(profileCountText(activeParentCategory, activeCategory, profileSearch, posterOnly))}</small>
+                    <small data-profile-count>${escapeHtml(profileCountText(activeParentCategory, activeCategory, profileSearch))}</small>
                   </div>
                   <div class="template-toolbar-stack">
                     <label class="compact-search">
                       <span>搜尋模板</span>
                       <input class="inline-search" name="profileSearch" value="${escapeHtml(profileSearch)}" placeholder="輸入角色、分類、別名或 id" />
                     </label>
-                    <div class="template-action-row">
-                      <label class="poster-toggle">
-                        <input type="checkbox" name="posterOnly" ${posterOnly ? "checked" : ""} />
-                        <span>只看高密度亮場華麗海報系</span>
-                      </label>
-                      <button type="button" class="small-btn" data-action="role-max">拉滿角色</button>
-                      <button type="button" class="secondary small-btn" data-action="random-batch">依目前分類隨機 6 張</button>
-                    </div>
                   </div>
                 </div>
-                ${randomProfilePreviewMarkup(randomPreviewIds, state.selectedProfileId, profileSearch)}
-                <div class="profile-row template-profile-row">${worldLayerProfileButtons(activeParentCategory, activeCategory, profileSearch, state.selectedProfileId, posterOnly)}</div>
+                <div class="profile-row template-profile-row">${worldLayerProfileButtons(activeParentCategory, activeCategory, profileSearch, state.selectedProfileId)}</div>
               </div>
             </section>
 
@@ -556,11 +460,6 @@ function render() {
                   <input name="category" list="role-category-list" value="${escapeHtml(state.category)}" placeholder="例：仙俠修真、魅姬系列、世界地標旅拍" />
                   <datalist id="role-category-list">${categoryOptions()}</datalist>
                   <small class="field-help">可留白；留白時會依主題、服裝與場景自動推定。</small>
-                </label>
-                <label>
-                  <span>罩杯</span>
-                  <input name="cupSize" value="${escapeHtml(state.cupSize)}" placeholder="例：K" />
-                  <small class="field-help">有填才會寫入短版咒語的真實人體骨架；暗黑王族角色卡預設 K。</small>
                 </label>
               </div>
               <div class="choice-section">
@@ -657,8 +556,16 @@ function render() {
 
             <details class="director-panel">
               <summary>
-                <span>進階導演欄位</span>
-                <small>環境 / 動作 / 光影，可選</small>
+                <div class="director-summary-content">
+                  <span>進階導演欄位</span>
+                  <small>環境 / 動作 / 光影，可選</small>
+                </div>
+                <label class="director-cup-field" data-director-cup-wrapper>
+                  <span>罩杯</span>
+                  <select name="cupSize" data-director-cup>
+                    ${cupSizeSelectOptions(cupSizeSelectValue(state.cupSize))}
+                  </select>
+                </label>
               </summary>
               <div class="director-grid">
                 <label>
@@ -748,12 +655,9 @@ function bindEvents() {
   });
   document.querySelectorAll("[data-role-parent]").forEach((button) => {
     button.addEventListener("click", () => {
-      const nextProfileSearch = form.elements.profileSearch?.value || "";
-      const nextPosterOnly = Boolean(form.elements.posterOnly?.checked);
       saveUiPrefs({
         roleParentCategory: button.dataset.roleParent,
         roleCategory: ALL_FILTER_LABEL,
-        randomPreviewIds: randomProfileIds(button.dataset.roleParent, ALL_FILTER_LABEL, nextProfileSearch, nextPosterOnly),
       });
       saveState({ ...formToState(form), finalPrompt: document.querySelector("#prompt-output").value });
       render();
@@ -765,30 +669,16 @@ function bindEvents() {
   document.querySelector('[data-scroll-target="template-picker"]')?.addEventListener("click", () => {
     document.querySelector(".template-first-section")?.scrollIntoView({ behavior: "smooth", block: "start" });
   });
+  document.querySelector("[data-director-cup-wrapper]")?.addEventListener("click", (event) => {
+    event.stopPropagation();
+  });
+  document.querySelector("[data-director-cup]")?.addEventListener("keydown", (event) => {
+    event.stopPropagation();
+  });
   form.elements.theme.addEventListener("input", () => refreshThemeRisk(form.elements.theme.value));
   form.elements.profileSearch?.addEventListener("input", () => {
-    const uiPrefs = loadUiPrefs();
     saveUiPrefs({
       profileSearch: form.elements.profileSearch.value,
-      randomPreviewIds: randomProfileIds(
-        uiPrefs.roleParentCategory || ALL_FILTER_LABEL,
-        ALL_FILTER_LABEL,
-        form.elements.profileSearch.value,
-        Boolean(form.elements.posterOnly?.checked),
-      ),
-    });
-    saveState({ ...formToState(form), finalPrompt: document.querySelector("#prompt-output").value });
-    refreshProfileLibrary(form);
-  });
-  form.elements.posterOnly?.addEventListener("change", () => {
-    saveUiPrefs({
-      posterOnly: form.elements.posterOnly.checked,
-      randomPreviewIds: randomProfileIds(
-        loadUiPrefs().roleParentCategory || ALL_FILTER_LABEL,
-        ALL_FILTER_LABEL,
-        form.elements.profileSearch?.value || "",
-        form.elements.posterOnly.checked,
-      ),
     });
     saveState({ ...formToState(form), finalPrompt: document.querySelector("#prompt-output").value });
     refreshProfileLibrary(form);
@@ -799,23 +689,6 @@ function bindEvents() {
   });
 
   document.querySelector('[data-action="expand-scene"]').addEventListener("click", () => expandSceneFields(form));
-  document.querySelector('[data-action="random-batch"]')?.addEventListener("click", () => {
-    const uiPrefs = loadUiPrefs();
-    const ids = randomProfileIds(
-      uiPrefs.roleParentCategory || ALL_FILTER_LABEL,
-      ALL_FILTER_LABEL,
-      form.elements.profileSearch?.value || "",
-      form.elements.posterOnly?.checked || false,
-    );
-    if (ids.length === 0) {
-      setStatus("目前篩選條件下沒有可隨機的模板");
-      return;
-    }
-    saveUiPrefs({ randomPreviewIds: ids });
-    refreshProfileLibrary(form);
-    setStatus(`已依目前分類隨機推薦 ${ids.length.toLocaleString("zh-Hant")} 張角色卡`);
-  });
-  document.querySelector('[data-action="role-max"]')?.addEventListener("click", () => maximizeRolePresence(form));
   document.querySelector('[data-action="compose-copy"]').addEventListener("click", () => composeAndCopyPrompt(form));
   document.querySelector('[data-action="download"]').addEventListener("click", () => downloadPrompt(form));
   document.querySelector('[data-action="reset"]').addEventListener("click", () => resetForm());
@@ -849,24 +722,14 @@ function refreshProfileLibrary(form) {
   const activeCategory = ALL_FILTER_LABEL;
   const profileSearch = form.elements.profileSearch?.value || "";
   const selectedProfileId = form.elements.selectedProfileId?.value || "";
-  const posterOnly = Boolean(uiPrefs.posterOnly);
-  const nextRandomIds = Array.isArray(uiPrefs.randomPreviewIds) && uiPrefs.randomPreviewIds.length > 0
-    ? uiPrefs.randomPreviewIds
-    : randomProfileIds(activeParentCategory, activeCategory, profileSearch, posterOnly);
 
-  document.querySelector("[data-profile-count]").textContent = profileCountText(activeParentCategory, activeCategory, profileSearch, posterOnly);
+  document.querySelector("[data-profile-count]").textContent = profileCountText(activeParentCategory, activeCategory, profileSearch);
   document.querySelector(".template-profile-row").innerHTML = worldLayerProfileButtons(
     activeParentCategory,
     activeCategory,
     profileSearch,
     selectedProfileId,
-    posterOnly,
   );
-  const previewBlock = document.querySelector(".random-preview-block");
-  if (previewBlock) previewBlock.remove();
-  document
-    .querySelector(".template-toolbar-stack")
-    ?.insertAdjacentHTML("afterend", randomProfilePreviewMarkup(nextRandomIds, selectedProfileId, profileSearch));
   document.querySelectorAll("[data-world-profile]").forEach((button) => {
     button.addEventListener("click", () => applyWorldLayerProfile(form, button.dataset.worldProfile));
   });
@@ -879,37 +742,6 @@ function applyWorldLayerProfile(form, profileId) {
   saveState({ ...state, finalPrompt: "" });
   render();
   setStatus(`已套用世界觀 Layer｜${profile.title}`);
-}
-
-function maximizeRolePresence(form) {
-  const uiPrefs = loadUiPrefs();
-  const activeParentCategory = uiPrefs.roleParentCategory || ALL_FILTER_LABEL;
-  const activeCategory = ALL_FILTER_LABEL;
-  const profileSearch = form.elements.profileSearch?.value || "";
-  const selectedProfileId = form.elements.selectedProfileId?.value || "";
-  const profile =
-    WORLD_LAYER_PROFILES.find((item) => item.id === selectedProfileId) ||
-    filteredWorldLayerProfiles(activeParentCategory, activeCategory, profileSearch, true)[0] ||
-    filteredWorldLayerProfiles(activeParentCategory, activeCategory, profileSearch, false)[0];
-
-  if (!profile) {
-    setStatus("目前篩選條件下沒有可拉滿的角色卡");
-    return;
-  }
-
-  const nextState = {
-    ...stateWithProfileApplied(formToState(form), profile),
-    ...roleMaxPresetForProfile(profile),
-    finalPrompt: "",
-  };
-
-  saveUiPrefs({
-    posterOnly: true,
-    randomPreviewIds: randomProfileIds(activeParentCategory, activeCategory, profileSearch, true),
-  });
-  saveState(nextState);
-  render();
-  setStatus(`已拉滿角色｜${profile.title}`);
 }
 
 function expandSceneFields(form) {

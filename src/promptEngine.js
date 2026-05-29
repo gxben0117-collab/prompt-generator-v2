@@ -137,6 +137,7 @@ export function suggestThemeRewrite(value = "") {
 
 export function normalizeForm(input = {}) {
   const form = { ...DEFAULT_FORM, ...input };
+  const normalizedCupSize = form.cupSize === "預設" ? DEFAULT_FORM.cupSize : sanitizeInput(form.cupSize) || DEFAULT_FORM.cupSize;
 
   const normalized = {
     category: sanitizeInput(form.category),
@@ -155,7 +156,7 @@ export function normalizeForm(input = {}) {
     frameEvent: sanitizeInput(form.frameEvent),
     costume: sanitizeInput(form.costume),
     makeup: sanitizeInput(form.makeup),
-    cupSize: sanitizeInput(form.cupSize) || DEFAULT_FORM.cupSize,
+    cupSize: normalizedCupSize,
     selectedProfileId: sanitizeInput(form.selectedProfileId),
     finalPrompt: String(form.finalPrompt || ""),
   };
@@ -269,10 +270,15 @@ function isDarkRoyalCategory(category = "", theme = "", scene = "") {
 
 function buildDarkRoyalBodyPresenceText(form, category) {
   if (!isDarkRoyalCategory(category, form.theme, form.scene)) return "";
+  const explicitCupSize = compactText(form.cupSize, 12);
+  const cupControlText = ["D", "F", "K"].includes(explicitCupSize)
+    ? `若角色卡罩杯欄位指定為 "${explicitCupSize}"，則只把它當成胸腔厚度與自然胸型量感的生成參考，允許胸部份量隨罩杯調整，但不可變成誇張爆乳、情色內衣視覺或不合理骨架`
+    : "若未指定 D / F / K 罩杯值，則維持角色卡預設胸型量感與自然胸腔厚度";
 
   return [
     "暗黑王族身形安全：胸部與身形只允許依照上傳真人原始體型自然延伸",
     "罩杯只依角色卡欄位寫入，不額外放大胸腰比例、不製造 pin-up 坐姿，不讓腿部或胸腰成為主視覺",
+    cupControlText,
     "服裝改採魅魔夜宴高訂睡袍系衣櫥，於紫晶黑、酒紅、月銀紫、煙玫瑰或黑羽色之間變化，主體可為貼身真絲內搭、半透紗質外罩、珠鏈肩披、垂墜披紗或開線裙片，保留可穿戴與電影級成熟誘惑感，避免一律厚重長袍包覆",
     "保留真實胸腔厚度、肩頸連接、正常腰臀比例、自然重力與高訂禮服布料張力",
     "視覺焦點集中在原始真人臉、暗黑王族氣場、絲絨高光、禮服輪廓與電影女王銀幕存在感",
@@ -359,17 +365,9 @@ const RATIO_COMPOSITION_TEXT = {
 };
 
 function buildAspectRatioControlText(form = DEFAULT_FORM) {
-  const effectiveRatio =
-    isDarkRoyalCategory(form.category, form.theme, form.scene) && ["9:16", "16:9"].includes(form.ratio)
-      ? "4:5"
-      : form.ratio;
+  const effectiveRatio = form.ratio;
   const ratioText = RATIO_COMPOSITION_TEXT[effectiveRatio] || RATIO_COMPOSITION_TEXT[DEFAULT_FORM.ratio];
-  const overrideText =
-    effectiveRatio !== form.ratio
-      ? `暗黑王族 / 夜宴魅魔主題比例修正：由 ${form.ratio} 改採 4:5 premium cinematic fantasy poster，避免橫式王座或手機直式性感寫真構圖`
-      : "";
   return [
-    overrideText,
     `輸出比例控制：${ratioText}`,
     effectiveRatio === "4:5" ? "4:5 character-dominant cinematic composition，可使用站姿、坐姿、臥姿、倚靠、泡茶、持扇、持刀或道具互動；重點是保留完整真人身體比例、臉部可辨識與電影主輪廓" : "",
     "composition must respect the specified aspect ratio and keep the full cinematic silhouette inside frame",
@@ -378,9 +376,7 @@ function buildAspectRatioControlText(form = DEFAULT_FORM) {
 }
 
 function effectiveOutputRatio(form = DEFAULT_FORM) {
-  return isDarkRoyalCategory(form.category, form.theme, form.scene) && ["9:16", "16:9"].includes(form.ratio)
-    ? "4:5"
-    : form.ratio;
+  return form.ratio;
 }
 
 function compactText(value = "", maxLength = 150) {
@@ -403,16 +399,20 @@ function compactLayerValue(value = "") {
     .trim();
 }
 
-function buildCupSizeSkeletonText(form = DEFAULT_FORM) {
+function buildCupSizeSkeletonText(form = DEFAULT_FORM, category = "", theme = "") {
   const cupSize = compactText(form.cupSize, 12);
-  return cupSize ? `、罩杯 "${cupSize}"` : "";
+  if (!cupSize) return "";
+  if (isDarkRoyalCategory(category, theme, form.scene) && ["D", "F", "K"].includes(cupSize)) {
+    return `、罩杯 "${cupSize}" 對應的自然胸型量感`;
+  }
+  return `、罩杯 "${cupSize}"`;
 }
 
-function buildFinalIdentityText(form = DEFAULT_FORM) {
+function buildFinalIdentityText(form = DEFAULT_FORM, category = "", theme = "") {
   return [
     "最高優先：保留上傳照片中的原始真人臉部身份，不換臉、不美化成 AI 美女，不改變眼型、鼻型、嘴型、臉型、下顎線、成熟年齡感與皮膚質感。",
     "真人身份優先：保留原始臉型、原始眼型、原始鼻型、原始嘴型、五官比例、可辨識特徵、自然臉部不對稱與真人攝影感；臉部正面或微側正面看向鏡頭。",
-    `真實人體骨架：平衡肩寬、真實鎖骨、胸腔厚度${buildCupSizeSkeletonText(form)}、軀幹深度、骨盆比例、人體重心、四肢比例與脊椎結構；避免頭大、肩窄、軀幹壓縮或臉貼在服裝上的 AI 感。`,
+    `真實人體骨架：平衡肩寬、真實鎖骨、胸腔厚度${buildCupSizeSkeletonText(form, category, theme)}、軀幹深度、骨盆比例、人體重心、四肢比例與脊椎結構；避免頭大、肩窄、軀幹壓縮或臉貼在服裝上的 AI 感。`,
   ].join("\n");
 }
 
@@ -838,17 +838,11 @@ export function buildChatGptInstruction(input = {}) {
   const costumeInput = buildCostumeLayerText(form, theme);
   const category = form.category || inferCategory(theme, costumeInput, sceneInput);
   const ratio = effectiveOutputRatio({ ...form, category });
-  const ratioText = RATIO_COMPOSITION_TEXT[ratio] || RATIO_COMPOSITION_TEXT[DEFAULT_FORM.ratio];
-  const ratioNotice =
-    ratio !== form.ratio
-      ? `比例修正：此主題改用 ${ratioText}，避免性感寫真構圖或身體比例漂移。`
-      : "";
 
   return [
     `請根據上傳真人照片生成 ${ratio} 真人電影級奇幻海報。`,
-    ratioNotice,
     "",
-    buildFinalIdentityText(form),
+    buildFinalIdentityText(form, category, theme),
     "",
     `分類：${category}`,
     `主題：${theme}`,

@@ -1625,6 +1625,12 @@ describe("prompt engine", () => {
       theme: "紫蝶夜宴魅魔",
       scene: "暗紫絲絨寢宮",
     });
+    const explicitCupDarkRoyal = buildPrompt({
+      category: "奇幻異世界 / 暗黑王族",
+      theme: "紫蝶夜宴魅魔",
+      scene: "暗紫絲絨寢宮",
+      cupSize: "F",
+    });
 
     expect(darkRoyal).toContain("暗黑王族身形安全");
     expect(darkRoyal).toContain("依照上傳真人原始體型自然延伸");
@@ -1637,6 +1643,8 @@ describe("prompt engine", () => {
     expect(inferredDarkRoyal).toContain("罩杯只依角色卡欄位寫入");
     expect(inferredDarkRoyal).toContain("分類：夜宴魅魔／高訂睡袍電影");
     expect(inferredDarkRoyal).toContain("輸出比例控制：4:5 premium commercial fantasy poster");
+    expect(explicitCupDarkRoyal).toContain('若角色卡罩杯欄位指定為 "F"');
+    expect(explicitCupDarkRoyal).toContain("胸腔厚度與自然胸型量感的生成參考");
     expect(darkRoyal).not.toContain("不做動漫誇張身材");
     expect(darkRoyal).not.toContain("罩杯:J");
     expect(changan).not.toContain("暗黑王族身形安全");
@@ -1781,7 +1789,7 @@ describe("prompt engine", () => {
     expect(form.cameraFraming).toBe("全身");
   });
 
-  it("overrides risky dark royal widescreen into 4:5 posture-flexible poster control", () => {
+  it("respects the selected dark royal widescreen ratio without forcing 4:5", () => {
     const prompt = buildPrompt({
       category: "奇幻異世界 / 暗黑王族",
       theme: "滿月骸骨權杖女王",
@@ -1790,10 +1798,9 @@ describe("prompt engine", () => {
       cameraFraming: "全身",
     });
 
-    expect(prompt).toContain("暗黑王族 / 夜宴魅魔主題比例修正：由 16:9 改採 4:5");
-    expect(prompt).toContain("輸出比例控制：4:5 premium commercial fantasy poster");
-    expect(prompt).toContain("4:5 character-dominant cinematic composition");
-    expect(prompt).toContain("可使用站姿、坐姿、臥姿、倚靠、泡茶、持扇、持刀或道具互動");
+    expect(prompt).toContain("輸出比例控制：16:9 epic cinematic frame");
+    expect(prompt).not.toContain("暗黑王族 / 夜宴魅魔主題比例修正");
+    expect(prompt).not.toContain("4:5 premium commercial fantasy poster");
     expect(prompt).toContain("坐姿、臥姿、跪坐、倚靠、泡茶或道具互動姿勢必須保留完整胸腔厚度");
     expect(prompt).toContain("camera distance must not compress body structure");
     expect(prompt).toContain("oversized head");
@@ -1895,7 +1902,7 @@ describe("prompt engine", () => {
     expect(getHiddenSystemPrompt()).toContain("【真實人體骨架】");
     expect(getHiddenSystemPrompt()).toContain("- 罩杯j");
     expect(darkInstruction).toContain("真實人體骨架");
-    expect(darkInstruction).toContain('胸腔厚度、罩杯 "K"、軀幹深度');
+    expect(darkInstruction).toContain('胸腔厚度、罩杯 "K" 對應的自然胸型量感、軀幹深度');
     expect(darkInstruction).toContain("不額外放大胸腰比例");
     expect(darkInstruction).not.toContain("- 罩杯:J");
     expect(darkInstruction).not.toContain("真實人體骨架追加：罩杯:J");

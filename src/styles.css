@@ -306,38 +306,6 @@ textarea:focus {
   justify-items: end;
 }
 
-.template-action-row {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: end;
-  gap: 8px;
-}
-
-.poster-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  min-height: 36px;
-  padding: 8px 12px;
-  border: 1px solid var(--line);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--muted);
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0;
-}
-
-.poster-toggle input {
-  width: 16px;
-  min-width: 16px;
-  min-height: 16px;
-  height: 16px;
-  margin: 0;
-  accent-color: var(--accent);
-}
-
 .compact-search span {
   color: var(--muted);
   font-size: 0.7rem;
@@ -360,15 +328,6 @@ textarea:focus {
 .template-profile-row {
   max-height: 360px;
   margin-top: 0;
-}
-
-.random-preview-block {
-  display: grid;
-  gap: 8px;
-}
-
-.random-preview-row {
-  max-height: none;
 }
 
 .suggestion-chip {
@@ -527,11 +486,39 @@ textarea:focus {
   letter-spacing: 1.2px;
 }
 
+.director-summary-content {
+  display: grid;
+  gap: 4px;
+}
+
 .director-panel summary small {
   color: var(--muted);
   font-size: 0.72rem;
   font-weight: 700;
   letter-spacing: 0;
+}
+
+.director-cup-field {
+  display: flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+}
+
+.director-cup-field span {
+  white-space: nowrap;
+}
+
+.director-cup-field select {
+  width: 112px;
+  min-height: 36px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .director-panel[open] summary {
@@ -845,19 +832,22 @@ button.ghost {
     width: 100%;
   }
 
-  .template-toolbar-stack,
-  .template-action-row {
+  .template-toolbar-stack {
     justify-items: stretch;
   }
 
-  .template-action-row {
-    display: grid;
-    grid-template-columns: 1fr;
+  .director-panel summary {
+    align-items: stretch;
+    flex-direction: column;
   }
 
-  .poster-toggle {
+  .director-cup-field {
     width: 100%;
-    justify-content: flex-start;
+    justify-content: space-between;
+  }
+
+  .director-cup-field select {
+    width: 128px;
   }
 
   .result textarea {
