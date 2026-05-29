@@ -1,4 +1,7 @@
-﻿export const RATIOS = ["4:5", "1:1", "3:4", "2:3", "9:16", "16:9", "3:2", "4:3", "2.39:1"];
+﻿import { TANG_MUSICIAN_PROFILE_DEFS, FOURTH_WAVE_PROFILE_DEFS } from './fourthWaveProfiles.js';
+import { LEGACY_ROLE_NAME_OVERRIDES } from './roleNaming.js';
+
+export const RATIOS = ["4:5", "1:1", "3:4", "2:3", "9:16", "16:9", "3:2", "4:3", "2.39:1"];
 
 export const CAMERA_FRAMINGS = ["全身", "半身", "膝蓋以上", "胸部以上", "遠景"];
 
@@ -1697,12 +1700,18 @@ const REQUESTED_THIRD_WAVE_PROFILES = [
   }),
 ];
 
+const TANG_MUSICIAN_PROFILES = TANG_MUSICIAN_PROFILE_DEFS.map((profile) => createCuratedRoleProfile(profile));
+const REQUESTED_FOURTH_WAVE_PROFILES = [
+  ...TANG_MUSICIAN_PROFILES,
+  ...FOURTH_WAVE_PROFILE_DEFS.map((profile) => createCuratedRoleProfile(profile)),
+];
 const REQUESTED_EXPANSION_PROFILES = [
   ...REQUESTED_HISTORICAL_PROFILES,
   ...REQUESTED_DYNASTY_PROFILES,
   ...REQUESTED_DARK_ROYAL_PROFILES,
   ...REQUESTED_SECOND_WAVE_PROFILES,
   ...REQUESTED_THIRD_WAVE_PROFILES,
+  ...REQUESTED_FOURTH_WAVE_PROFILES,
   ...REQUESTED_REFERENCE_IMAGE_PROFILES,
 ];
 
@@ -1877,9 +1886,24 @@ ROLE_SUGGESTION_ITEMS.unshift(
   })),
 );
 
+ROLE_SUGGESTION_ITEMS.forEach((item) => {
+  const override = LEGACY_ROLE_NAME_OVERRIDES[item.id];
+  if (!override?.title) return;
+  item.label = override.title;
+});
 export const ROLE_SUGGESTIONS = ROLE_SUGGESTION_ITEMS.map((item) => item.label);
 
-export const WORLD_LAYER_PROFILES = [
+function applyLegacyProfileNameOverride(profile) {
+  const override = LEGACY_ROLE_NAME_OVERRIDES[profile.id];
+  if (!override) return profile;
+  return {
+    ...profile,
+    title: override.title || profile.title,
+    themeHint: override.themeHint || profile.themeHint,
+    aliases: [...new Set([...(profile.aliases || []), profile.title, ...(override.aliases || []), override.title].filter(Boolean))],
+  };
+}
+const RAW_WORLD_LAYER_PROFILES = [
   {
     id: "succulent-greenhouse-goddess",
     title: "多肉花房・緞粉女神",
@@ -5711,7 +5735,9 @@ export const WORLD_LAYER_PROFILES = [
   ].map(createLayerProfile),
 ];
 
-export const DARK_ROYAL_PROFILE_IDS = [
+export const WORLD_LAYER_PROFILES = RAW_WORLD_LAYER_PROFILES.map(applyLegacyProfileNameOverride);
+
+const DARK_ROYAL_PROFILE_IDS = [
   "dark-succubus",
   "fallen-angel",
   "fallen-feather-night-court",
@@ -6045,4 +6071,5 @@ export const NEGATIVE_PROMPT = [
   "CG render look",
   "fashion editorial beauty campaign",
 ];
+
 

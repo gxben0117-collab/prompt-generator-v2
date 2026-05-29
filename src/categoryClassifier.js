@@ -1,3 +1,5 @@
+import { normalizeForSearch } from "./searchSynonyms.js";
+
 export const ALL_FILTER_LABEL = "全部";
 
 export const PARENT_ROLE_CATEGORIES = [
@@ -63,7 +65,30 @@ export const PARENT_ROLE_CATEGORIES = [
   },
   {
     label: "仙俠神話 / 古裝陸劇",
-    exclude: ["雅典", "希臘", "奧林匹斯", "神諭", "凡爾賽", "歐陸", "西方", "世界地標", "血族", "吸血鬼", "哥德", "巴洛克"],
+    exclude: [
+      "雅典",
+      "希臘",
+      "奧林匹斯",
+      "神諭",
+      "凡爾賽",
+      "歐陸",
+      "西方",
+      "世界地標",
+      "血族",
+      "吸血鬼",
+      "哥德",
+      "歌德",
+      "巴洛克",
+      "墮天使",
+      "墮羽",
+      "黑羽",
+      "黑翼",
+      "暗黑",
+      "魅魔",
+      "魔姬",
+      "魔后",
+      "夜庭",
+    ],
     keywords: [
       "仙俠",
       "修真",
@@ -138,7 +163,7 @@ export const PARENT_ROLE_CATEGORIES = [
   },
   {
     label: "世界景點旅拍",
-    exclude: ["大唐", "盛唐", "長安", "仙俠", "修真", "魅魔", "魔后", "墮天使", "冥界"],
+    exclude: ["大唐", "盛唐", "長安", "仙俠", "修真", "魅魔", "魔后", "墮天使", "冥界", "雅典", "希臘", "奧林匹斯", "聖殿", "神諭", "歌劇"],
     keywords: ["世界地標", "世界旅拍", "歐洲", "巴黎", "威尼斯", "首爾", "北境", "水城", "古橋", "海岸", "旅拍", "水巷"],
   },
   {
@@ -154,7 +179,7 @@ export const PARENT_ROLE_CATEGORIES = [
 ];
 
 export function normalizeSearchText(value) {
-  return String(value || "").toLowerCase();
+  return normalizeForSearch(value);
 }
 
 export function profileCategoryText(profile) {
@@ -163,11 +188,29 @@ export function profileCategoryText(profile) {
 
 export function parentCategoryForText(value) {
   const haystack = normalizeSearchText(value);
-  return PARENT_ROLE_CATEGORIES.find((parent) => {
+  const candidates = PARENT_ROLE_CATEGORIES.map((parent, index) => {
     const blocked = (parent.exclude || []).some((keyword) => haystack.includes(normalizeSearchText(keyword)));
-    if (blocked) return false;
-    return parent.keywords.some((keyword) => haystack.includes(normalizeSearchText(keyword)));
-  })?.label;
+    if (blocked) return null;
+
+    const matchedKeywords = parent.keywords.filter((keyword) => haystack.includes(normalizeSearchText(keyword)));
+    if (matchedKeywords.length === 0) return null;
+
+    return {
+      index,
+      label: parent.label,
+      hits: matchedKeywords.length,
+      strongestKeywordLength: Math.max(...matchedKeywords.map((keyword) => String(keyword).length)),
+    };
+  }).filter(Boolean);
+
+  candidates.sort(
+    (left, right) =>
+      right.hits - left.hits ||
+      right.strongestKeywordLength - left.strongestKeywordLength ||
+      left.index - right.index,
+  );
+
+  return candidates[0]?.label;
 }
 
 export function parentCategoryForProfile(profile) {

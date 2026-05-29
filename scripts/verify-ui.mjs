@@ -46,7 +46,7 @@ const profileChecks = [
   },
   {
     id: "seoul-nightview-socialite",
-    title: "首爾夜景名媛",
+    title: "首爾雲幕・夜色名媛",
     category: "現代都會／韓系夜景／高級名媛",
     layers: ["首爾都會名媛", "大型黑色毛領"],
     makeup: "光澤肌底妝",
@@ -145,7 +145,7 @@ try {
     await page.reload({ waitUntil: "domcontentloaded" });
 
     const title = await page.title();
-    if (title !== "出圖自組咒語生產器 v1.21") {
+    if (title !== "出圖自組咒語生產器 v1.22") {
       throw new Error(`${viewport.name}: unexpected page title ${title}`);
     }
 
@@ -153,11 +153,14 @@ try {
     if ((await page.getByRole("heading", { name: /出圖自組咒語生產器/ }).count()) !== 1) {
       throw new Error(`${viewport.name}: visible app name was not updated`);
     }
-    if ((await page.getByText("v1.21", { exact: true }).count()) < 1) {
-      throw new Error(`${viewport.name}: visible version v1.21 missing`);
+    if ((await page.getByText("v1.22", { exact: true }).count()) < 1) {
+      throw new Error(`${viewport.name}: visible version v1.22 missing`);
     }
     if ((await page.getByText("最高原則：真人鎖臉優先於所有華麗主視覺，不讓角色滑回 AI 仙女臉。", { exact: true }).count()) !== 1) {
       throw new Error(`${viewport.name}: visible product principle missing`);
+    }
+    if ((await page.getByRole("button", { name: "拉滿角色" }).count()) !== 1) {
+      throw new Error(`${viewport.name}: role-max button missing`);
     }
     if ((await page.getByText("HONGBING CINEMATIC PROMPT", { exact: true }).count()) !== 0) {
       throw new Error(`${viewport.name}: old English app header still visible`);
@@ -303,6 +306,17 @@ try {
 
     await clickSingle(page, page.locator('[data-role-parent="全部"]'), "全部 parent", viewport.name);
     await page.locator('input[name="profileSearch"]').fill("");
+
+    await page.getByRole("button", { name: "拉滿角色" }).click();
+    if (!(await page.locator('input[name="posterOnly"]').isChecked())) {
+      throw new Error(`${viewport.name}: role-max did not force poster-only mode`);
+    }
+    if ((await page.locator('input[name="cameraFraming"]:checked').inputValue()) !== "膝蓋以上") {
+      throw new Error(`${viewport.name}: role-max did not set camera framing`);
+    }
+    if ((await page.locator('input[name="visualMode"]:checked').inputValue()) !== "商業奇幻海報") {
+      throw new Error(`${viewport.name}: role-max did not set poster visual mode`);
+    }
 
     const aliasProfileSearches = [
       ["白牡丹", "scholar-study-calligraphy-lady"],

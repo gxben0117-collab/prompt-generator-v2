@@ -1,12 +1,14 @@
-﻿# 出圖自組咒語生產器 v1.20
+﻿# 出圖自組咒語生產器 v1.21
 
-真人電影級出圖咒語表單工具。主入口是可直接開啟的單檔 `index.html`，用來把使用者輸入的主題、服裝 Layer、妝容、場景、常用圖片尺寸與人物構圖組成「導演式生成層咒語」。
+真人電影級出圖咒語表單工具。主入口是可直接開啟的單檔 `index.html`，用來把使用者輸入的主題、服裝 Layer、妝容、場景、常用圖片尺寸與人物構圖組成「短版實際出圖咒語」。
 
 ## 核心理念
 
 最高原則：真人鎖臉優先於所有華麗主視覺，不讓角色滑回 AI 仙女臉。
 
 人物必須是「真人演員被拍進奇幻電影世界」，不是重新設計 AI 美女角色。
+
+目前母版以實際短版輸出為準：`請根據上傳真人照片生成...` → 鎖臉與真實人體 → 分類 / 主題 / 風格 → 構圖 → 服裝 → 妝容 → 場景 → 動作 → 光影 → 負面。
 
 工具會保護：
 
@@ -76,7 +78,7 @@ src/promptEngine.js                # 短版咒語生成架構
 src/data.js                        # 常用尺寸、人物構圖、服裝 Layer、角色卡資料
 src/categoryClassifier.js          # 角色大分類判斷
 src/styles.css                     # UI 樣式與 responsive
-doc/核心咒語規範.txt                # 固定母板來源
+doc/核心咒語規範.txt                # 固定母板來源，v1.21 Actual Output Canon
 src/coreSpec.js                    # 由 doc/核心咒語規範.txt 同步產生
 scripts/                           # 建置、同步、驗證與資料維護腳本
 scripts/maintenance/               # 歷史批次維護腳本，重跑前需審查
@@ -92,7 +94,7 @@ dist/                              # Vite build 暫存輸出，不追蹤
 重要來源關係：
 
 ```text
-doc/核心咒語規範.txt
+doc/核心咒語規範.txt                # 實際短版出圖母版
   -> npm.cmd run sync:spec
   -> src/coreSpec.js
   -> npm.cmd run build

@@ -18,7 +18,7 @@ import {
   sanitizeInput,
   suggestThemeRewrite,
 } from "../src/promptEngine.js";
-import { parentCategoryForProfile } from "../src/categoryClassifier.js";
+import { normalizeSearchText, parentCategoryForProfile } from "../src/categoryClassifier.js";
 
 const BULK_PARENT_CATEGORIES = [
   "歷史小說名著人物",
@@ -34,18 +34,18 @@ const BULK_PARENT_CATEGORIES = [
 ];
 
 const BATCH_ROLE_LABELS = [
-  "月下紅衣花神",
-  "月宮白玉仙姬",
-  "水榭青衣仙子",
+  "月庭焰瓣・紅衣花神",
+  "月闕凝玉・白璧仙姬",
+  "江南水榭・青綃仙姬",
   "西域邊關皇妃",
   "紫月夜庭魔后",
-  "長安夜宴樂姬",
+  "長安燈宴・回弦樂姬",
   "月紗織夢魅姬",
   "墮翼聖城遺女",
-  "長安夜宴之首席樂姬",
+  "長安花筵・領弦歌姬",
   "清宮水榭貴妃",
-  "大唐鳳儀皇后",
-  "長安內廷貴妃",
+  "唐闕鳳儀・金殿皇后",
+  "長安織錦・內廷貴妃",
   "赤焰長城邊關女將",
   "故宮秋景民國千金",
   "黑凰宮闕禁術祭司",
@@ -63,34 +63,34 @@ const BATCH_ROLE_LABELS = [
   "暗夜魔域古殿女王",
   "青鸞神殿隱世聖女",
   "紫櫻禁術陰陽師",
-  "大唐西域神殿之祭司",
-  "異域沙海古殿聖女",
-  "崑崙雪夜之白虎聖女",
-  "秋山古道之馭虎女俠",
-  "華山日暮江湖女俠",
-  "傀儡劇院之靈魂主宰",
-  "北境冰原之孤高王后",
+  "大唐西殿・流金祭姬",
+  "沙海玄殿・霜穹聖女",
+  "崑崙雪闕・白虎聖女",
+  "秋嶺虎蹤・古道女俠",
+  "華山暮嶺・歸鞘女俠",
+  "傀庭懸絲・攝魂之主",
+  "北境霜冠・孤峰王后",
   "蒼穹白龍聖女",
-  "紫陽花海初夏遊園少女",
+  "紫陽花徑・初夏遊姬",
   "血衣劍門聖女",
   "歐洲古橋異域貴婦",
-  "首爾夜景名媛",
-  "水城雨夜旅人",
+  "首爾雲幕・夜色名媛",
+  "水巷燈雨・夜航旅人",
 ];
 
 const BATCH_PROFILE_EXPECTATIONS = [
-  ["moon-red-flower-goddess", "月下紅衣花神", "流動紅紗", "月夜中式庭園"],
-  ["moon-palace-white-jade-fairy", "月宮白玉仙姬", "月光流動", "白玉月宮"],
-  ["jiangnan-water-pavilion-cyan-fairy", "水榭青衣仙子", "江南古裝輪廓", "江南水榭"],
+  ["moon-red-flower-goddess", "月庭焰瓣・紅衣花神", "流動紅紗", "月夜中式庭園"],
+  ["moon-palace-white-jade-fairy", "月闕凝玉・白璧仙姬", "月光流動", "白玉月宮"],
+  ["jiangnan-water-pavilion-cyan-fairy", "江南水榭・青綃仙姬", "江南古裝輪廓", "江南水榭"],
   ["western-border-riding-consort", "西域邊關皇妃", "沙漠邊關皇妃", "夕陽沙漠邊城"],
   ["purple-moon-night-court-empress", "紫月夜庭魔后", "紫月古堡魔后", "紫月古堡與漂浮星界王座"],
-  ["changan-night-banquet-musician", "長安夜宴樂姬", "長安夜宴樂姬真人身份保留主視覺", "長安盛唐花宴主視覺"],
+  ["changan-night-banquet-musician", "長安燈宴・回弦樂姬", "長安夜宴樂姬真人身份保留主視覺", "長安盛唐花宴主視覺"],
   ["moon-weaving-dream-enchantress", "月紗織夢魅姬", "月光絲絨寢宮", "月光絲絨織夢寢宮"],
   ["fallen-wing-holy-city-heiress", "墮翼聖城遺女", "墮翼剪影", "崩壞聖城"],
-  ["tang-night-banquet-chief-musician", "長安夜宴之首席樂姬", "長安首席樂姬電影主視覺輪廓", "長安夜宴之首席樂姬主視覺"],
+  ["tang-night-banquet-chief-musician", "長安花筵・領弦歌姬", "長安首席樂姬電影主視覺輪廓", "長安夜宴之首席樂姬主視覺"],
   ["qing-palace-water-pavilion-consort", "清宮水榭貴妃", "貴妃端坐輪廓", "清宮水榭"],
-  ["tang-phoenix-ritual-empress-formal", "大唐鳳儀皇后", "宮廷皇后莊重輪廓", "唐代宮廷長廊"],
-  ["changan-inner-court-consort", "長安內廷貴妃", "盛唐內廷正裝輪廓", "古典宮室"],
+  ["tang-phoenix-ritual-empress-formal", "唐闕鳳儀・金殿皇后", "宮廷皇后莊重輪廓", "唐代宮廷長廊"],
+  ["changan-inner-court-consort", "長安織錦・內廷貴妃", "盛唐內廷正裝輪廓", "古典宮室"],
   ["red-flame-great-wall-general", "赤焰長城邊關女將", "東方戰爭電影女將輪廓", "ancient great wall fortress"],
   ["republic-forbidden-city-autumn-heiress", "故宮秋景民國千金", "民國名門千金電影旅拍輪廓", "forbidden city autumn courtyard"],
   ["black-gold-phoenix-priestess", "黑凰宮闕禁術祭司", "黑金鳳凰祭司輪廓", "imperial palace at sunset"],
@@ -110,22 +110,22 @@ const BATCH_PROFILE_EXPECTATIONS = [
   ["qingluan-temple-hidden-saint", "青鸞神殿隱世聖女", "青鸞神殿隱世聖女電影輪廓", "青鸞神殿隱世聖女"],
   ["purple-sakura-forbidden-onmyoji", "紫櫻禁術陰陽師", "禁術系陰陽師巫女電影 silhouette", "紫櫻禁術陰陽師"],
   ["jiu-mo-crimson-phoenix-saint", "九漠沙海之赤鳳聖女", "赤鳳聖女電影輪廓", "九漠沙海之赤鳳聖女"],
-  ["water-mirror-crystal-flower-saint", "水鏡晶花聖女", "水鏡晶花聖女真人身份保留主視覺", "上方水面倒影"],
+  ["water-mirror-crystal-flower-saint", "水鏡霓晶・花律聖女", "水鏡晶花聖女真人身份保留主視覺", "上方水面倒影"],
   ["tang-western-temple-dancer", "大唐西域舞姬", "西域舞姬華麗輪廓", "大唐西域舞姬"],
-  ["tang-western-temple-priestess", "大唐西域神殿之祭司", "東方奇幻神職者輪廓", "敦煌神殿之黃金暮光"],
-  ["exotic-sand-ancient-temple-saint", "異域沙海古殿聖女", "古殿聖女史詩輪廓", "黑夜霜穹之聖座獨思"],
+  ["tang-western-temple-priestess", "大唐西殿・流金祭姬", "東方奇幻神職者輪廓", "敦煌神殿之黃金暮光"],
+  ["exotic-sand-ancient-temple-saint", "沙海玄殿・霜穹聖女", "古殿聖女史詩輪廓", "黑夜霜穹之聖座獨思"],
   ["moon-eclipse-ancient-temple-saint", "月蝕古殿聖女", "月蝕古殿聖女超脫輪廓", "月蝕古殿聖女"],
-  ["penglai-white-crane-immortal", "崑崙雪夜之白虎聖女", "白虎聖女電影輪廓", "崑崙雪夜白虎望盟"],
-  ["autumn-tiger-road-swordswoman", "秋山古道之馭虎女俠", "馭虎女俠硬朗電影輪廓", "秋山古道之馭虎同行"],
-  ["huashan-sunset-wuxia-swordswoman", "華山日暮江湖女俠", "華山女俠輪廓", "華山之巔日暮歸途"],
-  ["marionette-theater-soul-dominion", "傀儡劇院之靈魂主宰", "傀儡劇院主宰輪廓", "傀儡劇院之靈魂主宰"],
-  ["arctic-icefield-queen", "北境冰原之孤高王后", "北境孤高王后輪廓", "北境冰原孤峰"],
+  ["penglai-white-crane-immortal", "崑崙雪闕・白虎聖女", "白虎聖女電影輪廓", "崑崙雪夜白虎望盟"],
+  ["autumn-tiger-road-swordswoman", "秋嶺虎蹤・古道女俠", "馭虎女俠硬朗電影輪廓", "秋山古道之馭虎同行"],
+  ["huashan-sunset-wuxia-swordswoman", "華山暮嶺・歸鞘女俠", "華山女俠輪廓", "華山之巔日暮歸途"],
+  ["marionette-theater-soul-dominion", "傀庭懸絲・攝魂之主", "傀儡劇院主宰輪廓", "傀儡劇院之靈魂主宰"],
+  ["arctic-icefield-queen", "北境霜冠・孤峰王后", "北境孤高王后輪廓", "北境冰原孤峰"],
   ["sky-white-dragon-saint", "蒼穹白龍聖女", "天空龍域聖女神性 silhouette", "蒼穹白龍聖女"],
-  ["hydrangea-early-summer-kimono-girl", "紫陽花海初夏遊園少女", "自然日式古典儀態電影輪廓", "紫陽花海初夏遊園少女"],
+  ["hydrangea-early-summer-kimono-girl", "紫陽花徑・初夏遊姬", "自然日式古典儀態電影輪廓", "紫陽花海初夏遊園少女"],
   ["blood-sword-gate-saint", "血衣劍門聖女", "血色劍門聖女 silhouette", "血衣劍門聖女"],
   ["europe-bridge-saree-noblewoman", "歐洲古橋異域貴婦", "歐洲旅拍異域貴婦 silhouette", "歐洲古橋異域貴婦"],
-  ["seoul-nightview-socialite", "首爾夜景名媛", "首爾都會名媛 silhouette", "首爾夜景名媛"],
-  ["rainy-water-city-traveler", "水城雨夜旅人", "歐洲水城旅人", "水城雨夜旅人"],
+  ["seoul-nightview-socialite", "首爾雲幕・夜色名媛", "首爾都會名媛 silhouette", "首爾夜景名媛"],
+  ["rainy-water-city-traveler", "水巷燈雨・夜航旅人", "歐洲水城旅人", "水城雨夜旅人"],
 ];
 
 describe("prompt engine", () => {
@@ -169,8 +169,15 @@ describe("prompt engine", () => {
     expect(parentCategoryForProfile(byId("garden-wisteria-fairy-princess"))).toBe("花園童話 / 自然精靈");
   });
 
+  it("normalizes search aliases for role lookup", () => {
+    expect(normalizeSearchText("娘娘")).toContain("貴妃");
+    expect(normalizeSearchText("旅行景點")).toContain("旅拍");
+    expect(normalizeSearchText("歌伎")).toContain("樂姬");
+    expect(normalizeSearchText("哥德")).toContain("歌德");
+  });
+
   it("ships built-in role and costume suggestions", () => {
-    expect(ROLE_SUGGESTIONS).toContain("大唐公主");
+    expect(ROLE_SUGGESTIONS).toContain("大唐花闕・昭陽帝姬");
     expect(ROLE_SUGGESTIONS).toContain("多肉花房・緞粉女神");
     expect(ROLE_SUGGESTIONS).toContain("玫瑰晶翼・花園精靈女王");
     expect(ROLE_SUGGESTIONS).toContain("小喬・傾國佳人");
@@ -180,8 +187,8 @@ describe("prompt engine", () => {
     expect(ROLE_SUGGESTIONS).toContain("潘金蓮・金蓮繡閣");
     expect(ROLE_SUGGESTIONS).toContain("宋韻茶樓・玉盞仕女");
     expect(ROLE_SUGGESTIONS).toContain("深淵莉莉絲・黑玫王后");
-    expect(ROLE_SUGGESTIONS).toContain("大唐飛天");
-    expect(ROLE_SUGGESTIONS).toContain("長相思王姬");
+    expect(ROLE_SUGGESTIONS).toContain("大唐雲幔・飛天伎樂");
+    expect(ROLE_SUGGESTIONS).toContain("清水瓊枝・皓月王姬");
     expect(ROLE_SUGGESTIONS).toContain("墮羽夜庭魔姬");
     expect(ROLE_SUGGESTIONS).toContain("夜泊鳳凰樓主");
     expect(ROLE_SUGGESTIONS).toContain("雅典神殿祭儀");
@@ -460,6 +467,25 @@ describe("prompt engine", () => {
         expect(profile.sceneLighting).toContain("臉部明亮可辨識");
       }
     }
+    const fourthWaveExpectations = [
+      ["wave4-tangmusic-", "中國歷代服裝", 10],
+      ["wave4-western-", "西方古典 / 歐陸史詩", 10],
+      ["wave4-silkroad-", "東方異域 / 絲路西域", 10],
+      ["wave4-garden-", "花園童話 / 自然精靈", 10],
+    ];
+    for (const [idPrefix, parentCategory, expectedCount] of fourthWaveExpectations) {
+      const profiles = WORLD_LAYER_PROFILES.filter((profile) => profile.id.startsWith(idPrefix));
+      expect(profiles, idPrefix).toHaveLength(expectedCount);
+      for (const profile of profiles) {
+        expect(parentCategoryForProfile(profile)).toBe(parentCategory);
+        expect(Object.keys(profile.layers)).toHaveLength(10);
+        expect(profile.costume).toContain("保留上傳人物原始臉部辨識度");
+        expect(profile.makeup).toContain("保留上傳真人原始臉型");
+        expect(profile.sceneEnvironment).toContain("背景預設不放路人");
+        expect(profile.sceneAction).toContain("手不遮臉");
+        expect(profile.sceneLighting).toContain("臉部明亮可辨識");
+      }
+    }
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toEqual(
       expect.arrayContaining([
         "清水鎮藥香・長相思醫女",
@@ -561,6 +587,10 @@ describe("prompt engine", () => {
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("巴黎地鐵・深夜主編");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("首爾霓庭・午夜策展人");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("上海灘影・流光監製");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("唐珠回韻・琵琶歌伎");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("威城金幕・歌劇女公");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("樓蘭月幕・金砂王姬");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("蘭霧花亭・幽香精靈");
     expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "expand-dynasty-han-water-banquet-empress"))).toBe("中國歷代服裝");
     expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "expand-dynasty-tang-jewel-lantern-consort"))).toBe("中國歷代服裝");
     expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "expand-xianxia-moon-hall-qin-empress"))).toBe("仙俠神話 / 古裝陸劇");
@@ -571,6 +601,9 @@ describe("prompt engine", () => {
     expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "expand-travel-venice-canal-mask-evening"))).toBe("世界景點旅拍");
     expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "expand-modern-paris-metro-mystery-editor"))).toBe("現代都市 / 街拍電影");
     expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "expand-modern-seoul-neon-lounge-curator"))).toBe("現代都市 / 街拍電影");
+    expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "wave4-western-venetian-opera-duchess"))).toBe("西方古典 / 歐陸史詩");
+    expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "wave4-silkroad-loulan-moon-queen"))).toBe("東方異域 / 絲路西域");
+    expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "wave4-garden-orchid-mist-spirit"))).toBe("花園童話 / 自然精靈");
     expect(fairy.themeHint).toBe("古裝仙女");
     expect(fairy.layers.costumeLayer1).toContain("貼身柔白絲綢內襯");
     expect(fairy.layers.costumeLayer8).toContain("珍珠步搖");

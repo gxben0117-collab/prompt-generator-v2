@@ -1,50 +1,60 @@
-﻿
-【真人電影級 AI 電影角色系統｜V4.0 Ultimate】
+【真人電影級短版出圖母版｜v1.21 Actual Output Canon】
 
-【系統定位】
+【母版定位】
 
-本系統的任務不是生成：
+本母版以目前實際出圖流程為準。
 
-「AI 美女圖片」
+正式輸出不再複製整本規範書，而是由 prompt engine 組成可直接貼進 ChatGPT 的短版出圖指令。
 
-而是建立：
+現行短版輸出固定由以下段落構成：
 
-「真人演員被拍進奇幻世界後的正式電影角色設定檔」
+請根據上傳真人照片生成 ...
+鎖臉與真實人體
+分類 / 主題 / 風格
+構圖
+服裝
+妝容
+場景
+動作
+光影
+負面
 
-所有角色、服裝、妝容、場景與光影，
-都必須建立在可被真實攝影拍出的：
-
-「真人攝影可存在性」
-
-之上。
+本母版是治理規則、欄位邏輯與輸出方向的權威說明；實際貼出的咒語以短版輸出為準。
 
 【最高核心原則】
 
 人物必須始終被視為真人演員。
 
-不是：
+本系統不是生成：
 
-- AI 美女
+- AI 美女圖片
 - 動漫角色
 - 遊戲角色
 - 網紅模板
 - CG 人偶
+- 新設計的奇幻女主角
 
-所有奇幻元素，
-都只能依附並服務於：
+而是建立：
 
-「真人原始身份」
+「真人演員被拍進奇幻電影世界的正式電影海報」
 
-之上。
+所有奇幻元素、服裝、妝容、場景與光影，只能支撐上傳照片中的真人身份，不能改寫真人。
 
-奇幻世界只能襯托真人，
-不能改寫真人。
+若華麗主視覺、電影感、妝容、服裝或奇幻風格與真人身份保留衝突，一律保留真人身份。
 
-不能取代真人。
+【必要前提】
 
-【真人身份優先】
+出圖前必須有真人參考照片。
 
-保留：
+如果目前對話沒有可見的上傳真人照片，不應從文字自行發明臉，也不應生成新演員臉。
+
+短版咒語第一句固定以「請根據上傳真人照片生成 ... 真人電影級奇幻海報」為核心。
+
+【臉部主控｜最高優先】
+
+以上傳照片中的臉部作為唯一身份來源。
+
+必須保留：
 
 - 原始臉型
 - 原始眼型
@@ -54,156 +64,66 @@
 - 原始五官比例
 - 原始可辨識特徵
 - 自然臉部不對稱
-- 真實年齡感
+- 成熟年齡感
+- 原始皮膚質感
 - 真人攝影感
 
 禁止：
 
-- AI 美女臉
-- 網紅濾鏡感
-- 娃娃臉
-- 動漫化五官
-- 遊戲角色臉
-- AI 美顏化
-- 模板美女化
-- 過度磨皮
-- 過度銳利五官
-
-If any cinematic, fantasy, costume, or makeup styling conflicts with facial identity preservation, preserve the real facial identity first.
-
-【Facial Identity Lock｜最高優先】
-
-The uploaded person is a real photographed human actor.
-
-Facial identity preservation has absolute highest priority over:
-
-- costume
-- beauty
-- cinematic styling
-- fantasy styling
-- historical styling
-- makeup
-- poster composition
-- commercial fantasy aesthetics
-
-Do NOT redesign the face.
-
-Do NOT beautify the face.
-
-Do NOT transform the person into:
-
-- an AI beauty template
-- fantasy heroine face
-- historical drama actress face
-- influencer-style beauty face
-- commercial poster star face
-
-Preserve:
-
-- original eye distance
-- original eyelid structure
-- original nose width
-- original mouth shape
-- original jaw shape
-- original cheek volume
-- original facial asymmetry
-- original age details
-- original skin texture
-- original mature facial structure
-
-Keep the real-person identity recognizable at first glance.
-
-The fantasy world exists around the real photographed person,
-not instead of the person.
-
-【臉部主控｜最高優先】
-
-以上傳照片中的臉部作為唯一身份來源。
-
-先鎖定原始真人臉，
-再生成身體、服裝、姿勢、髮型、妝容、光影與場景。
-
-臉部不可重畫。
-
-臉部不可美化。
-
-臉部不可換成：
-
+- 換臉
+- 重畫臉
+- 美化成 AI 美女
 - 古裝女主角臉
 - 商業海報明星臉
 - AI 仙女臉
 - 新演員臉
-
-保持原始：
-
-- 臉型
-- 眼距
-- 眼型
-- 眼皮結構
-- 鼻翼寬度
-- 嘴唇形狀
-- 下顎線
-- 臉頰肉感
-- 成熟年齡感
-- 自然不對稱
-- 皮膚質感
-
-身體、服裝、姿勢、髮型、妝容、光影與場景都必須配合這張原始臉。
-
-若姿勢、角度、妝容、髮型、光影或構圖會降低臉部相似度，
-必須調整該元素，
-優先保留臉。
-
-這不是限制只能站姿。
-
-在臉部不被遮擋、不被側臉重畫、不被道具或髮絲遮住，
-並且身體依照頭部、鏡頭與場景產生正常比例姿態的條件下，
-可使用坐姿、臥姿、倚靠、泡茶、拿扇子、拿刀、持傘、撫琴、持杯、王座前緣端坐等漂亮動作。
-
-臉部角度需接近上傳照片：
-
-正面或微側正面，
-雙眼清楚看向鏡頭。
-
-禁止：
-
-- 大幅回眸
-- 側臉
-- 低頭
-- 仰頭
-- 遮臉
-- 強烈逆光壓暗臉
-- 厚重妝容改變五官
-- over-shoulder face redesign
-- different face
-- face swap
-- new actress face
-- historical drama actress face
-- younger face
-- slimmer face
+- influencer face
+- doll face
+- anime face
+- fantasy heroine face
 - altered jawline
 - altered eyes
 - altered nose
 - altered lips
 
+臉部角度需接近上傳照片。
+
+優先使用：
+
+- 正面
+- 微側正面
+- 雙眼清楚看向鏡頭
+- 臉部明亮可辨識
+
+避免：
+
+- 大幅回眸
+- 側臉
+- 低頭
+- 仰頭
+- over-shoulder
+- 手、道具、頭髮、披帛遮臉
+- 強烈逆光壓暗臉
+
+若動作、髮型、妝容、光影或構圖會降低相似度，必須放棄該元素並優先保留臉。
+
 【真實人體骨架】
 
-建立：
-
-真實成年人體骨架。
+建立真實成年人體骨架。
 
 保持：
 
 - 平衡肩寬
 - 真實鎖骨
 - 真實胸腔厚度
+- 罩杯j
 - 正常軀幹深度
 - 真實脖子連接
 - 真實骨盆比例
 - 真實人體重心
 - 真實四肢比例
 - 真實脊椎結構
-- 罩杯j
+- 頭身比例自然
 
 禁止：
 
@@ -215,1032 +135,383 @@ not instead of the person.
 - 不合理腰臀比
 - 頭重腳輕
 - 壓縮上半身
-- 卡通化人體
+- 肩膀過窄
+- 臉貼在服裝上的 AI 感
+- floating head feeling
 
-【真人比例穩定系統｜Body Proportion Stabilization】
+【罩杯欄位規則】
 
-Facial identity preservation must NOT distort:
+罩杯欄位只作為真實人體骨架資訊。
 
-- head-to-body ratio
-- shoulder width
-- torso depth
-- chest structure
-- adult body proportions
-- natural cinematic framing
+實際短版輸出會在「真實人體骨架」句中寫入：
 
-full-body physical coherence has equal priority with facial identity preservation.
+胸腔厚度、罩杯 "欄位值"、軀幹深度
 
-The character must preserve:
+預設值為：
 
-- realistic adult human proportions
+正常比例
+
+角色卡若提供 K 等特殊值，短版輸出只照欄位寫入，不額外放大胸腰比例，不轉成性感構圖。
+
+禁止把罩杯欄位轉換為：
+
+- pin-up pose
+- 極端胸腰比例
+- 性感主視覺
+- 腿部、胸部或腰臀成為主視覺
+- 情趣化或低俗化畫面
+
+【真人比例穩定】
+
+鎖臉不得造成身體比例漂移。
+
+真人臉部身份保留與全身物理一致性同等重要。
+
+必須保留：
+
 - balanced head size
 - natural shoulder-to-head ratio
 - realistic torso volume
 - proper body mass distribution
-- cinematic full-body coherence
+- full-body physical coherence
 
-避免：
+坐姿、臥姿、倚靠、泡茶、撫琴、持扇、持刀、持傘或道具互動都可以使用。
 
-- oversized head
-- compressed torso
-- narrow AI shoulders
-- portrait-only body structure
-- floating head feeling
-- beauty-app proportions
-- AI fashion anatomy
-- selfie-like body compression
+但必須保留：
 
-坐姿控制：
+- 完整胸腔厚度
+- 自然軀幹深度
+- 成人骨盆受力
+- 四肢支撐邏輯
+- 真實身體重心
+- 臉部完整可辨識
 
-seated posture must preserve full torso depth and natural adult body proportions.
+人物必須像 physically existing inside cinematic space 的真實演員，不像 face pasted onto a fantasy costume。
 
-camera distance must not compress body structure.
+【輸出比例與構圖】
 
-真人必須像：
+預設輸出比例：
 
-"a real actor physically existing inside cinematic space"
+4:5
 
-不是：
+常用比例：
 
-"a face pasted onto a fantasy costume"
-
-【成熟成年女性體積感】
-
-維持：
-
-- 真實成熟人體體積感
-- 自然胸部重量
-- 真實軀幹厚度
-- 真實布料張力
-- 真實重力結構
-- 真實站姿與坐姿
-
-避免：
-
-- AI 性感模板
-- pin-up 身材
-- 誇張挺胸
-- 過度後仰
-- 極端腰臀比例
-- 動漫式胸型
-
-人物體積感需優先於性感誇張。
-
-暗黑王族、夜宴魅魔、魅姬、魔后等分類的罩杯只依角色卡欄位或使用者欄位寫入。
-
-罩杯欄位只能作為真實人體骨架資訊，
-不得轉成性感構圖或身材誇張指令。
-
-不得放大胸腰比例。
-
-不得製造 pin-up 坐姿、臥姿或王座姿勢。
-
-不得讓腿部、胸部或腰臀成為主視覺。
-
-【夜宴魅魔安全風格系統】
-
-夜宴魅魔、夜宴魅姬、暗黑女王等角色，
-可以呈現：
-
-- 成熟暗黑浪漫氣質
-- 高級電影感女性魅力
-- 絲綢貼膚光澤
-- 若隱若現的布料層次
-- 燭光下的暖色 skin reflection
-- 紫黑、酒紅、月光銀、黑曜石色彩
-- 私密寢宮電影感
-
-但所有高級魅力必須來自：
-
-- luxury silk robe
-- velvet night robe
-- couture sleep-robe gown
-- lace-trim couture support
-- translucent chiffon overlay
-- sheer silk drapery
-- gothic couture jewelry
-- soft candlelight
-- intimate cinematic atmosphere
-- dark romantic atmosphere
-
-這些都必須被理解為：
-
-「真人演員可穿上的電影級高訂戲服」
-
-不是：
-
-真實私密服飾、
-情趣造型、
-低俗類型化畫面。
-
-夜宴魅魔的核心方向是：
-
-絲綢、
-薄紗、
-蕾絲邊、
-絲絨晨袍式外袍、
-夜宴寢宮、
-成熟電影魅力、
-克制危險感、
-暗黑浪漫氣氛。
-
-夜宴魅魔與暗黑王族的穩定構圖優先採：
-
-4:5 premium commercial fantasy poster。
-
-人物動作自由優先：
-
-4:5 character-dominant cinematic composition。
-
-可使用：
-
-站姿、
-坐姿、
-臥姿、
-倚靠、
-泡茶、
-拿扇子、
-拿刀、
-持傘、
-撫琴、
-緩步前行、
-王座前緣端坐、
-持杯、
-任何符合主題且可被真人攝影拍出的漂亮動作。
-
-核心限制不是禁止坐姿或臥姿，
-而是：
-
-臉部不可被手、道具、頭髮、強逆光或極端角度遮擋；
-臉部需正面或微側正面看向鏡頭；
-身體必須依照頭部、鏡頭與場景產生正常姿態比例；
-肩頸、胸腔、骨盆、四肢支撐點與身體受力必須合理；
-坐姿、臥姿、倚靠與道具互動不得壓縮軀幹或造成臉貼在服裝上的 AI 感。
-
-避免：
-
-- 16:9 橫式性感王座場景
-- 單手托臉
-- 半透明馬甲式垂褶
-- 腿部成為主視覺
-- 手、扇子、刀、茶杯、髮絲或披帛遮擋臉部
-- 坐姿、臥姿或倚靠姿勢造成頭大、肩窄、軀幹壓縮
-
-避免：
-
-- 裸露描寫
-- 私密服飾化
-- 情趣內衣感
-- 私密平台風格
-- 低俗類型化
-- pin-up
-- 低俗姿勢
-- 過度透明
-- 極端胸腰比例
-- 動漫魅魔
-- 遊戲 boss 化
-
-黑羽墮天使、廢墟史詩、神殿黑翼女王屬於另一條「黑羽史詩線」，
-不得自動混入夜宴魅魔模板。
-
-【電影攝影結構】
-
-固定建立：
-
-- 50mm 全片幅電影鏡頭
-- 真人攝影距離
-- 中遠景電影構圖
-- 全身完整入鏡
-- 真實空間透視
-- 真實人物與環境關係
-
-優先呈現：
-
-「真人電影攝影感」
-
-避免：
-
-- 自拍感
-- 網紅式 beauty framing
-- 平面雜誌封面感
-- AI 時尚大片模板臉
-- 誇張透視
-- 超廣角變形
-- 臉部主導畫面
-
-【輸出比例控制系統】
-
-輸出畫面比例必須明確指定。
-
-禁止 AI 自行猜測畫幅。
-
-根據輸出用途建立：
-
-- 9:16 cinematic mobile wallpaper
 - 4:5 premium commercial fantasy poster
-- 16:9 cinematic widescreen frame
+- 1:1 square poster composition
+- 3:4 vertical cinematic portrait
+- 2:3 classic vertical movie poster
+- 9:16 cinematic mobile wallpaper
+- 16:9 epic cinematic frame
+- 3:2 cinematic photography frame
+- 4:3 classic cinematic frame
 - 2.39:1 anamorphic movie frame
-- square poster composition
 
-人物與場景構圖需服從：
+構圖固定：
 
-「指定畫幅」。
-
-composition must respect the specified aspect ratio and keep the full cinematic silhouette inside frame.
+- 50mm 全片幅
+- 中遠景
+- 真實人像拍攝距離
+- 單人主角
+- 人物完整入鏡
+- 近景 / 中景 / 遠景分層
+- composition must respect the specified aspect ratio and keep the full cinematic silhouette inside frame
 
 避免：
 
-- 頭部被裁切
-- 手部超出畫面
-- 全身被截斷
-- 過度留白
+- 裁頭
+- 裁手
+- 截斷全身
+- 自拍感
 - AI 自動特寫
-- 自拍式構圖
-- 臉部佔據整個畫面
+- 臉部佔滿畫面
+- 過度留白
 
-【電影主視覺權重系統】
+暗黑王族、夜宴魅魔、魅姬、魔后、哥德女王等高風險主題，如果使用 9:16 或 16:9，實際輸出會改採 4:5，以避免性感寫真構圖或身體比例漂移。
 
-預設畫面必須接近：
+【風格系統】
 
-「真人身份保留的東方奇幻電影主視覺」
+現行主視覺模式：
 
-而不是：
+- Netflix 東方奇幻：真人身份保留的東方奇幻電影主視覺
+- 暗黑夜宴：暗黑夜宴電影主視覺
+- 商業奇幻海報：高級商業奇幻電影海報
 
-「安靜寫實人物照」
-「靜態角色設定卡 Character Sheet」
+現行色彩張力：
 
-人物必須是畫面能量中心。
+- 紅金寶石
+- 高級艷麗
+- 暗紫酒紅
+- 盛唐花宴
 
-優先建立：
+現行布料動態：
 
-- real-person cinematic protagonist framing
-- dominant cinematic silhouette
-- powerful visual flow
-- commanding feminine aura
-- emotionally focused real-person presence
-- preserved-identity royal atmosphere
-- elegant but dangerous styling around the real face
-- fantasy framing without facial redesign
-- cinematic tension between elegance and danger
-- premium cinematic color composition
-- vivid luxury cinematic color
-- jewel-tone color contrast
-- luminous silk highlights
-- rich red-gold visual impact
-- preserved-real-identity eastern fantasy key visual
-- single-protagonist cinematic composition
-- solo heroine visual dominance
-- isolated cinematic focus
-- environmental atmosphere without crowd distraction
-- high-impact real-person screen composition
+- 大動態飄紗
+- 中度流動
+- 靜態垂墜
 
-明確避免：
+畫面應是華麗、明亮、有電影主視覺衝擊的高密度海報，而不是空曠設定圖。
 
-- 安靜寫實
-- 灰藍低飽和
-- 文藝紀錄片感
-- 普通古裝旅拍
-- 端坐資料卡
-- 人物只是站在場景裡
+第一眼優先看見：
 
-角色可以具有明星感、女主角感、銀幕存在感與畫面支配力。
+- 原始真人臉部辨識度
+- 大型 silhouette
+- 動態布料
+- 情緒凝視
+- 寶石色光影
+- 電影事件瞬間
 
-禁止的是：
+第二層再看見：
 
-網紅模板臉、
-塑膠美顏、
-自拍姿勢、
-不合理身材、
-廉價魅力模板。
-
-不是禁止：
-
-電影女主角魅力、
-高級商業奇幻攝影、
-主角 aura、
-情緒張力、
-戲劇化構圖。
-
-【背景角色控制系統】
-
-畫面核心是：
-
-「真人女主角的銀幕存在感」
-
-不是群演場面。
-
-除非主題明確需要：
-
-- 宮廷宴會
-- 戰場
-- 市集
-- 宗教儀式
-- 王朝典禮
-
-否則避免：
-
-- 路人
-- NPC 感背景人物
-- 模糊群演
-- 隨機站立人物
-- 背景觀光客感
-- 古裝旅拍路人
-
-背景應優先使用：
-
-- 建築輪廓
-- 光影
-- 水霧
-- 花瓣
-- 燈籠
-- 布料
+- 光影方向
+- 色彩張力
+- 場景尺度
+- 建築、燈火、水霧或空間深度
 - 空氣粒子
-- 景深
-- 前景遮擋
-- 空間透視
+- 景深層次
 
-建立電影空間感。
+最後才看見：
 
-若主題確實需要背景人物，
-只能作為：
+- 珠寶
+- 刺繡
+- 頭飾
+- Layer 工藝細節
 
-small-scale cinematic silhouettes
+禁止平均塞滿元素，必須有主次層級。
 
-且不得搶奪主角視覺焦點。
+【服裝系統】
 
-主角需始終佔據：
+服裝必須像真人演員真正穿上的電影級戲服。
 
-absolute visual priority。
+不是：
 
-【大型動態服裝系統】
+- cosplay
+- 遊戲 skin
+- 動漫服裝
+- AI 插畫服裝
+- 淘寶古裝
 
-服裝不只是穿著，
-也必須參與畫面構圖與運動。
+服裝 Layer 1-10 是設計參考，不是逐層展示清單。
 
-可主動建立：
-
-- extra-long flowing silk drapery
-- airborne translucent shawls
-- movement-driven fabric silhouette
-- cinematic trailing sleeves
-- floating ceremonial ribbons
-- layered flowing textile choreography
-- fabric as visual leading lines
-- dynamic costume motion integrated into composition
-
-布料可在空中形成大輪廓、
-視線導引、
-色塊張力與主角支配畫面的視覺流線。
-
-但布料運動仍需符合：
-
-真實重力、
-真實風向、
-真實穿著結構、
-真人可拍攝性。
-
-【電影主視覺導演層】
-
-本系統預設不是讓 AI 填表，
-而是讓 AI 像電影美術指導與攝影導演一樣，
-重新組織：
-
-- 構圖主題
-- 視覺焦點
-- 視線流向
-- 畫面節奏
-- 主次層級
-- silhouette
-- visual narrative
-- cinematic reveal
-
-畫面必須有明確的視覺優先權，
-像創意總監 brief，
-不是平均填寫服裝設定表。
-
-第一眼必須先看到：
-真人女主角、
-大型 silhouette、
-動態布料、
-情緒凝視、
-畫面事件、
-銀幕存在感。
-
-第二層再看到：
-光影方向、
-色彩張力、
-場景尺度、
-建築、燈火、水霧或空間光影、
-空氣粒子、
-景深層次。
-
-最後才看到：
-珠寶、
-刺繡、
-頭飾、
-Layer 工藝細節。
-
-禁止把所有元素平均塞進畫面。
-
-【畫面事件系統】
-
-角色不能只是站著或端坐。
-
-畫面需要像電影事件中的一瞬間：
-
-- 她剛轉身看向鏡頭
-- 她剛從煙霧或燭光中走出
-- 披帛剛被風掀起
-- 光剛好打到眼睛
-- 花瓣、灰燼、羽毛或雨滴正在穿過前景
-- 遠景建築燈火、霧氣與空間光影正在襯托她出場
-
-這不是姿勢說明，
-而是：
-
-visual narrative、
-cinematic reveal、
-single-protagonist poster frame、
-emotional tension、
-dangerous elegance、
-frame narrative。
-
-【服裝 Layer 降權規則】
-
-Layer 1-10 是服裝設計參考，
-不是逐項展示清單。
-
-AI 不需要平均呈現每一層。
-
-服裝輸出只需抓住：
+實際短版輸出只抓：
 
 - 主輪廓
 - 主材質
 - 主色彩
 - 一到兩個記憶點
 - 真實布料重量
-- 可穿戴電影高訂結構
+- 可穿戴結構
+- 電影高訂質感
 
-其餘 Layer 應服務於：
+Layer 細節應自然融入高訂戲服，不搶真人臉部辨識度。
 
-dominant cinematic silhouette、
-visual flow、
-preserved real-person cinematic presence、
-movie poster impact。
+布料可形成大輪廓、視線導引、色塊張力與主角支配畫面的 visual flow。
 
-若 Layer 細節與電影主視覺衝突，
-優先保留電影主視覺。
+但布料運動必須符合：
 
-【高級艷麗色彩系統】
+- 真實重力
+- 真實風向
+- 真實穿著結構
+- 真人可拍攝性
 
-預設色彩不應過度保守、灰暗或低飽和。
+【暗黑王族與夜宴魅魔安全規則】
 
-若主題屬於：
+暗黑王族、夜宴魅魔、夜宴魅姬、魔后、哥德女王等類型可以呈現：
 
-夜宴、
-宮廷、
-魅魔、
-女王、
-花宴、
-神殿、
-奇幻主視覺、
-商業電影海報，
+- 成熟暗黑浪漫氣質
+- 高級電影感女性魅力
+- 絲綢光澤
+- 薄紗層次
+- 紫晶黑、酒紅、月銀紫、煙玫瑰、黑羽色
+- 燭光與月光下的電影氣氛
 
-應主動提高：
+服裝方向可使用：
 
-- vivid luxury color grading
-- rich cinematic color contrast
-- jewel-tone highlights
-- red-gold lantern glow
-- ruby red silk
-- emerald green accent
-- sapphire blue shadow
-- amethyst violet atmosphere
-- champagne gold reflection
-- luminous silk sheen
-- wet floor color reflection
-- saturated but realistic cinematic palette
+- 高訂睡袍系造型
+- 紫晶黑真絲內搭
+- 酒紅薄紗罩裙
+- 月銀紫珠鏈肩披
+- 煙玫瑰垂墜披紗
+- 黑羽色半透外罩
+- 蝴蝶或黑羽刺繡
+- 絲絨外袍
+- 哥德珠寶
 
-畫面可以艷麗、明亮、華麗、抓眼，
-但必須是：
-
-高級電影色彩、
-真實燈光反射、
-絲綢與珠寶的物理高光、
-舞台與宮燈造成的色彩張力。
-
-避免的是：
-
-螢光色、
-塑膠色、
-遊戲 UI 色、
-過度 HDR、
-假濾鏡、
-AI 發光皮膚。
-
-不是避免：
-
-紅金華麗、
-寶石色高光、
-濃烈宮燈、
-商業奇幻電影色彩、
-高級艷麗視覺衝擊。
-
-【商業奇幻亮場系統｜Commercial Fantasy Glamour Mode】
-
-若主題屬於：
-
-- 夜宴魅魔
-- 月夜女王
-- 紫晶神女
-- 星月祭司
-- 黑玫瑰女王
-- 魅姬系列
-- 商業奇幻海報
-- 高級女性主視覺
-- 暗黑王族
-
-則畫面不是低光黑暗電影，
-而是：
-
-「高亮商業奇幻女王主視覺」。
+所有內容都必須理解為真人演員可穿戴的電影高訂戲服。
 
 禁止：
 
-- 過度電影低光
-- 過度陰影壓暗
-- grim dark fantasy
-- desaturated realism
-- muddy black shadows
-- face underexposure
-- heavy contrast noir lighting
+- 額外放大胸腰比例
+- 讓腿部或胸腰成為主視覺
+- pin-up 坐姿
+- 私密服飾化
+- 情趣內衣感
+- 裸露描寫
+- 過度透明
+- 低俗姿勢
+- 16:9 橫式性感王座場景
+- 遊戲 boss 化
+- 動漫魅魔
 
-必須主動建立：
+【妝容系統】
+
+妝容只能影響：
+
+- 色彩
+- 質地
+- 光澤
+- 表面妝感
+- 電影氣氛
+
+妝容不得影響：
+
+- 臉型
+- 眼型
+- 鼻型
+- 嘴型
+- 下顎線
+- 臉頰肉感
+- 五官比例
+- 年齡感
+- 可辨識身份
+
+預設妝容方向：
+
+成熟真人電影妝感，保留自然皮膚紋理、原始五官比例與真實年齡感。
+
+【場景系統】
+
+場景必須可被真實攝影拍出。
+
+預設單人主角。
+
+除非主題明確需要宮廷宴會、戰場、市集、宗教儀式、王朝典禮，否則背景不得出現路人或隨機群演。
+
+背景應優先用：
+
+- 建築輪廓
+- 光影
+- 水霧
+- 燈火
+- 布料
+- 花材
+- 道具
+- 空氣粒子
+- 景深
+- 前景遮擋
+- 空間透視
+
+建立電影空間。
+
+高密度華麗海報要求：
+
+- foreground 有遮擋
+- midground 放置真人主角與互動
+- background 建立建築、天光、燈火、水霧或地形輪廓
+- every area of the frame contains meaningful visual detail
+- avoid empty space, sparse staging, flat catalog pose and dull background treatment
+
+【動作系統】
+
+鎖臉不等於只能站姿。
+
+可用動作：
+
+- 站姿
+- 坐姿
+- 臥姿
+- 倚靠
+- 泡茶
+- 撫琴
+- 持扇
+- 持刀
+- 持傘
+- 持杯
+- 扶欄
+- 踏階
+- 由座起身
+- 緩步前行
+- 與道具互動
+
+核心限制：
+
+- 手部不遮擋臉部
+- 道具不遮擋臉部
+- 髮絲不遮擋臉部
+- 披帛不遮擋臉部
+- 臉部正面或微側正面清楚看向鏡頭
+- 動作符合真實重心與四肢受力
+- 肩頸、胸腔、骨盆、四肢支撐點合理
+
+畫面需要像電影事件中的一瞬間，而不是單調站姿設定圖。
+
+【光影系統】
+
+預設光影：
+
+- 側前方柔和主光
+- 燭光或月光環境光
+- 柔和邊緣分離光
+- 自然景深
+- 空氣霧化
+- 真實皮膚反光
+- 真實空氣透視
+
+臉部必須清楚可辨識。
+
+商業奇幻、夜宴、女王、魅魔、暗黑王族、盛唐宮廷等華麗主題需要亮場：
 
 - luminous fantasy glamour lighting
 - commercial fantasy beauty exposure
+- bright hero lighting
 - glowing jewel-tone atmosphere
-- radiant cinematic skin highlights
-- bright luxury fantasy composition
-- high-key fantasy portrait balance
-- sparkling gemstone reflections
-- cinematic beauty fill lighting
-- elegant fantasy bloom
-- vivid luxury lighting design
-- premium fantasy poster lighting
-- radiant feminine cinematic presence
-- luxury cosmetic-commercial exposure balance
-
-臉部必須：
-
-- 明亮可辨識
-- 保持真實皮膚紋理
-- 有柔和珠寶反光
-- 有高級 catchlight
-- 保有成熟感但不能灰暗
-
-服裝必須：
-
-- 黑色仍保留刺繡細節
-- 紫色與紅色保持寶石感
-- 薄紗具有透光感
-- 珠寶具有 sparkle highlights
-- 布料有 luxury sheen
-
-畫面允許：
-
-- fantasy glow
-- magical sparkle particles
-- cinematic glamour bloom
-- jewel-tone light haze
-- moonlight glow
-- reflective gemstone highlights
-- vivid purple atmosphere
-- premium commercial fantasy lighting
-
-但避免：
-
-- AI plastic glow
-- overexposed skin
-- HDR fantasy game look
-- anime glow effect
-- unreal engine render feeling
-
-【真實電影攝影感】
-
-畫面必須像：
-
-「真實攝影師拍攝的真人奇幻電影海報」
-
-而不是：
-
-- AI 插畫
-- CG 渲染
-- 動漫概念圖
-- 遊戲宣傳圖
-
-強調：
-
-- 真實光影
-- 真實景深
-- 真實皮膚反光
-- 真實空氣感
-- 真實環境互動
-- 真實布料重量
-- 真實人體站姿
-
-The fantasy world must support the photographed real person.
-
-The person must remain a real photographed human,
-not a redesigned fantasy character.
-
-【電影光影氣氛系統】
-
-AI 可依據：
-
-- 世界觀
-- 場景時間
-- 天氣
-- 空間結構
-- 主題情緒
-- 電影氛圍
-
-自動建立：
-
-- 黃昏金光
-- 側前方柔和主光
-- 月光環境主光
-- soft edge separation light
-- volumetric light haze
-- dreamy atmospheric bokeh
-- floating dust particles
-- natural lens bloom
-- realistic air perspective
-- soft depth-of-field separation
-
-若場景適合：
-
-可建立：
-
-金色陽光從側前方柔和灑落，
-在臉部、布料與髮絲形成自然電影級光影層次。
-
-畫面可具有：
-
-- 真實柔焦散景
-- 空氣霧化
-- 微粒漂浮
-- 空間霧氣
-- 真實景深
-- 浪漫電影光暈
-
-但必須保持：
-
-- 真人皮膚質感
-- 真人臉部結構
-- 真實人體比例
-- 真實攝影空氣感
+- catchlight
+- sparkle highlights
+- 紫黑服裝保留暗部細節
+- 金飾、珠寶、絲綢與宮燈有發光層次
 
 避免：
 
+- grim dark fantasy
+- muddy black shadows
+- face underexposure
 - 過度 HDR
-- AI 發光皮膚
-- 假電影 LUT
-- 遊戲引擎光效
-- AI 柔焦濾鏡
-- 過度 bloom
 - 塑膠皮膚
+- AI 發光皮膚
+- 遊戲引擎光效
 
-【動作控制系統】
+【輸出格式規範】
 
-動作需符合：
+實際短版輸出格式：
 
-- 真實人體重心
-- 真實脊椎結構
-- 真實肩膀平衡
-- 真實手部比例
-- 真實肢體動態
+請根據上傳真人照片生成 {ratio} 真人電影級奇幻海報。
 
-維持：
+最高優先：保留上傳照片中的原始真人臉部身份，不換臉、不美化成 AI 美女，不改變眼型、鼻型、嘴型、臉型、下顎線、成熟年齡感與皮膚質感。
+真人身份優先：保留原始臉型、原始眼型、原始鼻型、原始嘴型、五官比例、可辨識特徵、自然臉部不對稱與真人攝影感；臉部正面或微側正面看向鏡頭。
+真實人體骨架：平衡肩寬、真實鎖骨、胸腔厚度、罩杯 "{cupSize}"、軀幹深度、骨盆比例、人體重心、四肢比例與脊椎結構；避免頭大、肩窄、軀幹壓縮或臉貼在服裝上的 AI 感。
 
-- 自然站姿
-- 自然坐姿
-- 正確四肢比例
-- 真實人體動態
+分類：...
+主題：...
+風格：...
 
-避免：
+構圖：...
 
-- 扭曲四肢
-- 錯誤手指
-- 不合理動作
-- cosplay pose
-- 網美姿勢
-- pin-up 姿勢
-- 跳躍
-- 旋轉
-- 手遮臉
-- 背對鏡頭
+服裝：...
 
-【電影級世界觀服裝生成系統】
+妝容：...
 
-服裝必須像：
+場景：...
 
-「真人演員真正穿上的電影級戲服」
+動作：...
 
-而不是：
+光影：...
 
-- 動漫 cosplay
-- AI 插畫服裝
-- 遊戲 skin
-- 淘寶古裝
-
-服裝需建立：
-
-- 真實高級訂製服裝感
-- 真實布料重量
-- 真實人體穿著邏輯
-- 真實電影服裝層次
-- 真實金屬工藝
-- 真實珠寶反光
-- 真實空氣流動
-- 真實垂墜結構
-
-【世界觀自動延伸】
-
-AI 可根據：
-
-- 主題
-- 朝代
-- 神話
-- 地域
-- 民族
-- 宗教
-- 歷史
-- 幻想宇宙
-- 文明背景
-
-自動延伸：
-
-- 高級服裝結構
-- 世界觀色彩
-- 電影布料材質
-- 珠寶工藝
-- 金屬裝飾
-- 頭飾吊飾
-- 王族符號
-- 宗教元素
-- 地域文化辨識度
-- 電影級輪廓語言
-
-【服裝 Layer 系統】
-
-Layer 1：
-貼身基底／內襯
-
-Layer 2：
-胸腰支撐／馬甲結構
-
-Layer 3：
-主體服裝輪廓
-
-Layer 4：
-薄紗／披帛／外層布料
-
-Layer 5：
-腰封／護甲／金屬結構
-
-Layer 6：
-大型外袍／拖尾／主輪廓
-
-Layer 7：
-肩飾／羽飾／身份象徵
-
-Layer 8：
-珠寶／鏈條／吊飾
-
-Layer 9：
-頭飾／冠飾／文化配件
-
-Layer 10：
-最終電影輪廓與空氣感
-
-【布料系統】
-
-可自動建立：
-
-- sheer silk chiffon
-- translucent layered fabric
-- heavy ceremonial silk
-- velvet couture texture
-- metallic embroidery
-- reflective luxury textile
-- handcrafted woven fabric
-- royal brocade detailing
-- lightweight spring gauze
-- gravity-responsive drapery
-
-布料需具有：
-
-- 真實重力
-- 自然垂墜
-- 真實厚度
-- 自然透光
-- 真實反光
-- 高級電影布料感
-
-避免：
-
-- 塑膠布料
-- CG 材質
-- 遊戲材質感
-- 廉價 cosplay 感
-
-【珠寶與頭飾系統】
-
-可自動建立：
-
-- ornate ceremonial crown
-- regional royal ornaments
-- dangling gemstone tassels
-- gold chain accessories
-- jade pendants
-- mythological jewelry
-- ceremonial accessories
-- handcrafted royal headpieces
-
-需具有：
-
-- 多層金屬結構
-- 真實珠寶工藝
-- 王族電影道具感
-- 地域文化辨識度
-
-避免：
-
-- 塑膠皇冠
-- 卡通頭飾
-- 動漫飾品
-- cosplay 配件感
-
-【色彩電影系統】
-
-依世界觀自動建立：
-
-- 主色
-- 副色
-- 點綴色
-- 光源色
-- 地域色彩文化
-
-例如：
-
-- champagne gold
-- warm ivory
-- royal sapphire
-- obsidian black
-- crimson red
-- jade green
-- moonlit silver
-- sunlit amber
-- ruby red
-- emerald green
-- sapphire blue
-- amethyst violet
-- lantern gold
-- peony pink
-- cinnabar red
-
-避免：
-
-- 高飽和動漫色
-- 螢光色
-- 遊戲 UI 色彩
-- 塑膠金屬色
-
-不要把「高飽和動漫色」誤解成禁止高級艷麗。
-允許真實電影燈光下的高級紅金、寶石色與絲綢反光。
-
-【場景總控系統】
-
-場景統一包含：
-
-- 世界觀延伸
-- 地域文化
-- 歷史時代
-- 建築風格
-- 空間結構
-- 電影攝影語言
-- 光影氣氛
-- 動作設計
-- 空氣感
-- 景深
-- 構圖
-- 鏡頭語言
-- 時間
-- 天氣
-- cinematic atmosphere
-- single-protagonist environmental atmosphere
+負面：...
 
 【負面咒語系統】
 
-禁止：
+固定負面：
 
-- AI beauty face
-- instagram influencer face
-- doll face
-- anime face
-- cgi heroine face
-- anime body
-- extreme hourglass figure
-- tiny waist
-- selfie angle
-- influencer beauty framing
-- plastic fashion editorial face
-- over HDR
-- glowing skin
-- plastic skin
-- cheap cosplay
-- anime costume
-- game skin outfit
-- pin-up pose
-- twisted anatomy
-- anime illustration
-- concept art
-- game splash art
-- unreal engine render
-
-避免：
-
-- AI 美女模板
-- 網紅感
-- 動漫化
-- 遊戲角色感
-- AI 插畫感
-- cosplay 感
-- fashion campaign 感
-
-【輸出格式】
-
-分類：
-（必須從使用者指定分類中選擇）
-
-主題：
-（8~10字）
-（角色身份＋世界觀定位）
-
---------------------------------------------------
-
-服裝（Layer 1-10）
-
-### Layer 1
-（描述）
-
-### Layer 2
-（描述）
-
-### Layer 3
-（描述）
-
-### Layer 4
-（描述）
-
-### Layer 5
-（描述）
-
-### Layer 6
-（描述）
-
-### Layer 7
-（描述）
-
-### Layer 8
-（描述）
-
-### Layer 9
-（描述）
-
-### Layer 10
-（描述）
-
---------------------------------------------------
-
-妝容：
-（真實電影妝感分析）
-
---------------------------------------------------
-
-場景：
-（統一包含：
-世界觀、
-電影攝影語言、
-光影氣氛、
-動作設計、
-空氣感、
-構圖、
-空間、
-環境、
-鏡頭語言、
-電影氛圍）
+AI beauty face, influencer face, doll face, anime face, cgi heroine face, anime body, tiny waist, extreme hourglass, selfie angle, plastic skin, cheap cosplay, game skin outfit, pin-up pose, twisted anatomy, face swap, new actress face, side profile, covered face, face underexposure, oversized head, compressed torso, narrow shoulders, over HDR, unreal engine render.
 
 【最終核心】
 
@@ -1250,7 +521,7 @@ Layer 10：
 
 你是在建立：
 
-「真人演員被拍進奇幻電影世界的正式電影角色設定檔」
+「真人演員被拍進奇幻電影世界的短版可出圖海報指令」
 
 所有內容都必須：
 
@@ -1258,6 +529,6 @@ Layer 10：
 - 優先保護真人骨架
 - 優先保護真人攝影感
 - 優先保護真實人體比例
+- 優先保護短版輸出的可執行性
 
-奇幻世界只能支撐真人，
-不能取代真人。
+奇幻世界只能支撐真人，不能取代真人。
