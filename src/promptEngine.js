@@ -520,23 +520,45 @@ function allowsBackgroundCharacters(text = "") {
   return /宮廷宴會|王朝典禮|宗教儀式|戰場|戰爭|軍勢|軍隊|市集|街市|朝會|祭儀|大型典禮/.test(text);
 }
 
+function isChineseDynastyOrnateTheme(text = "") {
+  return /中國朝代古裝|中國歷代服裝|唐|漢代|漢朝|宋代|宋朝|明代|明朝|清宮|清朝|長安|盛唐|宮廷|花宴|花朝|貴妃|公主|皇后|樂姬|舞姬|宮妃|帝姬|郡主|王姬|故宮|王朝|鳳儀|夜宴樂姬/.test(
+    text,
+  );
+}
+
+function globalPosterDensityText() {
+  return [
+    "Global visual target: high-density bright ornate cinematic poster",
+    "every area of the frame contains meaningful visual detail",
+    "foreground, midground and background must all contribute visual richness",
+    "each category should express this through its own world-building materials, not by forcing one ancient-costume visual formula onto every theme",
+    "avoid empty space, sparse staging, low-density scene design, flat catalog pose and dull background treatment",
+  ].join("；");
+}
+
 function backgroundControlText(form = DEFAULT_FORM) {
   const text = `${form.category} ${form.theme} ${form.scene} ${form.sceneEnvironment} ${form.frameEvent}`;
   if (allowsBackgroundCharacters(text)) {
-    return "背景角色控制：主題允許少量 small-scale cinematic silhouettes、侍從剪影或遠景軍勢輪廓；所有次要輪廓必須縮小、模糊、低存在感，主角仍佔 absolute visual priority";
+    return "背景角色控制：主題允許少量 small-scale cinematic silhouettes、侍從剪影或遠景軍勢輪廓；所有次要輪廓必須縮小、模糊、低存在感，同時前景、中景、遠景都要維持高密度細節，主角仍佔 absolute visual priority";
   }
-  return "背景角色控制：預設單女主電影海報構圖，畫面只保留真人主角；背景優先用建築輪廓、光影、水霧、燈籠、布料、前景遮擋與空間透視建立電影感，主角佔 absolute visual priority";
+  if (isChineseDynastyOrnateTheme(text)) {
+    return "背景角色控制：預設單女主華麗古裝海報構圖，背景必須服務角色且不可壓過主角；前景、中景、遠景都要有有效細節，以花枝、宮燈、珠簾、屏風、披帛、欄杆、殿閣與景深共同填滿畫面，避免留白、極簡場景、低密度背景或暗黑海報式空空構圖，主角佔 absolute visual priority";
+  }
+  return "背景角色控制：預設單女主華麗電影海報構圖，畫面只保留真人主角；背景必須服務角色，前景、中景、遠景都要有有效細節，優先用建築輪廓、光影、水霧、燈火、布料、花材、道具、前景遮擋與空間透視建立高密度電影感，主角佔 absolute visual priority";
 }
 
 function shouldUseCommercialGlamourLighting(form = DEFAULT_FORM) {
   return /夜宴|魅魔|魅姬|月夜|女王|魔后|紫晶|星月|黑玫瑰|暗黑王族|商業奇幻|高級女性|滿月|骸骨權杖/.test(
     `${form.category} ${form.theme} ${form.scene} ${form.visualMode}`,
-  );
+  ) || isChineseDynastyOrnateTheme(`${form.category} ${form.theme} ${form.scene} ${form.sceneEnvironment} ${form.visualMode}`);
 }
 
 function commercialGlamourLightingText(form = DEFAULT_FORM) {
   if (!shouldUseCommercialGlamourLighting(form)) return "";
-  return "商業奇幻亮場：luminous fantasy glamour lighting、commercial fantasy beauty exposure、glowing jewel-tone atmosphere；臉部明亮可辨識並保留皮膚紋理，眼睛有 catchlight，珠寶有 sparkle highlights，黑色衣料保留刺繡與細節；避免 grim dark fantasy、muddy black shadows、face underexposure";
+  if (isChineseDynastyOrnateTheme(`${form.category} ${form.theme} ${form.scene} ${form.sceneEnvironment} ${form.visualMode}`)) {
+    return "商業奇幻亮場：bright commercial fantasy lighting、high-key ornate Chinese poster exposure、luminous jewel-tone atmosphere；臉部明亮可辨識並保留皮膚紋理，珠寶、金飾、絲綢與宮燈都要有發光層次，避免 grim dark fantasy、muddy low exposure、大片黑影與空曠冷清畫面";
+  }
+  return "商業奇幻亮場：luminous fantasy glamour lighting、commercial fantasy beauty exposure、bright hero lighting、glowing jewel-tone atmosphere；臉部明亮可辨識並保留皮膚紋理，眼睛有 catchlight，珠寶、金屬、絲綢、皮革或場景高光都要有 sparkle highlights，避免 grim dark fantasy、muddy black shadows、face underexposure、低曝光與黯淡灰霧畫面";
 }
 
 const VISUAL_MODE_TEXT = {
@@ -593,6 +615,9 @@ function actionStagingBiasText(form = DEFAULT_FORM) {
   if (/唐|長安|盛唐|宮廷|花宴|牡丹|鳳/.test(text)) {
     return "避免證件照式站正中；優先踏階、扶欄、托器物、持團扇或轉肩停步";
   }
+  if (isChineseDynastyOrnateTheme(text)) {
+    return "避免歷史教科書式站姿；優先扶欄、倚榻、拂袖、持花、托盞、撩紗、抱琵琶、臨案停步或由宴席間回眸停拍";
+  }
   if (/賽博|霓虹|都市|特工|雨夜/.test(text)) {
     return "避免櫥窗模特式站姿；優先走動抓拍、倚窗、扶欄或街角回身";
   }
@@ -612,6 +637,9 @@ function buildSceneVisualDetailText(form = DEFAULT_FORM) {
       ? "少量 small-scale cinematic silhouettes、宮燈層次"
       : "宮燈層次、建築燈影";
     return `空間層級補強：長安宮廷花宴、王座前廳或紅金夜宴大殿作為主空間，前景燭火、牡丹、花枝、屏風邊框與半透明披帛穿過鏡頭，中景真人角色可與欄杆、石階、桌案或器物形成互動，遠景金色廊柱、寶石色帷幕、深層台階、${backgroundScale}與濕亮地面倒影形成盛唐商業奇幻電影規模`;
+  }
+  if (isChineseDynastyOrnateTheme(text)) {
+    return "空間層級補強：以盛世宮苑、花宴庭院、臨水水榭、金殿長廊或珠簾臥榻作為主空間，前景必須有花海壓鏡、宮燈、珠簾、團扇、器皿、窗紗或披帛，中景真人角色與案几、欄杆、台階、臥榻、樂器或花器形成互動，遠景保留殿閣燈火、重檐飛簷、寶石色帷幕、深層迴廊、月色窗紗或水面倒影；整體維持 foreground、midground、background 全畫面高密度但不雜亂";
   }
   if (/墮天使|黑羽|黑翼|廢墟|神殿/.test(text)) {
     return "空間層級補強：破碎哥德神殿或黑羽廢墟作為主空間，前景灰燼、羽毛、碎石與冷霧遮擋，中景真人角色被黑羽輪廓與破碎披風包圍，遠景斷裂石柱、月光高窗、殘破拱頂與暗紫聖光形成悲傷神性的 dark fantasy cinema depth";
@@ -655,13 +683,22 @@ function buildStyleVisualDetailText(form = DEFAULT_FORM) {
       ? "女主角的暗紫絲綢輪廓、燭光中的眼神、深酒紅薄紗與絲絨外袍形成第一視覺焦點"
       : "真人女主角的大型 silhouette、動態布料流線、情緒凝視與寶石色光影形成第一視覺焦點");
 
+  const dynastyOrnateText = isChineseDynastyOrnateTheme(`${form.category} ${form.theme} ${form.scene} ${form.sceneEnvironment}`)
+    ? [
+        "Reference visual target: ultra-luxury Chinese fantasy poster, high-density composition, ornate costume design, rich floral framing, bright commercial fantasy lighting, jewel-tone cinematic palette, every area of the frame contains meaningful visual detail, maximum visual richness without clutter",
+        "Visual Priority System: 40% 真人身份辨識度, 30% 華麗服裝與珠寶, 20% 花卉燈火與前景壓鏡, 10% 建築背景",
+      ].join("；")
+    : "";
+
   return [
     visualModeText.join("；"),
     `電影主視覺：${focus}`,
     colorText,
     fabricText,
+    globalPosterDensityText(),
+    dynastyOrnateText,
     "總控：preserved real-person identity first, recognizable original face, dominant silhouette, vivid jewel-tone grading, luxury fabric sheen",
-  ].join("；");
+  ].filter(Boolean).join("；");
 }
 
 function inferFrameEvent(theme, scene) {
@@ -674,6 +711,9 @@ function inferFrameEvent(theme, scene) {
   }
   if (/唐|長安|盛唐|宮廷|花宴|牡丹|鳳/.test(text)) {
     return "角色剛踏下宮階、扶過欄杆或托著器物停步，披帛在空中展開，燭火與花瓣同時掠過前景，像真人身份被完整保留的東方奇幻影集主視覺出場瞬間";
+  }
+  if (isChineseDynastyOrnateTheme(text)) {
+    return "角色剛在花宴、宮廊、水榭或臥榻之間完成一次扶欄、拂袖、撩紗、托盞、回身落座或抱樂器停拍，前景花枝與宮燈壓住畫面邊緣，珠寶與絲綢在亮場中同步發光，像高密度華麗古裝主視覺被攝影機精準截住的一瞬";
   }
   if (/墮天使|黑羽|黑翼|廢墟|神殿/.test(text)) {
     return "角色剛從破碎聖光、灰燼與黑羽之間正面凝視鏡頭，披風和羽毛被冷風掀起，畫面停在悲傷神性與危險感同時爆發的一瞬間";

@@ -45,6 +45,10 @@ const RATIO_LABELS = {
 
 function templateDirectionForProfile(profile) {
   const text = `${profile.title} ${profile.category} ${profile.scene} ${profile.sceneEnvironment} ${profile.sceneAction}`;
+  const isChineseDynastyOrnate =
+    /中國朝代古裝|中國歷代服裝|唐|漢代|漢朝|宋代|宋朝|明代|明朝|清宮|清朝|長安|盛唐|宮廷|花宴|花朝|貴妃|公主|皇后|樂姬|舞姬|宮妃|帝姬|郡主|王姬|故宮|王朝|鳳儀/.test(
+      text,
+    );
   if (/魅魔|魅姬|暗黑夜宴|絲絨|王座|紫晶|占星|哥德/.test(text)) {
     return {
       environment: "前景優先酒杯、燭台、垂鏈、帷幕或蝶翼貼鏡，中景讓角色和王座、扶手、座椅互動，遠景保留高窗、圓盤、鏡面與燈影深度。",
@@ -61,6 +65,12 @@ function templateDirectionForProfile(profile) {
     return {
       environment: "前景優先花枝、屏風、燈器、欄杆或披帛壓鏡，中景讓角色貼近台階、桌案、宮欄或器物，遠景保留廊柱、帷幕與深層殿階。",
       action: "姿態優先踏階、扶欄、托器物、提袖、持團扇或轉肩停步，避免站在中軸立正。",
+    };
+  }
+  if (isChineseDynastyOrnate) {
+    return {
+      environment: "前景優先花枝、花瓣、宮燈、珠簾、窗紗、團扇、欄杆或披帛壓鏡，中景讓角色貼近台階、案几、臥榻、花器、樂器或水榭欄杆，遠景保留殿閣燈火、寶石色帷幕、深層廊柱、飛檐與倒影，整體畫面維持高密度但不空亂。",
+      action: "姿態優先扶欄、拂袖、撩紗、托盞、持花、抱琵琶、倚坐、臨案停步、由榻起身或回眸停拍，避免站在中央僵直立正。",
     };
   }
   if (/武俠|女俠|戰場|江湖|劍|刀|槍|弓|邊關/.test(text)) {
@@ -100,8 +110,8 @@ function templateDirectionForProfile(profile) {
     };
   }
   return {
-    environment: "前景加入可壓鏡的道具或建築構件，中景讓角色和欄杆、座椅、台階或器物互動，遠景保留建築與天光深度。",
-    action: "姿態優先回身停步、扶物互動、坐靠場景邊緣或緩步抓拍，避免站正中。",
+    environment: "前景加入可壓鏡的花材、燈火、布料、道具或建築構件，中景讓角色和欄杆、座椅、台階、器物或場景主體互動，遠景保留建築、天光、燈影或世界觀縱深，整體維持高密度亮場海報感。",
+    action: "姿態優先回身停步、扶物互動、坐靠場景邊緣、由座起身、倚靠或緩步抓拍，避免站正中發呆。",
   };
 }
 
@@ -446,22 +456,22 @@ function render() {
                   <div class="sec-label">布料動態</div>
                   <div class="choice-grid fabric-choice-grid">${choiceCards("fabricMotion", FABRIC_MOTIONS, state.fabricMotion)}</div>
                 </div>
-                <small class="field-help">這三項只調整生成層權重：讓畫面更像高級商業奇幻電影主視覺，而不是灰暗角色設定卡。</small>
+                <small class="field-help">這三項只調整生成層權重：讓整體更接近高密度、亮場、華麗海報感，而不是灰暗、稀疏、普通角色設定卡。</small>
               </div>
               <div class="director-priority-section">
                 <div class="section-head compact-head">
                   <div>
                     <h2>電影主視覺導演層</h2>
-                    <p>空白會自動生成；有填時優先控制「第一眼看到什麼」與「電影事件瞬間」。</p>
+                    <p>空白會自動生成；有填時優先控制第一眼焦點與海報瞬間，不限定古裝語彙。</p>
                   </div>
                 </div>
                 <label>
                   <span>主視覺</span>
-                  <textarea name="visualFocus" rows="2" placeholder="例：紅金披帛佔據畫面，女主角位於花宴燈籠中心，絲綢形成巨大 S 型流線，眼神是第一焦點">${escapeHtml(state.visualFocus)}</textarea>
+                  <textarea name="visualFocus" rows="2" placeholder="例：主角大型輪廓壓住畫面中心，動態布料或場景主元素形成 S 型流線，眼神是第一焦點">${escapeHtml(state.visualFocus)}</textarea>
                 </label>
                 <label>
                   <span>畫面事件</span>
-                  <textarea name="frameEvent" rows="2" placeholder="例：她剛穿過燭火與花瓣回身看向鏡頭，披帛被風掀起，遠景建築燈火、霧氣與空間光影襯托她出場">${escapeHtml(state.frameEvent)}</textarea>
+                  <textarea name="frameEvent" rows="2" placeholder="例：她剛穿過光影與前景遮擋回身看向鏡頭，服裝或環境元素被氣流帶起，遠景空間層次襯托她出場">${escapeHtml(state.frameEvent)}</textarea>
                 </label>
                 <small class="field-help">這層比 Layer 1-10 更重要：先定第一視覺焦點、主角輪廓、動態與情緒，服裝細節只服務畫面。</small>
               </div>

@@ -1306,8 +1306,8 @@ describe("prompt engine", () => {
     expect(prompt).toContain("airborne translucent shawls");
     expect(prompt).toContain("cinematic trailing sleeves");
     expect(prompt).toContain("背景角色控制");
-    expect(prompt).toContain("預設單女主電影海報構圖");
-    expect(prompt).toContain("畫面只保留真人主角");
+    expect(prompt).toContain("預設單女主華麗古裝海報構圖");
+    expect(prompt).toContain("背景必須服務角色且不可壓過主角");
     expect(prompt).toContain("absolute visual priority");
     expect(prompt).toContain("臉部主控");
     expect(prompt).toContain("先鎖定原始真人臉");
@@ -1337,6 +1337,13 @@ describe("prompt engine", () => {
     expect(prompt).toContain("電影主視覺：");
     expect(prompt).toContain("長安宮廷花宴");
     expect(prompt).toContain("紅金夜宴大殿");
+    expect(prompt).toContain("Reference visual target: ultra-luxury Chinese fantasy poster");
+    expect(prompt).toContain("high-density composition");
+    expect(prompt).toContain("Visual Priority System: 40% 真人身份辨識度");
+    expect(prompt).toContain("bright commercial fantasy lighting");
+    expect(prompt).toContain("背景必須服務角色且不可壓過主角");
+    expect(prompt).toContain("前景、中景、遠景都要有有效細節");
+    expect(prompt).toContain("避免留白、極簡場景、低密度背景");
     expect(prompt).not.toContain("宴會群演");
     expect(prompt).not.toContain("遠景群演");
     expect(prompt).not.toContain("群演景深");
@@ -1396,6 +1403,7 @@ describe("prompt engine", () => {
     expect(darkBanquet).toContain("主視覺模式：暗黑夜宴電影");
     expect(darkBanquet).toContain("商業奇幻亮場");
     expect(darkBanquet).toContain("commercial fantasy beauty exposure");
+    expect(darkBanquet).toContain("Global visual target: high-density bright ornate cinematic poster");
     expect(darkBanquet).toContain("臉部明亮可辨識");
     expect(darkBanquet).toContain("避免 grim dark fantasy");
     expect(darkBanquet).toContain("muddy black shadows");
@@ -1408,7 +1416,8 @@ describe("prompt engine", () => {
     expect(darkBanquet).toContain("雙手可自然整理珠鏈、撩起薄紗、扶住座椅邊緣、持酒杯或收住披紗");
     expect(darkBanquet).toContain("罩杯只依角色卡欄位寫入");
     expect(darkBanquet).toContain("貼身真絲內搭、半透紗質外罩、珠鏈肩披、垂墜披紗或開線裙片");
-    expect(darkBanquet).toContain("預設單女主電影海報構圖");
+    expect(darkBanquet).toContain("預設單女主華麗電影海報構圖");
+    expect(darkBanquet).toContain("前景、中景、遠景都要有有效細節");
     expect(darkBanquet).not.toContain("主題允許少量 small-scale cinematic silhouettes");
     expect(netflixMode).toContain("主視覺模式：真人身份保留的東方奇幻電影主視覺");
     expect(netflixMode).toContain("single-protagonist cinematic composition");
@@ -1444,7 +1453,7 @@ describe("prompt engine", () => {
       ...fullmoon.layers,
     });
 
-    expect(prompt.length).toBeLessThan(4700);
+    expect(prompt.length).toBeLessThan(5200);
     expect(prompt).toContain("空間層級補強");
     expect(prompt).toContain("動作鏡頭語言補強");
     expect(prompt).toContain("光影補強");
@@ -1485,12 +1494,12 @@ describe("prompt engine", () => {
       scene: "王朝典禮大殿",
     });
 
-    expect(quietRoyal).toContain("預設單女主電影海報構圖");
+    expect(quietRoyal).toContain("預設單女主華麗電影海報構圖");
     expect(quietRoyal).toContain("商業奇幻亮場");
-    expect(quietRoyal).toContain("黑色衣料保留刺繡");
+    expect(quietRoyal).toContain("珠寶、金屬、絲綢、皮革或場景高光都要有 sparkle highlights");
     expect(quietRoyal).toContain("face underexposure");
     expect(quietRoyal).toContain("畫面只保留真人主角");
-    expect(quietRoyal).toContain("背景優先用建築輪廓、光影、水霧");
+    expect(quietRoyal).toContain("背景必須服務角色");
     expect(quietRoyal).toContain("主角佔 absolute visual priority");
     expect(quietRoyal).not.toContain("路人");
     expect(quietRoyal).not.toContain("NPC");
