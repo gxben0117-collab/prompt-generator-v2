@@ -529,7 +529,7 @@ describe("prompt engine", () => {
     expect(fairy.themeHint).toBe("古裝仙女");
     expect(fairy.layers.costumeLayer1).toContain("貼身柔白絲綢內襯");
     expect(fairy.layers.costumeLayer8).toContain("珍珠步搖");
-    expect(succubus.layers.costumeLayer2).toContain("蕾絲邊胸腰支撐");
+    expect(succubus.layers.costumeLayer2).toContain("半透珠繡上身");
     expect(fallenFeather.category).toBe("西方奇幻");
     expect(fallenFeather.layers.costumeLayer1).toContain("sheer silk chiffon");
     expect(fallenFeather.layers.costumeLayer7).toContain("layered raven feathers");
@@ -1404,10 +1404,10 @@ describe("prompt engine", () => {
     expect(darkBanquet).toContain("extra-long flowing silk drapery");
     expect(darkBanquet).toContain("暗紫絲絨寢宮");
     expect(darkBanquet).toContain("夜宴魅姬式電影動作");
-    expect(darkBanquet).toContain("可採站姿、坐姿、倚坐、泡茶、持扇或緩步前行");
-    expect(darkBanquet).toContain("雙手可自然牽起深紫絲絨外袍、持扇、端茶盞或扶住座椅邊緣");
+    expect(darkBanquet).toContain("可採倚坐、側躺、扶椅背、斜倚王座、由臥榻起身、半蹲回望或緩步逼近");
+    expect(darkBanquet).toContain("雙手可自然整理珠鏈、撩起薄紗、扶住座椅邊緣、持酒杯或收住披紗");
     expect(darkBanquet).toContain("罩杯只依角色卡欄位寫入");
-    expect(darkBanquet).toContain("胸口、腰線與腿部保持電影級禮服遮覆");
+    expect(darkBanquet).toContain("貼身真絲內搭、半透紗質外罩、珠鏈肩披、垂墜披紗或開線裙片");
     expect(darkBanquet).toContain("預設單女主電影海報構圖");
     expect(darkBanquet).not.toContain("主題允許少量 small-scale cinematic silhouettes");
     expect(netflixMode).toContain("主視覺模式：真人身份保留的東方奇幻電影主視覺");
@@ -1444,7 +1444,7 @@ describe("prompt engine", () => {
       ...fullmoon.layers,
     });
 
-    expect(prompt.length).toBeLessThan(4550);
+    expect(prompt.length).toBeLessThan(4700);
     expect(prompt).toContain("空間層級補強");
     expect(prompt).toContain("動作鏡頭語言補強");
     expect(prompt).toContain("光影補強");
@@ -1544,7 +1544,7 @@ describe("prompt engine", () => {
     expect(darkRoyal).toContain("罩杯只依角色卡欄位寫入");
     expect(darkRoyal).toContain("不額外放大胸腰比例");
     expect(darkRoyal).toContain("不製造 pin-up 坐姿");
-    expect(darkRoyal).toContain("深紫絲絨高訂夜宴長袍");
+    expect(darkRoyal).toContain("魅魔夜宴高訂睡袍系衣櫥");
     expect(darkRoyal).toContain("真實胸腔厚度");
     expect(darkRoyal).toContain("視覺焦點集中在原始真人臉");
     expect(inferredDarkRoyal).toContain("罩杯只依角色卡欄位寫入");
@@ -1670,7 +1670,7 @@ describe("prompt engine", () => {
     expect(form.sceneEnvironment).toContain("近景");
     expect(form.sceneEnvironment).toContain("遠景");
     expect(form.sceneAction).toContain("夜宴魅姬式電影動作");
-    expect(form.sceneAction).toContain("可採站姿、坐姿、倚坐、泡茶、持扇或緩步前行");
+    expect(form.sceneAction).toContain("可採倚坐、側躺、扶椅背、斜倚王座、由臥榻起身、半蹲回望或緩步逼近");
     expect(form.sceneAction).toContain("臉部角度接近上傳照片");
     expect(form.sceneAction).toContain("50mm eye-level cinematic blocking");
     expect(form.sceneAction).toContain("臉部完整清楚");

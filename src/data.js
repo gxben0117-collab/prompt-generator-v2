@@ -1425,28 +1425,28 @@ export const WORLD_LAYER_PROFILES = [
     themeHint: "紫蝶夜宴魅魔",
     category: "夜宴魅魔／高訂睡袍電影",
     costume:
-      "電影級夜宴高訂睡袍式禮服，紫黑絲綢、蕾絲邊薄紗、絲絨晨袍外袍與哥德珠寶共同建立成熟暗黑浪漫氣質，像真人演員穿上的高級電影戲服而非私密服飾",
+      "電影級夜宴高訂睡袍系禮服，紫晶黑真絲內搭、月銀紫半透紗層、蝴蝶珠鏈肩披、垂墜腰鏈與流光披紗共同建立成熟暗黑浪漫氣質，像真人演員穿上的高級電影戲服而非全包式厚重長袍",
     layers: {
       costumeLayer1:
-        "高訂黑紫絲綢貼身襯裙作為內層，使用 luxury silk inner slip 與 soft skin-close fabric 建立真實人體輪廓、成熟體積感與布料貼膚光澤",
+        "高訂紫晶黑真絲貼身內搭作為底層，使用 luxury silk slip lining 與 soft skin-close fabric 建立真實人體輪廓、成熟體積感與貼膚光澤",
       costumeLayer2:
-        "蕾絲邊胸腰支撐結構採 lace-trim couture support，不走私密服飾方向，以柔性骨架承托上身與腰線，保留真實胸腔厚度與自然呼吸感",
+        "半透珠繡上身與柔性支撐結構採 beaded sheer couture support，以薄紗刺繡、珠鏈連接與柔性承托建立上身輪廓，保留真實胸腔厚度與自然呼吸感",
       costumeLayer3:
-        "深紫高訂禮服垂褶使用 couture velvet bodice drapery 與 layered silk fabric，讓紫黑布料在燭光中形成高級夜宴禮服層次，胸口、腰線與腿部保持電影級禮服遮覆",
+        "主體改採高開線真絲裙片、斜肩垂領與 layered silk drapery，讓紫晶黑、月銀紫與煙玫瑰色布料在燭光中形成更輕盈的夜宴層次，不固定為全包長袍",
       costumeLayer4:
-        "流動雪紡夜紗與紫蝶紋薄紗外罩採 flowing chiffon night veil，覆於肩臂與裙側，形成柔軟空氣感與暗黑浪漫輪廓",
+        "流動雪紡夜紗、蝶紋薄紗外罩與半透袖層採 flowing chiffon night veil，覆於肩臂、腰側與腿部外緣，形成柔軟空氣感與暗黑浪漫輪廓",
       costumeLayer5:
-        "黑曜石腰鏈、暗銀珠寶扣與細緻腰飾固定於真實裙身結構上，低調反射燭光，建立高級哥德夜宴細節",
+        "黑曜石腰鏈、腿側珠鏈、暗銀珠寶扣與細緻腰飾固定於真實裙身結構上，低調反射燭光，建立高級哥德夜宴細節",
       costumeLayer6:
-        "深紫絲絨高訂夜宴長袍採 velvet couture evening robe，長版布料自然垂落於地面，形成暗黑夜宴女王的電影級主輪廓",
+        "月銀紫或煙紫色垂墜披紗採 translucent draped outer veil，從肩側與扶手邊緣自然瀉下，形成女王式流光輪廓而非厚重包覆外袍",
       costumeLayer7:
-        "羽毛邊肩紗與暗紫披肩採 feather-edged shoulder veil，只作柔和肩頸身份象徵，維持室內夜宴、高訂睡袍式禮服與暗黑浪漫輪廓",
+        "蝴蝶珠鏈肩披、羽毛邊肩紗與細緻披肩採 jeweled shoulder veil，只作柔和肩頸身份象徵，維持室內夜宴、高訂睡袍系與暗黑浪漫輪廓",
       costumeLayer8:
-        "紫晶耳飾、黑曜石細鏈手飾與哥德珠寶環繞手腕、腰側與頸部，細節多層但不搶臉部辨識度",
+        "紫晶耳飾、黑曜石細鏈手飾、蝴蝶珠寶與鎖骨垂飾環繞手腕、腰側與頸部，細節多層但不搶臉部辨識度",
       costumeLayer9:
         "暗水晶髮飾與黑玫瑰小型頭飾融入自然長髮，建立夜宴魅魔的暗黑浪漫妝髮輪廓",
       costumeLayer10:
-        "整體以紫黑絲綢、蕾絲邊薄紗、絲絨睡袍式外袍、燭光寢宮與成熟電影魅力形成 cinematic dark romantic silhouette，而非遊戲 skin 或低俗性感模板",
+        "整體以貼身真絲內搭、半透珠繡紗層、蝴蝶珠鏈、垂墜披紗、燭光寢宮與成熟電影魅力形成 cinematic dark romantic silhouette，而非遊戲 skin、全包式禮袍或低俗性感模板",
     },
     makeup:
       "成熟暗黑電影妝感，保留原始真人五官與皮膚紋理；深酒紅唇色、柔和紫棕煙燻眼影、燭光下的自然 skin reflection、黑玫瑰髮飾與紫晶耳飾形成高級夜宴魅魔氣質，不改變眼型、鼻型或臉型。",

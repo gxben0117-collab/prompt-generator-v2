@@ -273,7 +273,7 @@ function buildDarkRoyalBodyPresenceText(form, category) {
   return [
     "暗黑王族身形安全：胸部與身形只允許依照上傳真人原始體型自然延伸",
     "罩杯只依角色卡欄位寫入，不額外放大胸腰比例、不製造 pin-up 坐姿，不讓腿部或胸腰成為主視覺",
-    "服裝為深紫絲絨高訂夜宴長袍與絲綢披帛，胸口、腰線與腿部保持電影級禮服遮覆與真實布料重量",
+    "服裝改採魅魔夜宴高訂睡袍系衣櫥，於紫晶黑、酒紅、月銀紫、煙玫瑰或黑羽色之間變化，主體可為貼身真絲內搭、半透紗質外罩、珠鏈肩披、垂墜披紗或開線裙片，保留可穿戴與電影級成熟誘惑感，避免一律厚重長袍包覆",
     "保留真實胸腔厚度、肩頸連接、正常腰臀比例、自然重力與高訂禮服布料張力",
     "視覺焦點集中在原始真人臉、暗黑王族氣場、絲絨高光、禮服輪廓與電影女王銀幕存在感",
   ].join("；");
@@ -320,7 +320,7 @@ function stabilizeFaceAngleText(text = "") {
 function inferEmotionalAction(theme, scene) {
   const text = `${theme} ${scene}`;
   if (isDarkBanquetTheme(theme, scene)) {
-    return "夜宴魅姬式電影動作，可採站姿、坐姿、倚坐、泡茶、持扇或緩步前行；臉部角度接近上傳照片，正面或三分之一微側正面看向鏡頭，雙手可自然牽起深紫絲絨外袍、持扇、端茶盞或扶住座椅邊緣，肩頸放鬆、胸腔厚度與骨盆受力穩定、臉部完整清楚";
+  return "夜宴魅姬式電影動作，可採倚坐、側躺、扶椅背、斜倚王座、由臥榻起身、半蹲回望或緩步逼近；臉部角度接近上傳照片，正面或三分之一微側正面看向鏡頭，雙手可自然整理珠鏈、撩起薄紗、扶住座椅邊緣、持酒杯或收住披紗，肩頸放鬆、胸腔厚度與骨盆受力穩定、臉部完整清楚";
   }
   if (/女王|哥德|暗夜|王座|魔后|血族|冥界/.test(text)) {
     return "女王式電影動作，可站立、端坐王座前緣、倚坐扶手或緩步前行；臉部穩定朝向鏡頭，雙手可牽起外袍、扶住權杖、持杯、持扇或自然垂落布料，肩線、胸腔、骨盆與支撐點穩定，眼神具有壓迫感與情緒吸引力";
@@ -418,7 +418,7 @@ function buildFinalIdentityText(form = DEFAULT_FORM) {
 
 function buildFinalCostumeText(form, category, theme) {
   if (isDarkRoyalCategory(category, theme, form.scene)) {
-    return "真人可穿戴的深紫絲絨高訂夜宴長袍，黑紫絲綢內層，流動紫色薄紗披帛，紫蝶刺繡，紅寶石與金色鏈飾。重點是大輪廓、絲絨光澤、薄紗流動與電影高訂質感；保持禮服遮覆，不額外放大胸腰比例。";
+    return "真人可穿戴的魅魔夜宴高訂睡袍系造型，從紫晶黑真絲內搭、酒紅薄紗罩裙、月銀紫珠鏈肩披、煙玫瑰垂墜披紗、黑羽色半透外罩與蝴蝶或黑羽刺繡中隨機組合；重點是貼身內搭、半透紗層、珠鏈流光、開線裙片與成熟電影誘惑感，不固定為全包式厚重長袍，也不額外放大胸腰比例。";
   }
 
   const layerText = [form.costumeLayer1, form.costumeLayer3, form.costumeLayer4, form.costumeLayer6, form.costumeLayer8]
