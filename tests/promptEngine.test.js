@@ -1397,7 +1397,7 @@ describe("prompt engine", () => {
     expect(prompt).toContain("輸出比例控制");
     expect(prompt).toContain("4:5 premium commercial fantasy poster");
     expect(prompt).toContain("4:5 character-dominant cinematic composition");
-    expect(prompt).toContain("可使用站姿、坐姿、臥姿、倚靠、泡茶、持扇、持刀或道具互動");
+    expect(prompt).toContain("優先使用坐姿、臥姿、倚靠、泡茶、持扇、持刀、踏階停步或道具互動");
     expect(prompt).toContain("composition must respect the specified aspect ratio");
     expect(prompt).toContain("keep the full cinematic silhouette inside frame");
     expect(prompt).toContain("face swap");
@@ -1406,6 +1406,9 @@ describe("prompt engine", () => {
     expect(prompt).toContain("altered jawline");
     expect(prompt).toContain("畫面事件");
     expect(prompt).toContain("動作鏡頭語言");
+    expect(prompt).toContain("姿態優先規則");
+    expect(prompt).toContain("不預設筆直站立");
+    expect(prompt).toContain("持物低於臉部");
     expect(prompt).toContain("盛唐夜宴女主角在燈籠與花瓣前正面或微側正面停步");
     expect(prompt).toContain("50mm eye-level cinematic blocking");
     expect(prompt).toContain("臉部完整可見");
@@ -1460,6 +1463,61 @@ describe("prompt engine", () => {
     expect(prompt).toContain("new actress face");
     expect(prompt).toContain("altered jawline");
     expect(prompt).not.toMatch(/over-shoulder|gentle over-shoulder|側身回眸|微微回眸|大幅回眸|回眸動作/i);
+  });
+
+  it("keeps pose variation compatible with face lock and anatomy safety", () => {
+    const standingProfile = WORLD_LAYER_PROFILES.find((item) => item.id === "purple-moon-night-court-empress");
+    const prompt = buildPrompt({
+      category: standingProfile.category,
+      theme: standingProfile.themeHint,
+      makeup: standingProfile.makeup,
+      scene: standingProfile.scene,
+      sceneEnvironment: standingProfile.sceneEnvironment,
+      sceneAction: standingProfile.sceneAction,
+      sceneLighting: standingProfile.sceneLighting,
+      ...standingProfile.layers,
+    });
+    const instruction = buildChatGptInstruction({
+      category: standingProfile.category,
+      theme: standingProfile.themeHint,
+      makeup: standingProfile.makeup,
+      scene: standingProfile.scene,
+      sceneEnvironment: standingProfile.sceneEnvironment,
+      sceneAction: standingProfile.sceneAction,
+      sceneLighting: standingProfile.sceneLighting,
+      ...standingProfile.layers,
+    });
+
+    expect(prompt).toContain("姿態優先規則");
+    expect(prompt).toContain("鎖臉、五官比例、頭身比例與手部正確優先");
+    expect(prompt).toContain("不預設筆直站立");
+    expect(prompt).toContain("端坐、側坐、扶椅、倚欄、臨案、泡茶、撫琴、持扇、持杯、持瓶、持卷、操作星盤");
+    expect(prompt).toContain("觸花、洗紗、與寵物或龍互動");
+    expect(prompt).toContain("低角度女王旅拍、前傾靠近鏡頭、扶桌、扶膝、托腮或指尖近唇");
+    expect(prompt).toContain("五官必須完整可辨識");
+    expect(prompt).toContain("手、紗、道具不得遮五官");
+    expect(prompt).toContain("持物低於臉部、踏階停步或回身看鏡頭");
+    expect(prompt).toContain("避免正中立正");
+    expect(prompt).toContain("王座前緣端坐");
+    expect(instruction).toContain("姿態優先規則");
+    expect(instruction).toContain("不預設筆直站立");
+    expect(instruction).toContain("手、紗、道具不得遮五官");
+    expect(instruction).toContain("操作星盤");
+    expect(instruction).toContain("指尖近唇");
+    expect(instruction).toContain("持物低於臉部");
+  });
+
+  it("allows hairstyle adjustments only when the original face identity remains unchanged", () => {
+    const instruction = buildChatGptInstruction({
+      theme: "月宮仙姬持瓶夜景",
+      scene: "月下宮苑與欄杆",
+      sceneAction: "人物端坐於欄邊，單手持玉瓶低於臉部，髮冠與披髮配合月宮造型。",
+    });
+
+    expect(instruction).toContain("髮型可配合角色微調為盤髮、披髮、編髮、髮髻、髮冠或髮飾");
+    expect(instruction).toContain("不得改變臉型、髮際線辨識、五官位置、成熟年齡感與原始真人身份");
+    expect(instruction).toContain("不換臉");
+    expect(instruction).toContain("不改變眼型、鼻型、嘴型、臉型");
   });
 
   it("supports vivid visual weight controls without changing the five-field output shape", () => {

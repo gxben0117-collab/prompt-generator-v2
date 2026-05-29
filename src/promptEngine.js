@@ -329,7 +329,7 @@ function inferEmotionalAction(theme, scene) {
   return "夜宴魅姬式電影動作，可採倚坐、側躺、扶椅背、斜倚王座、由臥榻起身、半蹲回望或緩步逼近；臉部角度接近上傳照片，正面或三分之一微側正面看向鏡頭，雙手可自然整理珠鏈、撩起薄紗、扶住座椅邊緣、持酒杯或收住披紗，肩頸放鬆、胸腔厚度與骨盆受力穩定、臉部完整清楚";
   }
   if (/女王|哥德|暗夜|王座|魔后|血族|冥界/.test(text)) {
-    return "女王式電影動作，可站立、端坐王座前緣、倚坐扶手或緩步前行；臉部穩定朝向鏡頭，雙手可牽起外袍、扶住權杖、持杯、持扇或自然垂落布料，肩線、胸腔、骨盆與支撐點穩定，眼神具有壓迫感與情緒吸引力";
+    return "女王式電影動作，優先端坐王座前緣、倚坐扶手、踏階逼近或緩步前行；臉部穩定朝向鏡頭，雙手可牽起外袍、扶住權杖、持杯、持扇或自然垂落布料，肩線、胸腔、骨盆與支撐點穩定，眼神具有壓迫感與情緒吸引力";
   }
   if (/唐|長安|盛唐|宮廷|花宴|牡丹|鳳|樂姬|舞姬/.test(text)) {
     return "盛唐夜宴女主角在燈籠與花瓣前正面或微側正面停步，單手帶動披帛或團扇，另一手自然壓住長袖，步伐停在布料揚起瞬間，長裙與飄帶形成 S 型視線流線，臉部完整面向鏡頭";
@@ -369,9 +369,9 @@ function buildAspectRatioControlText(form = DEFAULT_FORM) {
   const ratioText = RATIO_COMPOSITION_TEXT[effectiveRatio] || RATIO_COMPOSITION_TEXT[DEFAULT_FORM.ratio];
   return [
     `輸出比例控制：${ratioText}`,
-    effectiveRatio === "4:5" ? "4:5 character-dominant cinematic composition，可使用站姿、坐姿、臥姿、倚靠、泡茶、持扇、持刀或道具互動；重點是保留完整真人身體比例、臉部可辨識與電影主輪廓" : "",
+    effectiveRatio === "4:5" ? "4:5 character-dominant cinematic composition，優先使用坐姿、臥姿、倚靠、泡茶、持扇、持刀、踏階停步或道具互動；保留真人身體比例、臉部可辨識與電影主輪廓" : "",
     "composition must respect the specified aspect ratio and keep the full cinematic silhouette inside frame",
-    "避免裁頭、裁手、截斷全身、過度留白、AI 自動特寫或自拍式構圖",
+    "避免裁頭、裁手、截斷全身、AI 自動特寫或自拍式構圖",
   ].filter(Boolean).join("；");
 }
 
@@ -412,6 +412,7 @@ function buildFinalIdentityText(form = DEFAULT_FORM, category = "", theme = "") 
   return [
     "最高優先：保留上傳照片中的原始真人臉部身份，不換臉、不美化成 AI 美女，不改變眼型、鼻型、嘴型、臉型、下顎線、成熟年齡感與皮膚質感。",
     "真人身份優先：保留原始臉型、原始眼型、原始鼻型、原始嘴型、五官比例、可辨識特徵、自然臉部不對稱與真人攝影感；臉部正面或微側正面看向鏡頭。",
+    "髮型可配合角色微調為盤髮、披髮、編髮、髮髻、髮冠或髮飾，但不得改變臉型、髮際線辨識、五官位置、成熟年齡感與原始真人身份。",
     `真實人體骨架：平衡肩寬、真實鎖骨、胸腔厚度${buildCupSizeSkeletonText(form, category, theme)}、軀幹深度、骨盆比例、人體重心、四肢比例與脊椎結構；避免頭大、肩窄、軀幹壓縮或臉貼在服裝上的 AI 感。`,
   ].join("\n");
 }
@@ -446,8 +447,8 @@ function buildFinalSceneText(form, category, theme) {
 
 function buildFinalActionText(form, category, theme) {
   const action = compactText(stabilizeFaceAngleText(form.sceneAction), 180);
-  if (action) return `${action}。手部不遮擋臉部；臉部正面或微側正面清楚看向鏡頭，動作符合真實重心與四肢受力。`;
-  return `${inferEmotionalAction(theme, form.scene)}。可採站姿、坐姿、臥姿、倚靠、泡茶、持扇、持刀或持傘；手部、道具、髮絲與布料不得遮臉。`;
+  if (action) return `${action}。${safePosePriorityText()}；手部不遮擋臉部；臉部正面或微側正面清楚看向鏡頭，動作符合真實重心與四肢受力。`;
+  return `${inferEmotionalAction(theme, form.scene)}。${safePosePriorityText()}；手部、道具、髮絲與布料不得遮臉。`;
 }
 
 function buildFinalLightingText(form, category, theme) {
@@ -514,14 +515,14 @@ function buildFinalMakeupText(form) {
 
 function buildBodyProportionStabilizationText(form = DEFAULT_FORM) {
   const postureText = /坐|端坐|坐姿|王座|椅|榻|跪|半跪|臥|躺|倚|靠|泡茶|撫琴/.test(`${form.scene} ${form.sceneEnvironment} ${form.sceneAction}`)
-    ? "坐姿、臥姿、跪坐、倚靠、泡茶或道具互動姿勢必須保留完整胸腔厚度、自然軀幹深度、成人骨盆受力與四肢支撐邏輯，camera distance must not compress body structure"
-    : "站姿、行走、持刀、持扇、持傘或其他動作姿勢保留自然肩寬、軀幹深度、骨盆比例、四肢長度與成人重心";
+    ? "坐姿、臥姿、跪坐、倚靠、泡茶或道具互動姿勢必須保留完整胸腔厚度、軀幹深度、成人骨盆受力與四肢支撐邏輯，camera distance must not compress body structure"
+    : "站姿、行走、持刀、持扇、持傘保留自然肩寬、軀幹深度、骨盆比例、四肢長度與成人重心";
   return [
     "真人比例穩定：full-body physical coherence has equal priority with facial identity preservation",
     "鎖臉不得造成 oversized head、compressed torso、narrow AI shoulders、portrait-only body structure 或 floating head feeling",
-    "保留 balanced head size、natural shoulder-to-head ratio、realistic torso volume、proper body mass distribution",
+    "保留 balanced head size、natural shoulder-to-head ratio、realistic torso volume",
     postureText,
-    "真人必須像 physically existing inside cinematic space 的真實演員，不像 face pasted onto a fantasy costume",
+    "真人必須 physically existing inside cinematic space，不像 face pasted onto a fantasy costume",
   ].join("；");
 }
 
@@ -542,24 +543,18 @@ function isDreamyRadiantPosterTheme(text = "") {
 }
 
 function globalPosterDensityText() {
-  return [
-    "Global visual target: high-density bright ornate cinematic poster",
-    "every area of the frame contains meaningful visual detail",
-    "foreground, midground and background must all contribute visual richness",
-    "each category should express this through its own world-building materials, not by forcing one ancient-costume visual formula onto every theme",
-    "avoid empty space, sparse staging, low-density scene design, flat catalog pose and dull background treatment",
-  ].join("；");
+  return "Global visual target: high-density bright ornate cinematic poster；foreground, midground and background all carry meaningful world-building detail；avoid empty space, sparse staging, flat catalog pose and dull background treatment";
 }
 
 function backgroundControlText(form = DEFAULT_FORM) {
   const text = `${form.category} ${form.theme} ${form.scene} ${form.sceneEnvironment} ${form.frameEvent}`;
   if (allowsBackgroundCharacters(text)) {
-    return "背景角色控制：主題允許少量 small-scale cinematic silhouettes、侍從剪影或遠景軍勢輪廓；所有次要輪廓必須縮小、模糊、低存在感，同時前景、中景、遠景都要維持高密度細節，主角仍佔 absolute visual priority";
+    return "背景角色控制：主題允許少量 small-scale cinematic silhouettes、侍從剪影或遠景軍勢輪廓；所有次要輪廓必須縮小、模糊、低存在感；主角仍佔 absolute visual priority";
   }
   if (isChineseDynastyOrnateTheme(text)) {
-    return "背景角色控制：預設單女主華麗古裝海報構圖，背景必須服務角色且不可壓過主角；前景、中景、遠景都要有有效細節，以花枝、宮燈、珠簾、屏風、披帛、欄杆、殿閣與景深共同填滿畫面，避免留白、極簡場景、低密度背景或暗黑海報式空空構圖，主角佔 absolute visual priority";
+    return "背景角色控制：預設單女主華麗古裝海報構圖，背景必須服務角色且不可壓過主角；前景、中景、遠景都要有有效細節，以花枝、宮燈、珠簾、屏風、披帛、欄杆、殿閣與景深填滿畫面，避免留白、極簡場景、低密度背景，主角佔 absolute visual priority";
   }
-  return "背景角色控制：預設單女主華麗電影海報構圖，畫面只保留真人主角；背景必須服務角色，前景、中景、遠景都要有有效細節，優先用建築輪廓、光影、水霧、燈火、布料、花材、道具、前景遮擋與空間透視建立高密度電影感，主角佔 absolute visual priority";
+  return "背景角色控制：預設單女主華麗電影海報構圖，畫面只保留真人主角；背景必須服務角色，前景、中景、遠景都要有有效細節，用建築輪廓、光影、水霧、燈火、布料、花材、道具與空間透視建立高密度電影感，主角佔 absolute visual priority";
 }
 
 function shouldUseCommercialGlamourLighting(form = DEFAULT_FORM) {
@@ -573,12 +568,12 @@ function shouldUseCommercialGlamourLighting(form = DEFAULT_FORM) {
 function commercialGlamourLightingText(form = DEFAULT_FORM) {
   if (!shouldUseCommercialGlamourLighting(form)) return "";
   if (isDreamyRadiantPosterTheme(`${form.category} ${form.theme} ${form.scene} ${form.sceneEnvironment} ${form.visualMode}`)) {
-    return "商業奇幻亮場：dreamy radiant fantasy poster lighting、bright beauty exposure、translucent bloom、lifted cinematic shadows；臉部穩定明亮並保留真人紋理，眼睛、珠寶、薄紗與花材有柔亮發光層次，避免 grim dark fantasy、muddy low exposure、大片黑影與暖暗燭光獨占全畫面";
+    return "商業奇幻亮場：dreamy radiant fantasy poster lighting、bright beauty exposure、translucent bloom、lifted cinematic shadows；臉部穩定明亮，眼睛、珠寶、薄紗與花材有柔亮層次，避免 grim dark fantasy、muddy low exposure、大片黑影";
   }
   if (isChineseDynastyOrnateTheme(`${form.category} ${form.theme} ${form.scene} ${form.sceneEnvironment} ${form.visualMode}`)) {
-    return "商業奇幻亮場：bright commercial fantasy lighting、high-key ornate Chinese poster exposure、luminous jewel-tone atmosphere；臉部明亮可辨識並保留皮膚紋理，珠寶、金飾、絲綢與宮燈都要有發光層次，避免 grim dark fantasy、muddy low exposure、大片黑影與空曠冷清畫面";
+    return "商業奇幻亮場：bright commercial fantasy lighting、high-key ornate Chinese poster exposure、luminous jewel-tone atmosphere；臉部明亮可辨識，珠寶、金飾、絲綢與宮燈有發光層次，避免 grim dark fantasy、muddy low exposure";
   }
-  return "商業奇幻亮場：luminous fantasy glamour lighting、commercial fantasy beauty exposure、bright hero lighting、glowing jewel-tone atmosphere；臉部明亮可辨識並保留皮膚紋理，眼睛有 catchlight，珠寶、金屬、絲綢、皮革或場景高光都要有 sparkle highlights，避免 grim dark fantasy、muddy black shadows、face underexposure、低曝光與黯淡灰霧畫面";
+  return "商業奇幻亮場：luminous fantasy glamour lighting、commercial fantasy beauty exposure、bright hero lighting；臉部明亮可辨識，眼睛有 catchlight，珠寶、金屬、絲綢、皮革或場景高光都要有 sparkle highlights，避免 grim dark fantasy、muddy black shadows、face underexposure";
 }
 
 const VISUAL_MODE_TEXT = {
@@ -644,6 +639,10 @@ function actionStagingBiasText(form = DEFAULT_FORM) {
   return "避免筆直站正中；優先讓手部、欄杆、座椅、台階、道具或布料和場景發生互動";
 }
 
+function safePosePriorityText() {
+  return "姿態優先規則：鎖臉、五官比例、頭身比例與手部正確優先；可用端坐、側坐、扶椅、倚欄、臨案、泡茶、撫琴、持扇、持杯、持瓶、持卷、操作星盤、觸花、洗紗、與寵物或龍互動等有支撐點動作；可低角度女王旅拍、前傾靠近鏡頭、扶桌、扶膝、托腮或指尖近唇，但五官必須完整可辨識；不預設筆直站立；手、紗、道具不得遮五官，高風險動作降級為持物低於臉部、踏階停步或回身看鏡頭";
+}
+
 function buildSceneVisualDetailText(form = DEFAULT_FORM) {
   const text = `${form.theme} ${form.scene} ${form.sceneEnvironment}`;
   if (isDarkBanquetTheme(form.theme, `${form.scene} ${form.sceneEnvironment}`)) {
@@ -682,6 +681,7 @@ function buildActionCinematographyText(form = DEFAULT_FORM) {
     return [
       "動作鏡頭語言補強：承接上方動作，不重複姿勢描述",
       actionStagingBiasText(form),
+      safePosePriorityText(),
       "50mm eye-level cinematic blocking，臉部完整可見，眼神是表演核心",
       "肩頸、胸腔、骨盆、四肢支撐點與身體受力符合真實成年人體結構，手部不遮擋臉部",
       "布料、披帛、長袖、外袍或髮絲只作視線導引，不搶臉部辨識度",
@@ -690,6 +690,7 @@ function buildActionCinematographyText(form = DEFAULT_FORM) {
   return [
     `動作鏡頭語言：${action}`,
     actionStagingBiasText(form),
+    safePosePriorityText(),
     "50mm eye-level cinematic blocking，臉部完整可見，眼神是表演核心",
     "肩頸、胸腔、骨盆、四肢支撐點與身體受力符合真實成年人體結構，手部不遮擋臉部",
     "布料、披帛、長袖、外袍或髮絲跟隨動作產生可拍攝的 visual leading lines",
@@ -709,7 +710,7 @@ function buildStyleVisualDetailText(form = DEFAULT_FORM) {
 
   const dynastyOrnateText = isChineseDynastyOrnateTheme(`${form.category} ${form.theme} ${form.scene} ${form.sceneEnvironment}`)
     ? [
-        "Reference visual target: ultra-luxury Chinese fantasy poster, high-density composition, ornate costume design, rich floral framing, bright commercial fantasy lighting, jewel-tone cinematic palette, every area of the frame contains meaningful visual detail, maximum visual richness without clutter",
+        "Reference visual target: ultra-luxury Chinese fantasy poster, high-density composition, ornate costume design, rich floral framing, bright commercial fantasy lighting, jewel-tone cinematic palette",
         "Visual Priority System: 40% 真人身份辨識度, 30% 華麗服裝與珠寶, 20% 花卉燈火與前景壓鏡, 10% 建築背景",
       ].join("；")
     : "";
@@ -722,7 +723,7 @@ function buildStyleVisualDetailText(form = DEFAULT_FORM) {
     globalPosterDensityText(),
     dynastyOrnateText,
     dreamyRadiant
-      ? "Dreamy radiant poster target：高亮主角曝光、通透空氣感、柔和 bloom、抬升暗部、臉部亮面優先、冷暖發光分離、畫面整體更接近夢幻通透發光仙氣感而非暖暗燭光低照度電影"
+      ? "Dreamy radiant poster target：高亮主角曝光、通透空氣感、柔和 bloom、抬升暗部、臉部亮面優先，避免暖暗低照度電影"
       : "",
     "總控：preserved real-person identity first, recognizable original face, dominant silhouette, vivid jewel-tone grading, luxury fabric sheen",
   ].filter(Boolean).join("；");
@@ -758,8 +759,7 @@ function buildFrameEventText(form = DEFAULT_FORM) {
   const event = form.frameEvent || inferFrameEvent(form.theme, `${form.scene} ${form.sceneEnvironment}`);
   return [
     `畫面事件：${event}`,
-    "single-protagonist poster frame，風、光、眼神推動 visual narrative",
-    "cinematic reveal、dangerous elegance 與 atmospheric depth 建立主視覺",
+    "single-protagonist poster frame，風、光、眼神推動 visual narrative 與 cinematic reveal",
   ].join("；");
 }
 
