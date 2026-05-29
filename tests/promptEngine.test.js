@@ -1866,6 +1866,27 @@ describe("prompt engine", () => {
     expect(prompt).toContain("face pasted onto a fantasy costume");
   });
 
+  it("supports common print vertical ratios for A5, A4, and European 8K", () => {
+    const cases = [
+      ["14.8:21", "直式 A5 海報構圖"],
+      ["21:29", "直式 A4 海報構圖"],
+      ["25:35", "直式歐 8K 海報構圖"],
+    ];
+
+    for (const [ratio, expectedText] of cases) {
+      const form = normalizeForm({ ratio });
+      const instruction = buildChatGptInstruction({
+        theme: "宮廷旅拍",
+        ratio,
+      });
+
+      expect(form.ratio).toBe(ratio);
+      expect(instruction).toContain(`請根據上傳真人照片生成 ${ratio} 真人電影級奇幻海報`);
+      expect(instruction).toContain(expectedText);
+      expect(instruction).toContain("composition must respect the specified aspect ratio");
+    }
+  });
+
   it("preserves seated and prop-based dark royal actions when the face stays visible", () => {
     const prompt = buildPrompt({
       category: "奇幻異世界 / 暗黑王族",

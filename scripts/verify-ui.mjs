@@ -194,11 +194,20 @@ try {
     if ((await page.locator('select[name="cameraFraming"]').count()) !== 0 || (await page.locator('textarea[name="sceneCamera"]').count()) !== 0) {
       throw new Error(`${viewport.name}: camera controls should be fixed and hidden from UI`);
     }
-    if ((await page.locator('input[name="ratio"]').count()) !== 9) {
+    if ((await page.locator('input[name="ratio"]').count()) !== 12) {
       throw new Error(`${viewport.name}: ratio block-grid count mismatch`);
     }
     if ((await page.getByText("4:5 商業海報", { exact: true }).count()) !== 1) {
       throw new Error(`${viewport.name}: common ratio label for 4:5 missing`);
+    }
+    if ((await page.getByText("14.8:21 直A5", { exact: true }).count()) !== 1) {
+      throw new Error(`${viewport.name}: A5 vertical ratio label missing`);
+    }
+    if ((await page.getByText("21:29 直A4", { exact: true }).count()) !== 1) {
+      throw new Error(`${viewport.name}: A4 vertical ratio label missing`);
+    }
+    if ((await page.getByText("25:35 直歐8K", { exact: true }).count()) !== 1) {
+      throw new Error(`${viewport.name}: European 8K vertical ratio label missing`);
     }
     if ((await page.getByText("9:16 手機桌布", { exact: true }).count()) !== 1) {
       throw new Error(`${viewport.name}: mobile wallpaper ratio label missing`);

@@ -2,7 +2,7 @@
 import { FIFTH_WAVE_PROFILE_DEFS } from './fifthWaveProfiles.js';
 import { LEGACY_ROLE_NAME_OVERRIDES } from './roleNaming.js';
 
-export const RATIOS = ["4:5", "1:1", "3:4", "2:3", "9:16", "16:9", "3:2", "4:3", "2.39:1"];
+export const RATIOS = ["4:5", "1:1", "3:4", "2:3", "14.8:21", "21:29", "25:35", "9:16", "16:9", "3:2", "4:3", "2.39:1"];
 
 export const CAMERA_FRAMINGS = ["全身", "半身", "膝蓋以上", "胸部以上", "遠景"];
 
