@@ -170,6 +170,19 @@ h2 {
   line-height: 1.5;
 }
 
+.template-grid-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.template-grid-status {
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.45;
+}
+
 .detail-section {
   gap: 14px;
 }
@@ -450,6 +463,11 @@ textarea:focus {
 @media (max-width: 900px) {
   .profile-row {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .template-grid-foot {
+    align-items: stretch;
+    flex-direction: column;
   }
 }
 

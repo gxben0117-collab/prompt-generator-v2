@@ -89,8 +89,16 @@ async function clickSingle(page, locator, label, viewportName) {
   await locator.click();
 }
 
+async function revealProfile(page, viewportName, profileId, searchTerm = profileId) {
+  const locator = page.locator(`[data-world-profile="${profileId}"]`);
+  if ((await locator.count()) === 0) {
+    await page.locator('input[name="profileSearch"]').fill(searchTerm);
+  }
+  await clickSingle(page, locator, profileId, viewportName);
+}
+
 async function verifyProfileApplication(page, viewportName, profile) {
-  await clickSingle(page, page.locator(`[data-world-profile="${profile.id}"]`), profile.id, viewportName);
+  await revealProfile(page, viewportName, profile.id, profile.title);
 
   const theme = await page.getByLabel("主題（必填）").inputValue();
   const category = await page.locator('input[name="category"]').inputValue();
@@ -145,7 +153,7 @@ try {
     await page.reload({ waitUntil: "domcontentloaded" });
 
     const title = await page.title();
-    if (title !== "出圖自組咒語生產器 v1.23") {
+    if (title !== "出圖自組咒語生產器 v1.24") {
       throw new Error(`${viewport.name}: unexpected page title ${title}`);
     }
 
@@ -153,8 +161,8 @@ try {
     if ((await page.getByRole("heading", { name: /出圖自組咒語生產器/ }).count()) !== 1) {
       throw new Error(`${viewport.name}: visible app name was not updated`);
     }
-    if ((await page.getByText("v1.23", { exact: true }).count()) < 1) {
-      throw new Error(`${viewport.name}: visible version v1.23 missing`);
+    if ((await page.getByText("v1.24", { exact: true }).count()) < 1) {
+      throw new Error(`${viewport.name}: visible version v1.24 missing`);
     }
     if ((await page.getByText("最高原則：真人鎖臉優先於所有華麗主視覺，不讓角色滑回 AI 仙女臉。", { exact: true }).count()) !== 1) {
       throw new Error(`${viewport.name}: visible product principle missing`);
@@ -319,7 +327,7 @@ try {
     }
     await page.locator('input[name="profileSearch"]').fill("");
 
-    await clickSingle(page, page.locator('[data-world-profile="crimson-gold-secret-temple-priestess"]'), "crimson-gold-secret-temple-priestess", viewport.name);
+    await revealProfile(page, viewport.name, "crimson-gold-secret-temple-priestess", "赤金秘殿");
     if (!(await page.locator('textarea[name="scene"]').inputValue()).includes("赤金古文明秘殿")) {
       throw new Error(`${viewport.name}: setup profile did not fill 赤金古文明秘殿`);
     }

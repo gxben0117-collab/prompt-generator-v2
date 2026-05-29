@@ -453,11 +453,20 @@ function buildFinalActionText(form, category, theme) {
 function buildFinalLightingText(form, category, theme) {
   const lighting = compactText(form.sceneLighting, 150);
   const commercial = shouldUseCommercialGlamourLighting({ ...form, category, theme });
-  const base = lighting || "側前方柔和主光、燭光或月光環境光、柔和邊緣分離光、自然景深、空氣霧化與真實皮膚反光。";
+  const dreamyRadiant = isDreamyRadiantPosterTheme(`${category} ${theme} ${form.scene} ${form.sceneEnvironment} ${form.visualMode}`);
+  const base =
+    lighting ||
+    (dreamyRadiant
+      ? "高亮主角柔光、正面 beauty fill、柔和邊緣分離光、半透明 bloom、抬升暗部、通透空氣透視、冷暖混合發光層次、自然景深與真實皮膚反光。"
+      : "側前方柔和主光、燭光或月光環境光、柔和邊緣分離光、自然景深、空氣霧化與真實皮膚反光。");
   if (commercial) {
-    return `${base} 臉部明亮可辨識，眼睛有高級 catchlight，珠寶有 sparkle highlights，紫黑服裝保留暗部細節，避免過暗、過度 HDR 與塑膠皮膚。`;
+    return dreamyRadiant
+      ? `${base} 臉部必須明亮可辨識且維持真人紋理，眼睛有高級 catchlight，珠寶、花材、絲綢、薄紗與場景高光都要有 sparkle highlights，陰影保持透明不發黑，畫面偏夢幻、通透、發光仙氣感，避免過暗、過度 HDR、大片黑影、濁霧與塑膠皮膚。`
+      : `${base} 臉部明亮可辨識，眼睛有高級 catchlight，珠寶有 sparkle highlights，紫黑服裝保留暗部細節，避免過暗、過度 HDR 與塑膠皮膚。`;
   }
-  return `${base} 臉部清楚可辨識，保留皮膚紋理、髮絲細節、真實空氣透視與電影攝影感。`;
+  return dreamyRadiant
+    ? `${base} 臉部清楚可辨識並優先維持亮面，保留皮膚紋理、髮絲細節、真實空氣透視、柔亮 bloom 與電影攝影感，避免暖暗低照度把人物壓進背景。`
+    : `${base} 臉部清楚可辨識，保留皮膚紋理、髮絲細節、真實空氣透視與電影攝影感。`;
 }
 
 function buildFinalNegativeText() {
@@ -526,6 +535,12 @@ function isChineseDynastyOrnateTheme(text = "") {
   );
 }
 
+function isDreamyRadiantPosterTheme(text = "") {
+  return /歷史小說名著人物|中國歷代服裝|武俠江湖|戰場女將|仙俠神話|古裝陸劇|東方異域|絲路西域|奇幻異世界|暗黑王族|西方古典|歐陸史詩|花園童話|自然精靈|盛唐|宮廷|花宴|長安|月宮|雲海|仙俠|仙門|神殿|精靈|童話|史詩|絲路|西域|武俠|女俠|王族|王后|公主|皇后|貴妃|樂姬/.test(
+    text,
+  );
+}
+
 function globalPosterDensityText() {
   return [
     "Global visual target: high-density bright ornate cinematic poster",
@@ -550,11 +565,16 @@ function backgroundControlText(form = DEFAULT_FORM) {
 function shouldUseCommercialGlamourLighting(form = DEFAULT_FORM) {
   return /夜宴|魅魔|魅姬|月夜|女王|魔后|紫晶|星月|黑玫瑰|暗黑王族|商業奇幻|高級女性|滿月|骸骨權杖/.test(
     `${form.category} ${form.theme} ${form.scene} ${form.visualMode}`,
-  ) || isChineseDynastyOrnateTheme(`${form.category} ${form.theme} ${form.scene} ${form.sceneEnvironment} ${form.visualMode}`);
+  ) ||
+    isChineseDynastyOrnateTheme(`${form.category} ${form.theme} ${form.scene} ${form.sceneEnvironment} ${form.visualMode}`) ||
+    isDreamyRadiantPosterTheme(`${form.category} ${form.theme} ${form.scene} ${form.sceneEnvironment} ${form.visualMode}`);
 }
 
 function commercialGlamourLightingText(form = DEFAULT_FORM) {
   if (!shouldUseCommercialGlamourLighting(form)) return "";
+  if (isDreamyRadiantPosterTheme(`${form.category} ${form.theme} ${form.scene} ${form.sceneEnvironment} ${form.visualMode}`)) {
+    return "商業奇幻亮場：dreamy radiant fantasy poster lighting、bright beauty exposure、translucent bloom、lifted cinematic shadows；臉部穩定明亮並保留真人紋理，眼睛、珠寶、薄紗與花材有柔亮發光層次，避免 grim dark fantasy、muddy low exposure、大片黑影與暖暗燭光獨占全畫面";
+  }
   if (isChineseDynastyOrnateTheme(`${form.category} ${form.theme} ${form.scene} ${form.sceneEnvironment} ${form.visualMode}`)) {
     return "商業奇幻亮場：bright commercial fantasy lighting、high-key ornate Chinese poster exposure、luminous jewel-tone atmosphere；臉部明亮可辨識並保留皮膚紋理，珠寶、金飾、絲綢與宮燈都要有發光層次，避免 grim dark fantasy、muddy low exposure、大片黑影與空曠冷清畫面";
   }
@@ -641,6 +661,9 @@ function buildSceneVisualDetailText(form = DEFAULT_FORM) {
   if (isChineseDynastyOrnateTheme(text)) {
     return "空間層級補強：以盛世宮苑、花宴庭院、臨水水榭、金殿長廊或珠簾臥榻作為主空間，前景必須有花海壓鏡、宮燈、珠簾、團扇、器皿、窗紗或披帛，中景真人角色與案几、欄杆、台階、臥榻、樂器或花器形成互動，遠景保留殿閣燈火、重檐飛簷、寶石色帷幕、深層迴廊、月色窗紗或水面倒影；整體維持 foreground、midground、background 全畫面高密度但不雜亂";
   }
+  if (isDreamyRadiantPosterTheme(`${form.category} ${text}`) && !isDarkBanquetTheme(form.theme, `${form.scene} ${form.sceneEnvironment}`)) {
+    return "空間層級補強：前景貼鏡花材、珠簾、窗紗、葉影、器物、光斑或薄紗壓鏡，中景讓真人角色與欄杆、台階、案几、法器、樂器或場景主體互動，遠景建立高窗、殿閣、花庭、雲海、神殿、拱廊、水面或地景深度；維持 high-density bright poster composition、亮面人物優先、空氣通透、發光邊緣與夢幻電影層次，避免低照度空景吞沒角色。";
+  }
   if (/墮天使|黑羽|黑翼|廢墟|神殿/.test(text)) {
     return "空間層級補強：破碎哥德神殿或黑羽廢墟作為主空間，前景灰燼、羽毛、碎石與冷霧遮擋，中景真人角色被黑羽輪廓與破碎披風包圍，遠景斷裂石柱、月光高窗、殘破拱頂與暗紫聖光形成悲傷神性的 dark fantasy cinema depth";
   }
@@ -677,6 +700,7 @@ function buildStyleVisualDetailText(form = DEFAULT_FORM) {
   const visualModeText = VISUAL_MODE_TEXT[form.visualMode] || VISUAL_MODE_TEXT[DEFAULT_FORM.visualMode];
   const colorText = COLOR_INTENSITY_TEXT[form.colorIntensity] || COLOR_INTENSITY_TEXT[DEFAULT_FORM.colorIntensity];
   const fabricText = FABRIC_MOTION_TEXT[form.fabricMotion] || FABRIC_MOTION_TEXT[DEFAULT_FORM.fabricMotion];
+  const dreamyRadiant = isDreamyRadiantPosterTheme(`${form.category} ${form.theme} ${form.scene} ${form.sceneEnvironment}`);
   const focus =
     form.visualFocus ||
     (isDarkBanquetTheme(form.theme, `${form.scene} ${form.sceneEnvironment}`)
@@ -697,6 +721,9 @@ function buildStyleVisualDetailText(form = DEFAULT_FORM) {
     fabricText,
     globalPosterDensityText(),
     dynastyOrnateText,
+    dreamyRadiant
+      ? "Dreamy radiant poster target：高亮主角曝光、通透空氣感、柔和 bloom、抬升暗部、臉部亮面優先、冷暖發光分離、畫面整體更接近夢幻通透發光仙氣感而非暖暗燭光低照度電影"
+      : "",
     "總控：preserved real-person identity first, recognizable original face, dominant silhouette, vivid jewel-tone grading, luxury fabric sheen",
   ].filter(Boolean).join("；");
 }
@@ -776,6 +803,7 @@ export function expandSceneToDirectorFields(input = {}) {
   const form = normalizeForm(input);
   const scene = form.scene || `依據「${form.theme || "本次主題"}」建立電影場景`;
   const theme = form.theme || "本次主題";
+  const dreamyRadiant = isDreamyRadiantPosterTheme(`${form.category} ${form.theme} ${form.scene} ${form.sceneEnvironment} ${form.visualMode}`);
 
   return {
     ...form,
@@ -783,7 +811,9 @@ export function expandSceneToDirectorFields(input = {}) {
       form.sceneEnvironment
         ? stabilizeFaceAngleText(form.sceneEnvironment)
         :
-      `${scene}，近景加入可被鏡頭拍到的遮擋元素、花瓣、紅金燈籠、燭火、飄紗、寶石色布景、濕亮地面色彩倒影與空氣粒子，中景放置真人角色作為畫面能量中心與第一視覺焦點，遠景優先建立建築輪廓、燈火、水霧、天光、布料層次或空間透視；除非主題明確需要宴會、戰場、市集、宗教儀式或王朝典禮，否則畫面只保留單一真人主角，形成單女主艷麗商業奇幻電影主視覺與真實空間深度`,
+      dreamyRadiant
+        ? `${scene}，近景加入可被鏡頭拍到的花枝、珠簾、窗紗、葉影、光斑、飄紗或器物壓鏡，中景放置真人角色作為畫面能量中心與第一視覺焦點，遠景優先建立殿閣、雲海、神殿、花庭、拱廊、水面、燈火、天光、薄霧與空間透視；整體維持高密度亮場海報感、通透空氣感、柔亮 bloom 與亮面人物優先，除非主題明確需要宴會、戰場、市集、宗教儀式或王朝典禮，否則畫面只保留單一真人主角`
+        : `${scene}，近景加入可被鏡頭拍到的遮擋元素、花瓣、紅金燈籠、燭火、飄紗、寶石色布景、濕亮地面色彩倒影與空氣粒子，中景放置真人角色作為畫面能量中心與第一視覺焦點，遠景優先建立建築輪廓、燈火、水霧、天光、布料層次或空間透視；除非主題明確需要宴會、戰場、市集、宗教儀式或王朝典禮，否則畫面只保留單一真人主角，形成單女主艷麗商業奇幻電影主視覺與真實空間深度`,
     sceneAction:
       form.sceneAction
         ? stabilizeFaceAngleText(form.sceneAction)
@@ -792,7 +822,9 @@ export function expandSceneToDirectorFields(input = {}) {
     sceneCamera: `${buildCameraFramingText(form.cameraFraming)}，鏡頭高度接近眼平`,
     sceneLighting:
       form.sceneLighting ||
-      "真實光源邏輯，側前方柔和主光、紅金燈籠光、暗紫或祖母綠環境反射、寶石藍陰影、絲綢高光與柔和邊緣分離光分層，面部清楚可見，空氣霧化，自然景深、髮絲細節、濕亮地面色彩倒影與可見空氣透視",
+      (dreamyRadiant
+        ? "真實光源邏輯，高亮主角柔光、正面 beauty fill、柔和邊緣分離光、半透明 bloom、冷暖發光分離、抬升暗部、珠寶與薄紗高光、臉部清楚可見、空氣通透、自然景深、髮絲細節、可見空氣透視與柔亮景物反射"
+        : "真實光源邏輯，側前方柔和主光、紅金燈籠光、暗紫或祖母綠環境反射、寶石藍陰影、絲綢高光與柔和邊緣分離光分層，面部清楚可見，空氣霧化，自然景深、髮絲細節、濕亮地面色彩倒影與可見空氣透視"),
   };
 }
 

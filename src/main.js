@@ -29,7 +29,8 @@ const STORAGE_KEY = "hongbing-travel-prompt-state";
 const HISTORY_KEY = "hongbing-travel-prompt-history";
 const UI_PREFS_KEY = "hongbing-travel-prompt-ui-prefs";
 const HISTORY_LIMIT = 5;
-const APP_VERSION = "v1.23";
+const APP_VERSION = "v1.24";
+const PROFILE_PAGE_SIZE = 120;
 const PRODUCT_PRINCIPLE = "最高原則：真人鎖臉優先於所有華麗主視覺，不讓角色滑回 AI 仙女臉。";
 const RATIO_LABELS = {
   "4:5": "4:5 商業海報",
@@ -164,10 +165,16 @@ function loadUiPrefs() {
       roleParentCategory: ALL_FILTER_LABEL,
       roleCategory: ALL_FILTER_LABEL,
       profileSearch: "",
+      profileVisibleCount: PROFILE_PAGE_SIZE,
       ...(JSON.parse(localStorage.getItem(UI_PREFS_KEY)) || {}),
     };
   } catch {
-    return { roleParentCategory: ALL_FILTER_LABEL, roleCategory: ALL_FILTER_LABEL, profileSearch: "" };
+    return {
+      roleParentCategory: ALL_FILTER_LABEL,
+      roleCategory: ALL_FILTER_LABEL,
+      profileSearch: "",
+      profileVisibleCount: PROFILE_PAGE_SIZE,
+    };
   }
 }
 
@@ -302,19 +309,47 @@ function filteredWorldLayerProfiles(activeParentCategory, activeCategory, search
   });
 }
 
-function worldLayerProfileButtons(activeParentCategory, activeCategory, searchTerm, selectedProfileId = "") {
+function visibleProfileState(profiles, selectedProfileId = "", preferredVisibleCount = PROFILE_PAGE_SIZE) {
+  const normalizedVisibleCount = Math.max(PROFILE_PAGE_SIZE, Number(preferredVisibleCount) || PROFILE_PAGE_SIZE);
+  const selectedIndex = profiles.findIndex((profile) => profile.id === selectedProfileId);
+  const requiredVisibleCount =
+    selectedIndex >= normalizedVisibleCount
+      ? Math.ceil((selectedIndex + 1) / PROFILE_PAGE_SIZE) * PROFILE_PAGE_SIZE
+      : normalizedVisibleCount;
+  const visibleProfiles = profiles.slice(0, requiredVisibleCount);
+  return {
+    totalCount: profiles.length,
+    visibleCount: visibleProfiles.length,
+    hasMore: profiles.length > visibleProfiles.length,
+    visibleProfiles,
+  };
+}
+
+function worldLayerProfileButtons(activeParentCategory, activeCategory, searchTerm, selectedProfileId = "", preferredVisibleCount = PROFILE_PAGE_SIZE) {
   const profiles = filteredWorldLayerProfiles(activeParentCategory, activeCategory, searchTerm);
   if (profiles.length === 0) {
     return `<p class="empty-inline profile-empty">找不到符合條件的世界觀模板</p>`;
   }
 
-  return profiles.map(
+  const { visibleProfiles } = visibleProfileState(profiles, selectedProfileId, preferredVisibleCount);
+  return visibleProfiles.map(
     (profile) =>
       `<button type="button" class="profile-chip ${selectedProfileId === profile.id ? "active" : ""}" data-world-profile="${escapeHtml(profile.id)}" aria-label="${escapeHtml(`${profile.title} ${profile.themeHint}`)}">
         <span class="profile-chip-title">${escapeHtml(profile.title)}</span>
         <small class="profile-chip-meta">${escapeHtml(parentCategoryForProfile(profile) || profile.category || "未分類")}</small>
       </button>`,
   ).join("");
+}
+
+function profileLibraryFooter(activeParentCategory, activeCategory, searchTerm, selectedProfileId = "", preferredVisibleCount = PROFILE_PAGE_SIZE) {
+  const profiles = filteredWorldLayerProfiles(activeParentCategory, activeCategory, searchTerm);
+  if (profiles.length === 0) return "";
+  const { visibleCount, totalCount, hasMore } = visibleProfileState(profiles, selectedProfileId, preferredVisibleCount);
+  return `
+    <div class="template-grid-foot">
+      <small class="template-grid-status">目前顯示 ${visibleCount.toLocaleString("zh-Hant")} / ${totalCount.toLocaleString("zh-Hant")} 組模板</small>
+      ${hasMore ? '<button type="button" class="secondary small-btn" data-load-more-profiles>載入更多</button>' : '<small class="template-grid-status">已顯示全部模板</small>'}
+    </div>`;
 }
 
 function selectedProfileCard(state) {
@@ -403,6 +438,7 @@ function render() {
   const activeParentCategory = uiPrefs.roleParentCategory || ALL_FILTER_LABEL;
   const activeCategory = ALL_FILTER_LABEL;
   const profileSearch = uiPrefs.profileSearch || "";
+  const profileVisibleCount = uiPrefs.profileVisibleCount || PROFILE_PAGE_SIZE;
 
   document.querySelector("#app").innerHTML = `
     <main class="shell">
@@ -443,7 +479,8 @@ function render() {
                   </div>
                 </div>
                 <div class="template-grid-note">直接點小格選模板；我把它維持在頁面格狀排列，方便快速掃描，不再走下拉式挑選。</div>
-                <div class="profile-row template-profile-row">${worldLayerProfileButtons(activeParentCategory, activeCategory, profileSearch, state.selectedProfileId)}</div>
+                <div class="profile-row template-profile-row">${worldLayerProfileButtons(activeParentCategory, activeCategory, profileSearch, state.selectedProfileId, profileVisibleCount)}</div>
+                ${profileLibraryFooter(activeParentCategory, activeCategory, profileSearch, state.selectedProfileId, profileVisibleCount)}
               </div>
             </section>
 
@@ -659,6 +696,7 @@ function bindEvents() {
       saveUiPrefs({
         roleParentCategory: button.dataset.roleParent,
         roleCategory: ALL_FILTER_LABEL,
+        profileVisibleCount: PROFILE_PAGE_SIZE,
       });
       saveState({ ...formToState(form), finalPrompt: document.querySelector("#prompt-output").value });
       render();
@@ -680,8 +718,16 @@ function bindEvents() {
   form.elements.profileSearch?.addEventListener("input", () => {
     saveUiPrefs({
       profileSearch: form.elements.profileSearch.value,
+      profileVisibleCount: PROFILE_PAGE_SIZE,
     });
     saveState({ ...formToState(form), finalPrompt: document.querySelector("#prompt-output").value });
+    refreshProfileLibrary(form);
+  });
+  document.querySelector("[data-load-more-profiles]")?.addEventListener("click", () => {
+    const prefs = loadUiPrefs();
+    saveUiPrefs({
+      profileVisibleCount: (Number(prefs.profileVisibleCount) || PROFILE_PAGE_SIZE) + PROFILE_PAGE_SIZE,
+    });
     refreshProfileLibrary(form);
   });
   form.addEventListener("input", () => {
@@ -723,6 +769,7 @@ function refreshProfileLibrary(form) {
   const activeCategory = ALL_FILTER_LABEL;
   const profileSearch = form.elements.profileSearch?.value || "";
   const selectedProfileId = form.elements.selectedProfileId?.value || "";
+  const profileVisibleCount = uiPrefs.profileVisibleCount || PROFILE_PAGE_SIZE;
 
   document.querySelector("[data-profile-count]").textContent = profileCountText(activeParentCategory, activeCategory, profileSearch);
   document.querySelector(".template-profile-row").innerHTML = worldLayerProfileButtons(
@@ -730,9 +777,22 @@ function refreshProfileLibrary(form) {
     activeCategory,
     profileSearch,
     selectedProfileId,
+    profileVisibleCount,
+  );
+  document.querySelector(".template-grid-foot")?.remove();
+  document.querySelector(".template-picker")?.insertAdjacentHTML(
+    "beforeend",
+    profileLibraryFooter(activeParentCategory, activeCategory, profileSearch, selectedProfileId, profileVisibleCount),
   );
   document.querySelectorAll("[data-world-profile]").forEach((button) => {
     button.addEventListener("click", () => applyWorldLayerProfile(form, button.dataset.worldProfile));
+  });
+  document.querySelector("[data-load-more-profiles]")?.addEventListener("click", () => {
+    const prefs = loadUiPrefs();
+    saveUiPrefs({
+      profileVisibleCount: (Number(prefs.profileVisibleCount) || PROFILE_PAGE_SIZE) + PROFILE_PAGE_SIZE,
+    });
+    refreshProfileLibrary(form);
   });
 }
 
