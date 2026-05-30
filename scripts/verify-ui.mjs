@@ -9,6 +9,15 @@ const viewports = [
 ];
 
 const parentCategories = [
+  "長相思旅拍",
+  "敦煌飛天",
+  "九尾妖狐",
+  "魅魔",
+  "暗黑墮天使",
+  "水下龍宮海國",
+  "唐朝服飾",
+  "江南旅拍",
+  "現代都市夜景",
   "歷史小說名著人物",
   "中國歷代服裝",
   "武俠江湖 / 戰場女將",
@@ -153,7 +162,7 @@ try {
     await page.reload({ waitUntil: "domcontentloaded" });
 
     const title = await page.title();
-    if (title !== "出圖自組咒語生產器 v1.24") {
+    if (title !== "出圖自組咒語生產器 v1.25") {
       throw new Error(`${viewport.name}: unexpected page title ${title}`);
     }
 
@@ -161,8 +170,8 @@ try {
     if ((await page.getByRole("heading", { name: /出圖自組咒語生產器/ }).count()) !== 1) {
       throw new Error(`${viewport.name}: visible app name was not updated`);
     }
-    if ((await page.getByText("v1.24", { exact: true }).count()) < 1) {
-      throw new Error(`${viewport.name}: visible version v1.24 missing`);
+    if ((await page.getByText("v1.25", { exact: true }).count()) < 1) {
+      throw new Error(`${viewport.name}: visible version v1.25 missing`);
     }
     if ((await page.getByText("最高原則：真人鎖臉優先於所有華麗主視覺，不讓角色滑回 AI 仙女臉。", { exact: true }).count()) !== 1) {
       throw new Error(`${viewport.name}: visible product principle missing`);
@@ -303,18 +312,26 @@ try {
       throw new Error(`${viewport.name}: Chinese historical parent search did not reveal Song tea-house profile`);
     }
     await page.locator('input[name="profileSearch"]').fill("書香");
-    if ((await page.locator('[data-world-profile="scholar-study-calligraphy-lady"]').count()) !== 1) {
-      throw new Error(`${viewport.name}: Chinese historical parent search did not reveal scholar profile`);
+    if ((await page.locator('[data-world-profile="scholar-study-calligraphy-lady"]').count()) !== 0) {
+      throw new Error(`${viewport.name}: scholar profile should move out of Chinese historical parent`);
     }
 
-    await clickSingle(page, page.locator('[data-role-parent="奇幻異世界 / 暗黑王族"]'), "dark fantasy parent", viewport.name);
+    await clickSingle(page, page.locator('[data-role-parent="江南旅拍"]'), "江南旅拍 parent", viewport.name);
+    await page.locator('input[name="profileSearch"]').fill("書香");
+    if ((await page.locator('[data-world-profile="scholar-study-calligraphy-lady"]').count()) !== 1) {
+      throw new Error(`${viewport.name}: Jiangnan travel parent search did not reveal scholar profile`);
+    }
+
+    await clickSingle(page, page.locator('[data-role-parent="魅魔"]'), "魅魔 parent", viewport.name);
     await page.locator('input[name="profileSearch"]').fill("深淵莉莉絲");
     if ((await page.locator('[data-world-profile="dark-abyss-lilith-court-queen"]').count()) !== 1) {
-      throw new Error(`${viewport.name}: dark fantasy parent search did not reveal new abyss queen profile`);
+      throw new Error(`${viewport.name}: succubus parent search did not reveal new abyss queen profile`);
     }
+
+    await clickSingle(page, page.locator('[data-role-parent="暗黑墮天使"]'), "暗黑墮天使 parent", viewport.name);
     await page.locator('input[name="profileSearch"]').fill("黑羽墮夜");
     if ((await page.locator('[data-world-profile="fallen-elegy-black-wing-angel"]').count()) !== 1) {
-      throw new Error(`${viewport.name}: dark fantasy parent search did not reveal black-wing queen profile`);
+      throw new Error(`${viewport.name}: fallen angel parent search did not reveal black-wing queen profile`);
     }
     await page.locator('input[name="profileSearch"]').fill("not-a-template-keyword");
     if (!(await page.getByText("找不到符合條件的世界觀模板", { exact: true }).isVisible())) {

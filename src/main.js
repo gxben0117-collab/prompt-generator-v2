@@ -29,8 +29,8 @@ const STORAGE_KEY = "hongbing-travel-prompt-state";
 const HISTORY_KEY = "hongbing-travel-prompt-history";
 const UI_PREFS_KEY = "hongbing-travel-prompt-ui-prefs";
 const HISTORY_LIMIT = 5;
-const APP_VERSION = "v1.24";
-const PROFILE_PAGE_SIZE = 120;
+const APP_VERSION = "v1.25";
+const PROFILE_PAGE_SIZE = 60;
 const PRODUCT_PRINCIPLE = "最高原則：真人鎖臉優先於所有華麗主視覺，不讓角色滑回 AI 仙女臉。";
 const RATIO_LABELS = {
   "4:5": "4:5 商業海報",
@@ -290,9 +290,16 @@ function worldProfileSearchText(profile) {
   return `${profile.title} ${profile.themeHint} ${profile.category} ${profile.id} ${(profile.aliases || []).join(" ")} ${Object.values(profile.layers || {}).join(" ")} ${profile.makeup || ""} ${profile.scene || ""} ${profile.sceneEnvironment || ""} ${profile.sceneAction || ""} ${profile.sceneLighting || ""}`;
 }
 
-function profileMatchesParent(profile, activeParentCategory) {
-  return activeParentCategory === ALL_FILTER_LABEL || parentCategoryForProfile(profile) === activeParentCategory;
-}
+const WORLD_PROFILE_INDEX = WORLD_LAYER_PROFILES.map((profile) => ({
+  profile,
+  parentCategory: parentCategoryForProfile(profile),
+  searchText: normalizeSearchText(worldProfileSearchText(profile)),
+}));
+
+let profileFilterCache = {
+  key: "",
+  profiles: [],
+};
 
 function profileMatchesFineCategory(profile, activeCategory) {
   return activeCategory === ALL_FILTER_LABEL || profile.category === activeCategory;
@@ -304,12 +311,19 @@ function categoryOptions() {
 
 function filteredWorldLayerProfiles(activeParentCategory, activeCategory, searchTerm) {
   const keyword = normalizeSearchText(searchTerm).trim();
-  return WORLD_LAYER_PROFILES.filter((profile) => {
-    const categoryMatched = profileMatchesParent(profile, activeParentCategory) && profileMatchesFineCategory(profile, activeCategory);
-    if (!categoryMatched) return false;
-    if (!keyword) return true;
-    return normalizeSearchText(worldProfileSearchText(profile)).includes(keyword);
-  });
+  const cacheKey = `${activeParentCategory}\u0001${activeCategory}\u0001${keyword}`;
+  if (profileFilterCache.key === cacheKey) {
+    return profileFilterCache.profiles;
+  }
+
+  const profiles = WORLD_PROFILE_INDEX.filter(({ profile, parentCategory, searchText }) => {
+    const parentMatched = activeParentCategory === ALL_FILTER_LABEL || parentCategory === activeParentCategory;
+    if (!parentMatched || !profileMatchesFineCategory(profile, activeCategory)) return false;
+    return !keyword || searchText.includes(keyword);
+  }).map(({ profile }) => profile);
+
+  profileFilterCache = { key: cacheKey, profiles };
+  return profiles;
 }
 
 function visibleProfileState(profiles, selectedProfileId = "", preferredVisibleCount = PROFILE_PAGE_SIZE) {

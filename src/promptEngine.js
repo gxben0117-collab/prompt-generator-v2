@@ -18,6 +18,11 @@ const FORBIDDEN_REPLACEMENTS = [
   [/性感|挑逗|誘惑/g, "高級電影魅力"],
 ];
 
+const SANITIZE_PROTECTED_TERMS = [
+  ["自由女神像", "__PROTECTED_STATUE_OF_LIBERTY_FULL__"],
+  ["自由女神", "__PROTECTED_STATUE_OF_LIBERTY__"],
+];
+
 const THEME_RISK_RULES = [
   {
     name: "AI 美女模板詞",
@@ -87,9 +92,17 @@ export const DEFAULT_FORM = {
 };
 
 export function sanitizeInput(value = "") {
-  return FORBIDDEN_REPLACEMENTS.reduce(
-    (text, [pattern, replacement]) => text.replace(pattern, replacement),
+  const protectedText = SANITIZE_PROTECTED_TERMS.reduce(
+    (text, [term, token]) => text.replaceAll(term, token),
     String(value).trim().replace(/\s+/g, " "),
+  );
+  const sanitized = FORBIDDEN_REPLACEMENTS.reduce(
+    (text, [pattern, replacement]) => text.replace(pattern, replacement),
+    protectedText,
+  );
+  return SANITIZE_PROTECTED_TERMS.reduce(
+    (text, [term, token]) => text.replaceAll(token, term),
+    sanitized,
   );
 }
 

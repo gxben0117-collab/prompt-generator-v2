@@ -4,6 +4,51 @@ export const ALL_FILTER_LABEL = "全部";
 
 export const PARENT_ROLE_CATEGORIES = [
   {
+    label: "長相思旅拍",
+    exclude: [],
+    keywords: ["長相思旅拍", "長相思", "西安古城", "雪城紅裳", "宮廊紅袖", "紅綾持劍", "西炎", "皓翎", "辰榮", "塗山"],
+  },
+  {
+    label: "敦煌飛天",
+    exclude: [],
+    keywords: ["敦煌飛天", "敦煌", "飛天", "莫高窟", "敦煌壁畫", "鳴沙", "月牙泉", "洞窟", "飛天伎樂"],
+  },
+  {
+    label: "九尾妖狐",
+    exclude: [],
+    keywords: ["九尾", "妖狐", "狐仙", "狐后", "狐姬", "狐火", "靈狐", "天狐", "青丘", "狐族"],
+  },
+  {
+    label: "魅魔",
+    exclude: [],
+    keywords: ["魅魔", "夜宴魅姬", "冰霜夜宴魅姬", "紫蝶夜宴", "高訂睡袍", "暗黑浪漫電影"],
+  },
+  {
+    label: "暗黑墮天使",
+    exclude: ["魅魔", "魅姬"],
+    keywords: ["暗黑墮天使", "墮天使", "墮羽", "黑羽", "黑翼", "殘翼", "末日神話"],
+  },
+  {
+    label: "水下龍宮海國",
+    exclude: [],
+    keywords: ["水下龍宮海國", "龍宮", "海國", "深海", "水下", "滄海", "水母", "靈珠", "海月", "聽潮", "龍女"],
+  },
+  {
+    label: "唐朝服飾",
+    exclude: ["長相思", "西安古城", "敦煌", "飛天", "莫高窟", "九尾", "妖狐", "狐仙", "魅魔", "魅姬", "魔妃", "暗黑", "哥德", "墮天使", "龍宮", "海國", "深海", "水下"],
+    keywords: ["大唐", "盛唐", "唐代", "唐朝", "長安", "唐闕", "唐珠", "唐制", "霓裳", "飛天伎樂", "花鈿", "襦裙", "披帛"],
+  },
+  {
+    label: "江南旅拍",
+    exclude: [],
+    keywords: ["江南旅拍", "江南", "江東", "水鄉", "水榭", "古鎮", "西塘", "荷塘", "桃花庭院", "蘇州", "水岸"],
+  },
+  {
+    label: "現代都市夜景",
+    exclude: [],
+    keywords: ["現代都市夜景", "都市夜景", "現代", "都市", "都會", "夜景", "霓虹", "街拍", "首爾", "上海", "香港", "台北", "賽博", "捷運", "city pop"],
+  },
+  {
     label: "歷史小說名著人物",
     exclude: ["西方", "歐洲", "雅典", "希臘", "奧林匹斯", "凡爾賽", "哥德", "魅魔", "魔后", "暗黑", "賽博", "現代"],
     keywords: [
@@ -178,6 +223,9 @@ export const PARENT_ROLE_CATEGORIES = [
   },
 ];
 
+const PRIORITY_PARENT_CATEGORY_LABELS = ["長相思旅拍", "敦煌飛天", "九尾妖狐", "魅魔", "暗黑墮天使", "水下龍宮海國", "唐朝服飾", "江南旅拍", "現代都市夜景"];
+const PROFILE_PARENT_CATEGORY_CACHE = new WeakMap();
+
 export function normalizeSearchText(value) {
   return normalizeForSearch(value);
 }
@@ -187,7 +235,16 @@ export function profileCategoryText(profile) {
 }
 
 export function parentCategoryForText(value) {
+  const rawHaystack = String(value || "").toLowerCase();
   const haystack = normalizeSearchText(value);
+  const priorityCandidate = PARENT_ROLE_CATEGORIES.find((parent) => {
+    if (!PRIORITY_PARENT_CATEGORY_LABELS.includes(parent.label)) return false;
+    const blocked = (parent.exclude || []).some((keyword) => rawHaystack.includes(String(keyword).toLowerCase()));
+    if (blocked) return false;
+    return parent.keywords.some((keyword) => rawHaystack.includes(String(keyword).toLowerCase()));
+  });
+  if (priorityCandidate) return priorityCandidate.label;
+
   const candidates = PARENT_ROLE_CATEGORIES.map((parent, index) => {
     const blocked = (parent.exclude || []).some((keyword) => haystack.includes(normalizeSearchText(keyword)));
     if (blocked) return null;
@@ -214,6 +271,21 @@ export function parentCategoryForText(value) {
 }
 
 export function parentCategoryForProfile(profile) {
-  if (profile?.parentCategory) return profile.parentCategory;
-  return parentCategoryForText(profileCategoryText(profile));
+  if (profile && typeof profile === "object" && PROFILE_PARENT_CATEGORY_CACHE.has(profile)) {
+    return PROFILE_PARENT_CATEGORY_CACHE.get(profile);
+  }
+  const inferredCategory = parentCategoryForText(profileCategoryText(profile));
+  let category;
+  if (PRIORITY_PARENT_CATEGORY_LABELS.includes(inferredCategory)) {
+    category = inferredCategory;
+  } else if (profile?.parentCategory) {
+    category = profile.parentCategory;
+  } else {
+    category = inferredCategory;
+  }
+
+  if (profile && typeof profile === "object") {
+    PROFILE_PARENT_CATEGORY_CACHE.set(profile, category);
+  }
+  return category;
 }
