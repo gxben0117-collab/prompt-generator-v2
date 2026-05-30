@@ -489,6 +489,10 @@ function render() {
 
             <section class="form-section detail-section">
               ${selectedProfileCard(state)}
+              <div class="quick-compose-bar">
+                <button type="button" data-action="compose-copy">完成出圖 + 複製完整咒語</button>
+                <small>不調整詳細設定時，可選好模板後直接產生。</small>
+              </div>
               <div class="section-head">
                 <div>
                   <h2>詳細設定</h2>

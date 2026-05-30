@@ -1610,6 +1610,36 @@ describe("prompt engine", () => {
     expect(netflixMode).not.toContain("柔和電影主調");
   });
 
+  it("supports a bright commercial costume poster mode based on the vivid reference style", () => {
+    const prompt = buildPrompt({
+      theme: "長安水榭亮麗歌姬",
+      scene: "江南水榭夜景，宮燈、花枝、古琴、茶席、拱橋與水面燈影",
+      visualMode: "高亮商業古裝海報",
+      colorIntensity: "高級艷麗",
+      fabricMotion: "大動態飄紗",
+      cameraFraming: "膝蓋以上",
+    });
+    const instruction = buildChatGptInstruction({
+      theme: "長安水榭亮麗歌姬",
+      scene: "江南水榭夜景，宮燈、花枝、古琴、茶席、拱橋與水面燈影",
+      visualMode: "高亮商業古裝海報",
+      colorIntensity: "高級艷麗",
+      fabricMotion: "大動態飄紗",
+      cameraFraming: "膝蓋以上",
+    });
+
+    expect(prompt).toContain("主視覺模式：高亮商業古裝海報");
+    expect(prompt).toContain("圖二亮麗版風格");
+    expect(prompt).toContain("sparkle highlights");
+    expect(prompt).toContain("saturated but realistic");
+    expect(prompt).toContain("膝蓋以上");
+    expect(instruction).toContain("高亮商業古裝電影海報");
+    expect(instruction).toContain("圖二亮麗版風格");
+    expect(instruction).toContain("珠寶、金屬、燈籠、水面反光、絲綢、薄紗與披帛");
+    expect(instruction).toContain("陰影抬升不厚重");
+    expect(instruction).toContain("避免灰暗低光");
+  });
+
   it("keeps template prompts concise by using supplemental director notes instead of repeating filled fields", () => {
     const fullmoon = WORLD_LAYER_PROFILES.find((profile) => profile.id === "fullmoon-skull-scepter-queen");
     const prompt = buildPrompt({

@@ -701,6 +701,23 @@ textarea:focus {
   font-weight: 500;
 }
 
+.quick-compose-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  border: 1px solid rgba(255, 214, 138, 0.28);
+  border-radius: 8px;
+  background: rgba(255, 205, 128, 0.07);
+}
+
+.quick-compose-bar small {
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.4;
+}
+
 .actions,
 .panel-head,
 .status-line {
@@ -834,6 +851,7 @@ button.ghost {
   .library-form,
   .library-toolbar,
   .mode-group,
+  .quick-compose-bar,
   .section-head,
   .status-line {
     display: grid;

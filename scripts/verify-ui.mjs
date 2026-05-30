@@ -215,8 +215,11 @@ try {
     if ((await page.locator('input[name="cameraFraming"]').count()) !== 5) {
       throw new Error(`${viewport.name}: camera framing block-grid count mismatch`);
     }
-    if ((await page.locator('input[name="visualMode"]').count()) !== 3) {
+    if ((await page.locator('input[name="visualMode"]').count()) !== 4) {
       throw new Error(`${viewport.name}: visual mode block-grid count mismatch`);
+    }
+    if ((await page.getByText("高亮商業古裝海報", { exact: true }).count()) !== 1) {
+      throw new Error(`${viewport.name}: bright costume poster visual mode missing`);
     }
     if ((await page.locator('input[name="colorIntensity"]').count()) !== 4) {
       throw new Error(`${viewport.name}: color intensity block-grid count mismatch`);
@@ -224,7 +227,7 @@ try {
     if ((await page.locator('input[name="fabricMotion"]').count()) !== 3) {
       throw new Error(`${viewport.name}: fabric motion block-grid count mismatch`);
     }
-    if ((await page.getByRole("button", { name: "完成出圖 + 複製完整咒語" }).count()) !== 1) {
+    if ((await page.getByRole("button", { name: "完成出圖 + 複製完整咒語" }).count()) !== 2) {
       throw new Error(`${viewport.name}: compose-and-copy button missing`);
     }
     if ((await page.getByRole("button", { name: "完成出圖咒語", exact: true }).count()) !== 0) {
@@ -439,7 +442,7 @@ try {
     const actionValue = await page.locator('textarea[name="sceneAction"]').inputValue();
     const lightingValue = await page.locator('textarea[name="sceneLighting"]').inputValue();
 
-    await page.getByRole("button", { name: "完成出圖 + 複製完整咒語" }).click();
+    await page.getByRole("button", { name: "完成出圖 + 複製完整咒語" }).first().click();
     const historyItems = page.locator("[data-history-id]");
     if ((await historyItems.count()) < 1) {
       throw new Error(`${viewport.name}: prompt history was not recorded`);

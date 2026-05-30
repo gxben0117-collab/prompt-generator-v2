@@ -6,7 +6,7 @@ export const RATIOS = ["4:5", "1:1", "3:4", "2:3", "14.8:21", "21:29", "25:35", 
 
 export const CAMERA_FRAMINGS = ["全身", "半身", "膝蓋以上", "胸部以上", "遠景"];
 
-export const VISUAL_MODES = ["Netflix 東方奇幻", "暗黑夜宴", "商業奇幻海報"];
+export const VISUAL_MODES = ["Netflix 東方奇幻", "高亮商業古裝海報", "暗黑夜宴", "商業奇幻海報"];
 
 export const COLOR_INTENSITIES = ["紅金寶石", "高級艷麗", "暗紫酒紅", "盛唐花宴"];
 
