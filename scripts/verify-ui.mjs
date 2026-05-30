@@ -509,8 +509,20 @@ try {
     if (!promptText.includes("服裝：") || !promptText.includes("妝容：") || !promptText.includes("場景：") || !promptText.includes("動作：") || !promptText.includes("光影：") || !promptText.includes("負面：")) {
       throw new Error(`${viewport.name}: compact final prompt structure missing`);
     }
-    if (!promptText.includes("原始臉型") || !promptText.includes("原始眼型") || !promptText.includes("原始鼻型")) {
+    if (!promptText.includes("真人身份鎖定") || !promptText.includes("原始臉型") || !promptText.includes("眼型") || !promptText.includes("鼻型")) {
       throw new Error(`${viewport.name}: compact facial identity lock missing`);
+    }
+    if (!promptText.includes("請依主題、角色身份與情節重新設計背景近景 / 中景 / 遠景")) {
+      throw new Error(`${viewport.name}: adaptive near/mid/far scene direction missing`);
+    }
+    if (!promptText.includes("不要照抄角色卡近中遠原句")) {
+      throw new Error(`${viewport.name}: role-card scene copy guard missing`);
+    }
+    if (promptText.includes(environmentValue)) {
+      throw new Error(`${viewport.name}: final prompt copied director environment field verbatim`);
+    }
+    if (!promptText.includes("ChatGPT 需依場所、角色身份與情節設計不呆站的姿勢")) {
+      throw new Error(`${viewport.name}: adaptive action direction missing`);
     }
     if (!promptText.includes('胸腔厚度、罩杯 "K" 對應的自然胸型量感、軀幹深度')) {
       throw new Error(`${viewport.name}: cup size field did not enter skeleton prompt`);

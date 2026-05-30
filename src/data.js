@@ -52,6 +52,7 @@ export const ROLE_SUGGESTION_ITEMS = [
   { id: "tang-phoenix-ritual-empress-formal", label: "大唐鳳儀皇后", category: "大唐宮廷／皇后禮制／鳳儀正裝" },
   { id: "changan-inner-court-consort", label: "長安內廷貴妃", category: "大唐宮廷／內廷陳設／貴妃" },
   { id: "changan-night-banquet-musician", label: "長安夜宴樂姬", category: "東方奇幻歷史電影" },
+  { id: "tang-red-silk-flower-banquet-dancer", label: "盛唐紅綾花宴舞姬", category: "盛唐花宴｜紅綾舞姬｜宮廷電影主視覺" },
   { id: "tang-night-banquet-chief-musician", label: "長安夜宴之首席樂姬", category: "東方奇幻歷史電影" },
   { id: "spring-gold-gauze-commandery-princess", label: "春庭金紗・宮廷郡主", category: "盛唐宮廷／春日旅拍／東方電影美學" },
   { id: "crimson-forbidden-city-princess", label: "赤凰宮廷・故宮王姬", category: "故宮古風／宮廷電影／盛世王朝" },
@@ -123,6 +124,7 @@ export const ROLE_SUGGESTION_ITEMS = [
   { id: "frost-succubus-gothic-queen", label: "冰霜夜宴魅姬", category: "冰霜夜宴魅姬｜哥德寢宮電影" },
   { id: "dark-necromancer-throne-queen", label: "暗黑魔后・亡靈王座", category: "暗黑魔后｜亡靈王座｜哥德奇幻電影" },
   { id: "fullmoon-skull-scepter-queen", label: "滿月骸骨權杖女王", category: "暗黑王族｜滿月權杖｜哥德軍勢電影" },
+  { id: "ruby-skull-moon-throne-queen", label: "紅寶石骸骨月座女王", category: "暗黑王族｜紅寶石骸骨權杖｜滿月哥德王城" },
   { id: "purple-moon-night-court-empress", label: "紫月夜庭魔后", category: "黑暗奇幻／夜庭王座／魔后" },
   { id: "raven-throne-night-empress", label: "黑鴉王座暗夜魔后", category: "黑羽魔后｜哥德暗黑｜烏鴉王座電影" },
   { id: "dark-domain-ancient-temple-queen", label: "暗夜魔域古殿女王", category: "奇幻／歌德電影美術場景" },
@@ -138,6 +140,8 @@ export const ROLE_SUGGESTION_ITEMS = [
   { id: "blood-sword-gate-saint", label: "血衣劍門聖女", category: "武俠奇幻／血色江湖／劍門聖女" },
   { id: "moon-forest-nine-tail-fox-princess", label: "月夜禁林九尾狐姬", category: "九尾狐姬｜月夜妖靈｜東方神話電影" },
   { id: "spirit-fox-domain-nine-tail-empress", label: "靈狐神域九尾妖后", category: "九尾妖后｜靈火神域｜東方奇幻史詩" },
+  { id: "moon-courtyard-foxfire-nine-tail-queen", label: "月庭狐火九尾狐后", category: "九尾狐后｜月夜古庭｜狐火靈獸電影" },
+  { id: "moon-pass-foxfire-crimson-sword-queen", label: "月關狐火紅劍后", category: "九尾狐后｜長城劍勢｜狐火戰場電影" },
   { id: "jiu-mo-crimson-phoenix-saint", label: "九漠沙海之赤鳳聖女", category: "東方奇幻神話電影" },
   { id: "qingluan-temple-hidden-saint", label: "青鸞神殿隱世聖女", category: "東方玄幻史詩電影" },
   { id: "purple-sakura-forbidden-onmyoji", label: "紫櫻禁術陰陽師", category: "東方奇幻／陰陽術法／紫櫻巫女" },
@@ -151,6 +155,7 @@ export const ROLE_SUGGESTION_ITEMS = [
   { id: "marionette-theater-soul-dominion", label: "傀儡劇院之靈魂主宰", category: "暗黑哥德奇幻電影" },
   { id: "arctic-icefield-queen", label: "北境冰原之孤高王后", category: "史詩奇幻劇情電影" },
   { id: "purple-butterfly-succubus", label: "紫蝶夜宴魅魔", category: "夜宴魅魔／高訂睡袍電影" },
+  { id: "amethyst-butterfly-astrolabe-queen", label: "紫晶蝶焰星盤女王", category: "紫晶秘殿｜星盤女王｜蝶焰奇幻電影" },
   { id: "great-zhou-empress-throne-hall", label: "大周女帝・金殿朝會", category: "大周女帝｜皇朝史詩｜宮廷電影風" },
   { id: "seoul-nightview-socialite", label: "首爾夜景名媛", category: "現代都會／韓系夜景／高級名媛" },
   { id: "cyber-city-agent", label: "賽博都市特工", category: "科幻" },
@@ -2213,6 +2218,46 @@ const RAW_WORLD_LAYER_PROFILES = [
       "人物剛從燭光與薄霧中緩步走出，微側正面停步看向鏡頭，雙手自然牽起絲絨外袍或薄紗披帛，手不遮臉，布料被室內氣流拉開形成紫黑色電影主視覺流線。",
     sceneLighting:
       "soft candlelight、moonlight window glow、luminous fantasy glamour lighting、amethyst violet haze 與 warm ruby reflection；臉部明亮可辨識，眼睛有 catchlight，珠寶與絲絨有柔和高光，避免低光死黑與塑膠 HDR。",
+  },
+  {
+    id: "amethyst-butterfly-astrolabe-queen",
+    title: "紫晶蝶焰星盤女王",
+    themeHint: "紫晶蝶焰星盤女王",
+    category: "紫晶秘殿｜星盤女王｜蝶焰奇幻電影",
+    costume:
+      "電影級紫晶寶石女王禮服，深紫絲絨胸腰支撐、金線藤蔓刺繡、紅寶石垂墜珠寶、白紫半透明披紗與紫色發光蝴蝶共同建立奢華秘殿女王輪廓，保留真人臉部身份與成熟紅髮辨識度。",
+    layers: {
+      costumeLayer1:
+        "暖粉真絲貼身內襯與柔性胸腰基底建立真實人體輪廓，保留自然胸腔厚度、肩頸連接與坐姿受力",
+      costumeLayer2:
+        "深紫寶石絲絨胸衣採 couture corset support，金線藤蔓刺繡與紫晶珠繡貼合上身，但不改變真人身體比例",
+      costumeLayer3:
+        "紅寶石主墜、紫晶鎖骨鏈、金色細鏈肩飾與手腕珠鍊形成星盤女王珠寶層，細節華麗但不得遮擋臉部",
+      costumeLayer4:
+        "深紫高開線長裙與多層紫紗裙片在坐姿前緣自然垂落，腿部姿勢需符合真實坐姿重心與膝踝方向",
+      costumeLayer5:
+        "金線蝴蝶與藤蔓刺繡沿腰線、裙片與披紗延展，呼應周圍紫色發光蝴蝶與秘殿魔法符號",
+      costumeLayer6:
+        "白紫半透明長披紗從肩臂與雕花椅扶手向外瀉下，帶有金線刺繡、紅寶石吊墜與柔軟 chiffon veil flow",
+      costumeLayer7:
+        "肩臂薄紗袖、珠鏈臂飾與金色蝴蝶紋飾建立女王式華麗肩頸線條，保持手臂支撐點與手指自然",
+      costumeLayer8:
+        "紫晶耳環、紅寶石耳墜、金色頸鏈、踝鏈與細緻戒飾反射燭火、星盤金光與紫蝶光點",
+      costumeLayer9:
+        "紅色自然波浪長髮保留原圖辨識，可加入小型金色髮飾與紫晶髮針，但不得改變髮際線、臉型與真人身份",
+      costumeLayer10:
+        "整體以深紫絲絨、白紫透明披紗、紅寶石垂墜、金線星盤紋與紫色發光蝴蝶形成紫晶蝶焰星盤女王 cinematic fantasy silhouette",
+    },
+    makeup:
+      "高亮奢華奇幻電影妝，保留上傳照片真人臉部身份、眼型、鼻型、嘴型、臉型、下顎線、成熟年齡感與真實皮膚反光；紅唇、柔和金棕眼妝、細緻眼線、紫晶耳飾與紅色波浪長髮只強化角色氣氛，不換臉、不磨成 AI 網美。",
+    scene:
+      "紫晶蝶焰星盤秘殿，金色巨型星盤位於後方，玻璃魔法瓶、古銅燭台、雕花王椅、紅寶石燈火、紫色發光蝴蝶、玫紫花瓣與透明帷幕形成亮場奢華奇幻電影場景。",
+    sceneEnvironment:
+      "近景以燭火、玻璃魔法瓶、紫色發光蝴蝶、玫紫花瓣與白紫披紗形成柔焦遮擋，中景真人女王坐於雕花王椅前緣並保持臉部清楚，遠景金色巨型星盤、古銅器皿、燈火層次、透明帷幕與深遠秘殿柱廊建立近中遠電影景深。",
+    sceneAction:
+      "人物坐於雕花王椅前緣或微側端坐，一手扶住椅臂或讓披紗自然垂落，另一手輕靠下巴旁但不遮臉，正面或微側正面看向鏡頭；肩頸、頭部、手指、膝蓋與腳踝方向符合真實坐姿，白紫披紗與紫蝶圍繞形成動態，不做枯燥直站或詭異肢體。",
+    sceneLighting:
+      "金色星盤背光、暖橙燭火、紫晶蝶焰光、玻璃瓶折射、紅寶石高光與柔和臉部補光交織；近景燭火與蝴蝶形成 bokeh，中景臉部與珠寶保持清晰，遠景星盤與秘殿燈火建立 high-end commercial fantasy cinema lighting，避免低光死黑、塑膠 HDR 與過度遊戲特效。",
   },
   {
     id: "ancient-fairy",
@@ -4351,6 +4396,45 @@ const RAW_WORLD_LAYER_PROFILES = [
     },
   },
   {
+    id: "ruby-skull-moon-throne-queen",
+    title: "紅寶石骸骨月座女王",
+    themeHint: "紅寶石骸骨月座女王",
+    category: "暗黑王族｜紅寶石骸骨權杖｜滿月哥德王城",
+    aliases: ["紅寶石骸骨女王", "滿月黑金魔后", "骸骨權杖月座女王", "黑金紅寶石亡靈女王"],
+    makeup:
+      "妝容建立在上傳照片原始真人臉部身份之上，保留原始臉型、眼型、鼻型、嘴型、下顎線、成熟年齡感與皮膚紋理。表面妝感為冷月光底妝、細緻黑色眼線、深紅緞面唇、少量紅寶石反光與高級哥德女王氣場；髮型可微調為自然黑色長髮、鬆散半盤髮或月光下微亂髮絲，但不得改變髮際線辨識與真人身份。",
+    scene:
+      "滿月哥德王城近景女王主視覺，巨大冷白滿月、尖塔城堡、亡靈軍旗、遠景骷髏軍勢、紅燭火、黑金王座與紅寶石骸骨權杖共同形成暗黑王族電影海報場景；畫面第一焦點是保留真人臉部辨識度的紅寶石骸骨女王。",
+    sceneEnvironment:
+      "近景以黑金骸骨權杖、紅寶石垂墜、王座扶手、紅燭與骷髏道具形成壓鏡，中景真人女王坐於黑金王座前緣或倚靠王座扶手，手持紅寶石骸骨權杖且臉部完整可辨識，遠景巨大滿月、哥德尖塔、骷髏軍旗、冷藍月霧與亡靈軍勢剪影建立世界規模感。",
+    sceneAction:
+      "人物採近景到膝上 character-dominant cinematic composition，可端坐王座前緣、側倚扶手或剛由王座起身停拍；一手穩定握住骸骨權杖，另一手可自然靠近下巴、整理蕾絲袖口、扶住扶手或牽起黑酒紅外袍邊緣；頭部正面或微側正面看向鏡頭，肩頸與頭部角度合理銜接，手指、權杖、髮絲與蕾絲不得遮擋五官。",
+    sceneLighting:
+      "giant full moon key light, cold blue moonlight, ruby gemstone glow, red candle rim light, black-gold specular highlights；冷白滿月作側前主光，紅寶石、黑金金屬、骸骨權杖、蕾絲袖、黑色指甲與項鍊產生紅色高光，背景火把、軍旗與月霧形成 cinematic gothic bokeh、floating embers、moonlit haze 與高級暗黑王族亮場曝光。",
+    layers: {
+      costumeLayer1:
+        "黑色高訂緞面內層與可穿戴胸腔支撐作為基底，保留真實成年人體積、肩頸連接與自然胸腔厚度",
+      costumeLayer2:
+        "黑金哥德馬甲與紅寶石胸前核心採 antique gold filigree、ruby centerpiece 與 structured couture bodice，建立女王權力中心但不重塑真人身形",
+      costumeLayer3:
+        "主體禮服使用 black lace couture、deep wine velvet panel 與 dark royal brocade，黑色、酒紅與古金形成圖中黑金暗紅主色",
+      costumeLayer4:
+        "半透明黑蕾絲袖、鏤空蕾絲手套與細碎薄紗披帛覆於手臂和肩側，呈現真實蕾絲紋理與月光邊緣高光",
+      costumeLayer5:
+        "黑金紅寶石腰封、多層鍊飾、胸前紅寶石吊墜與黑曜石細鏈呼應權杖與項鍊，形成華麗但不遮臉的珠寶系統",
+      costumeLayer6:
+        "黑酒紅絲絨披風與深色裙擺沿王座自然垂落，局部受夜風與坐姿帶出厚重可穿戴布料流線",
+      costumeLayer7:
+        "黑金骸骨肩飾、雕刻護腕與骷髏金屬花紋集中在肩手區域，作為暗黑王族身份符號，不壓過真人臉部",
+      costumeLayer8:
+        "大型黑金紅寶石骸骨權杖作為第二焦點，包含 skull relief、blood ruby core、antique gold claw frame、dangling ruby crystals 與真實手部握持重量",
+      costumeLayer9:
+        "紅寶石哥德耳墜、頸鍊、黑金戒指、黑色指甲、自然黑色長髮與微亂髮絲建立圖中精緻女王妝髮配件",
+      costumeLayer10:
+        "整體形成近景紅寶石骸骨月座女王主視覺：真人鎖臉、黑金蕾絲、紅寶石權杖、滿月、哥德王城、骷髏軍旗與亡靈軍勢共同構成 high-impact gothic dark queen poster silhouette",
+    },
+  },
+  {
     id: "lotus-pond-jiangnan-lady",
     title: "荷塘仕女・蓮池紙傘",
     themeHint: "荷塘仕女・蓮池紙傘",
@@ -5038,6 +5122,28 @@ const RAW_WORLD_LAYER_PROFILES = [
       sceneLighting: "紅金燈籠暖光、燭火反射、側前方柔和主光、祖母綠環境反射與寶石藍陰影交織，勾勒面部、髮絲、飛舞披帛、紅金長袍褶皺與濕亮地面色彩倒影；vivid luxury color grading、jewel-tone highlights、floating petals、檀香煙霧、volumetric light haze、dreamy atmospheric bokeh 與燈籠與花瓣景深形成艷麗光學焦外層次。",
     },
     {
+      id: "tang-red-silk-flower-banquet-dancer",
+      title: "盛唐紅綾花宴舞姬",
+      category: "盛唐花宴｜紅綾舞姬｜宮廷電影主視覺",
+      layers: [
+        "暖粉真絲內襯貼合頸部、胸腔與肩頸結構，保留真人可穿戴的皮膚接觸層與自然身體厚度",
+        "紅金刺繡高腰胸腰支撐結構固定上身重心，以盛唐高腰線修飾比例但不拉長成不自然九頭身",
+        "深紅主體宮廷舞裙搭配青綠織錦裙片與桃金色暗紋，形成紅、金、青綠交錯的花宴舞姬主色塊",
+        "超長半透明紅綾與青綠披帛從雙臂飛展，形成紅綾青綠披帛大動態，讓動作、布料與鏡頭視線同時向外展開",
+        "金絲牡丹腰封、紅玉珠扣、青玉腰佩與細流蘇固定裙身，使飄帶、裙擺與腰線有真實受力點",
+        "多層紅金絲綢裙襬在旋身前行時展開，裙底與濕亮反射地面互相映照，呈現 movement-driven cinematic fabric",
+        "肩部牡丹刺繡、薄紗袖口與飄帶軌跡共同建立盛唐紅綾花宴舞姬主視覺，而非靜態站姿人物卡",
+        "金色花冠、步搖、紅玉耳墜、青玉手飾與細金鏈反射宮燈、燭火與濕地倒影的暖光",
+        "紅棕自然波浪髮搭配半盤高髮髻與金色花簪，髮型可為角色微調但不得改變原始臉型、髮際與臉部辨識度",
+        "整體形成真人身份保留的盛唐花宴舞姬電影主視覺：紅綾飛舞、青綠披帛、花樹宮燈、濕亮地面與完整可辨識臉部共同構成華麗動態畫面",
+      ],
+      makeup: "盛唐花宴電影妝效，保留真人臉部身份、五官比例、眼型、鼻型、嘴型、下顎線、臉部年齡感與皮膚真實反光；暖金底妝、金棕眼妝、柔和眼線、朱紅花鈿、絲絨紅唇、金色花冠與紅棕波浪髮只調整角色表面妝造，不改變真人臉。",
+      scene: "盛唐紅金花宴大殿，紅金宮燈、紅色天幕帷幔、青綠垂幔、桃花與牡丹花樹、宴席燈火、少量賓客剪影、濕亮反射地面與飄落花瓣形成高密度宮廷電影場景。",
+      sceneEnvironment: "近景以飛舞紅綾、青綠披帛、花瓣與濕亮地面倒影壓鏡，中景真人舞姬旋身於花宴大殿中央並保持全身入鏡，遠景大型紅金宮燈、花樹、宴席剪影、紅帷、青綠垂幔與深遠宮殿木構建立盛唐花宴規模感。",
+      sceneAction: "人物採旋身前行或伸手邀請式舞步，正面或微側正面看向鏡頭，雙臂帶動紅綾與青綠披帛向左右飛展，裙擺、髮絲、花瓣與布料軌跡配合臉部與頭部角度生成；肩頸、脊椎、手指與步伐重心自然，避免枯燥直站與詭異肢體，臉部完整可辨識。",
+      sceneLighting: "紅金宮燈暖光、燭火反射、濕亮地面倒影、暖金側前方主光、柔和邊緣光、花瓣散景與空氣微粒交織，在紅綾、青綠披帛、金線刺繡、髮絲與臉部形成 high-end commercial fantasy cinema lighting；近景布料遮擋、中景舞者主光、遠景宮燈景深共同建立近中遠電影鏡頭層次。",
+    },
+    {
       id: "moon-weaving-dream-enchantress",
       title: "月紗織夢魅姬",
       category: "夜宴魅姬／暗黑浪漫電影",
@@ -5388,6 +5494,50 @@ const RAW_WORLD_LAYER_PROFILES = [
       sceneEnvironment: "滿月禁林狐神域，前景狐火，中景人物立於神社路徑，遠景遺跡與森林月霧。",
       sceneAction: "人物 standing calmly in shrine path，holding spiritual fire above palm，tails spreading behind body。",
       sceneLighting: "moonlight and fire dual-lighting、warm ember glow、cool forest shadows 與 cinematic mystical contrast。",
+    },
+    {
+      id: "moon-courtyard-foxfire-nine-tail-queen",
+      title: "月庭狐火九尾狐后",
+      category: "九尾狐后｜月夜古庭｜狐火靈獸電影",
+      layers: [
+        "深紅真絲內襯與交領古裝基底貼合頸部、胸腔與肩頸結構，保留真人成熟身形與自然軀幹厚度",
+        "紅金高腰胸腰支撐結構以金線狐紋、花枝刺繡與珠扣固定重心，形成狐族王后華服輪廓",
+        "深紅主體長袍與多層透明紅紗裙片垂落至濕石地面，紅金布料反射狐火與月光",
+        "外層半透明紅紗披帛與寬大袖袍隨夜風向兩側流動，袖口與裙擺有真實布料重量與受力點",
+        "白金狐毛長披領沿肩頸與前襟垂落，建立狐后身份象徵並自然框住臉部，不壓縮肩頸",
+        "九尾狐尾以分層半透明毛束在身後向右後方展開，保留身體重心，不遮擋臉部與上半身",
+        "裙身繡有小靈狐、金色花枝、狐火紋與紅寶石吊飾，讓服裝細節呼應月夜古庭與靈狐群",
+        "金色步搖、狐耳冠飾、紅玉耳墜、細鏈額飾、腰佩與手部珠飾反射暖橙狐火光",
+        "酒紅波浪髮與半盤高髮髻搭配金色狐耳冠與花簪，髮型可微調為狐后造型但不得改變原始臉型與真人身份",
+        "整體形成月庭狐火九尾狐后主視覺：紅金華服、白金狐毛、九尾展開、掌心狐火、小靈狐與滿月古庭共同構成東方奇幻電影輪廓",
+      ],
+      makeup: "月夜狐后電影妝，保留真人臉部身份、五官比例、眼型、鼻型、嘴型、臉型、下顎線、成熟年齡感與真實皮膚紋理；紅唇、柔和金棕眼妝、細緻眼線、金色狐耳冠飾與酒紅波浪髮只強化狐族王后氣質，不做動漫獸耳臉、不換臉。",
+      scene: "月夜古庭狐火神域，巨大滿月、古樹、東方亭廊屋簷、石燈籠、濕亮石徑、霧氣森林、金色狐火粒子與多隻小型金色靈狐形成高密度東方奇幻電影場景。",
+      sceneEnvironment: "近景以小靈狐、狐火、濕石反光、紅紗裙擺與金色火星形成遮擋層次，中景真人狐后站於古庭石徑中央並完整入鏡，遠景巨大滿月、古樹樹冠、東方亭廊、石燈籠、夜霧森林與屋簷剪影建立月夜狐族神域規模感。",
+      sceneAction: "人物正面或微側正面看向鏡頭，一手自然托起掌心狐火，另一手輕扶腰間珠鏈或垂落袖袍；肩頸、頭部、手指與站姿重心穩定，狐尾從身後展開，小靈狐環繞石徑，動作有召喚與守護感但不誇張，避免枯燥直站與詭異肢體。",
+      sceneLighting: "冷白滿月主光、暖橙狐火補光、石燈籠暖光、濕石地面反射與金色火星粒子交織，在臉部、狐毛披領、紅金刺繡、九尾邊緣與小靈狐身上形成 cinematic moonlight and foxfire dual lighting；近景狐火 bokeh、中景臉部清晰、遠景月霧森林建立近中遠電影景深。",
+    },
+    {
+      id: "moon-pass-foxfire-crimson-sword-queen",
+      title: "月關狐火紅劍后",
+      category: "九尾狐后｜長城劍勢｜狐火戰場電影",
+      layers: [
+        "深紅真絲交領內襯與武俠戰袍基底貼合頸部、胸腔與肩頸結構，保留真人成熟身形與自然軀幹厚度",
+        "紅金胸腰支撐結構以金線狐紋、戰紋刺繡與束腰扣固定重心，兼具狐后華服與女將戰袍比例",
+        "深紅主體長裙與武俠式裙甲分片在旋身劍勢中展開，布料重心跟隨腰胯與步伐而非無重力亂飄",
+        "外層大幅透明紅紗披帛與長袖被城牆高風向左前方捲起，形成第二張圖的紅紗劍勢大動態",
+        "白金狐毛披領可保留為肩頸身份符號，沿前襟自然垂落並框住臉部，不遮擋持劍手臂與胸腰結構",
+        "九尾狐尾以半透明金白毛束在身後呈弧形護身展開，與紅紗、劍氣、狐火共同形成戰場視線流線",
+        "裙身繡有小靈狐、金色花枝、狐火紋、雲雷戰紋與紅寶石吊飾，把狐族神性與城關戰場融合",
+        "金色戰冠、狐耳冠飾、紅玉耳墜、腰佩、護腕與手部細鏈反射狐火與陰天城牆冷光",
+        "長髮可由半盤髮轉為戰場高髮冠加風中長髮，保留原始髮際、臉型與真人身份，不改成陌生女俠臉",
+        "整體形成月關狐火紅劍后主視覺：紅衣劍勢、九尾護身、掌心狐火、城牆風旗、滿月古庭與真人臉部辨識共同構成東方奇幻戰場電影輪廓",
+      ],
+      makeup: "月關狐火劍后電影妝，保留真人臉部身份、五官比例、眼型、鼻型、嘴型、臉型、下顎線、成熟年齡感與真實皮膚紋理；紅唇、清晰眼線、金棕眼妝、狐耳戰冠與風中長髮只強化狐族女將氣場，不換臉、不做動漫獸耳臉。",
+      scene: "月關狐火古城戰場，古代城牆步道、灰藍陰雲、巨大滿月、紅色戰旗、燈籠、遠方城樓、古庭屋簷、風中紅花瓣、金色狐火、小靈狐與濕亮石地共同形成狐族女將的東方奇幻戰場場景。",
+      sceneEnvironment: "近景以紅紗披帛、劍刃、花瓣、狐火與濕石反光形成動態遮擋，中景真人狐火劍后旋身持劍並保持臉部清楚，遠景城牆延伸、紅旗燈籠、古城樓、滿月、夜霧古樹與亭廊屋簷建立月關戰場與狐族神域的雙重空間。",
+      sceneAction: "人物採旋身低重心劍勢或踏步出劍，正面或微側正面看向鏡頭，雙手穩定持劍向畫面右前方延伸，或一手持劍一手托起狐火；肩頸、頭部、腰胯、手腕、膝蓋與腳步方向需符合真實武打姿態，九尾從身後護身展開，小靈狐位於前景或側後方，不遮臉，避免枯燥直站與詭異肢體。",
+      sceneLighting: "冷灰陰天城牆主光、冷白滿月邊緣光、暖橙狐火補光、紅旗與紅紗透光、濕石地面反射與金色火星粒子交織，在臉部、髮絲、劍刃、紅金刺繡、九尾邊緣與小靈狐身上形成 cinematic war haze and foxfire dual lighting；近景紅紗與狐火 bokeh、中景劍后清晰、遠景城牆月霧建立近中遠電影鏡頭層次。",
     },
     {
       id: "dark-domain-ancient-temple-queen",
@@ -5890,6 +6040,7 @@ const DARK_ROYAL_PROFILE_IDS = [
   "frost-succubus-gothic-queen",
   "dark-necromancer-throne-queen",
   "fullmoon-skull-scepter-queen",
+  "ruby-skull-moon-throne-queen",
   "underworld-spirit-banquet-empress",
   "blood-amber-vampire-countess",
   "purple-moon-night-court-empress",

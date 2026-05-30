@@ -289,9 +289,11 @@ function faceMasterControlText() {
   return [
     "臉部主控：以上傳照片中的臉部作為唯一身份來源",
     "先鎖定原始真人臉，再讓身體、服裝、姿勢、髮型、妝容、光影與場景配合這張臉",
+    "髮型只能微調，不改髮際線、臉型輪廓或真人身份",
     "不可重畫、美化或換成古裝女主角臉；保留原始臉型、眼距、眼型、眼皮結構、鼻翼寬度、嘴唇形狀、下顎線、臉頰肉感、成熟年齡感、自然不對稱與皮膚質感",
     "臉部角度保持接近原圖，正面或微側正面，雙眼清楚看向鏡頭",
-    "若動作、髮型、妝容、光影或構圖會降低相似度，放棄該元素並優先保留臉",
+    "身體姿勢、肩頸與頭部角度配合臉部，避免脖子扭曲、頭身錯位",
+    "若動作、髮型、妝容、光影或構圖會降低相似度或造成詭異姿勢，放棄該元素",
     "負面鎖臉：face swap、different face、new actress face、altered jawline、altered eyes、altered nose、altered lips、side profile、covered face",
   ].join("；");
 }
@@ -326,13 +328,13 @@ function stabilizeFaceAngleText(text = "") {
 function inferEmotionalAction(theme, scene) {
   const text = `${theme} ${scene}`;
   if (isDarkBanquetTheme(theme, scene)) {
-  return "夜宴魅姬式電影動作，可採倚坐、側躺、扶椅背、斜倚王座、由臥榻起身、半蹲回望或緩步逼近；臉部角度接近上傳照片，正面或三分之一微側正面看向鏡頭，雙手可自然整理珠鏈、撩起薄紗、扶住座椅邊緣、持酒杯或收住披紗，肩頸放鬆、胸腔厚度與骨盆受力穩定、臉部完整清楚";
+    return "夜宴魅姬式電影動作必須配合本次主題、角色身份與情節自由設計，可在倚坐、側躺、扶椅背、斜倚王座、由臥榻起身、半蹲停拍或緩步逼近之間選擇；臉部角度接近上傳照片，正面或三分之一微側正面看向鏡頭，雙手依劇情自然整理珠鏈、撩起薄紗、扶住座椅邊緣、收住披紗或與本場景道具互動，肩頸放鬆、胸腔厚度與骨盆受力穩定、臉部完整清楚";
   }
   if (/女王|哥德|暗夜|王座|魔后|血族|冥界/.test(text)) {
-    return "女王式電影動作，優先端坐王座前緣、倚坐扶手、踏階逼近或緩步前行；臉部穩定朝向鏡頭，雙手可牽起外袍、扶住權杖、持杯、持扇或自然垂落布料，肩線、胸腔、骨盆與支撐點穩定，眼神具有壓迫感與情緒吸引力";
+    return "女王式電影動作依角色權力關係與當下情節設計，可端坐王座前緣、倚坐扶手、踏階逼近或緩步前行；臉部穩定朝向鏡頭，雙手可牽起外袍、扶住符合主題的權力象徵物、控制布料流向或自然垂落，肩線、胸腔、骨盆與支撐點穩定，眼神具有壓迫感與情緒吸引力";
   }
   if (/唐|長安|盛唐|宮廷|花宴|牡丹|鳳|樂姬|舞姬/.test(text)) {
-    return "盛唐夜宴女主角在燈籠與花瓣前正面或微側正面停步，單手帶動披帛或團扇，另一手自然壓住長袖，步伐停在布料揚起瞬間，長裙與飄帶形成 S 型視線流線，臉部完整面向鏡頭";
+    return "盛唐或宮廷人物動作依分類、角色身份與情節設計，可是入場、停步、轉肩、扶欄、臨案、舞步收勢或與本場景器物互動；手部、披帛、長袖與步伐共同服務鏡頭敘事，長裙與飄帶形成視線流線，臉部完整面向鏡頭";
   }
   if (/飛天|仙|瑤池|雲海|神族|聖女|月白/.test(text)) {
     return "清冷神性的正面或微側正面停步，臉部穩定朝向鏡頭，單手輕抬引動長袖與披帛，另一手自然靠近腰側或道具，脊椎挺直但不僵硬，衣料在高空風或神域氣流中形成柔和弧線";
@@ -372,7 +374,7 @@ function buildAspectRatioControlText(form = DEFAULT_FORM) {
   const ratioText = RATIO_COMPOSITION_TEXT[effectiveRatio] || RATIO_COMPOSITION_TEXT[DEFAULT_FORM.ratio];
   return [
     `輸出比例控制：${ratioText}`,
-    effectiveRatio === "4:5" ? "4:5 character-dominant cinematic composition，優先使用坐姿、臥姿、倚靠、泡茶、持扇、持刀、踏階停步或道具互動；保留真人身體比例、臉部可辨識與電影主輪廓" : "",
+    effectiveRatio === "4:5" ? "4:5 character-dominant cinematic composition，人物動作、道具互動與場景調度依分類、主題、角色身份與情節自由設計；保留真人身體比例、臉部可辨識與電影主輪廓" : "",
     "composition must respect the specified aspect ratio and keep the full cinematic silhouette inside frame",
     "避免裁頭、裁手、截斷全身、AI 自動特寫或自拍式構圖",
   ].filter(Boolean).join("；");
@@ -394,6 +396,10 @@ function compactText(value = "", maxLength = 150) {
   return `${cut.slice(0, punctuationIndex > 45 ? punctuationIndex : maxLength).trim()}。`;
 }
 
+function trimSentenceEnding(value = "") {
+  return String(value || "").replace(/[。；，、\s]+$/g, "");
+}
+
 function compactLayerValue(value = "") {
   return compactText(value, 42)
     .replace(/作為.*$/g, "")
@@ -413,10 +419,8 @@ function buildCupSizeSkeletonText(form = DEFAULT_FORM, category = "", theme = ""
 
 function buildFinalIdentityText(form = DEFAULT_FORM, category = "", theme = "") {
   return [
-    "最高優先：保留上傳照片中的原始真人臉部身份，不換臉、不美化成 AI 美女，不改變眼型、鼻型、嘴型、臉型、下顎線、成熟年齡感與皮膚質感。",
-    "真人身份優先：保留原始臉型、原始眼型、原始鼻型、原始嘴型、五官比例、可辨識特徵、自然臉部不對稱與真人攝影感；臉部正面或微側正面看向鏡頭。",
-    "髮型可配合角色微調為盤髮、披髮、編髮、髮髻、髮冠或髮飾，但不得改變臉型、髮際線辨識、五官位置、成熟年齡感與原始真人身份。",
-    `真實人體骨架：平衡肩寬、真實鎖骨、胸腔厚度${buildCupSizeSkeletonText(form, category, theme)}、軀幹深度、骨盆比例、人體重心、四肢比例與脊椎結構；避免頭大、肩窄、軀幹壓縮或臉貼在服裝上的 AI 感。`,
+    "真人身份鎖定：保留上傳照片原始臉型、眼型、鼻型、嘴型、下顎線、五官比例、成熟年齡感、自然不對稱與真實皮膚紋理；不換臉、不生成新演員臉、不美化成 AI 美女或網紅臉。髮型與髮飾可配合角色微調，但不得改變臉型、髮際線與真人辨識度。",
+    `真實人體骨架：平衡肩寬、鎖骨、胸腔厚度${buildCupSizeSkeletonText(form, category, theme)}、軀幹深度、骨盆比例、四肢比例與人體重心；避免頭大、肩窄、軀幹壓縮、脖子扭曲或 AI 娃娃比例。`,
   ].join("\n");
 }
 
@@ -438,20 +442,19 @@ function buildFinalCostumeText(form, category, theme) {
 
 function buildFinalSceneText(form, category, theme) {
   const sceneBase = compactText(form.scene, 120) || `依據「${theme}」建立可被真實攝影拍出的奇幻電影場景`;
-  const environment = compactText(form.sceneEnvironment, 180);
-  if (environment) {
-    return `${sceneBase}。${environment}。背景不得出現路人或隨機群演；用建築輪廓、光影、水霧、燈火、布料、空氣粒子、景深與前景遮擋建立電影空間。`;
-  }
+  const directorLens = "請依主題、角色身份與情節重新設計背景近景 / 中景 / 遠景：近景做壓鏡與視線引導，中景承接角色動作，遠景建立空間尺度、光源方向、特效與氛圍；不要照抄角色卡近中遠原句";
   if (isDarkRoyalCategory(category, theme, sceneBase)) {
-    return `${sceneBase}。赤金燭光、哥德建築輪廓、深酒紅帷幕、黑曜石反光、古器或聖器、空氣微粒與景深共同形成高級暗黑奇幻電影空間。背景不得出現路人或群演。`;
+    return `${sceneBase}。${directorLens}，可加入符合主題的燭光、建築輪廓、帷幕、反光、古器、粒子或景深。背景不得出現路人或群演。`;
   }
-  return `${sceneBase}。近景提供花瓣、燭火、霧氣、布料或建築遮擋；中景服務真人主角與服裝動態；遠景建立建築、天光、燈火、水霧或地形輪廓。背景不得出現路人。`;
+  return `${sceneBase}。${directorLens}；場景道具、特效與氛圍都服務本次角色和故事。背景不得出現路人。`;
 }
 
 function buildFinalActionText(form, category, theme) {
-  const action = compactText(stabilizeFaceAngleText(form.sceneAction), 180);
-  if (action) return `${action}。${safePosePriorityText()}；手部不遮擋臉部；臉部正面或微側正面清楚看向鏡頭，動作符合真實重心與四肢受力。`;
-  return `${inferEmotionalAction(theme, form.scene)}。${safePosePriorityText()}；手部、道具、髮絲與布料不得遮臉。`;
+  const action = trimSentenceEnding(compactText(stabilizeFaceAngleText(form.sceneAction), 145));
+  const directorAction = "ChatGPT 需依場所、角色身份與情節設計不呆站的姿勢，可調整為踏階、旋身、扶欄、持物、倚坐、臨案或其他符合主題的支撐點動作";
+  const safety = "姿態安全：鎖臉與正常身體比例優先，臉部正面或微側正面清楚可辨識；手部、披帛與道具不得遮五官；肩頸、頭部、脊椎、骨盆與四肢受力合理，避免詭異肢體";
+  if (action) return `${action}。${directorAction}。${safety}。`;
+  return `${trimSentenceEnding(compactText(inferEmotionalAction(theme, form.scene), 120))}。${directorAction}。${safety}。`;
 }
 
 function buildFinalLightingText(form, category, theme) {
@@ -465,11 +468,11 @@ function buildFinalLightingText(form, category, theme) {
       : "側前方柔和主光、燭光或月光環境光、柔和邊緣分離光、自然景深、空氣霧化與真實皮膚反光。");
   if (commercial) {
     return dreamyRadiant
-      ? `${base} 臉部必須明亮可辨識且維持真人紋理，眼睛有高級 catchlight，珠寶、花材、絲綢、薄紗與場景高光都要有 sparkle highlights，陰影保持透明不發黑，畫面偏夢幻、通透、發光仙氣感，避免過暗、過度 HDR、大片黑影、濁霧與塑膠皮膚。`
-      : `${base} 臉部明亮可辨識，眼睛有高級 catchlight，珠寶有 sparkle highlights，紫黑服裝保留暗部細節，避免過暗、過度 HDR 與塑膠皮膚。`;
+      ? `${base} 臉部明亮且保留真人皮膚紋理，眼睛有自然 catchlight；絲綢、珠寶、薄紗與場景高光呈現 sparkle highlights，畫面夢幻通透但保持真實攝影質感。`
+      : `${base} 臉部明亮可辨識，眼睛有自然 catchlight，珠寶與服裝保留細膩高光，避免過暗、過度 HDR 與塑膠皮膚。`;
   }
   return dreamyRadiant
-    ? `${base} 臉部清楚可辨識並優先維持亮面，保留皮膚紋理、髮絲細節、真實空氣透視、柔亮 bloom 與電影攝影感，避免暖暗低照度把人物壓進背景。`
+    ? `${base} 臉部清楚可辨識，保留皮膚紋理、髮絲細節、真實空氣透視、柔亮 bloom 與電影攝影感。`
     : `${base} 臉部清楚可辨識，保留皮膚紋理、髮絲細節、真實空氣透視與電影攝影感。`;
 }
 
@@ -518,12 +521,13 @@ function buildFinalMakeupText(form) {
 
 function buildBodyProportionStabilizationText(form = DEFAULT_FORM) {
   const postureText = /坐|端坐|坐姿|王座|椅|榻|跪|半跪|臥|躺|倚|靠|泡茶|撫琴/.test(`${form.scene} ${form.sceneEnvironment} ${form.sceneAction}`)
-    ? "坐姿、臥姿、跪坐、倚靠、泡茶或道具互動姿勢必須保留完整胸腔厚度、軀幹深度、成人骨盆受力與四肢支撐邏輯，camera distance must not compress body structure"
-    : "站姿、行走、持刀、持扇、持傘保留自然肩寬、軀幹深度、骨盆比例、四肢長度與成人重心";
+    ? "坐姿、臥姿、跪坐、倚靠或情節道具互動姿勢必須保留完整胸腔厚度、軀幹深度、成人骨盆受力與四肢支撐邏輯，camera distance must not compress body structure"
+    : "站姿、行走或主題動作都必須保留自然肩寬、軀幹深度、骨盆比例、四肢長度與成人重心";
   return [
     "真人比例穩定：full-body physical coherence has equal priority with facial identity preservation",
     "鎖臉不得造成 oversized head、compressed torso、narrow AI shoulders、portrait-only body structure 或 floating head feeling",
     "保留 balanced head size、natural shoulder-to-head ratio、realistic torso volume",
+    "姿勢配合臉部與頭部角度，肩頸、脊椎、骨盆和四肢受力自然",
     postureText,
     "真人必須 physically existing inside cinematic space，不像 face pasted onto a fantasy costume",
   ].join("；");
@@ -557,7 +561,7 @@ function backgroundControlText(form = DEFAULT_FORM) {
   if (isChineseDynastyOrnateTheme(text)) {
     return "背景角色控制：預設單女主華麗古裝海報構圖，背景必須服務角色且不可壓過主角；前景、中景、遠景都要有有效細節，以花枝、宮燈、珠簾、屏風、披帛、欄杆、殿閣與景深填滿畫面，避免留白、極簡場景、低密度背景，主角佔 absolute visual priority";
   }
-  return "背景角色控制：預設單女主華麗電影海報構圖，畫面只保留真人主角；背景必須服務角色，前景、中景、遠景都要有有效細節，用建築輪廓、光影、水霧、燈火、布料、花材、道具與空間透視建立高密度電影感，主角佔 absolute visual priority";
+  return "背景角色控制：預設單女主華麗電影海報構圖，畫面只保留真人主角；背景必須服務角色，前景、中景、遠景都要依分類、主題、角色身份與場景重新設計，不套用固定素材清單；以本次故事需要的鏡頭遮擋、空間尺度、光源方向、景深層次與場景敘事建立高密度電影感，主角佔 absolute visual priority";
 }
 
 function shouldUseCommercialGlamourLighting(form = DEFAULT_FORM) {
@@ -622,19 +626,19 @@ function isDarkBanquetTheme(theme = "", scene = "") {
 function actionStagingBiasText(form = DEFAULT_FORM) {
   const text = `${form.category} ${form.theme} ${form.scene} ${form.sceneEnvironment}`;
   if (isDarkBanquetTheme(form.theme, `${form.scene} ${form.sceneEnvironment}`)) {
-    return "避免正中立正；優先王座前緣端坐、倚扶手、持酒杯或起身";
+    return "避免正中立正；依夜宴角色身份與當下情節選擇王座、臥榻、扶手、薄紗、珠鏈或本場景道具互動";
   }
   if (/女王|哥德|暗夜|王座|魔后|血族|冥界/.test(text)) {
-    return "避免閱兵式站姿；優先踏階逼近、倚欄、扶權杖或高背椅前緣坐姿";
+    return "避免閱兵式站姿；依女王權力關係與場景支撐點設計踏階、倚靠、起身、逼近或道具互動";
   }
   if (/飛天|敦煌|伎樂|舞姬|洞窟/.test(text)) {
     return "避免平直站姿；優先舞步停格、手臂弧線、披帛穿鏡與半轉身";
   }
   if (/唐|長安|盛唐|宮廷|花宴|牡丹|鳳/.test(text)) {
-    return "避免證件照式站正中；優先踏階、扶欄、托器物、持團扇或轉肩停步";
+    return "避免證件照式站正中；依宮廷身份、宴席情節、舞樂或禮制動作設計踏階、扶欄、臨案、轉肩停步或器物互動";
   }
   if (isChineseDynastyOrnateTheme(text)) {
-    return "避免歷史教科書式站姿；優先扶欄、倚榻、拂袖、持花、托盞、撩紗、抱琵琶、臨案停步或由宴席間回眸停拍";
+    return "避免歷史教科書式站姿；依角色身份、情節與場景支撐點自由設計扶欄、倚榻、拂袖、臨案、舞樂、禮儀或器物互動";
   }
   if (/賽博|霓虹|都市|特工|雨夜/.test(text)) {
     return "避免櫥窗模特式站姿；優先走動抓拍、倚窗、扶欄或街角回身";
@@ -643,28 +647,28 @@ function actionStagingBiasText(form = DEFAULT_FORM) {
 }
 
 function safePosePriorityText() {
-  return "姿態優先規則：鎖臉、五官比例、頭身比例與手部正確優先；可用端坐、側坐、扶椅、倚欄、臨案、泡茶、撫琴、持扇、持杯、持瓶、持卷、操作星盤、觸花、洗紗、與寵物或龍互動等有支撐點動作；可低角度女王旅拍、前傾靠近鏡頭、扶桌、扶膝、托腮或指尖近唇，但五官必須完整可辨識；不預設筆直站立；手、紗、道具不得遮五官，高風險動作降級為持物低於臉部、踏階停步或回身看鏡頭";
+  return "姿態優先規則：鎖臉、五官比例、頭身比例、頭部角度與手部正確優先；ChatGPT 的自由設計範圍是根據分類、主題、角色身份與情節設計場景、道具、姿勢、特效與氣氛，形成可拍攝的電影事件瞬間；所有設計都服務主題和角色，不套用固定清單；只在主題明確需要時才使用杯、扇、瓶、卷、星盤、樂器、花材、寵物或龍等道具，不把單一道具當預設姿勢；避免枯燥筆直站立，若站立也要有情緒、支撐點、手部互動或鏡頭調度；可端坐、側坐、扶椅、倚欄、臨案、踏階、回身、緩步、整理衣袖、扶桌、扶膝或與場景支撐點互動；五官必須完整可辨識；身體姿勢、肩頸方向與頭部角度必須合理銜接，不可詭異扭曲；手、紗、道具不得遮五官，高風險動作降級為持物低於臉部、踏階停步或回身看鏡頭";
 }
 
 function buildSceneVisualDetailText(form = DEFAULT_FORM) {
   const text = `${form.theme} ${form.scene} ${form.sceneEnvironment}`;
   if (isDarkBanquetTheme(form.theme, `${form.scene} ${form.sceneEnvironment}`)) {
-    return "空間層級補強：暗紫絲絨夜宴寢宮、占星圓盤內殿或高背王座廳作為主空間，前景燭台、玻璃酒杯、紫晶垂鏈與薄紗帷幕貼近鏡頭，中景角色與王座扶手、披紗和珠寶形成權力中心，遠景月輪高窗、酒紅窗簾、黑曜石鏡面、燭火與建築燈影疊出 dark romantic chamber depth";
+    return "空間層級補強：夜宴空間、前景壓鏡、角色支撐點、道具、特效與遠景尺度都必須依本次主題、人物權力關係與情節自由設計；近景負責暗黑浪漫視線引導，中景讓真人角色與王座、臥榻、帷幕或本場景核心物件形成權力中心，遠景建立本次夜宴世界的深度與光源敘事";
   }
   if (/飛天|敦煌|伎樂|舞姬|洞窟/.test(text)) {
-    return "空間層級補強：敦煌洞窟、壁畫佛龕或高聳石窟台階作為主空間，前景飄帶、紗幕、香煙與石壁殘片穿過鏡頭，中景真人角色以舞姿和披帛成為畫面流線核心，遠景壁畫、佛像、洞窟高窗天光、石階與塵粒建立可探索的神祕深度";
+    return "空間層級補強：飛天、敦煌或神域題材的近景、中景、遠景依舞蹈情節、角色身份與場景儀式重新設計；前景選擇能導引舞姿的元素，中景以真人角色動作與布料流線為核心，遠景建立本次場景的神聖尺度、光源與文化空間深度";
   }
   if (/唐|長安|盛唐|宮廷|花宴|牡丹|鳳/.test(text)) {
     const backgroundScale = allowsBackgroundCharacters(text)
       ? "少量 small-scale cinematic silhouettes、宮燈層次"
-      : "宮燈層次、建築燈影";
-    return `空間層級補強：長安宮廷花宴、王座前廳或紅金夜宴大殿作為主空間，前景燭火、牡丹、花枝、屏風邊框與半透明披帛穿過鏡頭，中景真人角色可與欄杆、石階、桌案或器物形成互動，遠景金色廊柱、寶石色帷幕、深層台階、${backgroundScale}與濕亮地面倒影形成盛唐商業奇幻電影規模`;
+      : "單人主角背景層次";
+    return `空間層級補強：盛唐或宮廷場景的近景、中景、遠景依分類、主題、角色身份、禮制/宴席/舞樂情節重新設計；前景選擇本場景最有敘事作用的壓鏡元素，中景讓真人角色與場景支撐點或器物自然互動，遠景以${backgroundScale}、空間尺度、光源方向與場景敘事形成商業奇幻電影規模`;
   }
   if (isChineseDynastyOrnateTheme(text)) {
-    return "空間層級補強：以盛世宮苑、花宴庭院、臨水水榭、金殿長廊或珠簾臥榻作為主空間，前景必須有花海壓鏡、宮燈、珠簾、團扇、器皿、窗紗或披帛，中景真人角色與案几、欄杆、台階、臥榻、樂器或花器形成互動，遠景保留殿閣燈火、重檐飛簷、寶石色帷幕、深層迴廊、月色窗紗或水面倒影；整體維持 foreground、midground、background 全畫面高密度但不雜亂";
+    return "空間層級補強：中國朝代古裝場景的主空間、前景壓鏡、中景互動、遠景尺度都依人物身份、主題情節與場景性質自由設計；道具、特效、花材、器皿、樂器或建築元素只在符合情節時使用，整體維持 foreground、midground、background 全畫面高密度但不雜亂";
   }
   if (isDreamyRadiantPosterTheme(`${form.category} ${text}`) && !isDarkBanquetTheme(form.theme, `${form.scene} ${form.sceneEnvironment}`)) {
-    return "空間層級補強：前景貼鏡花材、珠簾、窗紗、葉影、器物、光斑或薄紗壓鏡，中景讓真人角色與欄杆、台階、案几、法器、樂器或場景主體互動，遠景建立高窗、殿閣、花庭、雲海、神殿、拱廊、水面或地景深度；維持 high-density bright poster composition、亮面人物優先、空氣通透、發光邊緣與夢幻電影層次，避免低照度空景吞沒角色。";
+    return "空間層級補強：夢幻亮場題材的前景、中景、遠景依分類、主題、角色身份與情節重新設計；前景只選最能支撐本題氛圍的壓鏡或光效，中景讓真人角色與場景主體互動，遠景建立本次世界觀的尺度、空氣感與敘事深度；維持 high-density bright poster composition、亮面人物優先、空氣通透、發光邊緣與夢幻電影層次，避免低照度空景吞沒角色。";
   }
   if (/墮天使|黑羽|黑翼|廢墟|神殿/.test(text)) {
     return "空間層級補強：破碎哥德神殿或黑羽廢墟作為主空間，前景灰燼、羽毛、碎石與冷霧遮擋，中景真人角色被黑羽輪廓與破碎披風包圍，遠景斷裂石柱、月光高窗、殘破拱頂與暗紫聖光形成悲傷神性的 dark fantasy cinema depth";
@@ -673,9 +677,9 @@ function buildSceneVisualDetailText(form = DEFAULT_FORM) {
     return "空間層級補強：雨夜霓虹街區作為主空間，前景雨滴、玻璃反光與招牌色塊遮擋，中景真人角色從濕亮地面反射中走近鏡頭，遠景高樓、車燈、霓虹招牌與雨霧光斑壓成淺景深色彩層次";
   }
   if (form.sceneEnvironment) {
-    return "空間層級補強：近景要有遮擋，中景讓真人角色和欄杆、座椅、階梯或器物互動，遠景建立建築、光影、水霧、燈火或天光尺度。";
+    return "空間層級補強：近景、中景、遠景依分類、主題、角色身份與場景重新安排電影鏡頭；近景選擇符合本題的壓鏡或視線引導，中景承接真人角色動作與服裝輪廓，遠景建立本場景特有的空間尺度、光源方向與敘事背景。";
   }
-  return "場景以可拍攝的近景、中景、遠景建立電影空間：近景提供花瓣、燭火、霧氣、布料或建築遮擋，中景放置真人角色與動態服裝，遠景建立建築、天光、燈火、水霧或地形輪廓，形成單女主主導的 cinematic atmosphere";
+  return "場景以可拍攝的近景、中景、遠景建立電影空間：鏡頭層次必須根據分類、主題、角色身份與場景設計，不固定套用花瓣、燭火、霧氣、布料或建築；近景負責壓鏡與視線導引，中景放置真人角色和事件動作，遠景建立本次世界觀的空間尺度、光源與敘事背景，形成單女主主導的 cinematic atmosphere";
 }
 
 function buildActionCinematographyText(form = DEFAULT_FORM) {
@@ -810,13 +814,13 @@ export function expandSceneToDirectorFields(input = {}) {
 
   return {
     ...form,
-    sceneEnvironment:
+  sceneEnvironment:
       form.sceneEnvironment
         ? stabilizeFaceAngleText(form.sceneEnvironment)
         :
       dreamyRadiant
-        ? `${scene}，近景加入可被鏡頭拍到的花枝、珠簾、窗紗、葉影、光斑、飄紗或器物壓鏡，中景放置真人角色作為畫面能量中心與第一視覺焦點，遠景優先建立殿閣、雲海、神殿、花庭、拱廊、水面、燈火、天光、薄霧與空間透視；整體維持高密度亮場海報感、通透空氣感、柔亮 bloom 與亮面人物優先，除非主題明確需要宴會、戰場、市集、宗教儀式或王朝典禮，否則畫面只保留單一真人主角`
-        : `${scene}，近景加入可被鏡頭拍到的遮擋元素、花瓣、紅金燈籠、燭火、飄紗、寶石色布景、濕亮地面色彩倒影與空氣粒子，中景放置真人角色作為畫面能量中心與第一視覺焦點，遠景優先建立建築輪廓、燈火、水霧、天光、布料層次或空間透視；除非主題明確需要宴會、戰場、市集、宗教儀式或王朝典禮，否則畫面只保留單一真人主角，形成單女主艷麗商業奇幻電影主視覺與真實空間深度`,
+        ? `${scene}，近景、中景、遠景依分類、主題、角色身份與情節自由設計；近景選擇最能支撐本題氛圍的壓鏡元素、光效或視線引導，中景放置真人角色作為畫面能量中心與第一視覺焦點，遠景建立本次世界觀的空間尺度、光源方向、空氣感與敘事背景；整體維持高密度亮場海報感、通透空氣感、柔亮 bloom 與亮面人物優先，除非主題明確需要宴會、戰場、市集、宗教儀式或王朝典禮，否則畫面只保留單一真人主角`
+        : `${scene}，近景、中景、遠景依分類、主題、角色身份與情節自由設計，不固定套用花瓣、燈籠、燭火、飄紗、建築或水霧；近景負責壓鏡與視線導引，中景放置真人角色作為畫面能量中心與第一視覺焦點，遠景建立本次世界觀的空間尺度、光源方向、特效邏輯與敘事背景；除非主題明確需要宴會、戰場、市集、宗教儀式或王朝典禮，否則畫面只保留單一真人主角，形成單女主艷麗商業奇幻電影主視覺與真實空間深度`,
     sceneAction:
       form.sceneAction
         ? stabilizeFaceAngleText(form.sceneAction)

@@ -85,6 +85,7 @@ const BATCH_PROFILE_EXPECTATIONS = [
   ["western-border-riding-consort", "西域邊關皇妃", "沙漠邊關皇妃", "夕陽沙漠邊城"],
   ["purple-moon-night-court-empress", "紫月夜庭魔后", "紫月古堡魔后", "紫月古堡與漂浮星界王座"],
   ["changan-night-banquet-musician", "長安燈宴・回弦樂姬", "長安夜宴樂姬真人身份保留主視覺", "長安盛唐花宴主視覺"],
+  ["tang-red-silk-flower-banquet-dancer", "盛唐紅綾花宴舞姬", "紅綾青綠披帛大動態", "盛唐紅金花宴大殿"],
   ["moon-weaving-dream-enchantress", "月紗織夢魅姬", "月光絲絨寢宮", "月光絲絨織夢寢宮"],
   ["fallen-wing-holy-city-heiress", "墮翼聖城遺女", "墮翼剪影", "崩壞聖城"],
   ["tang-night-banquet-chief-musician", "長安花筵・領弦歌姬", "長安首席樂姬電影主視覺輪廓", "長安夜宴之首席樂姬主視覺"],
@@ -105,8 +106,12 @@ const BATCH_PROFILE_EXPECTATIONS = [
   ["sunset-ancient-city-swordswoman", "夕照古城江湖女俠", "女劍客輪廓", "ancient city rooftops"],
   ["moon-forest-nine-tail-fox-princess", "月夜禁林九尾狐姬", "東方九尾狐姬輪廓", "moonlit ancient forest"],
   ["spirit-fox-domain-nine-tail-empress", "靈狐神域九尾妖后", "九尾妖后史詩輪廓", "moonlit sacred forest"],
+  ["moon-courtyard-foxfire-nine-tail-queen", "月庭狐火九尾狐后", "月庭狐火九尾狐后主視覺", "月夜古庭狐火神域"],
+  ["moon-pass-foxfire-crimson-sword-queen", "月關狐火紅劍后", "月關狐火紅劍后主視覺", "月關狐火古城戰場"],
   ["dark-domain-ancient-temple-queen", "暗夜魔域古殿女王", "歌德王座輪廓", "月夜暗黑宮廷王座"],
   ["fullmoon-skull-scepter-queen", "滿月骸骨權杖女王", "大型紅寶石骸骨權杖", "巨大冷白滿月"],
+  ["ruby-skull-moon-throne-queen", "紅寶石骸骨月座女王", "大型黑金紅寶石骸骨權杖", "滿月哥德王城近景女王主視覺"],
+  ["amethyst-butterfly-astrolabe-queen", "紫晶蝶焰星盤女王", "紫晶蝶焰星盤女王 cinematic fantasy silhouette", "紫晶蝶焰星盤秘殿"],
   ["qingluan-temple-hidden-saint", "青鸞神殿隱世聖女", "青鸞神殿隱世聖女電影輪廓", "青鸞神殿隱世聖女"],
   ["purple-sakura-forbidden-onmyoji", "紫櫻禁術陰陽師", "禁術系陰陽師巫女電影 silhouette", "紫櫻禁術陰陽師"],
   ["jiu-mo-crimson-phoenix-saint", "九漠沙海之赤鳳聖女", "赤鳳聖女電影輪廓", "九漠沙海之赤鳳聖女"],
@@ -558,6 +563,9 @@ describe("prompt engine", () => {
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("海棠仙旅・海岸花亭");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("暗黑魔后・亡靈王座");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("滿月骸骨權杖女王");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("紅寶石骸骨月座女王");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("盛唐紅綾花宴舞姬");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("紫晶蝶焰星盤女王");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("荷塘仕女・蓮池紙傘");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("墮羽黑翼王女");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("聖域天使・天空神國");
@@ -595,6 +603,8 @@ describe("prompt engine", () => {
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("桃亭團扇・春水仕女");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("冷月白裳・朱鈿幽姬");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("九尾天狐・月城海報");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("月庭狐火九尾狐后");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("月關狐火紅劍后");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("星海水母・靈珠神女");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("月湖九尾・靈狐水榭");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("藍金王帳・寶石舞姬");
@@ -1402,7 +1412,9 @@ describe("prompt engine", () => {
     expect(prompt).toContain("absolute visual priority");
     expect(prompt).toContain("臉部主控");
     expect(prompt).toContain("先鎖定原始真人臉");
+    expect(prompt).toContain("髮型只能微調");
     expect(prompt).toContain("正面或微側正面");
+    expect(prompt).toContain("身體姿勢、肩頸與頭部角度配合臉部");
     expect(prompt).toContain("真人比例穩定");
     expect(prompt).toContain("full-body physical coherence has equal priority with facial identity preservation");
     expect(prompt).toContain("balanced head size");
@@ -1410,7 +1422,7 @@ describe("prompt engine", () => {
     expect(prompt).toContain("輸出比例控制");
     expect(prompt).toContain("4:5 premium commercial fantasy poster");
     expect(prompt).toContain("4:5 character-dominant cinematic composition");
-    expect(prompt).toContain("優先使用坐姿、臥姿、倚靠、泡茶、持扇、持刀、踏階停步或道具互動");
+    expect(prompt).toContain("人物動作、道具互動與場景調度依分類、主題、角色身份與情節自由設計");
     expect(prompt).toContain("composition must respect the specified aspect ratio");
     expect(prompt).toContain("keep the full cinematic silhouette inside frame");
     expect(prompt).toContain("face swap");
@@ -1420,17 +1432,17 @@ describe("prompt engine", () => {
     expect(prompt).toContain("畫面事件");
     expect(prompt).toContain("動作鏡頭語言");
     expect(prompt).toContain("姿態優先規則");
-    expect(prompt).toContain("不預設筆直站立");
+    expect(prompt).toContain("避免枯燥筆直站立");
     expect(prompt).toContain("持物低於臉部");
-    expect(prompt).toContain("盛唐夜宴女主角在燈籠與花瓣前正面或微側正面停步");
+    expect(prompt).toContain("盛唐或宮廷人物動作依分類、角色身份與情節設計");
     expect(prompt).toContain("50mm eye-level cinematic blocking");
     expect(prompt).toContain("臉部完整可見");
     expect(prompt).toContain("肩頸、胸腔、骨盆、四肢支撐點與身體受力符合真實成年人體結構");
     expect(prompt).toContain("cinematic reveal");
     expect(prompt).toContain("visual narrative");
     expect(prompt).toContain("電影主視覺：");
-    expect(prompt).toContain("長安宮廷花宴");
-    expect(prompt).toContain("紅金夜宴大殿");
+    expect(prompt).toContain("盛唐或宮廷場景的近景、中景、遠景依分類、主題、角色身份、禮制/宴席/舞樂情節重新設計");
+    expect(prompt).toContain("前景選擇本場景最有敘事作用的壓鏡元素");
     expect(prompt).toContain("Reference visual target: ultra-luxury Chinese fantasy poster");
     expect(prompt).toContain("high-density composition");
     expect(prompt).toContain("Visual Priority System: 40% 真人身份辨識度");
@@ -1502,22 +1514,29 @@ describe("prompt engine", () => {
     });
 
     expect(prompt).toContain("姿態優先規則");
-    expect(prompt).toContain("鎖臉、五官比例、頭身比例與手部正確優先");
-    expect(prompt).toContain("不預設筆直站立");
-    expect(prompt).toContain("端坐、側坐、扶椅、倚欄、臨案、泡茶、撫琴、持扇、持杯、持瓶、持卷、操作星盤");
-    expect(prompt).toContain("觸花、洗紗、與寵物或龍互動");
-    expect(prompt).toContain("低角度女王旅拍、前傾靠近鏡頭、扶桌、扶膝、托腮或指尖近唇");
+    expect(prompt).toContain("鎖臉、五官比例、頭身比例、頭部角度與手部正確優先");
+    expect(prompt).toContain("頭部角度與手部正確優先");
+    expect(prompt).toContain("ChatGPT 的自由設計範圍是根據分類、主題、角色身份與情節設計場景、道具、姿勢、特效與氣氛");
+    expect(prompt).toContain("形成可拍攝的電影事件瞬間");
+    expect(prompt).toContain("所有設計都服務主題和角色");
+    expect(prompt).toContain("只在主題明確需要時才使用杯、扇、瓶、卷、星盤、樂器、花材、寵物或龍等道具");
+    expect(prompt).toContain("不把單一道具當預設姿勢");
+    expect(prompt).toContain("避免枯燥筆直站立");
+    expect(prompt).toContain("端坐、側坐、扶椅、倚欄、臨案、踏階、回身、緩步、整理衣袖、扶桌、扶膝或與場景支撐點互動");
     expect(prompt).toContain("五官必須完整可辨識");
+    expect(prompt).toContain("身體姿勢、肩頸方向與頭部角度必須合理銜接，不可詭異扭曲");
     expect(prompt).toContain("手、紗、道具不得遮五官");
     expect(prompt).toContain("持物低於臉部、踏階停步或回身看鏡頭");
     expect(prompt).toContain("避免正中立正");
-    expect(prompt).toContain("王座前緣端坐");
-    expect(instruction).toContain("姿態優先規則");
-    expect(instruction).toContain("不預設筆直站立");
-    expect(instruction).toContain("手、紗、道具不得遮五官");
-    expect(instruction).toContain("操作星盤");
-    expect(instruction).toContain("指尖近唇");
-    expect(instruction).toContain("持物低於臉部");
+    expect(prompt).toContain("依夜宴角色身份與當下情節選擇王座、臥榻、扶手、薄紗、珠鏈或本場景道具互動");
+    expect(instruction).toContain("姿態安全");
+    expect(instruction).toContain("ChatGPT 需依場所、角色身份與情節設計不呆站的姿勢");
+    expect(instruction).toContain("手部、披帛與道具不得遮五官");
+    expect(instruction).toContain("肩頸、頭部、脊椎、骨盆與四肢受力合理");
+    expect(instruction).toContain("避免詭異肢體");
+    expect(instruction).toContain("不要照抄角色卡近中遠原句");
+    expect(instruction).not.toContain("ChatGPT 的自由設計範圍是根據分類、主題、角色身份與情節設計場景、道具、姿勢、特效與氣氛");
+    expect(instruction).not.toContain("不把單一道具當預設姿勢");
   });
 
   it("allows hairstyle adjustments only when the original face identity remains unchanged", () => {
@@ -1527,10 +1546,11 @@ describe("prompt engine", () => {
       sceneAction: "人物端坐於欄邊，單手持玉瓶低於臉部，髮冠與披髮配合月宮造型。",
     });
 
-    expect(instruction).toContain("髮型可配合角色微調為盤髮、披髮、編髮、髮髻、髮冠或髮飾");
-    expect(instruction).toContain("不得改變臉型、髮際線辨識、五官位置、成熟年齡感與原始真人身份");
+    expect(instruction).toContain("髮型與髮飾可配合角色微調");
+    expect(instruction).toContain("不得改變臉型、髮際線與真人辨識度");
+    expect(instruction).toContain("姿態安全");
     expect(instruction).toContain("不換臉");
-    expect(instruction).toContain("不改變眼型、鼻型、嘴型、臉型");
+    expect(instruction).toContain("眼型、鼻型、嘴型");
   });
 
   it("supports vivid visual weight controls without changing the five-field output shape", () => {
@@ -1561,12 +1581,13 @@ describe("prompt engine", () => {
     expect(darkBanquet).toContain("extra-long flowing silk drapery");
     expect(darkBanquet).toContain("暗紫絲絨寢宮");
     expect(darkBanquet).toContain("夜宴魅姬式電影動作");
-    expect(darkBanquet).toContain("可採倚坐、側躺、扶椅背、斜倚王座、由臥榻起身、半蹲回望或緩步逼近");
-    expect(darkBanquet).toContain("雙手可自然整理珠鏈、撩起薄紗、扶住座椅邊緣、持酒杯或收住披紗");
+    expect(darkBanquet).toContain("必須配合本次主題、角色身份與情節自由設計");
+    expect(darkBanquet).toContain("雙手依劇情自然整理珠鏈、撩起薄紗、扶住座椅邊緣、收住披紗或與本場景道具互動");
     expect(darkBanquet).toContain("罩杯只依角色卡欄位寫入");
     expect(darkBanquet).toContain("貼身真絲內搭、半透紗質外罩、珠鏈肩披、垂墜披紗或開線裙片");
     expect(darkBanquet).toContain("預設單女主華麗電影海報構圖");
-    expect(darkBanquet).toContain("前景、中景、遠景都要有有效細節");
+    expect(darkBanquet).toContain("前景、中景、遠景都要依分類、主題、角色身份與場景重新設計");
+    expect(darkBanquet).toContain("不套用固定素材清單");
     expect(darkBanquet).not.toContain("主題允許少量 small-scale cinematic silhouettes");
     expect(netflixMode).toContain("主視覺模式：真人身份保留的東方奇幻電影主視覺");
     expect(netflixMode).toContain("single-protagonist cinematic composition");
@@ -1672,7 +1693,7 @@ describe("prompt engine", () => {
     expect(instruction).toContain("高亮商業奇幻曝光");
     expect(instruction).toContain("臉部明亮可辨識");
     expect(instruction).toContain("catchlight");
-    expect(instruction).toContain("sparkle highlights");
+    expect(instruction).toContain("珠寶與服裝保留細膩高光");
     expect(instruction).not.toContain("【背景角色控制系統】");
     expect(instruction).not.toContain("【商業奇幻亮場系統｜Commercial Fantasy Glamour Mode】");
     expect(instruction).not.toContain("遠景群演與燈光正在襯托她出場");
@@ -1836,7 +1857,7 @@ describe("prompt engine", () => {
     expect(form.sceneEnvironment).toContain("近景");
     expect(form.sceneEnvironment).toContain("遠景");
     expect(form.sceneAction).toContain("夜宴魅姬式電影動作");
-    expect(form.sceneAction).toContain("可採倚坐、側躺、扶椅背、斜倚王座、由臥榻起身、半蹲回望或緩步逼近");
+    expect(form.sceneAction).toContain("必須配合本次主題、角色身份與情節自由設計");
     expect(form.sceneAction).toContain("臉部角度接近上傳照片");
     expect(form.sceneAction).toContain("50mm eye-level cinematic blocking");
     expect(form.sceneAction).toContain("臉部完整清楚");
@@ -1872,7 +1893,7 @@ describe("prompt engine", () => {
     expect(prompt).toContain("輸出比例控制：16:9 epic cinematic frame");
     expect(prompt).not.toContain("暗黑王族 / 夜宴魅魔主題比例修正");
     expect(prompt).not.toContain("4:5 premium commercial fantasy poster");
-    expect(prompt).toContain("坐姿、臥姿、跪坐、倚靠、泡茶或道具互動姿勢必須保留完整胸腔厚度");
+    expect(prompt).toContain("坐姿、臥姿、跪坐、倚靠或情節道具互動姿勢必須保留完整胸腔厚度");
     expect(prompt).toContain("camera distance must not compress body structure");
     expect(prompt).toContain("oversized head");
     expect(prompt).toContain("compressed torso");
@@ -1914,7 +1935,7 @@ describe("prompt engine", () => {
     expect(prompt).toContain("右手持羽扇放在胸口下方不遮臉");
     expect(prompt).toContain("左手端茶盞靠近膝上");
     expect(prompt).toContain("手部不遮擋臉部");
-    expect(prompt).toContain("坐姿、臥姿、跪坐、倚靠、泡茶或道具互動姿勢必須保留完整胸腔厚度");
+    expect(prompt).toContain("坐姿、臥姿、跪坐、倚靠或情節道具互動姿勢必須保留完整胸腔厚度");
     expect(prompt).not.toContain("人物剛從燭光與薄霧中走出");
     expect(prompt).not.toContain("雙手自然牽起外袍或披帛");
   });
@@ -1945,10 +1966,10 @@ describe("prompt engine", () => {
   it("wraps the prompt for ChatGPT image generation", () => {
     const instruction = buildChatGptInstruction({ theme: "雲海仙門旅拍" });
     expect(instruction).toContain("請根據上傳真人照片生成 4:5 真人電影級奇幻海報");
-    expect(instruction).toContain("最高優先：保留上傳照片中的原始真人臉部身份");
+    expect(instruction).toContain("真人身份鎖定");
     expect(instruction).toContain("原始臉型");
-    expect(instruction).toContain("原始眼型");
-    expect(instruction).toContain("原始鼻型");
+    expect(instruction).toContain("眼型");
+    expect(instruction).toContain("鼻型");
     expect(instruction).toContain("不換臉");
     expect(instruction).toContain("真實人體骨架");
     expect(instruction).toContain("頭大、肩窄、軀幹壓縮");

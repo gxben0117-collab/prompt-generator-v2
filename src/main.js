@@ -611,7 +611,7 @@ function render() {
               <div class="director-grid">
                 <label>
                   <span>環境</span>
-                  <textarea name="sceneEnvironment" rows="2" placeholder="近景遮擋、中景角色、遠景建築 / 雲海 / 街景、天氣、世界觀空間">${escapeHtml(state.sceneEnvironment)}</textarea>
+                  <textarea name="sceneEnvironment" rows="2" placeholder="場景元素、道具、特效與氛圍參考；最終近景 / 中景 / 遠景由 ChatGPT 依主題、角色與情節重新設計">${escapeHtml(state.sceneEnvironment)}</textarea>
                   <div class="suggestion-row compact-suggestion-row">${fieldSuggestionButtons("sceneEnvironment")}</div>
                 </label>
                 <label>
