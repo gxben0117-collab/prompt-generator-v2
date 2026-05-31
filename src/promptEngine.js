@@ -195,15 +195,20 @@ export function expandCostumeToLayers(input = {}) {
     (isTang ? "金絲月白" : "符合主題的電影色彩");
   const motif =
     pickKeyword(text, ["蝴蝶", "夜宴魅魔", "魅魔", "魅姬", "哥德", "王族", "惡魔", "天使", "仙俠", "唐風", "大唐", "公主"]) || theme;
-  const inner = pickKeyword(text, ["蕾絲邊", "睡袍式", "貼身", "絲綢"]) || "高訂絲綢貼身襯裙";
+  const isSuccubusNightgown = /魅魔|魅姬|夜宴|睡袍式/.test(text);
+  const inner = isSuccubusNightgown
+    ? "低胸連身真絲睡衣長裙"
+    : pickKeyword(text, ["睡袍式", "絲綢"]) || "高訂絲綢長裙內層";
   const gothic = pickKeyword(text, ["哥德式", "哥德", "暗黑"]) || (isTang ? "盛唐宮廷" : "電影級世界觀");
   const chain = pickKeyword(text, ["鍊條", "鏈條", "金屬", "配件"]) || (isTang ? "玉石步搖與金絲配件" : "手工金屬飾件");
   const sheer =
     pickKeyword(text, ["透明紗衣", "透明紗", "薄紗", "紗衣", "披帛"]) || (isTang ? "金絲披帛" : "半透明外層薄紗");
 
   const genericSuggestions = {
-    costumeLayer1: `${color}${inner}，真實貼合人體的內層基底，保留真人身形與自然布料張力`,
-    costumeLayer2: `${gothic}${motif}刺繡胸衣骨架，建立角色輪廓，不改變真人骨相`,
+    costumeLayer1: `${color}${inner}，以 one-piece slip dress nightgown silhouette 建立連身布料基底，保留真人身形與自然布料張力`,
+    costumeLayer2: isSuccubusNightgown
+      ? `${gothic}${motif}柔性睡袍式胸腰支撐，藏在連身真絲裙身內，胸腰與下身由同一件長裙完整覆蓋，不分離成內衣套裝`
+      : `${gothic}${motif}刺繡胸衣骨架，建立角色輪廓，不改變真人骨相`,
     costumeLayer3: `${color}絲絨腰封與柔性支撐結構，真實縫製、可穿戴、符合電影戲服邏輯`,
     costumeLayer4: `${motif}主視覺裙片與不對稱垂墜布料，形成第一眼可辨識的電影輪廓`,
     costumeLayer5: `${chain}腰臀飾件，低調反光，固定在真實服裝結構上`,
@@ -292,9 +297,9 @@ function buildDarkRoyalBodyPresenceText(form, category) {
     "暗黑王族身形安全：胸部與身形只允許依照上傳真人原始體型自然延伸",
     "罩杯只依角色卡欄位寫入，不額外放大胸腰比例、不製造 pin-up 坐姿，不讓腿部或胸腰成為主視覺",
     cupControlText,
-    "服裝改採魅魔夜宴高訂睡袍系衣櫥，於紫晶黑、酒紅、月銀紫、煙玫瑰或黑羽色之間變化，主體可為貼身真絲內搭、半透紗質外罩、珠鏈肩披、垂墜披紗或開線裙片，保留可穿戴與電影級成熟誘惑感，避免一律厚重長袍包覆",
-    "保留真實胸腔厚度、肩頸連接、正常腰臀比例、自然重力與高訂禮服布料張力",
-    "視覺焦點集中在原始真人臉、暗黑王族氣場、絲絨高光、禮服輪廓與電影女王銀幕存在感",
+    "服裝改採魅魔夜宴低胸真絲睡衣長裙，主體是 one-piece deep V satin nightgown，胸腰與下身由同一件長裙完整覆蓋；性感來自低胸領口、絲綢垂墜與燭光反光，不得分離成胸罩內褲或情趣內衣套裝",
+    "保留真實胸腔厚度、肩頸連接、正常腰臀比例與高訂布料張力",
+    "視覺焦點集中在原始真人臉、暗黑王族氣場、絲絨高光與禮服輪廓",
   ].join("；");
 }
 
@@ -439,7 +444,7 @@ function buildFinalIdentityText(form = DEFAULT_FORM, category = "", theme = "") 
 
 function buildFinalCostumeText(form, category, theme) {
   if (isDarkRoyalCategory(category, theme, form.scene)) {
-    return "真人可穿戴的魅魔夜宴高訂睡袍系造型，從紫晶黑真絲內搭、酒紅薄紗罩裙、月銀紫珠鏈肩披、煙玫瑰垂墜披紗、黑羽色半透外罩與蝴蝶或黑羽刺繡中隨機組合；重點是貼身內搭、半透紗層、珠鏈流光、開線裙片與成熟電影誘惑感，不固定為全包式厚重長袍，也不額外放大胸腰比例。";
+    return "真人可穿戴的魅魔夜宴低胸真絲睡衣長裙造型，主體是 one-piece deep V satin nightgown / slip dress nightgown，胸腰與下身由連身絲綢裙身完整覆蓋，外層搭配長版絲絨晨袍、薄紗披袖與垂墜披紗；重點是低胸領口、絲綢垂墜、晨袍滑落肩線、燭光反光與成熟電影誘惑感，不得分離成胸罩內褲或情趣內衣套裝，不生成比基尼式服裝、上下分離內衣造型，也不額外放大胸腰比例。";
   }
 
   const layerText = [form.costumeLayer1, form.costumeLayer3, form.costumeLayer4, form.costumeLayer6, form.costumeLayer8]
@@ -494,7 +499,7 @@ function buildFinalLightingText(form, category, theme) {
 }
 
 function buildFinalNegativeText() {
-  return "負面：AI beauty face, influencer face, doll face, anime face, cgi heroine face, anime body, tiny waist, extreme hourglass, selfie angle, plastic skin, cheap cosplay, game skin outfit, pin-up pose, twisted anatomy, face swap, new actress face, side profile, covered face, face underexposure, oversized head, compressed torso, narrow shoulders, over HDR, unreal engine render.";
+  return "負面：AI beauty face, influencer face, doll face, anime face, cgi heroine face, anime body, tiny waist, extreme hourglass, selfie angle, plastic skin, cheap cosplay, game skin outfit, pin-up pose, bra and panties set, lingerie set, underwear outfit, bikini-like costume, exposed panties, erotic lingerie, two-piece underwear look, private bedroom underwear styling, twisted anatomy, face swap, new actress face, side profile, covered face, face underexposure, oversized head, compressed torso, narrow shoulders, over HDR, unreal engine render.";
 }
 
 function buildFinalStyleText(form, category, theme) {

@@ -719,7 +719,8 @@ describe("prompt engine", () => {
     expect(fairy.themeHint).toBe("古裝仙女");
     expect(fairy.layers.costumeLayer1).toContain("貼身柔白絲綢內襯");
     expect(fairy.layers.costumeLayer8).toContain("珍珠步搖");
-    expect(succubus.layers.costumeLayer2).toContain("半透珠繡上身");
+    expect(succubus.layers.costumeLayer2).toContain("睡袍式柔性胸腰支撐");
+    expect(succubus.layers.costumeLayer2).toContain("同一件長裙完整覆蓋");
     expect(fallenFeather.category).toBe("西方奇幻");
     expect(fallenFeather.layers.costumeLayer1).toContain("sheer silk chiffon");
     expect(fallenFeather.layers.costumeLayer7).toContain("layered raven feathers");
@@ -1673,7 +1674,8 @@ describe("prompt engine", () => {
     expect(darkBanquet).toContain("必須配合本次主題、角色身份與情節自由設計");
     expect(darkBanquet).toContain("雙手依劇情自然整理珠鏈、撩起薄紗、扶住座椅邊緣、收住披紗或與本場景道具互動");
     expect(darkBanquet).toContain("罩杯只依角色卡欄位寫入");
-    expect(darkBanquet).toContain("貼身真絲內搭、半透紗質外罩、珠鏈肩披、垂墜披紗或開線裙片");
+    expect(darkBanquet).toContain("主體是 one-piece deep V satin nightgown");
+    expect(darkBanquet).toContain("不得分離成胸罩內褲或情趣內衣套裝");
     expect(darkBanquet).toContain("預設單女主華麗電影海報構圖");
     expect(darkBanquet).toContain("前景、中景、遠景都要依分類、主題、角色身份與場景重新設計");
     expect(darkBanquet).toContain("不套用固定素材清單");
@@ -1848,7 +1850,9 @@ describe("prompt engine", () => {
     expect(darkRoyal).toContain("罩杯只依角色卡欄位寫入");
     expect(darkRoyal).toContain("不額外放大胸腰比例");
     expect(darkRoyal).toContain("不製造 pin-up 坐姿");
-    expect(darkRoyal).toContain("魅魔夜宴高訂睡袍系衣櫥");
+    expect(darkRoyal).toContain("魅魔夜宴低胸真絲睡衣長裙");
+    expect(darkRoyal).toContain("one-piece deep V satin nightgown");
+    expect(darkRoyal).toContain("不得分離成胸罩內褲或情趣內衣套裝");
     expect(darkRoyal).toContain("真實胸腔厚度");
     expect(darkRoyal).toContain("視覺焦點集中在原始真人臉");
     expect(inferredDarkRoyal).toContain("罩杯只依角色卡欄位寫入");
@@ -1916,6 +1920,23 @@ describe("prompt engine", () => {
     expect(prompt).not.toContain("L2: lace-trim couture support");
   });
 
+  it("keeps succubus styling as a one-piece nightgown instead of underwear", () => {
+    const prompt = buildPrompt({
+      theme: "紫蝶夜宴魅魔",
+      category: "夜宴魅魔／高訂睡袍電影",
+      scene: "暗紫絲絨寢宮",
+    });
+
+    expect(prompt).toContain("低胸真絲睡衣長裙");
+    expect(prompt).toContain("one-piece deep V satin nightgown");
+    expect(prompt).toContain("胸腰與下身由同一件長裙完整覆蓋");
+    expect(prompt).toContain("不得分離成胸罩內褲或情趣內衣套裝");
+    expect(prompt).toContain("情趣內衣套裝");
+    expect(prompt).not.toContain("腿側珠鏈");
+    expect(prompt).not.toContain("開線裙片");
+    expect(prompt).not.toContain("貼身真絲內搭");
+  });
+
   it("normalizes obsolete output mode without changing the clean five-field prompt shape", () => {
     const prompt = buildPrompt({
       theme: "賽博都市特工",
@@ -1941,7 +1962,8 @@ describe("prompt engine", () => {
     });
     const prompt = buildPrompt(form);
 
-    expect(form.costumeLayer1).toContain("紫色蕾絲邊");
+    expect(form.costumeLayer1).toContain("紫色低胸連身真絲睡衣長裙");
+    expect(form.costumeLayer2).toContain("不分離成內衣套裝");
     expect(form.costumeLayer4).toContain("蝴蝶");
     expect(form.costumeLayer6).toContain("透明紗");
     expect(form.costumeLayer8).toContain("鍊條");
