@@ -1481,6 +1481,39 @@ describe("prompt engine", () => {
     expect(parentCategoryForProfile(formalFallen[0])).toBe("暗黑墮天使");
   });
 
+  it("ships elegant sensual role-card categories without low-class prompt language", () => {
+    const sensualProfiles = WORLD_LAYER_PROFILES.filter((profile) => profile.id.startsWith("sensual-"));
+    const byId = (id) => WORLD_LAYER_PROFILES.find((profile) => profile.id === id);
+    const combinedText = sensualProfiles
+      .map((profile) => [
+        profile.title,
+        profile.category,
+        profile.costume,
+        profile.scene,
+        profile.sceneEnvironment,
+        profile.sceneAction,
+        profile.sceneLighting,
+        ...Object.values(profile.layers),
+      ].join(" "))
+      .join("\n");
+
+    expect(sensualProfiles).toHaveLength(24);
+    expect(byId("sensual-geisha-crimson-lantern").title).toContain("高級性感歌伎");
+    expect(byId("sensual-succubus-couture-rose-chain").title).toContain("高級性感魅魔");
+    expect(byId("sensual-fallen-moonsilver-relic").title).toContain("高級性感墮天使");
+    expect(parentCategoryForProfile(byId("sensual-geisha-crimson-lantern"))).toBe("中國歷代服裝");
+    expect(parentCategoryForProfile(byId("sensual-court-lady-moon-fan"))).toBe("中國歷代服裝");
+    expect(parentCategoryForProfile(byId("sensual-succubus-couture-rose-chain"))).toBe("魅魔");
+    expect(parentCategoryForProfile(byId("sensual-fallen-moonsilver-relic"))).toBe("暗黑墮天使");
+    expect(parentCategoryForProfile(byId("sensual-silkroad-emerald-dancer"))).toBe("東方異域 / 絲路西域");
+    expect(parentCategoryForProfile(byId("sensual-opera-baroque-diva"))).toBe("西方古典 / 歐陸史詩");
+    expect(combinedText).toContain("高訂");
+    expect(combinedText).toContain("可穿戴");
+    expect(combinedText).toContain("手不遮臉");
+    expect(combinedText).toContain("不是情趣內衣");
+    expect(combinedText).not.toMatch(/裸體|裸露|情色|成人色情/);
+  });
+
   it("keeps night-banquet charm profiles soft, cinematic, and separate from black-wing epic templates", () => {
     const charmIds = [
       "dark-succubus",
