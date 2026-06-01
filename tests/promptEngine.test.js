@@ -1516,6 +1516,8 @@ describe("prompt engine", () => {
       "ref-style-example-moon-dragon-cloud-saint",
       "ref-style-example-floral-clock-butterfly-girl",
       "ref-style-example-baroque-ruby-princess-closeup",
+      "ref-style-example-venice-golden-carnival-couture",
+      "ref-style-example-shanghai-bund-emerald-qipao",
     ];
     const profiles = styleExampleIds.map((id) => byId(id));
     const combinedText = profiles
@@ -1528,12 +1530,19 @@ describe("prompt engine", () => {
     expect(parentCategoryForProfile(byId("ref-style-example-moon-dragon-cloud-saint"))).toBe("仙俠神話 / 古裝陸劇");
     expect(parentCategoryForProfile(byId("ref-style-example-floral-clock-butterfly-girl"))).toBe("花園童話 / 自然精靈");
     expect(parentCategoryForProfile(byId("ref-style-example-baroque-ruby-princess-closeup"))).toBe("西方古典 / 歐陸史詩");
+    expect(parentCategoryForProfile(byId("ref-style-example-venice-golden-carnival-couture"))).toBe("世界地標旅拍");
+    expect(parentCategoryForProfile(byId("ref-style-example-shanghai-bund-emerald-qipao"))).toBe("現代都市夜景");
     expect(combinedText).toContain("虹彩珠光泳裝");
     expect(combinedText).toContain("金色歐式宮殿大理石長廊");
     expect(combinedText).toContain("粉色櫻花和傘");
     expect(combinedText).toContain("巨型銀白神龍");
     expect(combinedText).toContain("復古羅馬數字時鐘");
     expect(combinedText).toContain("紅寶石巴洛克鏡廳");
+    expect(combinedText).toContain("威尼斯金燈");
+    expect(combinedText).toContain("金色嘉年華面具");
+    expect(combinedText).toContain("上海外灘");
+    expect(combinedText).toContain("深翡翠綠緞面高級旗袍");
+    expect(combinedText).toContain("江面彩色反射");
   });
 
   it("ships 50 diverse world landmark travel photo role cards", () => {
@@ -1597,6 +1606,51 @@ describe("prompt engine", () => {
     }
 
     for (const landmark of ["奇琴伊察", "阿爾罕布拉", "薩爾瓦多", "撒馬爾罕", "波拉波拉", "全州韓屋村", "黃山", "會安", "婆羅浮屠", "布萊德湖", "拉利貝拉", "阿布辛貝", "拉普蘭", "白川鄉", "阿魯巴"]) {
+      expect(combinedText).toContain(landmark);
+    }
+  });
+
+  it("ships iconic social-media check-in landmark role cards", () => {
+    const profiles = WORLD_LAYER_PROFILES.filter((profile) => profile.id.startsWith("iconic-checkin-"));
+    const byId = (id) => WORLD_LAYER_PROFILES.find((profile) => profile.id === id);
+    const combinedText = profiles
+      .map((profile) => [profile.title, profile.category, profile.costume, profile.scene, profile.sceneEnvironment, profile.sceneLighting, ...Object.values(profile.layers)].join(" "))
+      .join("\n");
+
+    expect(profiles).toHaveLength(27);
+    expect(parentCategoryForProfile(byId("iconic-checkin-paris-eiffel-champagne-night"))).toBe("世界地標旅拍");
+    expect(parentCategoryForProfile(byId("iconic-checkin-taipei-101-rain-night-heroine"))).toBe("現代都市夜景");
+    expect(parentCategoryForProfile(byId("iconic-checkin-shanghai-bund-emerald-qipao"))).toBe("現代都市夜景");
+    expect(parentCategoryForProfile(byId("iconic-checkin-london-tower-bridge-rain-duchess"))).toBe("世界地標旅拍");
+    expect(parentCategoryForProfile(byId("iconic-checkin-newyork-times-square-neon-star"))).toBe("現代都市夜景");
+    for (const landmark of [
+      "艾菲爾鐵塔",
+      "自由女神",
+      "威尼斯",
+      "上海外灘",
+      "台北101",
+      "人面獅身",
+      "倫敦塔橋",
+      "哈里發塔",
+      "羅馬競技場",
+      "泰姬陵",
+      "雪梨歌劇院",
+      "聖家堂",
+      "羅浮宮玻璃金字塔",
+      "聖托里尼藍頂",
+      "伏見稻荷",
+      "南山塔",
+      "香港維港",
+      "濱海灣金沙",
+      "佩特拉",
+      "舍夫沙萬",
+      "卡帕多奇亞",
+      "時代廣場",
+      "帝國大廈",
+      "Hollywood Sign",
+      "Space Needle",
+      "中央公園",
+    ]) {
       expect(combinedText).toContain(landmark);
     }
   });
