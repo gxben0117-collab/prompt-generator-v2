@@ -1505,6 +1505,66 @@ describe("prompt engine", () => {
     expect(empressCombinedText).toContain("月夜魔宮");
   });
 
+  it("ships role cards from the six uploaded style examples", () => {
+    const byId = (id) => WORLD_LAYER_PROFILES.find((profile) => profile.id === id);
+    const styleExampleIds = [
+      "ref-style-example-iridescent-lagoon-swimsuit",
+      "ref-style-example-golden-hall-bridal-gown",
+      "ref-style-example-sakura-parasol-courtyard-lady",
+      "ref-style-example-moon-dragon-cloud-saint",
+      "ref-style-example-floral-clock-butterfly-girl",
+      "ref-style-example-baroque-ruby-princess-closeup",
+    ];
+    const profiles = styleExampleIds.map((id) => byId(id));
+    const combinedText = profiles
+      .map((profile) => [profile.title, profile.category, profile.costume, profile.scene, profile.sceneAction, profile.sceneLighting, ...Object.values(profile.layers)].join(" "))
+      .join("\n");
+
+    expect(profiles.every(Boolean)).toBe(true);
+    expect(parentCategoryForProfile(byId("ref-style-example-iridescent-lagoon-swimsuit"))).toBe("世界地標旅拍");
+    expect(parentCategoryForProfile(byId("ref-style-example-sakura-parasol-courtyard-lady"))).toBe("中國歷代服裝");
+    expect(parentCategoryForProfile(byId("ref-style-example-moon-dragon-cloud-saint"))).toBe("仙俠神話 / 古裝陸劇");
+    expect(parentCategoryForProfile(byId("ref-style-example-floral-clock-butterfly-girl"))).toBe("花園童話 / 自然精靈");
+    expect(parentCategoryForProfile(byId("ref-style-example-baroque-ruby-princess-closeup"))).toBe("西方古典 / 歐陸史詩");
+    expect(combinedText).toContain("虹彩珠光泳裝");
+    expect(combinedText).toContain("金色歐式宮殿大理石長廊");
+    expect(combinedText).toContain("粉色櫻花和傘");
+    expect(combinedText).toContain("巨型銀白神龍");
+    expect(combinedText).toContain("復古羅馬數字時鐘");
+    expect(combinedText).toContain("紅寶石巴洛克鏡廳");
+  });
+
+  it("ships 50 diverse world landmark travel photo role cards", () => {
+    const profiles = [
+      ...new Map(
+        WORLD_LAYER_PROFILES
+          .filter((profile) => profile.id.startsWith("world-landmark-diverse-"))
+          .map((profile) => [profile.id, profile]),
+      ).values(),
+    ];
+    const places = new Set(profiles.map((profile) => profile.scene.split("，")[0]));
+    const combinedText = profiles
+      .map((profile) => [profile.id, profile.title, profile.category, profile.costume, profile.scene, profile.sceneEnvironment, profile.sceneAction, profile.sceneLighting].join(" "))
+      .join("\n");
+
+    expect(profiles).toHaveLength(50);
+    expect(places.size).toBe(50);
+    for (const profile of profiles) {
+      expect(parentCategoryForProfile(profile), profile.id).toBe("世界景點旅拍");
+      expect(Object.keys(profile.layers)).toHaveLength(10);
+      expect(profile.costume).toContain("大量不同世界景點的旅行拍照電影角色卡主視覺");
+      expect(profile.costume).toContain("保留上傳人物原始臉部辨識度");
+      expect(profile.makeup).toContain("保留上傳真人原始臉型");
+      expect(profile.sceneEnvironment).toContain("背景預設不放路人");
+      expect(profile.sceneAction).toContain("手不遮臉");
+      expect(profile.sceneLighting).toContain("臉部明亮可辨識");
+    }
+
+    for (const landmark of ["馬丘比丘", "烏尤尼", "巴塔哥尼亞", "露易絲湖", "冰島", "法羅群島", "新天鵝堡", "佩特拉", "舍夫沙萬", "馬賽馬拉", "泰姬陵", "吳哥窟", "馬爾地夫", "大堡礁", "米佛峽灣"]) {
+      expect(combinedText).toContain(landmark);
+    }
+  });
+
   it("ships elegant sensual role-card categories without low-class prompt language", () => {
     const sensualProfiles = WORLD_LAYER_PROFILES.filter((profile) => profile.id.startsWith("sensual-"));
     const byId = (id) => WORLD_LAYER_PROFILES.find((profile) => profile.id === id);
