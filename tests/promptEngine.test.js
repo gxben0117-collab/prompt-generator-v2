@@ -1618,11 +1618,10 @@ describe("prompt engine", () => {
       .join("\n");
 
     expect(profiles).toHaveLength(27);
-    expect(parentCategoryForProfile(byId("iconic-checkin-paris-eiffel-champagne-night"))).toBe("世界地標旅拍");
-    expect(parentCategoryForProfile(byId("iconic-checkin-taipei-101-rain-night-heroine"))).toBe("現代都市夜景");
-    expect(parentCategoryForProfile(byId("iconic-checkin-shanghai-bund-emerald-qipao"))).toBe("現代都市夜景");
-    expect(parentCategoryForProfile(byId("iconic-checkin-london-tower-bridge-rain-duchess"))).toBe("世界地標旅拍");
-    expect(parentCategoryForProfile(byId("iconic-checkin-newyork-times-square-neon-star"))).toBe("現代都市夜景");
+    expect(profiles.every((profile) => parentCategoryForProfile(profile) === "世界頂級網紅地標旅拍")).toBe(true);
+    expect(parentCategoryForProfile(byId("iconic-checkin-paris-eiffel-champagne-night"))).toBe("世界頂級網紅地標旅拍");
+    expect(parentCategoryForProfile(byId("iconic-checkin-taipei-101-rain-night-heroine"))).toBe("世界頂級網紅地標旅拍");
+    expect(parentCategoryForProfile(byId("iconic-checkin-shanghai-bund-emerald-qipao"))).toBe("世界頂級網紅地標旅拍");
     for (const landmark of [
       "艾菲爾鐵塔",
       "自由女神",

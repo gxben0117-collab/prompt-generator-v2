@@ -49,6 +49,11 @@ export const PARENT_ROLE_CATEGORIES = [
     keywords: ["江南旅拍", "江南", "江東", "水鄉", "水榭", "古鎮", "西塘", "荷塘", "桃花庭院", "蘇州", "水岸"],
   },
   {
+    label: "世界頂級網紅地標旅拍",
+    exclude: [],
+    keywords: ["世界頂級網紅地標旅拍", "網紅打卡", "iconic-checkin", "頂級網紅地標"],
+  },
+  {
     label: "現代都市夜景",
     exclude: ["艾菲爾", "自由女神", "威尼斯", "人面獅身", "金字塔", "塔橋", "哈里發塔", "羅馬競技場", "泰姬陵", "雪梨歌劇院", "聖家堂", "聖托里尼", "伏見稻荷", "佩特拉", "舍夫沙萬", "卡帕多奇亞", "Hollywood Sign", "中央公園"],
     keywords: ["現代都市夜景", "都市夜景", "現代", "都市", "都會", "夜景", "霓虹", "街拍", "首爾", "上海", "香港", "台北", "賽博", "捷運", "city pop"],
@@ -239,7 +244,7 @@ export const PARENT_ROLE_CATEGORIES = [
   },
 ];
 
-const PRIORITY_PARENT_CATEGORY_LABELS = ["長相思旅拍", "民族古城旅拍", "敦煌飛天", "九尾妖狐", "魅魔", "暗黑墮天使", "水下龍宮海國", "唐朝服飾", "江南旅拍", "現代都市夜景"];
+const PRIORITY_PARENT_CATEGORY_LABELS = ["長相思旅拍", "民族古城旅拍", "敦煌飛天", "九尾妖狐", "魅魔", "暗黑墮天使", "水下龍宮海國", "唐朝服飾", "江南旅拍", "世界頂級網紅地標旅拍", "現代都市夜景"];
 const PROFILE_PARENT_CATEGORY_CACHE = new WeakMap();
 
 export function normalizeSearchText(value) {
