@@ -757,7 +757,9 @@ function bindEvents() {
   });
 
   document.querySelector('[data-action="expand-scene"]').addEventListener("click", () => expandSceneFields(form));
-  document.querySelector('[data-action="compose-copy"]').addEventListener("click", () => composeAndCopyPrompt(form));
+  document.querySelectorAll('[data-action="compose-copy"]').forEach((button) => {
+    button.addEventListener("click", () => composeAndCopyPrompt(form));
+  });
   document.querySelector('[data-action="download"]').addEventListener("click", () => downloadPrompt(form));
   document.querySelector('[data-action="reset"]').addEventListener("click", () => resetForm());
   document.querySelector('[data-action="clear-history"]').addEventListener("click", () => clearHistory());

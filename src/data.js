@@ -1,5 +1,7 @@
 ﻿import { TANG_MUSICIAN_PROFILE_DEFS, FOURTH_WAVE_PROFILE_DEFS } from './fourthWaveProfiles.js';
 import { FIFTH_WAVE_PROFILE_DEFS } from './fifthWaveProfiles.js';
+import { SIXTH_WAVE_PROFILE_DEFS } from './sixthWaveProfiles.js';
+import { SEVENTH_WAVE_PROFILE_DEFS } from './seventhWaveProfiles.js';
 import { LEGACY_ROLE_NAME_OVERRIDES } from './roleNaming.js';
 
 export const RATIOS = ["4:5", "1:1", "3:4", "2:3", "14.8:21", "21:29", "25:35", "9:16", "16:9", "3:2", "4:3", "2.39:1"];
@@ -1938,6 +1940,8 @@ const REQUESTED_FOURTH_WAVE_PROFILES = [
   ...FOURTH_WAVE_PROFILE_DEFS.map((profile) => createCuratedRoleProfile(profile)),
 ];
 const REQUESTED_FIFTH_WAVE_PROFILES = FIFTH_WAVE_PROFILE_DEFS.map((profile) => createCuratedRoleProfile(profile));
+const REQUESTED_SIXTH_WAVE_PROFILES = SIXTH_WAVE_PROFILE_DEFS.map((profile) => createCuratedRoleProfile(profile));
+const REQUESTED_SEVENTH_WAVE_PROFILES = SEVENTH_WAVE_PROFILE_DEFS.map((profile) => createCuratedRoleProfile(profile));
 const ETHNIC_OLD_TOWN_REFERENCE_PROFILES = [
   [
     "ethnic-oldtown-red-hanfu-lantern-lady",
@@ -2132,6 +2136,8 @@ const REQUESTED_EXPANSION_PROFILES = [
   ...REQUESTED_THIRD_WAVE_PROFILES,
   ...REQUESTED_FOURTH_WAVE_PROFILES,
   ...REQUESTED_FIFTH_WAVE_PROFILES,
+  ...REQUESTED_SIXTH_WAVE_PROFILES,
+  ...REQUESTED_SEVENTH_WAVE_PROFILES,
   ...REQUESTED_REFERENCE_IMAGE_PROFILES,
   ...ETHNIC_OLD_TOWN_REFERENCE_PROFILES,
 ];
