@@ -10,6 +10,7 @@ const viewports = [
 
 const parentCategories = [
   "長相思旅拍",
+  "民族古城旅拍",
   "敦煌飛天",
   "九尾妖狐",
   "魅魔",
@@ -162,7 +163,7 @@ try {
     await page.reload({ waitUntil: "domcontentloaded" });
 
     const title = await page.title();
-    if (title !== "出圖自組咒語生產器 v1.25") {
+    if (title !== "出圖自組咒語生產器 v1.27") {
       throw new Error(`${viewport.name}: unexpected page title ${title}`);
     }
 
@@ -170,8 +171,8 @@ try {
     if ((await page.getByRole("heading", { name: /出圖自組咒語生產器/ }).count()) !== 1) {
       throw new Error(`${viewport.name}: visible app name was not updated`);
     }
-    if ((await page.getByText("v1.25", { exact: true }).count()) < 1) {
-      throw new Error(`${viewport.name}: visible version v1.25 missing`);
+    if ((await page.getByText("v1.27", { exact: true }).count()) < 1) {
+      throw new Error(`${viewport.name}: visible version v1.27 missing`);
     }
     if ((await page.getByText("最高原則：真人鎖臉優先於所有華麗主視覺，不讓角色滑回 AI 仙女臉。", { exact: true }).count()) !== 1) {
       throw new Error(`${viewport.name}: visible product principle missing`);

@@ -9,6 +9,11 @@ export const PARENT_ROLE_CATEGORIES = [
     keywords: ["長相思旅拍", "長相思", "西安古城", "雪城紅裳", "宮廊紅袖", "紅綾持劍", "西炎", "皓翎", "辰榮", "塗山"],
   },
   {
+    label: "民族古城旅拍",
+    exclude: ["現代", "都市", "賽博", "西方", "歐洲", "雅典", "希臘", "哥德", "魅魔", "墮天使"],
+    keywords: ["民族古城旅拍", "民族風", "民族服", "苗風", "苗族", "銀冠", "古城夜景", "古城河岸", "草原民族", "白裘", "紙傘", "月洞門", "鼓樓"],
+  },
+  {
     label: "敦煌飛天",
     exclude: [],
     keywords: ["敦煌飛天", "敦煌", "飛天", "莫高窟", "敦煌壁畫", "鳴沙", "月牙泉", "洞窟", "飛天伎樂"],
@@ -30,7 +35,7 @@ export const PARENT_ROLE_CATEGORIES = [
   },
   {
     label: "水下龍宮海國",
-    exclude: [],
+    exclude: ["小龍女", "金庸", "神鵰", "神鵰俠侶", "古墓派"],
     keywords: ["水下龍宮海國", "龍宮", "海國", "深海", "水下", "滄海", "水母", "靈珠", "海月", "聽潮", "龍女"],
   },
   {
@@ -223,7 +228,7 @@ export const PARENT_ROLE_CATEGORIES = [
   },
 ];
 
-const PRIORITY_PARENT_CATEGORY_LABELS = ["長相思旅拍", "敦煌飛天", "九尾妖狐", "魅魔", "暗黑墮天使", "水下龍宮海國", "唐朝服飾", "江南旅拍", "現代都市夜景"];
+const PRIORITY_PARENT_CATEGORY_LABELS = ["長相思旅拍", "民族古城旅拍", "敦煌飛天", "九尾妖狐", "魅魔", "暗黑墮天使", "水下龍宮海國", "唐朝服飾", "江南旅拍", "現代都市夜景"];
 const PROFILE_PARENT_CATEGORY_CACHE = new WeakMap();
 
 export function normalizeSearchText(value) {

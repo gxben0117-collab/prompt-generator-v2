@@ -444,7 +444,7 @@ function buildFinalIdentityText(form = DEFAULT_FORM, category = "", theme = "") 
 
 function buildFinalCostumeText(form, category, theme) {
   if (isDarkRoyalCategory(category, theme, form.scene)) {
-    return "真人可穿戴的魅魔夜宴低胸真絲睡衣長裙造型，主體是 one-piece deep V satin nightgown / slip dress nightgown，胸腰與下身由連身絲綢裙身完整覆蓋，外層搭配長版絲絨晨袍、薄紗披袖與垂墜披紗；重點是低胸領口、絲綢垂墜、晨袍滑落肩線、燭光反光與成熟電影誘惑感，不得分離成胸罩內褲或情趣內衣套裝，不生成比基尼式服裝、上下分離內衣造型，也不額外放大胸腰比例。";
+    return "真人可穿戴的魅魔夜宴低胸真絲睡衣長裙造型，主體是 one-piece deep V satin nightgown / slip dress nightgown，胸腰與下身由連身絲綢裙身完整覆蓋，外層搭配哥德式華麗配件、薄紗披袖、垂墜披紗與寶石肩鏈；重點是低胸領口、絲綢垂墜、哥德珠寶層次、燭光反光與成熟電影誘惑感，不得分離成胸罩內褲或情趣內衣套裝，不生成比基尼式服裝、上下分離內衣造型，也不額外放大胸腰比例。";
   }
 
   const layerText = [form.costumeLayer1, form.costumeLayer3, form.costumeLayer4, form.costumeLayer6, form.costumeLayer8]

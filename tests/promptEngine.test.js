@@ -26,6 +26,7 @@ const BULK_PARENT_CATEGORIES = [
   "武俠江湖 / 戰場女將",
   "仙俠神話 / 古裝陸劇",
   "東方異域 / 絲路西域",
+  "民族古城旅拍",
   "奇幻異世界 / 暗黑王族",
   "西方古典 / 歐陸史詩",
   "世界景點旅拍",
@@ -172,10 +173,14 @@ describe("prompt engine", () => {
     expect(parentCategoryForProfile(byId("travel-taipei-jiufen-lantern-lady"))).toBe("世界景點旅拍");
     expect(parentCategoryForProfile(byId("modern-taipei-rain-neon-editor"))).toBe("現代都市夜景");
     expect(parentCategoryForProfile(byId("garden-wisteria-fairy-princess"))).toBe("花園童話 / 自然精靈");
+    expect(parentCategoryForProfile(byId("ethnic-oldtown-red-hanfu-lantern-lady"))).toBe("民族古城旅拍");
+    expect(parentCategoryForProfile(byId("ethnic-oldtown-silver-miao-festival-maiden"))).toBe("民族古城旅拍");
     expect(parentCategoryForProfile(byId("moon-courtyard-foxfire-nine-tail-queen"))).toBe("九尾妖狐");
     expect(parentCategoryForProfile(byId("dark-succubus"))).toBe("魅魔");
     expect(parentCategoryForProfile(byId("fallen-feather-night-court"))).toBe("暗黑墮天使");
     expect(parentCategoryForProfile(byId("tang-peony-court-lady-fan"))).toBe("唐朝服飾");
+    expect(parentCategoryForProfile(byId("xiao-longnu-ancient-tomb-fairy"))).toBe("歷史小說名著人物");
+    expect(parentCategoryForProfile(byId("jinyong-xiaolongnu-cold-jade"))).toBe("歷史小說名著人物");
   });
 
   it("normalizes search aliases for role lookup", () => {
@@ -395,7 +400,7 @@ describe("prompt engine", () => {
       ]),
     );
     expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.title === "大喬・江東雅姬"))).toBe("江南旅拍");
-    expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.title === "小龍女・古墓仙影"))).toBe("水下龍宮海國");
+    expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.title === "小龍女・古墓仙影"))).toBe("歷史小說名著人物");
     const requestedHistoricalCounts = {
       "金瓶梅／歷史小說名著人物": 10,
       "金庸／歷史小說名著人物": 10,
@@ -406,7 +411,7 @@ describe("prompt engine", () => {
       const profiles = WORLD_LAYER_PROFILES.filter((profile) => profile.category === category);
       expect(profiles, category).toHaveLength(minCount);
       for (const profile of profiles) {
-        if (profile.title === "小龍女・古墓仙影" || profile.title === "小龍女・冷玉白綾" || profile.title === "萬聖公主・碧潭龍宮") {
+        if (profile.title === "萬聖公主・碧潭龍宮") {
           expect(parentCategoryForProfile(profile)).toBe("水下龍宮海國");
         } else if (profile.title === "大喬・江東水榭") {
           expect(parentCategoryForProfile(profile)).toBe("江南旅拍");
@@ -458,16 +463,20 @@ describe("prompt engine", () => {
       expect(profiles, idPrefix).toHaveLength(expectedCount);
       for (const profile of profiles) {
         const profileText = `${profile.id} ${profile.title} ${profile.themeHint} ${profile.category} ${(profile.aliases || []).join(" ")}`;
-        const expectedParent = /長相思|西安古城|雪城紅裳|宮廊紅袖|紅綾持劍|西炎|皓翎|辰榮|塗山/.test(profileText)
+        const expectedParent = /金庸|神鵰|小龍女|古墓派/.test(profileText)
+          ? "歷史小說名著人物"
+          : /長相思|西安古城|雪城紅裳|宮廊紅袖|紅綾持劍|西炎|皓翎|辰榮|塗山/.test(profileText)
           ? "長相思旅拍"
           : /敦煌|飛天|莫高窟|敦煌壁畫|鳴沙|月牙泉|洞窟/.test(profileText)
             ? "敦煌飛天"
           : /nine-tail|九尾|狐仙|狐姬|狐后|妖狐|靈狐|天狐|青丘/.test(profileText)
             ? "九尾妖狐"
-          : /江南|江東|水鄉|水榭|古鎮|西塘|荷塘|桃花庭院|蘇州|水岸/.test(profileText)
-            ? "江南旅拍"
-            : /龍宮|海國|深海|水下|滄海|水母|靈珠|海月|聽潮|龍女/.test(profileText)
-              ? "水下龍宮海國"
+            : /民族古城旅拍|民族風|民族服|苗風|苗族|銀冠|古城夜景|古城河岸|草原民族|白裘|紙傘|月洞門|鼓樓/.test(profileText)
+              ? "民族古城旅拍"
+              : /江南|江東|水鄉|水榭|古鎮|西塘|荷塘|桃花庭院|蘇州|水岸/.test(profileText)
+                ? "江南旅拍"
+                : /龍宮|海國|深海|水下|滄海|水母|靈珠|海月|聽潮|龍女/.test(profileText)
+                  ? "水下龍宮海國"
                 : /現代|都市|都會|夜景|霓虹|街拍|首爾|上海|香港|台北|賽博|捷運|燈火|travel-paris-louvre-night/.test(profileText)
                 ? "現代都市夜景"
           : /大唐|盛唐|唐代|唐朝|長安/.test(profileText)
@@ -501,13 +510,17 @@ describe("prompt engine", () => {
             ? "敦煌飛天"
             : /nine-tail|九尾|狐仙|狐姬|狐后|妖狐|靈狐|天狐|青丘/.test(profileText)
               ? "九尾妖狐"
+              : /金庸|神鵰|小龍女|古墓派/.test(profileText)
+                ? "歷史小說名著人物"
           : /succubus|魅魔|夜宴魅姬|冰霜夜宴魅姬|莉莉絲|高訂睡袍/.test(profileText)
             ? "魅魔"
             : /墮天使|墮羽|黑羽|黑翼|殘翼|末日神話/.test(profileText)
               ? "暗黑墮天使"
-              : /江南|江東|水鄉|水榭|古鎮|西塘|荷塘|桃花庭院|蘇州|水岸/.test(profileText)
-                ? "江南旅拍"
-                : /龍宮|海國|深海|水下|滄海|水母|靈珠|海月|聽潮|龍女/.test(profileText)
+              : /民族古城旅拍|民族風|民族服|苗風|苗族|銀冠|古城夜景|古城河岸|草原民族|白裘|紙傘|月洞門|鼓樓/.test(profileText)
+                ? "民族古城旅拍"
+                : /江南|江東|水鄉|水榭|古鎮|西塘|荷塘|桃花庭院|蘇州|水岸/.test(profileText)
+                  ? "江南旅拍"
+                  : /龍宮|海國|深海|水下|滄海|水母|靈珠|海月|聽潮|(?<!小)龍女/.test(profileText)
                   ? "水下龍宮海國"
                   : /現代|都市|都會|夜景|霓虹|街拍|首爾|上海|香港|台北|賽博|捷運|燈火|夜色|evening|travel-paris-louvre-night/.test(profileText)
                     ? "現代都市夜景"
@@ -587,19 +600,23 @@ describe("prompt engine", () => {
       expect(profiles.length, parentCategory).toBeGreaterThanOrEqual(expectedMinimum);
       for (const profile of profiles) {
         const profileText = `${profile.id} ${profile.title} ${profile.themeHint} ${profile.category} ${(profile.aliases || []).join(" ")}`;
-        const expectedParent = /長相思|西安古城|雪城紅裳|宮廊紅袖|紅綾持劍|西炎|皓翎|辰榮|塗山/.test(profileText)
-          ? "長相思旅拍"
-          : /敦煌|飛天|莫高窟|敦煌壁畫|鳴沙|月牙泉|洞窟/.test(profileText)
-            ? "敦煌飛天"
-            : /nine-tail|九尾|狐仙|狐姬|狐后|妖狐|靈狐|天狐|青丘/.test(profileText)
-              ? "九尾妖狐"
-          : /succubus|魅魔|夜宴魅姬|冰霜夜宴魅姬|莉莉絲|高訂睡袍/.test(profileText)
+        const expectedParent = /金庸|神鵰|小龍女|古墓派/.test(profileText)
+          ? "歷史小說名著人物"
+          : /長相思|西安古城|雪城紅裳|宮廊紅袖|紅綾持劍|西炎|皓翎|辰榮|塗山/.test(profileText)
+            ? "長相思旅拍"
+            : /敦煌|飛天|莫高窟|敦煌壁畫|鳴沙|月牙泉|洞窟/.test(profileText)
+              ? "敦煌飛天"
+              : /nine-tail|九尾|狐仙|狐姬|狐后|妖狐|靈狐|天狐|青丘/.test(profileText)
+                ? "九尾妖狐"
+                : /succubus|魅魔|夜宴魅姬|冰霜夜宴魅姬|莉莉絲|高訂睡袍/.test(profileText)
             ? "魅魔"
             : /墮天使|墮羽|黑羽|黑翼|殘翼|末日神話/.test(profileText)
               ? "暗黑墮天使"
-              : /江南|江東|水鄉|水榭|古鎮|西塘|荷塘|桃花庭院|蘇州|水岸/.test(profileText)
-                ? "江南旅拍"
-                : /龍宮|海國|深海|水下|滄海|水母|靈珠|海月|聽潮|龍女/.test(profileText)
+              : /民族古城旅拍|民族風|民族服|苗風|苗族|銀冠|古城夜景|古城河岸|草原民族|白裘|紙傘|月洞門|鼓樓/.test(profileText)
+                ? "民族古城旅拍"
+                : /江南|江東|水鄉|水榭|古鎮|西塘|荷塘|桃花庭院|蘇州|水岸/.test(profileText)
+                  ? "江南旅拍"
+                  : /龍宮|海國|深海|水下|滄海|水母|靈珠|海月|聽潮|龍女/.test(profileText)
                   ? "水下龍宮海國"
                   : /現代|都市|都會|夜景|霓虹|街拍|首爾|上海|香港|台北|賽博|捷運|燈火|夜色|evening|travel-paris-louvre-night/.test(profileText)
                     ? "現代都市夜景"
@@ -639,6 +656,8 @@ describe("prompt engine", () => {
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("赤凰宮廷・故宮王姬");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("赤凰華庭・盛世宮妃");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("桃花仙境・江南仙姬");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("紅裳燈影・古城漢服仕女");
+    expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("銀冠鼓樓・苗風節慶少女");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("桃花女俠・海岸古道");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("盛唐宮姬・牡丹金扇");
     expect(WORLD_LAYER_PROFILES.map((profile) => profile.title)).toContain("大唐花朝・宮廷貴姬");
@@ -721,6 +740,8 @@ describe("prompt engine", () => {
     expect(fairy.layers.costumeLayer8).toContain("珍珠步搖");
     expect(succubus.layers.costumeLayer2).toContain("睡袍式柔性胸腰支撐");
     expect(succubus.layers.costumeLayer2).toContain("同一件長裙完整覆蓋");
+    expect(succubus.costume).toContain("哥德式華麗配件");
+    expect(succubus.layers.costumeLayer10).toContain("哥德式華麗配件");
     expect(fallenFeather.category).toBe("西方奇幻");
     expect(fallenFeather.layers.costumeLayer1).toContain("sheer silk chiffon");
     expect(fallenFeather.layers.costumeLayer7).toContain("layered raven feathers");
@@ -1440,6 +1461,25 @@ describe("prompt engine", () => {
       expect(`${profile.scene}\n${profile.sceneEnvironment}`).toContain(sceneKeyword);
     }
   }, 15000);
+
+  it("ships formal succubus queen and fallen angel queen role cards", () => {
+    const byId = (id) => WORLD_LAYER_PROFILES.find((profile) => profile.id === id);
+    const formalSuccubi = WORLD_LAYER_PROFILES.filter((profile) => profile.id.startsWith("formal-succubus-queen-"));
+    const formalFallen = WORLD_LAYER_PROFILES.filter((profile) => profile.id.startsWith("formal-fallen-queen-"));
+    const nightgownSuccubus = byId("darkroyal-succubus-1");
+    const nightgownFallen = byId("darkroyal-fallen-1");
+
+    expect(formalSuccubi).toHaveLength(10);
+    expect(formalFallen).toHaveLength(10);
+    expect(nightgownSuccubus.title).toContain("性感睡衣");
+    expect(nightgownFallen.title).toContain("性感睡衣");
+    expect(formalSuccubi[0].costume).toContain("黑色蕾絲馬甲式胸衣");
+    expect(formalSuccubi[0].costume).toContain("紅寶石鑲嵌");
+    expect(formalFallen[0].costume).toContain("月銀色真絲高腰長裙");
+    expect(formalFallen[0].costume).toContain("黑曜石色胸腰護甲");
+    expect(parentCategoryForProfile(formalSuccubi[0])).toBe("魅魔");
+    expect(parentCategoryForProfile(formalFallen[0])).toBe("暗黑墮天使");
+  });
 
   it("keeps night-banquet charm profiles soft, cinematic, and separate from black-wing epic templates", () => {
     const charmIds = [
