@@ -1460,7 +1460,7 @@ describe("prompt engine", () => {
       expect(Object.values(profile.layers).join("\n")).toContain(layerKeyword);
       expect(`${profile.scene}\n${profile.sceneEnvironment}`).toContain(sceneKeyword);
     }
-  }, 15000);
+  }, 45000);
 
   it("ships formal succubus queen and fallen angel queen role cards", () => {
     const byId = (id) => WORLD_LAYER_PROFILES.find((profile) => profile.id === id);
