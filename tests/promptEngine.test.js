@@ -522,7 +522,7 @@ describe("prompt engine", () => {
                   ? "江南旅拍"
                   : /龍宮|海國|深海|水下|滄海|水母|靈珠|海月|聽潮|(?<!小)龍女/.test(profileText)
                   ? "水下龍宮海國"
-                  : /現代|都市|都會|夜景|霓虹|街拍|首爾|上海|香港|台北|賽博|捷運|燈火|夜色|evening|travel-paris-louvre-night/.test(profileText)
+                  : /現代|都市|都會|夜景|霓虹|街拍|首爾|上海|香港|台北|賽博|捷運|燈火|夜色|travel-paris-louvre-night/.test(profileText)
                     ? "現代都市夜景"
                     : /大唐|盛唐|唐代|唐朝|長安/.test(profileText)
                       ? "唐朝服飾"
@@ -618,7 +618,7 @@ describe("prompt engine", () => {
                   ? "江南旅拍"
                   : /龍宮|海國|深海|水下|滄海|水母|靈珠|海月|聽潮|龍女/.test(profileText)
                   ? "水下龍宮海國"
-                  : /現代|都市|都會|夜景|霓虹|街拍|首爾|上海|香港|台北|賽博|捷運|燈火|夜色|evening|travel-paris-louvre-night/.test(profileText)
+                  : /現代|都市|都會|夜景|霓虹|街拍|首爾|上海|香港|台北|賽博|捷運|燈火|夜色|travel-paris-louvre-night/.test(profileText)
                     ? "現代都市夜景"
                     : /大唐|盛唐|唐代|唐朝|長安/.test(profileText)
                       ? "唐朝服飾"
@@ -723,7 +723,9 @@ describe("prompt engine", () => {
     expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "expand-darkroyal-velvet-throne-rose-queen"))).toBe("奇幻異世界 / 暗黑王族");
     expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "expand-darkroyal-rose-banquet-succubus"))).toBe("魅魔");
     expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "expand-travel-prague-lantern-bridge"))).toBe("世界景點旅拍");
-    expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "expand-travel-venice-canal-mask-evening"))).toBe("現代都市夜景");
+    expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "expand-travel-venice-canal-mask-evening"))).toBe("世界景點旅拍");
+    expect(WORLD_LAYER_PROFILES.find((profile) => profile.id === "expand-travel-venice-canal-mask-evening").costume).toContain("威尼斯嘉年華風");
+    expect(WORLD_LAYER_PROFILES.find((profile) => profile.id === "expand-travel-venice-canal-mask-evening").sceneAction).toContain("金面具");
     expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "expand-modern-paris-metro-mystery-editor"))).toBe("現代都市夜景");
     expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "expand-modern-seoul-neon-lounge-curator"))).toBe("現代都市夜景");
     expect(parentCategoryForProfile(WORLD_LAYER_PROFILES.find((profile) => profile.id === "wave4-western-venetian-opera-duchess"))).toBe("西方古典 / 歐陸史詩");
