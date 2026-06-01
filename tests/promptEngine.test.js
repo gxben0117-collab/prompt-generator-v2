@@ -1567,6 +1567,40 @@ describe("prompt engine", () => {
     }
   });
 
+  it("ships 150 world landmark travel cards with local cultural outfits", () => {
+    const profiles = [
+      ...new Map(
+        WORLD_LAYER_PROFILES
+          .filter((profile) => profile.id.startsWith("world-cultural-landmark-"))
+          .map((profile) => [profile.id, profile]),
+      ).values(),
+    ];
+    const places = new Set(profiles.map((profile) => profile.scene.split("，")[0]));
+    const combinedText = profiles
+      .map((profile) => [profile.id, profile.title, profile.category, profile.costume, profile.scene, profile.sceneEnvironment, profile.sceneAction, profile.sceneLighting].join(" "))
+      .join("\n");
+
+    expect(profiles).toHaveLength(150);
+    expect(places.size).toBe(150);
+    for (const profile of profiles) {
+      expect(parentCategoryForProfile(profile), profile.id).toBe("世界景點旅拍");
+      expect(Object.keys(profile.layers)).toHaveLength(10);
+      expect(profile.costume).toContain("世界景點搭配當地文化服裝的高級旅行拍照電影角色卡主視覺");
+      expect(profile.category).toContain("世界景點旅拍");
+      expect(profile.themeHint).toContain("當地文化服裝");
+      expect(profile.costume).toContain("保留上傳人物原始臉部辨識度");
+      expect(profile.makeup).toContain("保留上傳真人原始臉型");
+      expect(profile.sceneEnvironment).toContain("背景預設不放路人");
+      expect(profile.sceneAction).toContain("手不遮臉");
+      expect(profile.sceneAction).toContain("當地地標旅行拍照");
+      expect(profile.sceneLighting).toContain("臉部明亮可辨識");
+    }
+
+    for (const landmark of ["奇琴伊察", "阿爾罕布拉", "薩爾瓦多", "撒馬爾罕", "波拉波拉", "全州韓屋村", "黃山", "會安", "婆羅浮屠", "布萊德湖", "拉利貝拉", "阿布辛貝", "拉普蘭", "白川鄉", "阿魯巴"]) {
+      expect(combinedText).toContain(landmark);
+    }
+  });
+
   it("ships elegant sensual role-card categories without low-class prompt language", () => {
     const sensualProfiles = WORLD_LAYER_PROFILES.filter((profile) => profile.id.startsWith("sensual-"));
     const byId = (id) => WORLD_LAYER_PROFILES.find((profile) => profile.id === id);
