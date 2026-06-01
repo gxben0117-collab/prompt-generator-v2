@@ -1481,6 +1481,30 @@ describe("prompt engine", () => {
     expect(parentCategoryForProfile(formalFallen[0])).toBe("暗黑墮天使");
   });
 
+  it("ships fallen succubus queen and succubus empress couture role cards", () => {
+    const byId = (id) => WORLD_LAYER_PROFILES.find((profile) => profile.id === id);
+    const fallenSuccubusQueens = WORLD_LAYER_PROFILES.filter((profile) => profile.category.startsWith("墮羽魅魔女皇｜"));
+    const succubusEmpresses = WORLD_LAYER_PROFILES.filter((profile) => profile.category.startsWith("魅魔女帝｜"));
+    const fallenCombinedText = fallenSuccubusQueens
+      .map((profile) => [profile.title, profile.category, profile.costume, profile.scene, profile.sceneEnvironment, ...Object.values(profile.layers)].join(" "))
+      .join("\n");
+    const empressCombinedText = succubusEmpresses
+      .map((profile) => [profile.title, profile.category, profile.costume, profile.scene, profile.sceneEnvironment, ...Object.values(profile.layers)].join(" "))
+      .join("\n");
+
+    expect(fallenSuccubusQueens).toHaveLength(20);
+    expect(succubusEmpresses).toHaveLength(20);
+    expect(parentCategoryForProfile(byId("fallen-succubus-queen-obsidian-cathedral"))).toBe("魅魔");
+    expect(parentCategoryForProfile(byId("succubus-empress-crimson-chain"))).toBe("魅魔");
+    expect(fallenCombinedText).toContain("墮羽魅魔女皇");
+    expect(fallenCombinedText).toContain("黑羽翼");
+    expect(fallenCombinedText).toContain("哥德大教堂");
+    expect(empressCombinedText).toContain("魅魔女帝");
+    expect(empressCombinedText).toContain("透明薄紗");
+    expect(empressCombinedText).toContain("body jewelry chains");
+    expect(empressCombinedText).toContain("月夜魔宮");
+  });
+
   it("ships elegant sensual role-card categories without low-class prompt language", () => {
     const sensualProfiles = WORLD_LAYER_PROFILES.filter((profile) => profile.id.startsWith("sensual-"));
     const byId = (id) => WORLD_LAYER_PROFILES.find((profile) => profile.id === id);
