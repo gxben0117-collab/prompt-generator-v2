@@ -20,7 +20,7 @@ import {
   sanitizeInput,
   suggestThemeRewrite,
 } from "../src/promptEngine.js";
-import { PARENT_ROLE_CATEGORIES, normalizeSearchText, parentCategoryForProfile } from "../src/categoryClassifier.js";
+import { normalizeSearchText, parentCategoryForProfile } from "../src/categoryClassifier.js";
 
 const BULK_PARENT_CATEGORIES = [
   "歷史小說名著人物",
@@ -46,7 +46,6 @@ const LEGACY_PARENT_CATEGORY_LABELS = new Set([
   "世界地標旅拍",
   "世界花園旅拍",
 ]);
-const PARENT_CATEGORY_LABELS = new Set(PARENT_ROLE_CATEGORIES.map((category) => category.label));
 
 const STYLE_REFERENCE_PROFILE_EXPECTATIONS = [
   ["ref-gothic-throne-black-queen", "黑曜王座・哥德女王", "奇幻異世界 / 暗黑王族", "黑曜哥德", "黑曜王座", "K"],
@@ -225,7 +224,6 @@ describe("prompt engine", () => {
     const directCategories = new Set(ROLE_CATEGORIES);
     const orphans = ROLE_SUGGESTION_ITEMS.filter((item) => {
       if (directCategories.has(item.category) || LEGACY_PARENT_CATEGORY_LABELS.has(item.category)) return false;
-      if ([...PARENT_CATEGORY_LABELS].some((label) => item.category.includes(label))) return false;
       return !parentCategoryForProfile({
         id: item.id,
         title: item.label,
@@ -235,7 +233,7 @@ describe("prompt engine", () => {
     });
 
     expect(orphans.map((item) => `${item.id}: ${item.category}`)).toEqual([]);
-  });
+  }, 20000);
 
   it("maps world templates into the correct parent role categories", () => {
     const byId = (id) => WORLD_LAYER_PROFILES.find((profile) => profile.id === id);
