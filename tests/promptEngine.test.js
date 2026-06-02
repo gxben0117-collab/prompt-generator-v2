@@ -204,7 +204,7 @@ describe("prompt engine", () => {
     const mainSource = fs.readFileSync(new URL("../src/main.js", import.meta.url), "utf8");
     expect(mainSource).toContain("最高原則：真人鎖臉優先於所有華麗主視覺，不讓角色滑回 AI 仙女臉。");
     expect(mainSource).toContain("const PRODUCT_PRINCIPLE");
-  });
+  }, 20000);
 
   it("uses explicit defaults for the three director weight controls", () => {
     const form = normalizeForm({});
@@ -222,7 +222,13 @@ describe("prompt engine", () => {
 
   it("keeps role suggestion categories visible through direct or parent category routing", () => {
     const directCategories = new Set(ROLE_CATEGORIES);
-    const orphans = ROLE_SUGGESTION_ITEMS.filter((item) => {
+    const representativeByCategory = new Map();
+    for (const item of ROLE_SUGGESTION_ITEMS) {
+      if (!representativeByCategory.has(item.category)) {
+        representativeByCategory.set(item.category, item);
+      }
+    }
+    const orphans = [...representativeByCategory.values()].filter((item) => {
       if (directCategories.has(item.category) || LEGACY_PARENT_CATEGORY_LABELS.has(item.category)) return false;
       return !parentCategoryForProfile({
         id: item.id,

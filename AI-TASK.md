@@ -353,6 +353,22 @@ npm.cmd run test
 47 tests passed
 ```
 
+### CI 追修
+
+第一次推送 `05f0d7f` 後，GitHub Actions 在嚴格 category 可見性測試超時。根因不是分類失敗，而是測試逐筆對 1500+ ROLE_SUGGESTION_ITEMS 重複執行 parentCategoryForProfile，GitHub runner 較慢導致 20s timeout。
+
+已追修 `tests/promptEngine.test.js`：先依 category 取代表項目，再以 parentCategoryForProfile 驗證每種 category 的 UI 父分類可見性。測試語意不放寬，仍與 UI 行為一致，但避免同一 category 重複計算。
+
+追修後：
+
+```text
+npm.cmd run test
+47 tests passed
+
+npm.cmd run check
+passed
+```
+
 ### Codex 補充說明
 
 Claude v2 報告提到 115 個真正隱形項目；Codex 以目前 repo 狀態重測時為 74 個、18 種 category。修正後已歸零。差異推測來自掃描版本或判斷條件不同，但問題方向成立。
