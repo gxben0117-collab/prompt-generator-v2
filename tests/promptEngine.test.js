@@ -34,6 +34,58 @@ const BULK_PARENT_CATEGORIES = [
   "花園童話 / 自然精靈",
 ];
 
+const STYLE_REFERENCE_PROFILE_EXPECTATIONS = [
+  ["ref-gothic-throne-black-queen", "黑曜王座・哥德女王", "奇幻異世界 / 暗黑王族", "黑曜哥德", "黑曜王座", "K"],
+  ["ref-peony-spring-hanfu-lady", "花朝牡丹・橙青仕女", "中國歷代服裝", "春日中式庭園", "橙青漢服", "正常比例"],
+  ["ref-rajput-palace-burgundy-princess", "赤霞宮殿・寶石紗裙公主", "世界景點旅拍", "印度宮殿", "紅酒寶石紗裙", "正常比例"],
+  ["ref-sakura-lantern-palace-goddess", "櫻燈城樓・粉紗花神", "花園童話 / 自然精靈", "櫻花山城", "粉紗花神禮裙", "K"],
+  ["ref-pastoral-pink-chiffon-sundress", "晴野花園・粉裙旅拍", "田園花園旅拍", "田園花園露台", "粉色雪紡長裙", "正常比例"],
+  ["ref-valley-garden-peach-dress", "山谷花園・蜜桃長裙", "田園花園旅拍", "山谷牧野", "蜜桃長裙", "正常比例"],
+  ["ref-butterfly-chestwrap-flower-fairy", "蝶飾花紗・粉紫仙姬", "仙俠神話 / 古裝陸劇", "暗色棚景仙俠", "粉紫胸衣", "K"],
+  ["ref-ten-thousand-swords-wuxia-poster", "萬劍歸宗・風暴劍姬", "武俠江湖 / 戰場女將", "萬劍歸宗", "飛劍", "K"],
+];
+
+const TEMP_IMAGE_PROFILE_EXPECTATIONS = [
+  ["ref-temp-magazine-red-witch-layout", "赤帽荒原・魔女版面", "西方古典 / 歐陸史詩"],
+  ["ref-temp-blue-ballroom-princess", "藍金宮廷・水晶舞會公主", "高訂婚紗禮服"],
+  ["ref-temp-icy-blue-bridal-queen", "冰晶花廳・藍白婚紗女王", "高訂婚紗禮服"],
+  ["ref-temp-lakeside-cream-sheer-dress", "湖畔暮光・奶油紗裙旅人", "海岸度假旅拍"],
+  ["ref-temp-lakeside-tree-fairy-dress", "暮湖樹影・白紗花靈", "花園童話 / 自然精靈"],
+  ["ref-temp-moonlit-bedroom-sheer-lady", "月窗紗帳・室內柔光女子", "室內生活寫真"],
+  ["ref-temp-red-kimono-paper-umbrella", "紅櫻紙傘・和風花姬", "東方和風旅拍"],
+  ["ref-temp-lavender-cafe-garden-girl", "薰衣草露台・紫裙茶敘少女", "田園花園旅拍"],
+  ["ref-temp-bluebell-summer-portrait", "藍鈴花徑・夏日白裙旅人", "田園花園旅拍"],
+  ["ref-temp-champagne-sequin-garden-dress", "香檳花庭・亮片晚禮裙", "高訂婚紗禮服"],
+  ["ref-temp-black-gold-qipao-throne", "黑金雕座・旗袍名伶", "東方旗袍夜宴"],
+  ["ref-temp-white-sparkle-beach-swim", "白浪星砂・海岸泳裝旅人", "海岸度假旅拍"],
+  ["ref-temp-silver-bikini-rock-beach", "銀灘礁石・落日泳裝旅人", "海岸度假旅拍"],
+  ["ref-temp-mecha-pink-pilot", "粉髮機甲・未來戰姬", "賽博機甲 / 科幻戰姬"],
+  ["ref-temp-forest-archer-heroine", "森弓凝光・精靈射手", "仙俠神話 / 古裝陸劇"],
+  ["ref-temp-cyber-butterfly-street-girl", "金蝶街角・皮革短裝女主", "現代都市 / 街拍電影"],
+  ["ref-temp-sakura-ninja-street-fighter", "櫻雨忍姬・街頭格鬥者", "動漫次文化街拍"],
+  ["ref-temp-white-suit-mecha-girl", "白西裝機甲・都市工程師", "賽博機甲 / 科幻戰姬"],
+  ["ref-temp-white-wet-beach-dress", "白浪薄紗・海岸濕裙旅人", "海岸度假旅拍"],
+  ["ref-temp-indoor-fan-summer-girl", "風扇午後・室內背心女子", "室內生活寫真"],
+  ["ref-temp-wanted-black-queen-layout", "黑羽通緝令・暗夜女王版面", "奇幻異世界 / 暗黑王族"],
+  ["ref-temp-kawaii-device-subculture", "粉紫電子寵物・甜酷玩家", "動漫次文化街拍"],
+  ["ref-temp-venice-floral-ballgown", "威尼斯晨光・花瓣舞會裙", "世界景點旅拍"],
+  ["ref-temp-mai-shiranui-warrior-poster", "不知火舞・戰鬥海報版", "動漫次文化街拍"],
+  ["ref-temp-neon-qipao-rain-city", "霓虹雨街・香檳旗袍女主", "現代都市夜景"],
+  ["ref-temp-floral-butterfly-gown", "萬花蝶舞・紅金高訂花裙", "高訂婚紗禮服"],
+  ["ref-temp-blue-moon-crystal-sorceress", "藍月晶陣・星河女巫", "仙俠神話 / 古裝陸劇"],
+  ["ref-temp-sofa-boots-lifestyle", "米灰沙發・長靴生活寫真", "室內生活寫真"],
+  ["ref-temp-pirate-queen-wanted-poster", "骷髏海盜・黑帆女王通緝令", "奇幻異世界 / 暗黑王族"],
+  ["ref-temp-yuna-black-mage-layout", "黑羽法帽・暮海魔法師版", "西方古典 / 歐陸史詩"],
+  ["ref-temp-silver-rose-bed-gown", "銀玫花床・水晶禮裙女子", "高訂婚紗禮服"],
+  ["ref-temp-witch-battle-seaside-layout", "暮海法陣・戰鬥魔女版面", "西方古典 / 歐陸史詩"],
+  ["ref-temp-office-white-blazer-secretary", "白西裝辦公・都市秘書", "室內生活寫真"],
+  ["ref-temp-moon-mermaid-sea-goddess", "月海人魚・銀藍海神女", "水下龍宮海國"],
+  ["ref-temp-wet-white-beach-kneeling", "白浪岸邊・濕紗坐姿旅人", "海岸度假旅拍"],
+  ["ref-temp-neon-cat-ear-girl", "霓虹貓耳・粉白街頭少女", "動漫次文化街拍"],
+  ["ref-temp-black-banquet-sofa-queen", "黑紗夜宴・沙發女王", "奇幻異世界 / 暗黑王族"],
+  ["ref-temp-pale-pink-hanfu-garden-lady", "淡粉花庭・欄邊漢服仕女", "中國歷代服裝"],
+];
+
 const BATCH_ROLE_LABELS = [
   "月庭焰瓣・紅衣花神",
   "月闕凝玉・白璧仙姬",
@@ -181,6 +233,32 @@ describe("prompt engine", () => {
     expect(parentCategoryForProfile(byId("tang-peony-court-lady-fan"))).toBe("唐朝服飾");
     expect(parentCategoryForProfile(byId("xiao-longnu-ancient-tomb-fairy"))).toBe("歷史小說名著人物");
     expect(parentCategoryForProfile(byId("jinyong-xiaolongnu-cold-jade"))).toBe("歷史小說名著人物");
+  });
+
+  it("adds the eight style-reference profiles with correct parent categories", () => {
+    for (const [id, title, parentCategory, sceneNeedle, layerNeedle, cupSize] of STYLE_REFERENCE_PROFILE_EXPECTATIONS) {
+      const profile = WORLD_LAYER_PROFILES.find((item) => item.id === id);
+
+      expect(profile?.title).toBe(title);
+      expect(parentCategoryForProfile(profile)).toBe(parentCategory);
+      expect(profile?.scene).toContain(sceneNeedle);
+      expect(Object.values(profile?.layers || {}).join("\n")).toContain(layerNeedle);
+      expect(profile?.cupSize).toBe(cupSize);
+    }
+  });
+
+  it("adds non-duplicate temp-folder image profiles from xx 9-46", () => {
+    const tempProfiles = WORLD_LAYER_PROFILES.filter((profile) => profile.id.startsWith("ref-temp-"));
+
+    expect(tempProfiles).toHaveLength(38);
+    for (const [id, title, parentCategory] of TEMP_IMAGE_PROFILE_EXPECTATIONS) {
+      const profile = WORLD_LAYER_PROFILES.find((item) => item.id === id);
+
+      expect(profile?.title).toBe(title);
+      expect(parentCategoryForProfile(profile)).toBe(parentCategory);
+      expect(Object.keys(profile?.layers || {})).toHaveLength(10);
+      expect(profile?.themeHint).toMatch(/xx \((9|[1-3][0-9]|4[0-6])\)\.jpg/);
+    }
   });
 
   it("normalizes search aliases for role lookup", () => {
@@ -588,7 +666,7 @@ describe("prompt engine", () => {
       expect(Object.keys(profile.layers)).toHaveLength(10);
     }
 
-    const curatedProfiles = WORLD_LAYER_PROFILES.filter((profile) => BULK_PARENT_CATEGORIES.includes(profile.parentCategory));
+    const curatedProfiles = WORLD_LAYER_PROFILES.filter((profile) => BULK_PARENT_CATEGORIES.includes(profile.parentCategory) && !profile.id.startsWith("ref-"));
     expect(curatedProfiles.length).toBeGreaterThanOrEqual(100);
     for (const parentCategory of BULK_PARENT_CATEGORIES) {
       const profiles = curatedProfiles.filter((profile) => profile.parentCategory === parentCategory);
@@ -1919,7 +1997,7 @@ describe("prompt engine", () => {
     expect(darkBanquet).toContain("夜宴魅姬式電影動作");
     expect(darkBanquet).toContain("必須配合本次主題、角色身份與情節自由設計");
     expect(darkBanquet).toContain("雙手依劇情自然整理珠鏈、撩起薄紗、扶住座椅邊緣、收住披紗或與本場景道具互動");
-    expect(darkBanquet).toContain("罩杯只依角色卡欄位寫入");
+    expect(darkBanquet).toContain("角色卡舊欄位 K 只作為豐滿體態記號");
     expect(darkBanquet).toContain("主體是 one-piece deep V satin nightgown");
     expect(darkBanquet).toContain("不得分離成胸罩內褲或情趣內衣套裝");
     expect(darkBanquet).toContain("預設單女主華麗電影海報構圖");
@@ -1975,6 +2053,47 @@ describe("prompt engine", () => {
     expect(instruction).toContain("珠寶、金屬、燈籠、水面反光、絲綢、薄紗與披帛");
     expect(instruction).toContain("陰影抬升不厚重");
     expect(instruction).toContain("避免灰暗低光");
+    expect(instruction).toContain("ultra realistic cinematic photography");
+    expect(instruction).toContain("photorealistic");
+    expect(instruction).toContain("high-detail skin texture");
+    expect(instruction).toContain("realistic hair strands");
+    expect(instruction).toContain("realistic fabric texture");
+    expect(instruction).toContain("realistic jewelry reflections");
+    expect(instruction).toContain("medium format photography");
+    expect(instruction).toContain("premium commercial fantasy artwork");
+    expect(instruction).not.toContain("realistic silk texture");
+  });
+
+  it("infers category-specific visual language when new categories keep default controls", () => {
+    const instruction = buildChatGptInstruction({
+      category: "賽博機甲／粉髮駕駛員／黑金戰服",
+      theme: "粉髮機甲・未來戰姬",
+      scene: "未來機甲停機坪",
+    });
+
+    expect(instruction).toContain("科幻機甲電影主視覺");
+    expect(instruction).toContain("cool white hangar light");
+    expect(instruction).toContain("metal armor panels");
+    expect(instruction).not.toContain("東方奇幻電影主視覺");
+    expect(instruction).not.toContain("ruby red silk");
+    expect(instruction).not.toContain("extra-long flowing silk drapery");
+  });
+
+  it("uses dark royal language for gothic queen categories instead of eastern silk defaults", () => {
+    const instruction = buildChatGptInstruction({
+      category: "奇幻異世界 / 暗黑王族",
+      theme: "黑曜王座・哥德女王",
+      scene: "黑曜哥德大教堂王座廳",
+      cupSize: "豐滿",
+    });
+
+    expect(instruction).toContain("暗黑王族電影主視覺");
+    expect(instruction).toContain("black velvet shadow");
+    expect(instruction).toContain("heavy cloak fabric");
+    expect(instruction).toContain("豐滿體態女王版");
+    expect(instruction).not.toContain("東方奇幻電影主視覺");
+    expect(instruction).not.toContain("ruby red silk");
+    expect(instruction).not.toContain("extra-long flowing silk drapery");
   });
 
   it("keeps template prompts concise by using supplemental director notes instead of repeating filled fields", () => {
@@ -2084,28 +2203,29 @@ describe("prompt engine", () => {
       theme: "紫蝶夜宴魅魔",
       scene: "暗紫絲絨寢宮",
     });
-    const explicitCupDarkRoyal = buildPrompt({
+    const explicitFullnessDarkRoyal = buildPrompt({
       category: "奇幻異世界 / 暗黑王族",
       theme: "紫蝶夜宴魅魔",
       scene: "暗紫絲絨寢宮",
-      cupSize: "F",
+      cupSize: "豐滿",
     });
 
     expect(darkRoyal).toContain("暗黑王族身形安全");
     expect(darkRoyal).toContain("依照上傳真人原始體型自然延伸");
-    expect(darkRoyal).toContain("罩杯只依角色卡欄位寫入");
-    expect(darkRoyal).toContain("不額外放大胸腰比例");
+    expect(darkRoyal).toContain("角色卡舊欄位 K 只作為豐滿體態記號");
+    expect(darkRoyal).toContain("體態模式：預設");
     expect(darkRoyal).toContain("不製造 pin-up 坐姿");
     expect(darkRoyal).toContain("魅魔夜宴低胸真絲睡衣長裙");
     expect(darkRoyal).toContain("one-piece deep V satin nightgown");
     expect(darkRoyal).toContain("不得分離成胸罩內褲或情趣內衣套裝");
     expect(darkRoyal).toContain("真實胸腔厚度");
     expect(darkRoyal).toContain("視覺焦點集中在原始真人臉");
-    expect(inferredDarkRoyal).toContain("罩杯只依角色卡欄位寫入");
+    expect(inferredDarkRoyal).toContain("角色卡舊欄位 K 只作為豐滿體態記號");
     expect(inferredDarkRoyal).toContain("分類：夜宴魅魔／高訂睡袍電影");
     expect(inferredDarkRoyal).toContain("輸出比例控制：4:5 premium commercial fantasy poster");
-    expect(explicitCupDarkRoyal).toContain('若角色卡罩杯欄位指定為 "F"');
-    expect(explicitCupDarkRoyal).toContain("胸腔厚度與自然胸型量感的生成參考");
+    expect(explicitFullnessDarkRoyal).toContain("體態模式：豐滿");
+    expect(explicitFullnessDarkRoyal).toContain("royal feminine physique");
+    expect(explicitFullnessDarkRoyal).toContain("balanced chest-to-shoulder ratio");
     expect(darkRoyal).not.toContain("不做動漫誇張身材");
     expect(darkRoyal).not.toContain("罩杯:J");
     expect(changan).not.toContain("暗黑王族身形安全");
@@ -2369,6 +2489,10 @@ describe("prompt engine", () => {
     expect(instruction).toContain("場景：");
     expect(instruction).toContain("動作：");
     expect(instruction).toContain("光影：");
+    expect(instruction).toContain("ultra realistic cinematic photography");
+    expect(instruction).toContain("professional movie poster quality");
+    expect(instruction).toContain("realistic fabric texture");
+    expect(instruction).toContain("true-to-life lighting");
     expect(instruction).toContain("負面：");
     expect(instruction).not.toContain("【真人電影級 AI 電影角色系統｜V4.0 Ultimate】");
     expect(instruction).not.toContain("【輸出格式】");
@@ -2382,7 +2506,7 @@ describe("prompt engine", () => {
     expect(instruction).not.toContain("罩杯:J");
   });
 
-  it("writes cup size into the final skeleton from the role card field or normal default", () => {
+  it("uses K as a fullness marker and writes queen body proportions instead of cup text", () => {
     const darkInstruction = buildChatGptInstruction({
       category: "奇幻異世界 / 暗黑王族",
       theme: "紫蝶夜宴魅魔",
@@ -2403,13 +2527,17 @@ describe("prompt engine", () => {
     expect(getHiddenSystemPrompt()).toContain("【真實人體骨架】");
     expect(getHiddenSystemPrompt()).toContain("- 罩杯j");
     expect(darkInstruction).toContain("真實人體骨架");
-    expect(darkInstruction).toContain('胸腔厚度、罩杯 "K" 對應的自然胸型量感、軀幹深度');
-    expect(darkInstruction).toContain("不額外放大胸腰比例");
+    expect(darkInstruction).toContain("豐滿體態女王版");
+    expect(darkInstruction).toContain("full mature bust");
+    expect(darkInstruction).toContain("royal feminine physique");
+    expect(darkInstruction).toContain("balanced chest-to-shoulder ratio");
     expect(darkInstruction).not.toContain("- 罩杯:J");
     expect(darkInstruction).not.toContain("真實人體骨架追加：罩杯:J");
-    expect(normalInstruction).toContain('胸腔厚度、罩杯 "正常比例"、軀幹深度');
-    expect(emptyCupInstruction).toContain('胸腔厚度、罩杯 "正常比例"、軀幹深度');
+    expect(normalInstruction).toContain("胸腔厚度、軀幹深度");
+    expect(emptyCupInstruction).toContain("胸腔厚度、軀幹深度");
     expect(normalInstruction).not.toContain('罩杯 "K"');
+    expect(darkInstruction).not.toContain('罩杯 "K"');
+    expect(normalInstruction).not.toContain('罩杯 "正常比例"');
     expect(normalInstruction).not.toContain("- 罩杯j");
     expect(normalInstruction).not.toContain("- 罩杯:J");
   });

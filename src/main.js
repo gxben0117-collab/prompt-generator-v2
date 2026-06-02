@@ -46,10 +46,11 @@ const RATIO_LABELS = {
   "4:3": "4:3 經典畫幅",
   "2.39:1": "2.39:1 寬銀幕",
 };
-const CUP_SIZE_OPTIONS = ["預設", "D", "F", "K"];
+const BODY_FULLNESS_VALUE = "豐滿";
+const CUP_SIZE_OPTIONS = ["預設", BODY_FULLNESS_VALUE];
 
 function cupSizeSelectValue(value) {
-  return !value || value === "正常比例" ? "預設" : value;
+  return value === "K" || value === BODY_FULLNESS_VALUE ? BODY_FULLNESS_VALUE : "預設";
 }
 
 function cupSizeSelectOptions(activeValue) {
@@ -381,14 +382,14 @@ function selectedProfileCard(state) {
         </div>
       </div>`;
   }
-  const cupSizeLabel = state.cupSize && state.cupSize !== "正常比例" ? `｜罩杯 ${escapeHtml(state.cupSize)}` : "";
+  const bodyFullnessLabel = cupSizeSelectValue(state.cupSize) === BODY_FULLNESS_VALUE ? "｜體態 豐滿" : "";
 
   return `
     <div class="selected-profile-card">
       <div>
         <div class="sec-label">目前模板角色</div>
         <strong>${escapeHtml(profile.title)}</strong>
-        <small>${escapeHtml(profile.category)}${cupSizeLabel}</small>
+        <small>${escapeHtml(profile.category)}${bodyFullnessLabel}</small>
       </div>
       <button type="button" class="secondary small-btn" data-scroll-target="template-picker">重新選模板</button>
     </div>`;
@@ -620,7 +621,7 @@ function render() {
                   <small>環境 / 動作 / 光影，可選</small>
                 </div>
                 <label class="director-cup-field" data-director-cup-wrapper>
-                  <span>罩杯</span>
+                  <span>體態</span>
                   <select name="cupSize" data-director-cup>
                     ${cupSizeSelectOptions(cupSizeSelectValue(state.cupSize))}
                   </select>

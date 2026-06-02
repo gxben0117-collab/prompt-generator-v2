@@ -49,6 +49,46 @@ export const PARENT_ROLE_CATEGORIES = [
     keywords: ["江南旅拍", "江南", "江東", "水鄉", "水榭", "古鎮", "西塘", "荷塘", "桃花庭院", "蘇州", "水岸"],
   },
   {
+    label: "田園花園旅拍",
+    exclude: ["古裝", "唐", "大唐", "盛唐", "仙俠", "神話", "魅魔", "哥德", "暗黑", "墮天使"],
+    keywords: ["田園花園旅拍", "田園", "牧場", "草地", "鄉村花園", "花園露台", "粉色雪紡", "木平台", "山谷草原", "戶外洋裝"],
+  },
+  {
+    label: "高訂婚紗禮服",
+    exclude: ["暗黑", "哥德", "魅魔", "戰場", "賽博"],
+    keywords: ["高訂婚紗禮服", "婚紗", "禮服", "晚禮服", "水晶禮服", "舞會禮裙", "高訂花裙", "公主禮裙"],
+  },
+  {
+    label: "海岸度假旅拍",
+    exclude: ["龍宮", "水下", "海國", "人魚", "賽博", "戰場"],
+    keywords: ["海岸度假旅拍", "海灘", "海岸", "沙灘", "浪花", "礁石", "比基尼", "泳裝", "海邊", "度假"],
+  },
+  {
+    label: "室內生活寫真",
+    exclude: ["王座", "哥德", "暗黑", "婚紗", "戰場", "賽博"],
+    keywords: ["室內生活寫真", "室內", "沙發", "臥室", "窗邊", "居家", "辦公桌", "電腦桌", "生活寫真"],
+  },
+  {
+    label: "賽博機甲 / 科幻戰姬",
+    exclude: ["古裝", "漢服", "婚紗"],
+    keywords: ["賽博機甲", "科幻戰姬", "機甲", "鋼彈", "戰甲", "未來裝甲", "太空艙", "機械", "cyber mech"],
+  },
+  {
+    label: "動漫次文化街拍",
+    exclude: ["古裝", "漢服", "婚紗", "世界地標"],
+    keywords: ["動漫次文化街拍", "次文化", "遊戲致敬", "電子寵物", "貓耳", "cosplay", "霓虹塗鴉", "格鬥女忍", "魔法少女"],
+  },
+  {
+    label: "東方和風旅拍",
+    exclude: ["九尾", "妖狐", "賽博", "現代都市"],
+    keywords: ["東方和風旅拍", "和風", "和服", "日式", "紙傘", "櫻花傘", "花魁", "巫女"],
+  },
+  {
+    label: "東方旗袍夜宴",
+    exclude: ["現代都市", "賽博", "婚紗"],
+    keywords: ["東方旗袍夜宴", "旗袍", "黑金旗袍", "中式夜宴", "雕花王座", "東方名伶"],
+  },
+  {
     label: "世界頂級網紅地標旅拍",
     exclude: [],
     keywords: ["世界頂級網紅地標旅拍", "網紅打卡", "iconic-checkin", "頂級網紅地標"],
@@ -294,6 +334,10 @@ export function parentCategoryForText(value) {
 export function parentCategoryForProfile(profile) {
   if (profile && typeof profile === "object" && PROFILE_PARENT_CATEGORY_CACHE.has(profile)) {
     return PROFILE_PARENT_CATEGORY_CACHE.get(profile);
+  }
+  if (profile?.id?.startsWith("ref-temp-") && profile.parentCategory) {
+    PROFILE_PARENT_CATEGORY_CACHE.set(profile, profile.parentCategory);
+    return profile.parentCategory;
   }
   const inferredCategory = parentCategoryForText(profileCategoryText(profile));
   let category;

@@ -18,6 +18,14 @@ const parentCategories = [
   "水下龍宮海國",
   "唐朝服飾",
   "江南旅拍",
+  "田園花園旅拍",
+  "高訂婚紗禮服",
+  "海岸度假旅拍",
+  "室內生活寫真",
+  "賽博機甲 / 科幻戰姬",
+  "動漫次文化街拍",
+  "東方和風旅拍",
+  "東方旗袍夜宴",
   "世界頂級網紅地標旅拍",
   "現代都市夜景",
   "歷史小說名著人物",
@@ -65,6 +73,39 @@ const profileChecks = [
     environment: "首爾高空夜景平台",
     action: "微側臉凝視鏡頭",
     lighting: "城市夜景 bokeh",
+  },
+  {
+    id: "ref-pastoral-pink-chiffon-sundress",
+    title: "晴野花園・粉裙旅拍",
+    category: "田園花園旅拍／粉色雪紡洋裝／晴日草地",
+    layers: ["粉色雪紡長裙", "田園花園旅拍輪廓"],
+    makeup: "清透日光底妝",
+    scene: "晴日田園花園露台",
+    environment: "田園花園露台",
+    action: "自然站立或微步前行",
+    lighting: "晴日上午自然光",
+  },
+  {
+    id: "ref-temp-blue-ballroom-princess",
+    title: "藍金宮廷・水晶舞會公主",
+    category: "高訂婚紗禮服／藍金舞會／水晶宮殿",
+    layers: ["藍金蓬裙高訂舞會禮服", "水晶舞會公主主視覺輪廓"],
+    makeup: "清透公主妝",
+    scene: "金色水晶宮殿舞會廳",
+    environment: "金色水晶宮殿舞會廳",
+    action: "雙手自然扶裙",
+    lighting: "宮殿暖金主光",
+  },
+  {
+    id: "ref-temp-mecha-pink-pilot",
+    title: "粉髮機甲・未來戰姬",
+    category: "賽博機甲／粉髮駕駛員／黑金戰服",
+    layers: ["黑金未來駕駛員戰服", "粉髮機甲・未來戰姬主視覺輪廓"],
+    makeup: "未來感眼妝",
+    scene: "未來機甲停機坪",
+    environment: "未來機甲停機坪",
+    action: "單手扶腰",
+    lighting: "冷白機庫光",
   },
 ];
 
@@ -388,11 +429,11 @@ try {
       }
       if (profile.id === "fallen-feather-night-court") {
         const cupSize = await page.locator('select[name="cupSize"]').inputValue();
-        if (cupSize !== "K") {
-          throw new Error(`${viewport.name}: dark royal profile did not set cup size K`);
+        if (cupSize !== "豐滿") {
+          throw new Error(`${viewport.name}: dark royal profile did not set body fullness`);
         }
-        if (!(await page.locator(".selected-profile-card").getByText("罩杯 K").isVisible())) {
-          throw new Error(`${viewport.name}: selected dark royal card did not show cup size`);
+        if (!(await page.locator(".selected-profile-card").getByText("體態 豐滿").isVisible())) {
+          throw new Error(`${viewport.name}: selected dark royal card did not show body fullness`);
         }
       }
     }
@@ -403,8 +444,8 @@ try {
     if ((await page.locator('select[name="cupSize"]').inputValue()) !== "預設") {
       throw new Error(`${viewport.name}: default cup-size select should show 預設`);
     }
-    if (await page.locator(".selected-profile-card").getByText("罩杯 正常比例", { exact: true }).isVisible()) {
-      throw new Error(`${viewport.name}: normal cup-size text should be hidden in selected template card`);
+    if (await page.locator(".selected-profile-card").getByText("體態 預設", { exact: true }).isVisible()) {
+      throw new Error(`${viewport.name}: default body fullness text should be hidden in selected template card`);
     }
 
     await page.getByRole("button", { name: "清空" }).click();
@@ -442,7 +483,7 @@ try {
       throw new Error(`${viewport.name}: visual mode block-grid card did not select 暗黑夜宴`);
     }
     await page.locator('input[name="category"]').fill("測試分類");
-    await page.locator('select[name="cupSize"]').selectOption("K");
+    await page.locator('select[name="cupSize"]').selectOption("豐滿");
     await page.getByLabel("主題（必填）").fill(typedTheme);
     await page.getByRole("button", { name: "黑色絲綢內襯" }).click();
     await page.getByRole("button", { name: "長安宮廷夜宴，前景燭火，中景角色，遠景宮殿廊柱" }).click();
@@ -546,8 +587,11 @@ try {
     if (!promptText.includes("ChatGPT 需依場所、角色身份與情節設計不呆站的姿勢")) {
       throw new Error(`${viewport.name}: adaptive action direction missing`);
     }
-    if (!promptText.includes('胸腔厚度、罩杯 "K" 對應的自然胸型量感、軀幹深度')) {
-      throw new Error(`${viewport.name}: cup size field did not enter skeleton prompt`);
+    if (!promptText.includes("豐滿體態女王版") || !promptText.includes("royal feminine physique") || !promptText.includes("balanced chest-to-shoulder ratio")) {
+      throw new Error(`${viewport.name}: body fullness queen profile did not enter skeleton prompt`);
+    }
+    if (promptText.includes('罩杯 "K"') || promptText.includes("罩杯 K")) {
+      throw new Error(`${viewport.name}: legacy cup-size K leaked into prompt`);
     }
     if (metrics.horizontalOverflow) {
       throw new Error(`${viewport.name}: horizontal overflow detected`);

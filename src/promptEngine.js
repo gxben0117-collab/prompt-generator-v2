@@ -91,6 +91,8 @@ export const DEFAULT_FORM = {
   finalPrompt: "",
 };
 
+const FULLNESS_MARKERS = new Set(["K", "豐滿"]);
+
 export function sanitizeInput(value = "") {
   const protectedText = SANITIZE_PROTECTED_TERMS.reduce(
     (text, [term, token]) => text.replaceAll(term, token),
@@ -150,7 +152,10 @@ export function suggestThemeRewrite(value = "") {
 
 export function normalizeForm(input = {}) {
   const form = { ...DEFAULT_FORM, ...input };
-  const normalizedCupSize = form.cupSize === "預設" ? DEFAULT_FORM.cupSize : sanitizeInput(form.cupSize) || DEFAULT_FORM.cupSize;
+  const sanitizedCupSize = sanitizeInput(form.cupSize);
+  const normalizedCupSize = FULLNESS_MARKERS.has(sanitizedCupSize)
+    ? "K"
+    : DEFAULT_FORM.cupSize;
 
   const normalized = {
     category: sanitizeInput(form.category),
@@ -289,14 +294,14 @@ function isDarkRoyalCategory(category = "", theme = "", scene = "") {
 function buildDarkRoyalBodyPresenceText(form, category) {
   if (!isDarkRoyalCategory(category, form.theme, form.scene)) return "";
   const explicitCupSize = compactText(form.cupSize, 12);
-  const cupControlText = ["D", "F", "K"].includes(explicitCupSize)
-    ? `若角色卡罩杯欄位指定為 "${explicitCupSize}"，則只把它當成胸腔厚度與自然胸型量感的生成參考，允許胸部份量隨罩杯調整，但不可變成誇張爆乳、情色內衣視覺或不合理骨架`
-    : "若未指定 D / F / K 罩杯值，則維持角色卡預設胸型量感與自然胸腔厚度";
+  const bodyFullnessText = FULLNESS_MARKERS.has(explicitCupSize)
+    ? "體態模式：豐滿；套用女王版身體比例，broad shoulders、strong clavicle structure、full ribcage、deep ribcage anatomy、deep torso、substantial upper body volume、full mature bust、natural breast weight、luxurious mature feminine proportions、royal feminine physique、balanced chest-to-shoulder ratio、realistic body mass distribution、physically believable anatomy、elegant queen-like silhouette、cinematic fantasy realism、natural gravity、natural fabric tension、adult feminine presence、powerful regal posture"
+    : "體態模式：預設；維持上傳真人原始身形、自然胸腔厚度與角色卡預設量感";
 
   return [
     "暗黑王族身形安全：胸部與身形只允許依照上傳真人原始體型自然延伸",
-    "罩杯只依角色卡欄位寫入，不額外放大胸腰比例、不製造 pin-up 坐姿，不讓腿部或胸腰成為主視覺",
-    cupControlText,
+    "角色卡舊欄位 K 只作為豐滿體態記號，不在咒語中輸出罩杯字面值；不製造 pin-up 坐姿，不讓腿部或胸腰成為主視覺",
+    bodyFullnessText,
     "服裝改採魅魔夜宴低胸真絲睡衣長裙，主體是 one-piece deep V satin nightgown，胸腰與下身由同一件長裙完整覆蓋；性感來自低胸領口、絲綢垂墜與燭光反光，不得分離成胸罩內褲或情趣內衣套裝",
     "保留真實胸腔厚度、肩頸連接、正常腰臀比例與高訂布料張力",
     "視覺焦點集中在原始真人臉、暗黑王族氣場、絲絨高光與禮服輪廓",
@@ -426,19 +431,19 @@ function compactLayerValue(value = "") {
     .trim();
 }
 
-function buildCupSizeSkeletonText(form = DEFAULT_FORM, category = "", theme = "") {
+function buildCupSizeSkeletonText(form = DEFAULT_FORM) {
   const cupSize = compactText(form.cupSize, 12);
   if (!cupSize) return "";
-  if (isDarkRoyalCategory(category, theme, form.scene) && ["D", "F", "K"].includes(cupSize)) {
-    return `、罩杯 "${cupSize}" 對應的自然胸型量感`;
+  if (FULLNESS_MARKERS.has(cupSize)) {
+    return "、豐滿體態女王版：broad shoulders、strong clavicle structure、full ribcage、deep ribcage anatomy、deep torso、substantial upper body volume、full mature bust、natural breast weight、luxurious mature feminine proportions、royal feminine physique、balanced chest-to-shoulder ratio、realistic body mass distribution、physically believable anatomy、elegant queen-like silhouette、cinematic fantasy realism、natural gravity、natural fabric tension、adult feminine presence、powerful regal posture";
   }
-  return `、罩杯 "${cupSize}"`;
+  return "";
 }
 
-function buildFinalIdentityText(form = DEFAULT_FORM, category = "", theme = "") {
+function buildFinalIdentityText(form = DEFAULT_FORM) {
   return [
     "真人身份鎖定：保留上傳照片原始臉型、眼型、鼻型、嘴型、下顎線、五官比例、成熟年齡感、自然不對稱與真實皮膚紋理；不換臉、不生成新演員臉、不美化成 AI 美女或網紅臉。髮型與髮飾可配合角色微調，但不得改變臉型、髮際線與真人辨識度。",
-    `真實人體骨架：平衡肩寬、鎖骨、胸腔厚度${buildCupSizeSkeletonText(form, category, theme)}、軀幹深度、骨盆比例、四肢比例與人體重心；避免頭大、肩窄、軀幹壓縮、脖子扭曲或 AI 娃娃比例。`,
+    `真實人體骨架：平衡肩寬、鎖骨、胸腔厚度${buildCupSizeSkeletonText(form)}、軀幹深度、骨盆比例、四肢比例與人體重心；避免頭大、肩窄、軀幹壓縮、脖子扭曲或 AI 娃娃比例。`,
   ].join("\n");
 }
 
@@ -480,22 +485,27 @@ function buildFinalLightingText(form, category, theme) {
   const commercial = shouldUseCommercialGlamourLighting({ ...form, category, theme });
   const dreamyRadiant = isDreamyRadiantPosterTheme(`${category} ${theme} ${form.scene} ${form.sceneEnvironment} ${form.visualMode}`);
   const brightCostumePoster = form.visualMode === "高亮商業古裝海報";
+  const realismQuality =
+    "品質質感：ultra realistic cinematic photography、photorealistic、professional movie poster quality、high-detail skin texture、realistic hair strands、realistic fabric texture、realistic jewelry reflections、true-to-life lighting、medium format photography、extreme detail";
+  const commercialQuality = brightCostumePoster
+    ? "、premium commercial fantasy artwork、bright commercial costume poster、luminous jewel-tone atmosphere"
+    : "";
   const base =
     lighting ||
     (dreamyRadiant || brightCostumePoster
       ? "高亮主角柔光、正面 beauty fill、柔和邊緣分離光、半透明 bloom、抬升暗部、通透空氣透視、冷暖混合發光層次、自然景深與真實皮膚反光。"
       : "側前方柔和主光、燭光或月光環境光、柔和邊緣分離光、自然景深、空氣霧化與真實皮膚反光。");
   if (brightCostumePoster) {
-    return `${base} 圖二亮麗版風格：臉部明亮清晰且保留真人皮膚紋理，眼睛有自然 catchlight；珠寶、金屬、燈籠、水面反光、絲綢、薄紗與披帛都有明顯 sparkle highlights；色彩飽和但真實，粉、金、青綠與寶石藍形成夢幻通透層次；陰影抬升不厚重，避免灰暗低光、塑膠 HDR 與 AI 美女換臉感。`;
+    return `${base} 圖二亮麗版風格：臉部明亮清晰且保留真人皮膚紋理，眼睛有自然 catchlight；珠寶、金屬、燈籠、水面反光、絲綢、薄紗與披帛都有明顯 sparkle highlights；色彩飽和但真實，粉、金、青綠與寶石藍形成夢幻通透層次；陰影抬升不厚重，避免灰暗低光、塑膠 HDR 與 AI 美女換臉感。${realismQuality}${commercialQuality}。`;
   }
   if (commercial) {
     return dreamyRadiant
-      ? `${base} 臉部明亮且保留真人皮膚紋理，眼睛有自然 catchlight；絲綢、珠寶、薄紗與場景高光呈現 sparkle highlights，畫面夢幻通透但保持真實攝影質感。`
-      : `${base} 臉部明亮可辨識，眼睛有自然 catchlight，珠寶與服裝保留細膩高光，避免過暗、過度 HDR 與塑膠皮膚。`;
+      ? `${base} 臉部明亮且保留真人皮膚紋理，眼睛有自然 catchlight；絲綢、珠寶、薄紗與場景高光呈現 sparkle highlights，畫面夢幻通透但保持真實攝影質感。${realismQuality}。`
+      : `${base} 臉部明亮可辨識，眼睛有自然 catchlight，珠寶與服裝保留細膩高光，避免過暗、過度 HDR 與塑膠皮膚。${realismQuality}。`;
   }
   return dreamyRadiant
-    ? `${base} 臉部清楚可辨識，保留皮膚紋理、髮絲細節、真實空氣透視、柔亮 bloom 與電影攝影感。`
-    : `${base} 臉部清楚可辨識，保留皮膚紋理、髮絲細節、真實空氣透視與電影攝影感。`;
+    ? `${base} 臉部清楚可辨識，保留皮膚紋理、髮絲細節、真實空氣透視、柔亮 bloom 與電影攝影感。${realismQuality}。`
+    : `${base} 臉部清楚可辨識，保留皮膚紋理、髮絲細節、真實空氣透視與電影攝影感。${realismQuality}。`;
 }
 
 function buildFinalNegativeText() {
@@ -503,6 +513,19 @@ function buildFinalNegativeText() {
 }
 
 function buildFinalStyleText(form, category, theme) {
+  const categoryText = `${category} ${theme}`;
+  const usesDefaultVisualMode = form.visualMode === DEFAULT_FORM.visualMode;
+  const usesDefaultColor = form.colorIntensity === DEFAULT_FORM.colorIntensity;
+  const usesDefaultFabric = form.fabricMotion === DEFAULT_FORM.fabricMotion;
+  const inferredVisualModeText = usesDefaultVisualMode
+    ? inferCategoryVisualModeText(categoryText)
+    : "";
+  const inferredColorText = usesDefaultColor
+    ? inferCategoryColorText(categoryText)
+    : "";
+  const inferredMaterialText = usesDefaultFabric
+    ? inferCategoryMaterialText(categoryText)
+    : "";
   const visualModeText = {
     "Netflix 東方奇幻": "真人身份保留的東方奇幻電影主視覺",
     "高亮商業古裝海報": "高亮商業古裝電影海報，圖二亮麗版風格，臉部、珠寶、絲綢、薄紗與燈火都是第一眼亮點",
@@ -520,10 +543,88 @@ function buildFinalStyleText(form, category, theme) {
     "中度流動": "中度流動，披帛、長袖與外袍依照動作自然延伸",
     "靜態垂墜": "靜態垂墜，重點是真實布料重量與高訂結構",
   }[form.fabricMotion] || "真實布料動態";
+  const hasCategoryInference = Boolean(inferredVisualModeText || inferredColorText || inferredMaterialText);
   const commercial = shouldUseCommercialGlamourLighting({ ...form, category, theme })
     ? "高亮商業奇幻曝光，臉亮、珠寶亮、避免灰暗低光。"
-    : "真人電影級奇幻主視覺，華麗但保持真實攝影可存在性。";
-  return [visualModeText, colorText, fabricText, commercial].join("；");
+    : hasCategoryInference
+      ? "真人電影級主視覺，華麗但保持真實攝影可存在性。"
+      : "真人電影級奇幻主視覺，華麗但保持真實攝影可存在性。";
+  return [inferredVisualModeText || visualModeText, inferredColorText || colorText, inferredMaterialText || fabricText, commercial].join("；");
+}
+
+function inferCategoryVisualModeText(text = "") {
+  if (/賽博機甲|科幻戰姬|機甲|鋼彈|未來裝甲|cyber mech/.test(text)) {
+    return "真人身份保留的科幻機甲電影主視覺，重點是巨大機械尺度、金屬結構、駕駛員銀幕存在感與真實攝影可存在性";
+  }
+  if (/海岸度假|海灘|沙灘|泳裝|海邊/.test(text)) {
+    return "真人海岸度假電影旅拍主視覺，重點是自然日光、海面反射、濕髮水珠、真實膚質與清爽戶外攝影感";
+  }
+  if (/室內生活寫真|沙發|臥室|辦公桌|居家|室內/.test(text)) {
+    return "真人室內生活電影寫真主視覺，重點是窗光、室內空間、自然姿勢、真實皮膚與生活感攝影";
+  }
+  if (/高訂婚紗禮服|婚紗|禮服|晚禮服|舞會/.test(text)) {
+    return "真人高訂婚紗禮服電影主視覺，重點是禮服輪廓、珠寶高光、布料層次、端莊姿態與專業商業攝影";
+  }
+  if (/動漫次文化街拍|電子寵物|貓耳|格鬥女忍|次文化/.test(text)) {
+    return "真人次文化街拍電影主視覺，保留真人臉與攝影質感，只借用角色符號、霓虹道具與街頭能量，不轉成動漫臉";
+  }
+  if (/東方旗袍夜宴|旗袍|名伶/.test(text)) {
+    return "真人東方旗袍夜宴電影主視覺，重點是中式剪裁、室內燈光、珠寶反光與成熟名伶氣場";
+  }
+  if (/暗黑王族|哥德|黑曜|吸血|女王|夜宴/.test(text)) {
+    return "真人暗黑王族電影主視覺，重點是哥德宮殿尺度、黑曜石王座、成熟女王氣場與真實低光攝影";
+  }
+  return "";
+}
+
+function inferCategoryColorText(text = "") {
+  if (/賽博機甲|科幻戰姬|機甲|鋼彈|未來裝甲|cyber mech/.test(text)) {
+    return "科幻金屬色彩，cool white hangar light、gunmetal gray、black-gold armor、neon accent reflections";
+  }
+  if (/海岸度假|海灘|沙灘|泳裝|海邊/.test(text)) {
+    return "海岸自然色彩，sunlit ocean blue、wet sand reflection、clean skin highlights、fresh daylight palette";
+  }
+  if (/室內生活寫真|沙發|臥室|辦公桌|居家|室內/.test(text)) {
+    return "室內自然色彩，soft window light、warm interior tones、realistic skin highlights、subtle fabric shadows";
+  }
+  if (/高訂婚紗禮服|婚紗|禮服|晚禮服|舞會/.test(text)) {
+    return "高訂禮服色彩，champagne highlights、crystal reflections、soft pastel shadows、luxury fabric sheen";
+  }
+  if (/動漫次文化街拍|電子寵物|貓耳|格鬥女忍|次文化/.test(text)) {
+    return "次文化霓虹色彩，pink-blue neon、glossy street reflections、clean cinematic contrast、real skin exposure";
+  }
+  if (/東方旗袍夜宴|旗袍|名伶/.test(text)) {
+    return "東方夜宴色彩，black-gold textile、ruby red accents、warm interior glow、polished jewelry highlights";
+  }
+  if (/暗黑王族|哥德|黑曜|吸血|女王|夜宴/.test(text)) {
+    return "暗黑王族色彩，black velvet shadow、obsidian highlights、deep wine-red accents、cold candle rim light";
+  }
+  return "";
+}
+
+function inferCategoryMaterialText(text = "") {
+  if (/賽博機甲|科幻戰姬|機甲|鋼彈|未來裝甲|cyber mech/.test(text)) {
+    return "機甲材質動態，metal armor panels、pilot suit fabric、cable details 與機械反光依鏡頭光源自然呈現";
+  }
+  if (/海岸度假|海灘|沙灘|泳裝|海邊/.test(text)) {
+    return "海岸材質動態，wet fabric、water droplets、wind-touched hair、light beach cover-up 與浪花反射自然呈現";
+  }
+  if (/室內生活寫真|沙發|臥室|辦公桌|居家|室內/.test(text)) {
+    return "室內材質動態，cotton、knitwear、leather、sofa fabric、curtain light 與生活物件反光自然呈現";
+  }
+  if (/高訂婚紗禮服|婚紗|禮服|晚禮服|舞會/.test(text)) {
+    return "高訂布料動態，layered gown fabric、crystal beading、lace texture、soft veil 與裙襬重量自然呈現";
+  }
+  if (/動漫次文化街拍|電子寵物|貓耳|格鬥女忍|次文化/.test(text)) {
+    return "街拍材質動態，synthetic fabric、glossy accessories、screen glow、neon reflections 與外套/裙襬自然呈現";
+  }
+  if (/東方旗袍夜宴|旗袍|名伶/.test(text)) {
+    return "旗袍材質動態，embroidered satin、black-gold textile、structured side seams 與珠寶反光自然呈現";
+  }
+  if (/暗黑王族|哥德|黑曜|吸血|女王|夜宴/.test(text)) {
+    return "暗黑宮廷材質動態，black velvet、obsidian jewelry、structured corset gown、heavy cloak fabric 與燭光反射自然呈現";
+  }
+  return "";
 }
 
 function buildFinalCompositionText(form, ratio) {
@@ -912,7 +1013,7 @@ export function buildChatGptInstruction(input = {}) {
   return [
     `請根據上傳真人照片生成 ${ratio} 真人電影級奇幻海報。`,
     "",
-    buildFinalIdentityText(form, category, theme),
+    buildFinalIdentityText(form),
     "",
     `分類：${category}`,
     `主題：${theme}`,

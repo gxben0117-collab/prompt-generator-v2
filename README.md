@@ -49,6 +49,8 @@ start index.html
 
 原始碼在 `src/`，建置後會輸出成單檔 `index.html`。
 
+完整專案現況、交接手冊、維護規則與最新驗證結果見：`docs/PROJECT.md`。
+
 ```powershell
 npm.cmd run check
 ```
