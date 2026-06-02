@@ -369,6 +369,48 @@ npm.cmd run check
 passed
 ```
 
+---
+
+## Codex 再次全專案檢查與重新上架紀錄（2026-06-02）
+
+執行者：Codex  
+基準 commit：`d968883 Speed up category routing guard test`
+
+### 本輪目的
+
+依使用者要求，再執行一次完整專案檢查；若無問題，更新此交接檔並重新推送上架。
+
+### 本輪檢查結果
+
+```text
+npm.cmd run check
+passed
+```
+
+包含：
+
+- `sync:spec`：通過，已同步 `src/coreSpec.js`
+- `lint`：通過
+- `test`：47 tests passed
+- `build`：通過，已重建 standalone `index.html`
+- `verify:ui`：通過
+  - desktop：153 controls、無 horizontal overflow、consoleErrors 0
+  - mobile：153 controls、無 horizontal overflow、consoleErrors 0
+
+### 注意事項
+
+仍有既有 Vite 大 chunk warning：
+
+```text
+Some chunks are larger than 800 kB after minification.
+```
+
+此為目前單頁資料量大的已知提醒，不阻斷輸出與上架。未在本輪處理 data.js 分拆。
+
+### 結論
+
+本輪沒有新增功能變更；只做再次全專案驗證、更新 AI-TASK.md，並準備重新上架。
+
 ### Codex 補充說明
 
 Claude v2 報告提到 115 個真正隱形項目；Codex 以目前 repo 狀態重測時為 74 個、18 種 category。修正後已歸零。差異推測來自掃描版本或判斷條件不同，但問題方向成立。
