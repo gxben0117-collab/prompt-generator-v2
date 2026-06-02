@@ -310,6 +310,46 @@ describe("prompt engine", () => {
     expect(orphans.map((profile) => `${profile.id}: ${profile.category}`)).toEqual([]);
   }, 60000);
 
+  it("adds eighth-wave category expansion profiles with balanced parent coverage", () => {
+    const eighthProfiles = WORLD_LAYER_PROFILES.filter((profile) => profile.id.startsWith("eighth-"));
+    const counts = eighthProfiles.reduce((acc, profile) => {
+      const parentCategory = parentCategoryForProfile(profile);
+      acc[parentCategory] = (acc[parentCategory] || 0) + 1;
+      return acc;
+    }, {});
+
+    expect(eighthProfiles).toHaveLength(24);
+    expect(counts).toEqual({
+      "東方和風旅拍": 3,
+      "東方旗袍夜宴": 3,
+      "賽博機甲 / 科幻戰姬": 3,
+      "現代都市 / 街拍電影": 3,
+      "世界地標旅拍": 3,
+      "室內生活寫真": 3,
+      "海岸度假旅拍": 3,
+      "高訂婚紗禮服": 3,
+    });
+    expect(ROLE_SUGGESTIONS).toContain("京都鳥居雨巷・朱傘和服旅人");
+    expect(ROLE_SUGGESTIONS).toContain("銀灰機庫・女指揮官");
+    expect(ROLE_SUGGESTIONS).toContain("首爾黑膠街角・皮衣音樂人");
+  });
+
+  it("keeps all role cards covered by the shared action quality guard", () => {
+    const missingGuard = WORLD_LAYER_PROFILES.filter((profile) => !profile.sceneAction.includes("全角色卡品質補強"));
+    expect(missingGuard.map((profile) => profile.id)).toEqual([]);
+  });
+
+  it("does not keep ghost role categories without role cards", () => {
+    const ghostCategories = ROLE_CATEGORIES.filter(
+      (category) =>
+        category !== "全部" &&
+        !WORLD_LAYER_PROFILES.some((profile) => profile.category === category) &&
+        !ROLE_SUGGESTION_ITEMS.some((item) => item.category === category),
+    );
+
+    expect(ghostCategories).toEqual([]);
+  });
+
   it("adds the eight style-reference profiles with correct parent categories", () => {
     for (const [id, title, parentCategory, sceneNeedle, layerNeedle, cupSize] of STYLE_REFERENCE_PROFILE_EXPECTATIONS) {
       const profile = WORLD_LAYER_PROFILES.find((item) => item.id === id);
@@ -753,7 +793,9 @@ describe("prompt engine", () => {
       expect(profiles.length, parentCategory).toBeGreaterThanOrEqual(expectedMinimum);
       for (const profile of profiles) {
         const profileText = `${profile.id} ${profile.title} ${profile.themeHint} ${profile.category} ${(profile.aliases || []).join(" ")}`;
-        const expectedParent = /金庸|神鵰|小龍女|古墓派/.test(profileText)
+        const expectedParent = (profile.id.startsWith("eighth-") && profile.parentCategory)
+          ? profile.parentCategory
+          : /金庸|神鵰|小龍女|古墓派/.test(profileText)
           ? "歷史小說名著人物"
           : /長相思|西安古城|雪城紅裳|宮廊紅袖|紅綾持劍|西炎|皓翎|辰榮|塗山/.test(profileText)
             ? "長相思旅拍"

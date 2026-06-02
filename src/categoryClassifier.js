@@ -355,7 +355,7 @@ export function parentCategoryForProfile(profile) {
   if (profile && typeof profile === "object" && PROFILE_PARENT_CATEGORY_CACHE.has(profile)) {
     return PROFILE_PARENT_CATEGORY_CACHE.get(profile);
   }
-  if (profile?.id?.startsWith("ref-temp-") && profile.parentCategory) {
+  if ((profile?.id?.startsWith("ref-temp-") || profile?.id?.startsWith("eighth-")) && profile.parentCategory) {
     PROFILE_PARENT_CATEGORY_CACHE.set(profile, profile.parentCategory);
     return profile.parentCategory;
   }

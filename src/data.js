@@ -2,6 +2,7 @@
 import { FIFTH_WAVE_PROFILE_DEFS } from './fifthWaveProfiles.js';
 import { SIXTH_WAVE_PROFILE_DEFS } from './sixthWaveProfiles.js';
 import { SEVENTH_WAVE_PROFILE_DEFS } from './seventhWaveProfiles.js';
+import { EIGHTH_WAVE_PROFILE_DEFS } from './eighthWaveProfiles.js';
 import { LEGACY_ROLE_NAME_OVERRIDES } from './roleNaming.js';
 
 export const RATIOS = ["4:5", "1:1", "3:4", "2:3", "14.8:21", "21:29", "25:35", "9:16", "16:9", "3:2", "4:3", "2.39:1"];
@@ -26,7 +27,7 @@ export const POSE_MODES = [
   "自然站姿",
 ];
 
-export const ROLE_CATEGORIES = ["全部", "古裝", "中國朝代古裝", "大唐宮廷／盛世貴妃系列", "盛唐宮廷／皇后／東方電影美學", "盛唐宮廷／春日旅拍／東方電影美學", "盛唐宮姬｜牡丹庭院｜宮廷旅拍", "大唐花朝｜宮廷貴姬｜盛世古風電影", "故宮古風／宮廷電影／盛世王朝", "宮廷古裝／東方寫實電影／故宮美學", "夜宴貴姬｜古風宮廷｜夜景電影旅拍", "中國田園旅拍", "長相思旅拍／西安古城紅衣電影", "民族古城旅拍／漢服民族風／夜景電影", "江南古鎮／電影旅拍／寫實東方美學", "江南古風／桃花庭院／春日寫實電影", "江南園林／古風仕女／東方旅拍電影", "荷塘仕女｜江南園林｜古風生活電影", "江南水鄉／寫實旅拍／東方電影感", "江南水鄉｜古風生活旅拍｜療癒系電影", "海棠仙旅｜東方旅拍｜古風電影感", "江南花渡｜水鄉古風｜東方電影旅拍", "桃花庭院／東方電影／古風仕女", "桃花仙境｜江南仙姬｜古風電影旅拍", "桃花女俠｜江湖旅拍｜仙俠動作電影風", "書香才女｜古典文人｜文藝電影風", "日式庭園／紫陽花海／初夏和服", "神話", "中國神話", "東方神話／飛天系列", "上古神話／鳳凰戰姬／仙俠史詩", "仙俠神話／白龍神域／天空聖女", "東方神話／深海龍宮／龍族王后／海國奇幻電影", "東方神話／鳳凰神女／王庭奇幻", "天界神女｜仙宮神域｜東方神話電影", "月下仙姬｜桂花宮苑｜中秋神話電影", "聖域天使｜天空神國｜史詩奇幻電影", "東方奇幻／陰陽術法／紫櫻巫女", "東方奇幻／異域神殿／神秘祭司", "絲路奇幻／大漠王族／電影級旅拍", "絲路旅人｜西域長歌｜大漠電影旅拍", "月光奇幻／銀河神話／東方精靈", "月光奇幻／水鏡晶花／高級寫實奇幻", "花園奇幻／森林精靈／電影童話", "夢幻電影／花靈仙境／高級寫實奇幻", "東方古風／月夜庭院／琴師仙姬", "聊齋志異／幽冥系列", "聊齋志異／狐仙系列", "仙俠修真", "仙俠修真／月夜劍修", "月下飛仙｜古風舞姬｜仙俠奇幻電影", "雲巔仙宗｜修真古境｜仙俠電影", "夜宴魅魔／高訂睡袍電影", "夜宴魅姬／暗黑浪漫電影", "黑暗墮天使／黑羽史詩電影", "冰霜夜宴魅姬｜哥德寢宮電影", "暗黑魔后｜亡靈王座｜哥德奇幻電影", "幽冥妖后｜亡魂夜宴｜東方暗黑奇幻", "黑暗奇幻／冥界妖后", "黑暗奇幻／墮天使／史詩電影", "黑暗奇幻／墮天使／哥德電影／廢墟神殿", "墮落天使｜末日神話｜魔幻史詩電影", "血族神話｜哥德歌劇｜吸血鬼暗黑電影", "東方戰爭電影／女帝／古代戰場", "帝王宮廷／東方史詩電影／皇后", "大周女帝｜皇朝史詩｜宮廷電影風", "歐陸密教｜近代奇幻｜暮色懸疑電影", "古典神話｜希臘史詩｜神諭史詩電影", "神話紀實｜歷史史詩｜文藝復興電影", "室內宮廷｜古典懸疑｜巴洛克黑色電影", "都市", "科幻", "西方奇幻", "都市電影／City Pop／霓虹街拍", "電影旅拍／北境海岸／現代文藝", "現代都會／韓系夜景／高級名媛", "歐洲旅拍／威尼斯夜景／電影寫實", "武俠奇幻／血色江湖／劍門聖女", "世界地標旅拍", "世界花園旅拍", "世界旅拍／歐洲古城／異域貴婦"];
+export const ROLE_CATEGORIES = ["全部", "古裝", "中國朝代古裝", "大唐宮廷／盛世貴妃系列", "盛唐宮廷／皇后／東方電影美學", "盛唐宮廷／春日旅拍／東方電影美學", "盛唐宮姬｜牡丹庭院｜宮廷旅拍", "大唐花朝｜宮廷貴姬｜盛世古風電影", "故宮古風／宮廷電影／盛世王朝", "宮廷古裝／東方寫實電影／故宮美學", "夜宴貴姬｜古風宮廷｜夜景電影旅拍", "中國田園旅拍", "江南古鎮／電影旅拍／寫實東方美學", "江南古風／桃花庭院／春日寫實電影", "江南園林／古風仕女／東方旅拍電影", "荷塘仕女｜江南園林｜古風生活電影", "江南水鄉／寫實旅拍／東方電影感", "江南水鄉｜古風生活旅拍｜療癒系電影", "海棠仙旅｜東方旅拍｜古風電影感", "江南花渡｜水鄉古風｜東方電影旅拍", "桃花庭院／東方電影／古風仕女", "桃花仙境｜江南仙姬｜古風電影旅拍", "桃花女俠｜江湖旅拍｜仙俠動作電影風", "書香才女｜古典文人｜文藝電影風", "日式庭園／紫陽花海／初夏和服", "神話", "中國神話", "東方神話／飛天系列", "上古神話／鳳凰戰姬／仙俠史詩", "仙俠神話／白龍神域／天空聖女", "東方神話／深海龍宮／龍族王后／海國奇幻電影", "東方神話／鳳凰神女／王庭奇幻", "天界神女｜仙宮神域｜東方神話電影", "月下仙姬｜桂花宮苑｜中秋神話電影", "聖域天使｜天空神國｜史詩奇幻電影", "東方奇幻／陰陽術法／紫櫻巫女", "東方奇幻／異域神殿／神秘祭司", "絲路奇幻／大漠王族／電影級旅拍", "絲路旅人｜西域長歌｜大漠電影旅拍", "月光奇幻／銀河神話／東方精靈", "月光奇幻／水鏡晶花／高級寫實奇幻", "花園奇幻／森林精靈／電影童話", "夢幻電影／花靈仙境／高級寫實奇幻", "東方古風／月夜庭院／琴師仙姬", "聊齋志異／幽冥系列", "聊齋志異／狐仙系列", "仙俠修真", "仙俠修真／月夜劍修", "月下飛仙｜古風舞姬｜仙俠奇幻電影", "雲巔仙宗｜修真古境｜仙俠電影", "夜宴魅魔／高訂睡袍電影", "夜宴魅姬／暗黑浪漫電影", "黑暗墮天使／黑羽史詩電影", "冰霜夜宴魅姬｜哥德寢宮電影", "暗黑魔后｜亡靈王座｜哥德奇幻電影", "幽冥妖后｜亡魂夜宴｜東方暗黑奇幻", "黑暗奇幻／冥界妖后", "黑暗奇幻／墮天使／史詩電影", "黑暗奇幻／墮天使／哥德電影／廢墟神殿", "墮落天使｜末日神話｜魔幻史詩電影", "血族神話｜哥德歌劇｜吸血鬼暗黑電影", "東方戰爭電影／女帝／古代戰場", "帝王宮廷／東方史詩電影／皇后", "大周女帝｜皇朝史詩｜宮廷電影風", "歐陸密教｜近代奇幻｜暮色懸疑電影", "古典神話｜希臘史詩｜神諭史詩電影", "神話紀實｜歷史史詩｜文藝復興電影", "室內宮廷｜古典懸疑｜巴洛克黑色電影", "都市", "科幻", "西方奇幻", "都市電影／City Pop／霓虹街拍", "電影旅拍／北境海岸／現代文藝", "現代都會／韓系夜景／高級名媛", "歐洲旅拍／威尼斯夜景／電影寫實", "武俠奇幻／血色江湖／劍門聖女", "世界地標旅拍", "世界花園旅拍", "世界旅拍／歐洲古城／異域貴婦"];
 
 export const ROLE_SUGGESTION_ITEMS = [
   { id: "succulent-greenhouse-goddess", label: "多肉花房・緞粉女神", category: "花園奇幻／自然奢華／多肉花房" },
@@ -2483,6 +2484,7 @@ const REQUESTED_FOURTH_WAVE_PROFILES = [
 const REQUESTED_FIFTH_WAVE_PROFILES = FIFTH_WAVE_PROFILE_DEFS.map((profile) => createCuratedRoleProfile(profile));
 const REQUESTED_SIXTH_WAVE_PROFILES = SIXTH_WAVE_PROFILE_DEFS.map((profile) => createCuratedRoleProfile(profile));
 const REQUESTED_SEVENTH_WAVE_PROFILES = SEVENTH_WAVE_PROFILE_DEFS.map((profile) => createCuratedRoleProfile(profile));
+const REQUESTED_EIGHTH_WAVE_PROFILES = EIGHTH_WAVE_PROFILE_DEFS.map((profile) => createCuratedRoleProfile(profile));
 const ETHNIC_OLD_TOWN_REFERENCE_PROFILES = [
   [
     "ethnic-oldtown-red-hanfu-lantern-lady",
@@ -2713,6 +2715,7 @@ const REQUESTED_EXPANSION_PROFILES = [
   ...REQUESTED_FIFTH_WAVE_PROFILES,
   ...REQUESTED_SIXTH_WAVE_PROFILES,
   ...REQUESTED_SEVENTH_WAVE_PROFILES,
+  ...REQUESTED_EIGHTH_WAVE_PROFILES,
   ...WORLD_LANDMARK_DIVERSE_TRAVEL_PROFILES,
   ...WORLD_CULTURAL_LANDMARK_TRAVEL_DEFS,
   ...REQUESTED_REFERENCE_IMAGE_PROFILES,
@@ -7194,14 +7197,21 @@ function needsActionUpgrade(sceneAction) {
   return stiffPattern.test(sceneAction) && !dynamicPattern.test(sceneAction);
 }
 
+function actionQualityGuardText(profile) {
+  const cues = inferActionCueTexts(profile);
+  const cueText = cues.length ? cues.join("、") : fallbackActionDirection(profile.parentCategory);
+  return `全角色卡品質補強：姿態必須有明確支撐點與可拍攝動作，優先採 ${cueText}；手、道具、布料、髮絲與特效不得遮擋五官，肩頸、胸腔、骨盆、膝踝與受力方向符合真實成年人體結構，避免筆直呆站、證件照站姿與無情節擺拍。`;
+}
+
 function enrichSceneAction(profile) {
-  if (profile.sceneAction.includes("避免筆直呆站") || !needsActionUpgrade(profile.sceneAction)) {
+  if (profile.sceneAction.includes("全角色卡品質補強")) {
     return profile.sceneAction;
   }
 
-  const cues = inferActionCueTexts(profile);
-  const cueText = cues.length ? cues.join("、") : fallbackActionDirection(profile.parentCategory);
-  return `${profile.sceneAction}；避免筆直呆站，改採 ${cueText} 等互動姿態。`;
+  const upgradeText = needsActionUpgrade(profile.sceneAction)
+    ? `避免筆直呆站，改採 ${inferActionCueTexts(profile).join("、") || fallbackActionDirection(profile.parentCategory)} 等互動姿態。`
+    : "";
+  return [profile.sceneAction, upgradeText, actionQualityGuardText(profile)].filter(Boolean).join("；");
 }
 
 WORLD_LAYER_PROFILES.forEach((profile) => {
