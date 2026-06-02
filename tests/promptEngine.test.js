@@ -205,7 +205,7 @@ describe("prompt engine", () => {
     const mainSource = fs.readFileSync(new URL("../src/main.js", import.meta.url), "utf8");
     expect(mainSource).toContain("最高原則：真人鎖臉優先於所有華麗主視覺，不讓角色滑回 AI 仙女臉。");
     expect(mainSource).toContain("const PRODUCT_PRINCIPLE");
-  }, 60000);
+  }, 20000);
 
   it("uses explicit defaults for the three director weight controls", () => {
     const form = normalizeForm({});
@@ -266,7 +266,7 @@ describe("prompt engine", () => {
     });
 
     expect(orphans.map((item) => `${item.id}: ${item.category}`)).toEqual([]);
-  }, 20000);
+  }, 60000);
 
   it("maps world templates into the correct parent role categories", () => {
     const byId = (id) => WORLD_LAYER_PROFILES.find((profile) => profile.id === id);
