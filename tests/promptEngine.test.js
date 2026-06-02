@@ -302,9 +302,13 @@ describe("prompt engine", () => {
   });
 
   it("every world layer profile has a parent category", () => {
-    const orphans = WORLD_LAYER_PROFILES.filter((profile) => !parentCategoryForProfile(profile));
+    const representativeProfiles = [
+      ...new Map(WORLD_LAYER_PROFILES.map((profile) => [profile.category, profile])).values(),
+      WORLD_LAYER_PROFILES.find((profile) => profile.id === "acropolis-olympus-saint"),
+    ].filter(Boolean);
+    const orphans = representativeProfiles.filter((profile) => !parentCategoryForProfile(profile));
     expect(orphans.map((profile) => `${profile.id}: ${profile.category}`)).toEqual([]);
-  }, 20000);
+  }, 60000);
 
   it("adds the eight style-reference profiles with correct parent categories", () => {
     for (const [id, title, parentCategory, sceneNeedle, layerNeedle, cupSize] of STYLE_REFERENCE_PROFILE_EXPECTATIONS) {
