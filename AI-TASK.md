@@ -1,6 +1,261 @@
 # AI-TASK
 
-## Prompt 精簡方案待決策
+---
+
+## 全專案審查報告
+
+日期：2026-06-02  
+版本：APP_VERSION `v1.28`  
+狀態：tests 45/45 通過，git 乾淨，GitHub Pages 已上線
+
+---
+
+## 舊任務對照（2026-05-30 → 已執行狀況）
+
+| 舊建議 | 狀態 | 備註 |
+|--------|------|------|
+| 合併 `buildFinalIdentityText()` 重複內容（修改 3） | ✅ 已完成 | 現在 L443-448，2 句，清晰 |
+| 簡化 `buildFinalActionText()`（修改 4） | ✅ 已完成 | 現在 L475-481，已精簡 |
+| 簡化 `buildFinalSceneText()` layeredLens（修改 2） | ✅ 已完成 | directorLens 已縮短 |
+| 簡化 `safePosePriorityText()`（修改 1） | ⚠️ 部分 | 函數本身已縮短，但仍 250+ 字且在 `buildActionCinematographyText` 被呼叫 **2 次**（L823、L832），每次輸出重複 |
+| 壓縮 Prompt 到 1000-1300 字 | ⚠️ 部分 | 實測簡單案例「大唐西域公主」已降至 **2023 字**，仍超目標 |
+
+---
+
+## 新發現問題（此次全掃描）
+
+---
+
+### 🔴 緊急 BUG：4 個重複 ROLE_SUGGESTION_ITEMS ID
+
+**檔案**：`src/data.js`
+
+**重複的 id**：
+- `antarctic-penguin-photo-traveler`（L80 & L2837）
+- `giza-sphinx-pyramid-guardian`（L81 & L2838）
+- `liberty-harbor-trenchcoat-traveler`（L82 & L2839）
+- `taipei-101-cloudline-night-heroine`（L83 & L2840）
+
+**影響**：搜尋與 profile 選取會回傳兩份相同 id 的物件，可能導致套用錯誤角色卡（早期的輕量版本 vs 後期的完整 WORLD_LAYER_PROFILES 版本）。
+
+**修法**：刪除 L80-83 這 4 條舊的輕量條目（只保留 WORLD_LAYER_PROFILES 裡的完整版本）。
+
+---
+
+### 🔴 緊急 BUG：1445 個角色項目的 category 未在 ROLE_CATEGORIES 中
+
+**檔案**：`src/data.js`
+
+**問題 category 字串**：`'金瓶梅／歷史小說名著人物'`
+
+**受影響數量**：`ROLE_SUGGESTION_ITEMS` 中 1445 個項目（金瓶梅系列所有角色）
+
+**影響**：這些角色在「角色大分類」篩選 UI 完全看不到（因為 `ROLE_CATEGORIES` 陣列沒有此字串），使用者無法從分類瀏覽到金瓶梅系列。
+
+**修法**：在 `src/data.js` 的 `ROLE_CATEGORIES` 陣列中加入 `'金瓶梅／歷史小說名著人物'`（建議放在其他「歷史小說名著人物」分類附近）。
+
+---
+
+### 🟡 Prompt 品質：`safePosePriorityText()` 仍被呼叫 2 次
+
+**檔案**：`src/promptEngine.js`
+
+- L781-783：函數定義，輸出 **約 250 字**
+- L823：`buildActionCinematographyText()` 有動作時呼叫一次
+- L832：`buildActionCinematographyText()` 無動作時呼叫一次
+
+**問題**：每次出圖 `safePosePriorityText()` 都被插入一次，加上 `buildFinalActionText()` 中的 safety 短句，實質上動作安全規則仍重複出現 2 次，共約 500 字。
+
+**方案 A（推薦）**：將 `safePosePriorityText()` 縮短為 ≤ 60 字，只保留核心三點：
+```
+姿態安全：鎖臉優先；手部、道具不得遮五官；肩頸脊椎骨盆受力合理，避免詭異肢體。
+```
+
+**方案 B**：移除 `buildActionCinematographyText()` 對 `safePosePriorityText()` 的呼叫（L823、L832），改由 `buildFinalActionText()` 的 safety 短句統一負責。
+
+---
+
+### 🟡 data.js 體積過大，接近分拆臨界值
+
+**檔案**：`src/data.js`
+
+- **現況**：864 KB，7449 行
+- **臨界值**：vite.config.js 設定 chunkSizeWarningLimit 800KB，已超過
+- **成長趨勢**：每波新角色卡 +50-100KB
+
+**建議**：
+- 近期（不急）：無需立即分拆，但禁止繼續在 data.js 直接新增 WORLD_LAYER_PROFILES 條目
+- 中期：下一波新角色卡若要新增，應建立 `eighthWaveProfiles.js` 並在 data.js import，保持模式一致
+- 驗證：`npm run test` 中加入 data.js 行數上限斷言（建議 ≤ 7500 行）
+
+---
+
+### 🟡 seventhWaveProfiles.js 未被測試覆蓋
+
+**檔案**：`src/seventhWaveProfiles.js`（56KB，本次 Explore 掃描漏看）
+
+**問題**：`tests/promptEngine.test.js` 的現有案例未顯示針對第七波 profile 的驗證，可能有欄位缺失的角色卡未被偵測到。
+
+**建議**：在 `tests/promptEngine.test.js` 中加入第七波 profile 的完整性斷言（所有必要欄位 id, label, category, costume, scene, makeup, layers 存在且非空字串）。
+
+---
+
+### 🟡 `buildSceneVisualDetailText()` 有 9 個 if/else 分支，未測試
+
+**檔案**：`src/promptEngine.js` L785-814
+
+**問題**：這個函數有 9 個 if 分支，依主題文字 regex 決定場景補強文字，但 `tests/promptEngine.test.js` 中目前沒有直接測試此函數任何分支的案例。若 regex pattern 被錯誤修改，測試不會告警。
+
+**建議**：加入以下測試案例（各覆蓋一個分支）：
+- 含「飛天」的主題
+- 含「唐」的主題
+- 含「墮天使」的主題
+- 含「賽博」的主題
+- 含 sceneEnvironment 的表單
+
+---
+
+### 🟢 `ROLE_SUGGESTION_ITEMS` 缺乏 category 合法性自動驗證
+
+**問題**：新增角色卡後，若 category 字串未在 `ROLE_CATEGORIES` 中登記，目前只能靠 Node 腳本手動偵測（如本次審查才發現「金瓶梅」問題）。
+
+**建議**：在 `tests/promptEngine.test.js` 加入一個測試：
+```js
+test("所有 ROLE_SUGGESTION_ITEMS 的 category 必須在 ROLE_CATEGORIES 中", () => {
+  const cats = new Set(ROLE_CATEGORIES);
+  const orphans = ROLE_SUGGESTION_ITEMS.filter(i => !cats.has(i.category));
+  expect(orphans).toHaveLength(0);
+});
+```
+
+類似地，加入 ROLE_SUGGESTION_ITEMS id 唯一性檢查：
+```js
+test("ROLE_SUGGESTION_ITEMS id 必須唯一", () => {
+  const ids = ROLE_SUGGESTION_ITEMS.map(i => i.id);
+  expect(new Set(ids).size).toBe(ids.length);
+});
+```
+
+---
+
+## 完整動作清單（供 Codex 執行）
+
+### P0 — 立即修 BUG
+
+#### Task 1：修除 4 個重複 ROLE_SUGGESTION_ITEMS 條目
+
+**檔案**：`src/data.js`
+**動作**：刪除 L80-83 的 4 個輕量條目（`antarctic-penguin-photo-traveler`、`giza-sphinx-pyramid-guardian`、`liberty-harbor-trenchcoat-traveler`、`taipei-101-cloudline-night-heroine`）
+**驗證**：`npm run test` 通過，搜尋這 4 個 id 各只回傳 1 筆
+
+---
+
+#### Task 2：補上「金瓶梅／歷史小說名著人物」分類
+
+**檔案**：`src/data.js`
+**動作**：在 `ROLE_CATEGORIES` 陣列中加入 `"金瓶梅／歷史小說名著人物"`，位置建議放在「三國演義」或「紅樓夢」附近
+**驗證**：執行 Task 2 後，Node 指令 `orphans.length === 0`
+
+---
+
+### P1 — 高優先級
+
+#### Task 3：加入 data.js 資料完整性自動測試
+
+**檔案**：`tests/promptEngine.test.js`
+**動作**：在現有測試套件中加入以下 2 個測試：
+1. `ROLE_SUGGESTION_ITEMS id 唯一性`
+2. `ROLE_SUGGESTION_ITEMS category 必須在 ROLE_CATEGORIES 中`
+
+**目的**：防止 Task 1 & 2 的問題再次出現
+
+---
+
+#### Task 4：縮短 `safePosePriorityText()` 並移除其中一次呼叫
+
+**檔案**：`src/promptEngine.js`
+
+步驟：
+1. 將 L781-783 的 `safePosePriorityText()` 縮短為：
+   ```
+   姿態安全：鎖臉、五官比例優先；手部、道具不得遮五官；肩頸脊椎骨盆受力合理，避免詭異肢體與呆立。
+   ```
+2. 確認 L823 與 L832 只需保留其中一處呼叫（有 action 路徑 vs 無 action 路徑各一），不要兩處都有
+
+**預期節省**：每次 prompt 減少約 200-250 字
+**驗證**：`npm run test` 通過，實測簡單案例輸出 ≤ 1800 字
+
+---
+
+### P2 — 中優先級
+
+#### Task 5：seventhWaveProfiles.js 完整性測試
+
+**檔案**：`tests/promptEngine.test.js`
+**動作**：加入 SEVENTH_WAVE_PROFILE_DEFS 欄位完整性斷言，參考現有 fourthWave/fifthWave 測試格式
+
+---
+
+#### Task 6：`buildSceneVisualDetailText()` 分支覆蓋測試
+
+**檔案**：`tests/promptEngine.test.js`
+**動作**：加入針對各 regex 分支的 buildChatGptInstruction 整合測試（飛天、唐宮廷、墮天使、賽博、含 sceneEnvironment）
+
+---
+
+### P3 — 低優先級
+
+#### Task 7：data.js 行數上限保護
+
+**動作**：在 `tests/promptEngine.test.js` 加入行數斷言，或在 `scripts/lint.mjs` 加入文件大小檢查（warn when > 7500 lines）
+
+---
+
+## 目前檔案規模（供 Codex 參考）
+
+| 檔案 | 行數 | 大小 |
+|------|------|------|
+| src/data.js | 7449 | 864KB |
+| src/fifthWaveProfiles.js | 1810 | 76KB |
+| src/seventhWaveProfiles.js | — | 56KB |
+| src/promptEngine.js | 1057 | 68KB |
+| src/main.js | 921 | 44KB |
+| src/fourthWaveProfiles.js | 765 | 40KB |
+| src/sixthWaveProfiles.js | — | 16KB |
+| src/categoryClassifier.js | 356 | 16KB |
+| src/coreSpec.js | — | 12KB |
+
+---
+
+## 關鍵函數位置（promptEngine.js）
+
+| 函數 | 行號 |
+|------|------|
+| `buildChatGptInstruction()` | L1001 |
+| `buildFinalIdentityText()` | L443 |
+| `buildFinalCostumeText()` | L450 |
+| `buildFinalSceneText()` | L466 |
+| `buildFinalActionText()` | L475 |
+| `safePosePriorityText()` | L781 |
+| `buildSceneVisualDetailText()` | L785 |
+| `buildActionCinematographyText()` | L817 |
+| `expandSceneToDirectorFields()` | L941 |
+| `normalizeForm()` | L153 |
+| `DEFAULT_FORM` | L71 |
+
+---
+
+## Prompt 長度實測（2026-06-02）
+
+| 案例 | 長度 |
+|------|------|
+| 大唐西域公主（基本欄位） | 2023 字 |
+| 目標（舊 AI-TASK 設定） | 1000-1300 字 |
+| 完成 Task 4 後預估 | ~1700-1800 字 |
+
+---
+
+## Prompt 精簡方案（2026-05-30，仍待完整執行）
 
 日期：2026-05-30
 
@@ -144,379 +399,105 @@
 
 #### 4. 手不能遮臉（重複 4 次）
 
-**出現位置**：
-- 「手不遮臉」
-- 「手部不遮擋臉部」
-- 「手紗道具不得遮五官」
-- 「高風險動作降級」
-
 **建議**：一句話即可
 ```
 手部、披帛與道具不得遮擋五官。
 ```
 
-#### 5. 場景描述（過度冗長，約 300 字）
+#### 5. `safePosePriorityText()` 過度冗長（約 250 字）
 
-**當前結構**：
-```
-長安花庭燈階
-↓ 花枝宮燈檀板飄紗
-↓ 花庭彩亭夜宴屏風宮廊
-↓ 前景花枝
-↓ 前景屏風
-↓ 前景燈器
-↓ 中景角色
-↓ 遠景宮廊
-↓ 建立世界觀
-↓ 建立地域
-↓ 建立故事縱深
-```
+**函數位置**：`src/promptEngine.js` L781
+**被呼叫處**：L823、L832（每次出圖都被插入一次）
 
-**問題**：重複描述近景/中景/遠景，且包含大量無效詞彙（「建立世界觀」、「建立地域」等）
-
-**建議**：壓縮到 80-100 字
-```
-場景：長安花庭燈階。前景花枝、宮燈與飄紗壓鏡，中景歌姬踏階停步，遠景彩亭、夜宴屏風與深層宮廊建立空間縱深。
-```
-
-#### 6. 服裝描述（約 220 字）
-
-**當前問題**：過度詳細的 Layer 描述
-
-**建議**：保留核心元素
-```
-盛唐歌姬高訂戲服，以牡丹紅、香檳金與象牙白為主色。真絲內襯、層疊罩紗、花雲披帛與長裙形成主要輪廓，大型披帛與裙擺營造電影級動態飄逸感，強調真實布料重量與可穿戴結構。
-```
-
-#### 7. 光影描述（重複 50%）
-
-**重複內容**：
-- 臉部明亮（2 次）
-- 臉部可辨識（2 次）
-- 臉部維持真人紋理
-- 眼睛 catchlight（2 次）
-- 高級 catchlight
-- sparkle highlights
-- 高光
-- 發光仙氣
-
-**建議**：合併
-```
-亮場花宴主光與宮燈補光。臉部明亮且保留真人皮膚紋理，眼睛具有自然 catchlight；絲綢、珠寶與薄紗呈現細膩高光與 sparkle highlights，畫面夢幻通透但保持真實攝影質感。
-```
-
-#### 8. 動作模板（過度冗長，約 400 字）
-
-**當前問題**：包含 200+ 字的 `safePosePriorityText()` 函數
-
-**核心問題句子**：
-```
-ChatGPT 的自由設計範圍是根據分類、主題、角色身份與情節設計場景、道具、姿勢、特效與氣氛...
-```
-
-**建議**：直接刪除這段，因為：
-- 你已經指定了具體動作（提檀板、收披帛、踏石階）
-- 模型已經知道怎麼做
-- 這些是 Prompt 噪音
-
-#### 9. 可直接刪除的無效句子
-
-以下句子對 AI 幾乎沒有權重增益：
-
-❌ 建立世界觀  
-❌ 建立地域  
-❌ 建立故事縱深  
-❌ 形成電影事件瞬間  
-❌ 根據分類重新設計  
-❌ 只在主題需要時使用道具  
-❌ 不把單一道具當預設姿勢  
-❌ 自由設計範圍  
-❌ 避免枯燥筆直站立  
-❌ 若站立也要有情緒  
-❌ 建立空間尺度  
-❌ 建立敘事背景  
-
-**原因**：這些是人類閱讀舒服的詞彙，但對 AI 權重分配沒有幫助。
-
----
-
-### 程式碼層級修改建議
-
-#### 修改 1：簡化 `safePosePriorityText()` 函數
-
-**檔案位置**：`src/promptEngine.js` 第 650-652 行
-
-**當前代碼**：
+**建議縮短為**：
 ```javascript
 function safePosePriorityText() {
-  return "姿態優先規則：鎖臉、五官比例、頭身比例、頭部角度與手部正確優先；ChatGPT 的自由設計範圍是根據分類、主題、角色身份與情節設計場景、道具、姿勢、特效與氣氛，形成可拍攝的電影事件瞬間；所有設計都服務主題和角色，不套用固定清單；只在主題明確需要時才使用杯、扇、瓶、卷、星盤、樂器、花材、寵物或龍等道具，不把單一道具當預設姿勢；避免枯燥筆直站立，若站立也要有情緒、支撐點、手部互動或鏡頭調度；可端坐、側坐、扶椅、倚欄、臨案、踏階、回身、緩步、整理衣袖、扶桌、扶膝或與場景支撐點互動；五官必須完整可辨識；身體姿勢、肩頸方向與頭部角度必須合理銜接，不可詭異扭曲；手、紗、道具不得遮五官，高風險動作降級為持物低於臉部、踏階停步或回身看鏡頭";
+  return "姿態安全：鎖臉、五官比例優先；手部、道具不得遮五官；肩頸脊椎骨盆受力合理，避免詭異肢體與呆立。";
 }
 ```
 
-**建議修改為**：
-```javascript
-function safePosePriorityText() {
-  return "姿態優先規則：鎖臉、五官比例、頭身比例、頭部角度與手部正確優先；模板加強：姿態優先踏階、扶欄、托器物、提袖、持團扇或轉肩停步，避免站在中軸立正。";
-}
+### 優化效果預估（含已完成項目後的現況）
+
+| 項目 | 2026-05-30 當前 | 已完成後現況 | 完成 Task 4 後 |
+|------|----------------|------------|--------------|
+| 身份鎖定 | ~180 字 | ~100 字 ✅ | ~100 字 |
+| 姿態優先規則 | ~250 字 × 2次 | ~250 字 × 2次 ⚠️ | ~60 字 × 1次 |
+| 場景描述 | ~300 字 | ~120 字 ✅ | ~120 字 |
+| 動作描述 | ~400 字 | ~200 字 ✅ | ~200 字 |
+| 光影描述 | ~150 字 | ~120 字 | ~120 字 |
+| **總計** | **~2317 字** | **~2023 字** | **~1700 字** |
+
+---
+
+## Codex 後續處理結果（2026-06-02）
+
+執行者：Codex  
+狀態：已依 Codex 複核後的保守方案處理，等待/已完成全專案檢查與上架流程。
+
+### 已完成
+
+#### 1. 修正 4 個重複 ROLE_SUGGESTION_ITEMS ID
+
+已刪除 `src/data.js` 前段 4 筆舊輕量條目，只保留後段完整 WORLD_LAYER_PROFILES 版本：
+
+- `antarctic-penguin-photo-traveler`
+- `giza-sphinx-pyramid-guardian`
+- `liberty-harbor-trenchcoat-traveler`
+- `taipei-101-cloudline-night-heroine`
+
+複核指令結果：`duplicateIds: []`
+
+#### 2. 加入資料守門測試
+
+已在 `tests/promptEngine.test.js` 加入：
+
+- `ROLE_SUGGESTION_ITEMS id` 唯一性檢查
+- `ROLE_SUGGESTION_ITEMS category` 可見性檢查
+
+注意：Claude 原報告中「1445 個角色項目的 category 未在 ROLE_CATEGORIES 中」判斷方向需要修正。實際 UI 已使用 `PARENT_ROLE_CATEGORIES` / `parentCategoryForProfile()` 做父分類路由，很多 category 是合法細分類，例如 `...／中國歷代服裝`、`...／歷史小說名著人物`。因此測試採用「直接分類、舊式父分類、或可透過父分類器歸類」三層判斷，避免把正常細分類誤判為錯誤。
+
+#### 3. 精簡 `safePosePriorityText()`
+
+已將長版姿態安全規則縮短為：
+
+```text
+姿態安全：鎖臉與五官比例優先；手部、紗與道具不得遮五官；肩頸脊椎骨盆受力合理，避免詭異肢體與呆立。
 ```
 
-**節省字數**：約 180 字
+同時移除 `buildActionCinematographyText()` 中與新短句重複的長版肩頸/骨盆/手部安全句。
 
----
+#### 4. 更新回歸測試
 
-#### 修改 2：簡化 `buildFinalSceneText()` 中的 `layeredLens`
+已更新既有測試期待值，改為檢查新短句，並確認舊長版清單不再回到最終 ChatGPT 指令。
 
-**檔案位置**：`src/promptEngine.js` 第 445 行
+### 複核結果
 
-**當前代碼**：
-```javascript
-const layeredLens = "近景、中景、遠景根據分類、主題、角色身份與場景重新設計：近景選擇符合主題的壓鏡或視線引導，中景放置真人角色與主要動作，遠景建立本場景的空間尺度、光源方向與敘事背景";
-```
+目前已完成的局部驗證：
 
-**建議修改為**：
-```javascript
-const layeredLens = "模板加強：前景優先花枝、屏風、燈器、欄杆或披帛壓鏡，中景讓角色貼近台階、桌案、宮欄或器物，遠景保留廊柱、帷幕與深層殿階。";
-```
+- `npm.cmd run test`：47 tests passed
+- 重複 id 檢查：0
+- 抽樣 prompt 關鍵詞：
+  - 不再包含 `姿態優先規則`
+  - 不再包含 `只在主題明確需要時才使用杯...`
+  - 保留 `姿態安全`
 
-**節省字數**：約 50 字
+抽樣長度：
 
----
+| 案例 | 長度 |
+|------|------|
+| 大唐西域公主 | 2072 |
+| 高亮商業古裝海報 | 2269 |
+| 暗黑王族豐滿體態 | 2760 |
+| 科幻機甲 | 2035 |
 
-#### 修改 3：合併 `buildFinalIdentityText()` 中的重複內容
+### Codex 判斷
 
-**檔案位置**：`src/promptEngine.js` 第 416-424 行
+Prompt 長度未降到 Claude 預估的 1700-1800，原因是目前長度主要還包含固定母板、鎖臉、人體骨架、風格/光影、安全負面詞等保護層。這些層與本專案「真人鎖臉優先」核心目標直接相關，因此本次不做激進刪減，不硬壓到 1000-1300 字。
 
-**當前代碼**：
-```javascript
-function buildFinalIdentityText(form = DEFAULT_FORM, category = "", theme = "") {
-  return [
-    "最高優先：保留上傳照片中的原始真人臉部身份，不換臉、不美化成 AI 美女，不改變眼型、鼻型、嘴型、臉型、下顎線、成熟年齡感與皮膚質感。",
-    "真人身份優先：保留原始臉型、原始眼型、原始鼻型、原始嘴型、五官比例、可辨識特徵、自然臉部不對稱與真人攝影感；臉部正面或微側正面看向鏡頭。",
-    "髮型可配合角色微調為盤髮、披髮、編髮、髮髻、髮冠或髮飾，但不得改變臉型、髮際線辨識、五官位置、成熟年齡感與原始真人身份。",
-    "身體姿勢、肩頸方向、頭部角度與臉部朝向必須合理銜接；不可脖子扭曲、頭身錯位或詭異肢體。",
-    `真實人體骨架：平衡肩寬、真實鎖骨、胸腔厚度${buildCupSizeSkeletonText(form, category, theme)}、軀幹深度、骨盆比例、人體重心、四肢比例與脊椎結構；避免頭大、肩窄、軀幹壓縮或臉貼在服裝上的 AI 感。`,
-  ].join("\n");
-}
-```
+後續若要再壓縮，建議另開一輪，專門比較「精簡模式 / 詳細模式」對出圖穩定性的影響，而不是直接砍母板或負面詞。
 
-**建議修改為**：
-```javascript
-function buildFinalIdentityText(form = DEFAULT_FORM, category = "", theme = "") {
-  return [
-    "真人身份鎖定：保留上傳照片原始臉型、眼型、鼻型、嘴型、下顎線、五官比例、成熟年齡感、自然不對稱與真實皮膚紋理，不換臉、不生成新演員臉、不美化成 AI 美女或網紅臉。",
-    `真實人體骨架：平衡肩寬、鎖骨、胸腔厚度${buildCupSizeSkeletonText(form, category, theme)}、軀幹深度、骨盆比例、人體重心、四肢比例，避免頭大、肩窄、軀幹壓縮或 AI 娃娃比例。`,
-    "髮型可配合角色微調為盤髮、披髮、編髮、髮髻、髮冠或髮飾，但不得改變臉型、髮際線辨識、五官位置、成熟年齡感與原始真人身份。",
-    "身體姿勢、肩頸方向、頭部角度與臉部朝向必須合理銜接；不可脖子扭曲、頭身錯位或詭異肢體。",
-  ].join("\n");
-}
-```
+### 暫緩項目
 
-**節省字數**：約 80 字
-
-**主要變更**：
-- 合併前兩段的重複描述（「原始臉型」、「原始眼型」等）
-- 刪除「真實鎖骨」前的「真實」（重複詞）
-- 刪除「脊椎結構」（已包含在「人體重心」中）
-- 簡化「臉貼在服裝上的 AI 感」為「AI 娃娃比例」
-
----
-
-#### 修改 4：簡化 `buildFinalActionText()`
-
-**檔案位置**：`src/promptEngine.js` 第 455-459 行
-
-**當前代碼**：
-```javascript
-function buildFinalActionText(form, category, theme) {
-  const action = compactText(stabilizeFaceAngleText(form.sceneAction), 180);
-  if (action) return `${action}。${safePosePriorityText()}；手部不遮擋臉部；臉部正面或微側正面清楚看向鏡頭，動作符合真實重心與四肢受力。`;
-  return `${inferEmotionalAction(theme, form.scene)}。${safePosePriorityText()}；手部、道具、髮絲與布料不得遮臉。`;
-}
-```
-
-**建議修改為**：
-```javascript
-function buildFinalActionText(form, category, theme) {
-  const action = compactText(stabilizeFaceAngleText(form.sceneAction), 180);
-  if (action) return `${action}；臉部正面或微側正面看向鏡頭，手部不遮臉，肩頸、胸腔、骨盆、雙腳重心與布料受力符合真實成年人體結構。`;
-  return `${inferEmotionalAction(theme, form.scene)}；臉部保持正面或微側正面看向鏡頭，手部、道具、髮絲與布料不得遮臉。`;
-}
-```
-
-**節省字數**：約 200 字（刪除 `safePosePriorityText()` 調用）
-
-**主要變更**：
-- 移除 `safePosePriorityText()` 調用（該函數包含 200+ 字的冗長描述）
-- 直接寫入核心規則：臉部朝向、手部不遮臉、身體受力
-- 保留必要的安全規則，但更簡潔
-
----
-
-### 優化效果預估
-
-#### 字數統計
-
-| 項目 | 當前長度 | 優化後長度 | 節省 |
-|------|---------|-----------|------|
-| 身份鎖定 | 約 180 字 | 約 100 字 | 80 字 |
-| 姿態優先規則 | 約 220 字 | 約 40 字 | 180 字 |
-| 場景描述 | 約 300 字 | 約 100 字 | 200 字 |
-| 動作描述 | 約 400 字 | 約 200 字 | 200 字 |
-| 光影描述 | 約 150 字 | 約 100 字 | 50 字 |
-| **總計** | **約 2000 字** | **約 1100 字** | **約 900 字** |
-
-**壓縮率**：約 45%
-
-#### 預期改善
-
-優化後的 Prompt 將獲得：
-
-✅ **臉部一致性更高**  
-原因：減少重複描述，讓模型更專注於核心身份鎖定規則
-
-✅ **人體比例更穩定**  
-原因：合併重複的骨架描述，權重更集中
-
-✅ **手部錯誤下降**  
-原因：「手不遮臉」規則只出現一次，但位置更明確
-
-✅ **服裝辨識度提高**  
-原因：刪除冗長的 Layer 描述，讓核心服裝元素權重提升
-
-✅ **場景不再亂塞元素**  
-原因：刪除「建立世界觀」、「建立地域」等無效詞彙
-
-✅ **出圖速度更快**  
-原因：Prompt 更短，模型處理時間減少
-
-✅ **Prompt 權重更集中**  
-原因：每個規則只出現一次，避免 Prompt dilution
-
----
-
-### 實施建議
-
-#### 階段 1：立即修改（高優先級）
-
-1. **修改 `safePosePriorityText()` 函數**（節省 180 字）
-   - 影響範圍：所有動作描述
-   - 風險：低
-   - 測試重點：確認動作姿態仍然安全
-
-2. **合併 `buildFinalIdentityText()` 重複內容**（節省 80 字）
-   - 影響範圍：所有 Prompt 的開頭
-   - 風險：低
-   - 測試重點：確認臉部一致性不受影響
-
-#### 階段 2：次要修改（中優先級）
-
-3. **簡化 `buildFinalSceneText()` 的 `layeredLens`**（節省 50 字）
-   - 影響範圍：場景描述
-   - 風險：中
-   - 測試重點：確認場景層次仍然清晰
-
-4. **簡化 `buildFinalActionText()`**（節省 200 字）
-   - 影響範圍：動作描述
-   - 風險：中
-   - 測試重點：確認動作仍然符合安全規則
-
-#### 階段 3：可選修改（低優先級）
-
-5. **簡化服裝描述**（節省 100-150 字）
-   - 影響範圍：服裝 Layer 輸出
-   - 風險：中
-   - 測試重點：確認服裝細節不丟失
-
-6. **簡化光影描述**（節省 50 字）
-   - 影響範圍：光影段落
-   - 風險：低
-   - 測試重點：確認光影效果不受影響
-
----
-
-### 測試計劃
-
-#### 測試案例
-
-建議使用以下類型進行 A/B 測試：
-
-1. **長安燈階・慢板歌姬**（當前測試案例）
-2. **暗黑王族・夜宴魅魔**（高風險類型）
-3. **大唐西域公主**（標準類型）
-4. **賽博都市特工**（現代類型）
-5. **飛天敦煌舞姬**（動作類型）
-
-#### 評估指標
-
-| 指標 | 權重 | 評估方式 |
-|------|------|---------|
-| 臉部一致性 | 40% | 與上傳照片對比相似度 |
-| 人體比例 | 20% | 頭身比、肩寬、軀幹深度 |
-| 手部正確性 | 15% | 手指數量、手部位置 |
-| 服裝還原度 | 10% | 與角色卡描述的匹配度 |
-| 場景完整性 | 10% | 前景/中景/遠景層次 |
-| 出圖速度 | 5% | 生成時間對比 |
-
-#### 成功標準
-
-- 臉部一致性：≥ 當前水平
-- 人體比例：≥ 當前水平
-- 手部正確性：≥ 當前水平或提升
-- 服裝還原度：≥ 當前水平
-- 場景完整性：≥ 當前水平
-- 出圖速度：提升 10-20%
-
----
-
-### 風險評估
-
-#### 低風險修改
-
-- ✅ 合併重複的身份鎖定描述
-- ✅ 刪除無效詞彙（「建立世界觀」等）
-- ✅ 簡化光影描述
-
-#### 中風險修改
-
-- ⚠️ 簡化 `safePosePriorityText()` 函數
-- ⚠️ 簡化場景 `layeredLens` 描述
-- ⚠️ 移除動作段的 `safePosePriorityText()` 調用
-
-**風險緩解措施**：
-1. 保留核心安全規則（鎖臉、手不遮臉、身體受力）
-2. 分階段實施，每次修改後進行測試
-3. 保留原始版本作為備份
-4. 使用 Git 版本控制，方便回滾
-
-#### 高風險修改（不建議）
-
-- ❌ 完全刪除「根據分類、主題、角色身份與情節設計」的概念
-- ❌ 刪除負面詞
-- ❌ 大幅簡化服裝 Layer 系統
-
----
-
-### 結論
-
-**推薦方案**：採用方案 A（只壓縮 `buildChatGptInstruction`）
-
-**目標長度**：1000-1200 字（當前 2000 字）
-
-**核心策略**：
-1. 每種安全規則只出現一次
-2. 刪除無效詞彙和重複描述
-3. 保留核心功能和安全規則
-4. 分階段實施，逐步測試
-
-**預期效果**：
-- 壓縮率：45%
-- 臉部一致性：維持或提升
-- 出圖速度：提升 10-20%
-- Prompt 權重：更集中，避免 dilution
-
-**下一步行動**：
-1. 決策是否採用此方案
-2. 確認目標長度（1000-1200 字 或 900-1100 字）
-3. 決定是否同步精簡負面詞
-4. 開始階段 1 的修改（高優先級）
-
+- `data.js` 拆檔：暫緩。現有大 chunk warning 不阻斷上架，下一波大量角色卡再改用 `eighthWaveProfiles.js` 類型分拆。
+- `seventhWaveProfiles.js` 深度完整性測試：可做，但不是本次上架阻斷項。
+- `buildSceneVisualDetailText()` 9 分支逐一測試：可做，但不是本次 P0/P1。

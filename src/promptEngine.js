@@ -779,7 +779,7 @@ function actionStagingBiasText(form = DEFAULT_FORM) {
 }
 
 function safePosePriorityText() {
-  return "姿態優先規則：鎖臉、五官比例、頭身比例、頭部角度與手部正確優先；ChatGPT 的自由設計範圍是根據分類、主題、角色身份與情節設計場景、道具、姿勢、特效與氣氛，形成可拍攝的電影事件瞬間；所有設計都服務主題和角色，不套用固定清單；只在主題明確需要時才使用杯、扇、瓶、卷、星盤、樂器、花材、寵物或龍等道具，不把單一道具當預設姿勢；避免枯燥筆直站立，若站立也要有情緒、支撐點、手部互動或鏡頭調度；可端坐、側坐、扶椅、倚欄、臨案、踏階、回身、緩步、整理衣袖、扶桌、扶膝或與場景支撐點互動；五官必須完整可辨識；身體姿勢、肩頸方向與頭部角度必須合理銜接，不可詭異扭曲；手、紗、道具不得遮五官，高風險動作降級為持物低於臉部、踏階停步或回身看鏡頭";
+  return "姿態安全：鎖臉與五官比例優先；手部、紗與道具不得遮五官；肩頸脊椎骨盆受力合理，避免詭異肢體與呆立。";
 }
 
 function buildSceneVisualDetailText(form = DEFAULT_FORM) {
@@ -822,7 +822,6 @@ function buildActionCinematographyText(form = DEFAULT_FORM) {
       actionStagingBiasText(form),
       safePosePriorityText(),
       "50mm eye-level cinematic blocking，臉部完整可見，眼神是表演核心",
-      "肩頸、胸腔、骨盆、四肢支撐點與身體受力符合真實成年人體結構，手部不遮擋臉部",
       "布料、披帛、長袖、外袍或髮絲只作視線導引，不搶臉部辨識度",
     ].join("；");
   }
@@ -831,7 +830,6 @@ function buildActionCinematographyText(form = DEFAULT_FORM) {
     actionStagingBiasText(form),
     safePosePriorityText(),
     "50mm eye-level cinematic blocking，臉部完整可見，眼神是表演核心",
-    "肩頸、胸腔、骨盆、四肢支撐點與身體受力符合真實成年人體結構，手部不遮擋臉部",
     "布料、披帛、長袖、外袍或髮絲跟隨動作產生可拍攝的 visual leading lines",
   ].join("；");
 }

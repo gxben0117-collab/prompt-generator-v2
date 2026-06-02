@@ -4,6 +4,8 @@ import { URL } from "node:url";
 import {
   COSTUME_SUGGESTIONS,
   LAYER_SUGGESTIONS,
+  ROLE_CATEGORIES,
+  ROLE_SUGGESTION_ITEMS,
   ROLE_SUGGESTIONS,
   WORLD_LAYER_PROFILES,
 } from "../src/data.js";
@@ -18,7 +20,7 @@ import {
   sanitizeInput,
   suggestThemeRewrite,
 } from "../src/promptEngine.js";
-import { normalizeSearchText, parentCategoryForProfile } from "../src/categoryClassifier.js";
+import { PARENT_ROLE_CATEGORIES, normalizeSearchText, parentCategoryForProfile } from "../src/categoryClassifier.js";
 
 const BULK_PARENT_CATEGORIES = [
   "歷史小說名著人物",
@@ -33,6 +35,18 @@ const BULK_PARENT_CATEGORIES = [
   "現代都市 / 街拍電影",
   "花園童話 / 自然精靈",
 ];
+
+const LEGACY_PARENT_CATEGORY_LABELS = new Set([
+  "古裝",
+  "中國朝代古裝",
+  "中國神話",
+  "都市",
+  "科幻",
+  "西方奇幻",
+  "世界地標旅拍",
+  "世界花園旅拍",
+]);
+const PARENT_CATEGORY_LABELS = new Set(PARENT_ROLE_CATEGORIES.map((category) => category.label));
 
 const STYLE_REFERENCE_PROFILE_EXPECTATIONS = [
   ["ref-gothic-throne-black-queen", "黑曜王座・哥德女王", "奇幻異世界 / 暗黑王族", "黑曜哥德", "黑曜王座", "K"],
@@ -200,6 +214,27 @@ describe("prompt engine", () => {
     expect(form.visualMode).toBe("Netflix 東方奇幻");
     expect(form.colorIntensity).toBe("紅金寶石");
     expect(form.fabricMotion).toBe("大動態飄紗");
+  });
+
+  it("keeps role suggestion ids unique", () => {
+    const ids = ROLE_SUGGESTION_ITEMS.map((item) => item.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it("keeps role suggestion categories visible through direct or parent category routing", () => {
+    const directCategories = new Set(ROLE_CATEGORIES);
+    const orphans = ROLE_SUGGESTION_ITEMS.filter((item) => {
+      if (directCategories.has(item.category) || LEGACY_PARENT_CATEGORY_LABELS.has(item.category)) return false;
+      if ([...PARENT_CATEGORY_LABELS].some((label) => item.category.includes(label))) return false;
+      return !parentCategoryForProfile({
+        id: item.id,
+        title: item.label,
+        themeHint: item.label,
+        category: item.category,
+      });
+    });
+
+    expect(orphans.map((item) => `${item.id}: ${item.category}`)).toEqual([]);
   });
 
   it("maps world templates into the correct parent role categories", () => {
@@ -1845,13 +1880,12 @@ describe("prompt engine", () => {
     expect(prompt).toContain("altered jawline");
     expect(prompt).toContain("畫面事件");
     expect(prompt).toContain("動作鏡頭語言");
-    expect(prompt).toContain("姿態優先規則");
-    expect(prompt).toContain("避免枯燥筆直站立");
-    expect(prompt).toContain("持物低於臉部");
+    expect(prompt).toContain("姿態安全");
+    expect(prompt).toContain("肩頸脊椎骨盆受力合理");
+    expect(prompt).toContain("避免詭異肢體與呆立");
     expect(prompt).toContain("盛唐或宮廷人物動作依分類、角色身份與情節設計");
     expect(prompt).toContain("50mm eye-level cinematic blocking");
     expect(prompt).toContain("臉部完整可見");
-    expect(prompt).toContain("肩頸、胸腔、骨盆、四肢支撐點與身體受力符合真實成年人體結構");
     expect(prompt).toContain("cinematic reveal");
     expect(prompt).toContain("visual narrative");
     expect(prompt).toContain("電影主視覺：");
@@ -1927,20 +1961,11 @@ describe("prompt engine", () => {
       ...standingProfile.layers,
     });
 
-    expect(prompt).toContain("姿態優先規則");
-    expect(prompt).toContain("鎖臉、五官比例、頭身比例、頭部角度與手部正確優先");
-    expect(prompt).toContain("頭部角度與手部正確優先");
-    expect(prompt).toContain("ChatGPT 的自由設計範圍是根據分類、主題、角色身份與情節設計場景、道具、姿勢、特效與氣氛");
-    expect(prompt).toContain("形成可拍攝的電影事件瞬間");
-    expect(prompt).toContain("所有設計都服務主題和角色");
-    expect(prompt).toContain("只在主題明確需要時才使用杯、扇、瓶、卷、星盤、樂器、花材、寵物或龍等道具");
-    expect(prompt).toContain("不把單一道具當預設姿勢");
-    expect(prompt).toContain("避免枯燥筆直站立");
-    expect(prompt).toContain("端坐、側坐、扶椅、倚欄、臨案、踏階、回身、緩步、整理衣袖、扶桌、扶膝或與場景支撐點互動");
-    expect(prompt).toContain("五官必須完整可辨識");
-    expect(prompt).toContain("身體姿勢、肩頸方向與頭部角度必須合理銜接，不可詭異扭曲");
-    expect(prompt).toContain("手、紗、道具不得遮五官");
-    expect(prompt).toContain("持物低於臉部、踏階停步或回身看鏡頭");
+    expect(prompt).toContain("姿態安全");
+    expect(prompt).toContain("鎖臉與五官比例優先");
+    expect(prompt).toContain("手部、紗與道具不得遮五官");
+    expect(prompt).toContain("肩頸脊椎骨盆受力合理");
+    expect(prompt).toContain("避免詭異肢體與呆立");
     expect(prompt).toContain("避免正中立正");
     expect(prompt).toContain("依夜宴角色身份與當下情節選擇王座、臥榻、扶手、薄紗、珠鏈或本場景道具互動");
     expect(instruction).toContain("姿態安全");
@@ -1951,6 +1976,7 @@ describe("prompt engine", () => {
     expect(instruction).toContain("不要照抄角色卡近中遠原句");
     expect(instruction).not.toContain("ChatGPT 的自由設計範圍是根據分類、主題、角色身份與情節設計場景、道具、姿勢、特效與氣氛");
     expect(instruction).not.toContain("不把單一道具當預設姿勢");
+    expect(instruction).not.toContain("只在主題明確需要時才使用杯、扇、瓶、卷、星盤、樂器、花材、寵物或龍等道具");
   });
 
   it("allows hairstyle adjustments only when the original face identity remains unchanged", () => {
@@ -2441,7 +2467,7 @@ describe("prompt engine", () => {
     expect(prompt).toContain("端坐於黑曜石王座前緣");
     expect(prompt).toContain("右手持羽扇放在胸口下方不遮臉");
     expect(prompt).toContain("左手端茶盞靠近膝上");
-    expect(prompt).toContain("手部不遮擋臉部");
+    expect(prompt).toContain("手部、紗與道具不得遮五官");
     expect(prompt).toContain("坐姿、臥姿、跪坐、倚靠或情節道具互動姿勢必須保留完整胸腔厚度");
     expect(prompt).not.toContain("人物剛從燭光與薄霧中走出");
     expect(prompt).not.toContain("雙手自然牽起外袍或披帛");
