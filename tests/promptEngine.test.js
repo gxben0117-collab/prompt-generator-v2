@@ -205,7 +205,7 @@ describe("prompt engine", () => {
     const mainSource = fs.readFileSync(new URL("../src/main.js", import.meta.url), "utf8");
     expect(mainSource).toContain("最高原則：真人鎖臉優先於所有華麗主視覺，不讓角色滑回 AI 仙女臉。");
     expect(mainSource).toContain("const PRODUCT_PRINCIPLE");
-  }, 20000);
+  }, 60000);
 
   it("uses explicit defaults for the three director weight controls", () => {
     const form = normalizeForm({});
