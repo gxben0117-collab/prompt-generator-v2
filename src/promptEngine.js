@@ -4,6 +4,7 @@ import {
   COLOR_INTENSITIES,
   COSTUME_LAYERS,
   FABRIC_MOTIONS,
+  POSE_MODES,
   RATIOS,
   VISUAL_MODES,
 } from "./data.js";
@@ -76,6 +77,7 @@ export const DEFAULT_FORM = {
   visualMode: "Netflix 東方奇幻",
   colorIntensity: "紅金寶石",
   fabricMotion: "大動態飄紗",
+  poseMode: "自動推薦",
   scene: "",
   sceneEnvironment: "",
   sceneAction: "",
@@ -165,6 +167,7 @@ export function normalizeForm(input = {}) {
     visualMode: VISUAL_MODES.includes(form.visualMode) ? form.visualMode : DEFAULT_FORM.visualMode,
     colorIntensity: COLOR_INTENSITIES.includes(form.colorIntensity) ? form.colorIntensity : DEFAULT_FORM.colorIntensity,
     fabricMotion: FABRIC_MOTIONS.includes(form.fabricMotion) ? form.fabricMotion : DEFAULT_FORM.fabricMotion,
+    poseMode: POSE_MODES.includes(form.poseMode) ? form.poseMode : DEFAULT_FORM.poseMode,
     scene: sanitizeInput(form.scene),
     sceneEnvironment: sanitizeInput(form.sceneEnvironment),
     sceneAction: sanitizeInput(form.sceneAction),
@@ -474,7 +477,7 @@ function buildFinalSceneText(form, category, theme) {
 
 function buildFinalActionText(form, category, theme) {
   const action = trimSentenceEnding(compactText(stabilizeFaceAngleText(form.sceneAction), 145));
-  const directorAction = "ChatGPT 需依場所、角色身份與情節設計不呆站的姿勢，可調整為踏階、旋身、扶欄、持物、倚坐、臨案或其他符合主題的支撐點動作";
+  const directorAction = `ChatGPT 需依場所、角色身份與情節設計不呆站的姿勢，可調整為踏階、旋身、扶欄、持物、倚坐、臨案或其他符合主題的支撐點動作；${poseBiasText({ ...form, category, theme })}`;
   const safety = "姿態安全：鎖臉與正常身體比例優先，臉部正面或微側正面清楚可辨識；手部、披帛與道具不得遮五官；肩頸、頭部、脊椎、骨盆與四肢受力合理，避免詭異肢體";
   if (action) return `${action}。${directorAction}。${safety}。`;
   return `${trimSentenceEnding(compactText(inferEmotionalAction(theme, form.scene), 120))}。${directorAction}。${safety}。`;
@@ -755,27 +758,69 @@ function isDarkBanquetTheme(theme = "", scene = "") {
   return /魅魔|魅姬|寢宮|絲絨|暗紫|哥德|黑玫瑰|黑曜|暗黑夜宴/.test(`${theme} ${scene}`);
 }
 
+const POSE_MODE_TEXT = {
+  踏階行走: "姿態模式：踏階行走；讓人物踩在台階、街沿、甲板或石階上形成前進動作，裙擺、外袍或髮絲跟隨步伐拉出動線",
+  扶欄回身: "姿態模式：扶欄回身；讓人物以欄杆、橋欄、露台或場景邊緣作支撐點，身體微側回身看向鏡頭",
+  倚靠坐姿: "姿態模式：倚靠坐姿；讓人物倚靠沙發、榻面、窗邊、座椅或道具邊緣，維持端莊成人坐姿與清楚臉部",
+  王座端坐: "姿態模式：王座端坐；讓人物端坐王座、階台或主座前緣，手與扶手、權杖、裙襬或披風互動，形成權力中心",
+  臨案坐姿: "姿態模式：臨案坐姿；讓人物靠近書案、妝台、宴桌、工作台或祭台，手部操作器物但不遮臉",
+  轉身抓拍: "姿態模式：轉身抓拍；讓人物剛轉身或剛停步回望，肩線與視線形成動態瞬間，避免正中立正",
+  低位坐靠: "姿態模式：低位坐靠；讓人物坐在階台、礁石、榻邊、地毯或岸邊支撐點，重心合理，避免挑逗化低角度",
+  自然站姿: "姿態模式：自然站姿；允許站姿，但必須有手部、道具、衣料、欄杆、台階或場景支撐點互動，不做筆直站正中",
+};
+
+function autoPoseBiasText(form = DEFAULT_FORM) {
+  const text = `${form.category} ${form.theme} ${form.scene} ${form.sceneEnvironment}`;
+  if (isDarkBanquetTheme(form.theme, `${form.scene} ${form.sceneEnvironment}`) || /女王|魔后|王座|哥德|血族|冥界|暗黑/.test(text)) {
+    return "自動推薦姿態：王座端坐、倚靠坐姿或扶椅起身；優先用王座、臥榻、扶手、帷幕、權杖或燭台建立支撐點";
+  }
+  if (/唐|長安|盛唐|宮廷|花宴|牡丹|鳳|古裝|中國朝代/.test(text)) {
+    return "自動推薦姿態：踏階行走、扶欄回身或臨案坐姿；優先用宮階、欄杆、團扇、書案、樂器或花枝承接動作";
+  }
+  if (/世界頂級網紅地標|世界地標|世界景點|旅拍|巴黎|威尼斯|自由女神|台北101|上海|外灘|金字塔|人面獅身|倫敦|鐵塔/.test(text)) {
+    return "自動推薦姿態：扶欄回身、轉身抓拍或踏步旅拍；優先讓人物與欄杆、街角、階梯、渡輪甲板、觀景台或地標前景互動";
+  }
+  if (/室內生活|辦公|沙發|臥室|窗邊|書房|室內/.test(text)) {
+    return "自動推薦姿態：倚靠坐姿或臨案坐姿；優先用沙發、椅背、桌面、窗沿、床沿或手中物件建立自然生活動作";
+  }
+  if (/海岸|沙灘|湖畔|礁石|泳裝|海邊|水岸/.test(text)) {
+    return "自動推薦姿態：踏步水邊、低位坐靠或轉身抓拍；優先用浪線、礁石、岸邊、披巾、帽簷或裙襬形成旅拍動線";
+  }
+  if (/賽博|機甲|科幻|霓虹|特工|駕駛|工程師/.test(text)) {
+    return "自動推薦姿態：倚靠機甲、走出停機坪或扶欄回身；優先用機甲外殼、駕駛艙、工具箱、玻璃牆或雨夜街角建立支撐點";
+  }
+  return "自動推薦姿態：依分類選擇踏階、扶欄、倚坐、臨案、轉身抓拍或道具互動，避免筆直站正中";
+}
+
+function poseBiasText(form = DEFAULT_FORM) {
+  if (form.poseMode && form.poseMode !== DEFAULT_FORM.poseMode) {
+    return POSE_MODE_TEXT[form.poseMode] || autoPoseBiasText(form);
+  }
+  return autoPoseBiasText(form);
+}
+
 function actionStagingBiasText(form = DEFAULT_FORM) {
   const text = `${form.category} ${form.theme} ${form.scene} ${form.sceneEnvironment}`;
+  const poseBias = poseBiasText(form);
   if (isDarkBanquetTheme(form.theme, `${form.scene} ${form.sceneEnvironment}`)) {
-    return "避免正中立正；依夜宴角色身份與當下情節選擇王座、臥榻、扶手、薄紗、珠鏈或本場景道具互動";
+    return `${poseBias}；避免正中立正；依夜宴角色身份與當下情節選擇王座、臥榻、扶手、薄紗、珠鏈或本場景道具互動`;
   }
   if (/女王|哥德|暗夜|王座|魔后|血族|冥界/.test(text)) {
-    return "避免閱兵式站姿；依女王權力關係與場景支撐點設計踏階、倚靠、起身、逼近或道具互動";
+    return `${poseBias}；避免閱兵式站姿；依女王權力關係與場景支撐點設計踏階、倚靠、起身、逼近或道具互動`;
   }
   if (/飛天|敦煌|伎樂|舞姬|洞窟/.test(text)) {
-    return "避免平直站姿；優先舞步停格、手臂弧線、披帛穿鏡與半轉身";
+    return `${poseBias}；避免平直站姿；優先舞步停格、手臂弧線、披帛穿鏡與半轉身`;
   }
   if (/唐|長安|盛唐|宮廷|花宴|牡丹|鳳/.test(text)) {
-    return "避免證件照式站正中；依宮廷身份、宴席情節、舞樂或禮制動作設計踏階、扶欄、臨案、轉肩停步或器物互動";
+    return `${poseBias}；避免證件照式站正中；依宮廷身份、宴席情節、舞樂或禮制動作設計踏階、扶欄、臨案、轉肩停步或器物互動`;
   }
   if (isChineseDynastyOrnateTheme(text)) {
-    return "避免歷史教科書式站姿；依角色身份、情節與場景支撐點自由設計扶欄、倚榻、拂袖、臨案、舞樂、禮儀或器物互動";
+    return `${poseBias}；避免歷史教科書式站姿；依角色身份、情節與場景支撐點自由設計扶欄、倚榻、拂袖、臨案、舞樂、禮儀或器物互動`;
   }
   if (/賽博|霓虹|都市|特工|雨夜/.test(text)) {
-    return "避免櫥窗模特式站姿；優先走動抓拍、倚窗、扶欄或街角回身";
+    return `${poseBias}；避免櫥窗模特式站姿；優先走動抓拍、倚窗、扶欄或街角回身`;
   }
-  return "避免筆直站正中；優先讓手部、欄杆、座椅、台階、道具或布料和場景發生互動";
+  return `${poseBias}；避免筆直站正中；優先讓手部、欄杆、座椅、台階、道具或布料和場景發生互動`;
 }
 
 function safePosePriorityText() {

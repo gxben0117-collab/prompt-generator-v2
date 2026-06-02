@@ -671,7 +671,8 @@ textarea:focus {
 
 .mode-choice-grid,
 .intensity-choice-grid,
-.fabric-choice-grid {
+.fabric-choice-grid,
+.pose-choice-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 

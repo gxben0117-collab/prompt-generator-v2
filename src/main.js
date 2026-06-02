@@ -6,6 +6,7 @@ import {
   FABRIC_MOTIONS,
   FIELD_SUGGESTIONS,
   LAYER_SUGGESTIONS,
+  POSE_MODES,
   RATIOS,
   ROLE_CATEGORIES,
   ROLE_SUGGESTION_ITEMS,
@@ -546,7 +547,11 @@ function render() {
                   <div class="sec-label">布料動態</div>
                   <div class="choice-grid fabric-choice-grid">${choiceCards("fabricMotion", FABRIC_MOTIONS, state.fabricMotion)}</div>
                 </div>
-                <small class="field-help">這三項只調整生成層權重：讓整體更接近高密度、亮場、華麗海報感，而不是灰暗、稀疏、普通角色設定卡。</small>
+                <div>
+                  <div class="sec-label">姿態模式</div>
+                  <div class="choice-grid pose-choice-grid">${choiceCards("poseMode", POSE_MODES, state.poseMode)}</div>
+                </div>
+                <small class="field-help">自動推薦會依分類與場景挑選踏階、扶欄、倚坐、臨案或轉身抓拍；手動選擇時會優先鎖定該姿態方向。</small>
               </div>
               <div class="director-priority-section">
                 <div class="section-head compact-head">

@@ -104,7 +104,7 @@ const profileChecks = [
     makeup: "未來感眼妝",
     scene: "未來機甲停機坪",
     environment: "未來機甲停機坪",
-    action: "單手扶腰",
+    action: "機甲艙門邊框",
     lighting: "冷白機庫光",
   },
 ];

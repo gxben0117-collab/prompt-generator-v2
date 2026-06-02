@@ -4,6 +4,7 @@ import { URL } from "node:url";
 import {
   COSTUME_SUGGESTIONS,
   LAYER_SUGGESTIONS,
+  POSE_MODES,
   ROLE_CATEGORIES,
   ROLE_SUGGESTION_ITEMS,
   ROLE_SUGGESTIONS,
@@ -213,6 +214,32 @@ describe("prompt engine", () => {
     expect(form.visualMode).toBe("Netflix 東方奇幻");
     expect(form.colorIntensity).toBe("紅金寶石");
     expect(form.fabricMotion).toBe("大動態飄紗");
+    expect(form.poseMode).toBe("自動推薦");
+    expect(POSE_MODES).toContain(form.poseMode);
+  });
+
+  it("keeps pose mode constrained and injects selected pose guidance", () => {
+    expect(normalizeForm({ poseMode: "不存在的姿態" }).poseMode).toBe("自動推薦");
+
+    const prompt = buildChatGptInstruction({
+      theme: "長安花宴宮廷貴姬",
+      category: "大唐宮廷／盛世貴妃系列",
+      poseMode: "扶欄回身",
+    });
+
+    expect(prompt).toContain("姿態模式：扶欄回身");
+    expect(prompt).toContain("欄杆");
+  });
+
+  it("auto recommends category pose bias for landmark travel cards", () => {
+    const prompt = buildChatGptInstruction({
+      theme: "巴黎艾菲爾鐵塔香檳夜景旅拍女主",
+      category: "世界頂級網紅地標旅拍／巴黎艾菲爾鐵塔／世界頂級網紅地標旅拍",
+      scene: "巴黎觀景台夜景",
+    });
+
+    expect(prompt).toContain("自動推薦姿態：扶欄回身、轉身抓拍或踏步旅拍");
+    expect(prompt).toContain("地標前景互動");
   });
 
   it("keeps role suggestion ids unique", () => {
@@ -273,6 +300,11 @@ describe("prompt engine", () => {
     expect(parentCategoryForProfile(byId("xiao-longnu-ancient-tomb-fairy"))).toBe("歷史小說名著人物");
     expect(parentCategoryForProfile(byId("jinyong-xiaolongnu-cold-jade"))).toBe("歷史小說名著人物");
   });
+
+  it("every world layer profile has a parent category", () => {
+    const orphans = WORLD_LAYER_PROFILES.filter((profile) => !parentCategoryForProfile(profile));
+    expect(orphans.map((profile) => `${profile.id}: ${profile.category}`)).toEqual([]);
+  }, 20000);
 
   it("adds the eight style-reference profiles with correct parent categories", () => {
     for (const [id, title, parentCategory, sceneNeedle, layerNeedle, cupSize] of STYLE_REFERENCE_PROFILE_EXPECTATIONS) {
@@ -1499,7 +1531,7 @@ describe("prompt engine", () => {
     expect(tangConsort.layers.costumeLayer8).toContain("layered phoenix crown structure");
     expect(tangConsort.makeup).toContain("warm imperial cinematic skin texture");
     expect(tangConsort.sceneEnvironment).toContain("盛唐皇城春日宮苑");
-    expect(tangConsort.sceneAction).toContain("雙手自然交疊");
+    expect(tangConsort.sceneAction).toContain("單手扶雕欄");
     expect(tangConsort.sceneLighting).toContain("golden-hour imperial lighting");
     const purpleMoonProfile = WORLD_LAYER_PROFILES.find((profile) => profile.id === "purple-moon-night-court-empress");
     const tangFlowerFestivalProfile = WORLD_LAYER_PROFILES.find((profile) => profile.id === "tang-flower-festival-noble-lady");
@@ -1507,8 +1539,8 @@ describe("prompt engine", () => {
     expect(purpleMoonProfile.scene).toContain("星淵夜庭魔后");
     expect(purpleMoonProfile.layers.costumeLayer2).toContain("紫晶禮服胸腰支撐結構");
     expect(purpleMoonProfile.layers.costumeLayer10).toContain("宇宙魔后壓迫式 silhouette");
-    expect(purpleMoonProfile.sceneAction).toContain("人物站姿穩定");
-    expect(purpleMoonProfile.sceneAction).toContain("雙手操控紫色能量球");
+    expect(purpleMoonProfile.sceneAction).toContain("端坐王座前緣");
+    expect(purpleMoonProfile.sceneAction).toContain("紫色能量球");
     expect(purpleMoonProfile.sceneLighting).toContain("宇宙 soft edge separation light");
     expect(tangFlowerFestivalProfile.scene).toContain("大唐春殿樂姬");
     expect(tangFlowerFestivalProfile.layers.costumeLayer1).toContain("粉色絲質貼身內襯");
