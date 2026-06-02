@@ -203,19 +203,19 @@ export function expandCostumeToLayers(input = {}) {
     (isTang ? "金絲月白" : "符合主題的電影色彩");
   const motif =
     pickKeyword(text, ["蝴蝶", "夜宴魅魔", "魅魔", "魅姬", "哥德", "王族", "惡魔", "天使", "仙俠", "唐風", "大唐", "公主"]) || theme;
-  const isSuccubusNightgown = /魅魔|魅姬|夜宴|睡袍式/.test(text);
+  const isSuccubusNightgown = /魅魔|魅姬|夜宴|禮服式/.test(text);
   const inner = isSuccubusNightgown
-    ? "低胸連身真絲睡衣長裙"
-    : pickKeyword(text, ["睡袍式", "絲綢"]) || "高訂絲綢長裙內層";
+    ? "低胸連身真絲緞面禮服裙"
+    : pickKeyword(text, ["禮服式", "絲綢"]) || "高訂絲綢長裙內層";
   const gothic = pickKeyword(text, ["哥德式", "哥德", "暗黑"]) || (isTang ? "盛唐宮廷" : "電影級世界觀");
   const chain = pickKeyword(text, ["鍊條", "鏈條", "金屬", "配件"]) || (isTang ? "玉石步搖與金絲配件" : "手工金屬飾件");
   const sheer =
     pickKeyword(text, ["透明紗衣", "透明紗", "薄紗", "紗衣", "披帛"]) || (isTang ? "金絲披帛" : "半透明外層薄紗");
 
   const genericSuggestions = {
-    costumeLayer1: `${color}${inner}，以 one-piece slip dress nightgown silhouette 建立連身布料基底，保留真人身形與自然布料張力`,
+    costumeLayer1: `${color}${inner}，以 one-piece bias-cut silk evening gown silhouette 建立連身布料基底，保留真人身形與自然布料張力`,
     costumeLayer2: isSuccubusNightgown
-      ? `${gothic}${motif}柔性睡袍式胸腰支撐，藏在連身真絲裙身內，胸腰與下身由同一件長裙完整覆蓋，不分離成內衣套裝`
+      ? `${gothic}${motif}柔性禮服式胸腰支撐，藏在連身真絲裙身內，胸腰與下身由同一件長裙完整覆蓋，不分離成內衣套裝`
       : `${gothic}${motif}刺繡胸衣骨架，建立角色輪廓，不改變真人骨相`,
     costumeLayer3: `${color}絲絨腰封與柔性支撐結構，真實縫製、可穿戴、符合電影戲服邏輯`,
     costumeLayer4: `${motif}主視覺裙片與不對稱垂墜布料，形成第一眼可辨識的電影輪廓`,
@@ -280,7 +280,7 @@ export function getHiddenSystemPrompt() {
 
 function inferCategory(theme, costume, scene) {
   const text = `${theme} ${costume} ${scene}`;
-  if (/魅魔|魅姬|睡袍式|絲絨寢宮|暗黑浪漫/.test(text)) return "夜宴魅魔／高訂睡袍電影";
+  if (/魅魔|魅姬|禮服式|絲絨寢宮|暗黑浪漫/.test(text)) return "夜宴魅魔／高訂暗黑禮服電影";
   if (/惡魔|哥德|女王|暗夜/.test(text)) return "奇幻異世界 / 暗黑王族";
   if (/唐|漢代|宋代|明代|清宮|清朝|飛天|敦煌|長安|大周|故宮|宮廷/.test(text)) return "中國朝代古裝 / 中國神話";
   if (/仙|修真|雲海|山門/.test(text)) return "仙俠修真";
@@ -305,7 +305,7 @@ function buildDarkRoyalBodyPresenceText(form, category) {
     "暗黑王族身形安全：胸部與身形只允許依照上傳真人原始體型自然延伸",
     "角色卡舊欄位 K 只作為豐滿體態記號，不在咒語中輸出罩杯字面值；不製造 pin-up 坐姿，不讓腿部或胸腰成為主視覺",
     bodyFullnessText,
-    "服裝改採魅魔夜宴低胸真絲睡衣長裙，主體是 one-piece deep V satin nightgown，胸腰與下身由同一件長裙完整覆蓋；性感來自低胸領口、絲綢垂墜與燭光反光，不得分離成胸罩內褲或情趣內衣套裝",
+    "服裝採魅魔夜宴連身緞面禮服裙：流動感絲緞面料、自然垂墜深 V 領口、高開衩飄逸裙擺、半透明薄紗層次，主體是 one-piece bias-cut silk evening gown，胸腰與下身由同一件長裙完整覆蓋；魅力來自深 V 領口、絲綢垂墜與燭光反光，不得分離成胸罩內褲或情趣內衣套裝",
     "保留真實胸腔厚度、肩頸連接、正常腰臀比例與高訂布料張力",
     "視覺焦點集中在原始真人臉、暗黑王族氣場、絲絨高光與禮服輪廓",
   ].join("；");
@@ -452,7 +452,7 @@ function buildFinalIdentityText(form = DEFAULT_FORM) {
 
 function buildFinalCostumeText(form, category, theme) {
   if (isDarkRoyalCategory(category, theme, form.scene)) {
-    return "真人可穿戴的魅魔夜宴低胸真絲睡衣長裙造型，主體是 one-piece deep V satin nightgown / slip dress nightgown，胸腰與下身由連身絲綢裙身完整覆蓋，外層搭配哥德式華麗配件、薄紗披袖、垂墜披紗與寶石肩鏈；重點是低胸領口、絲綢垂墜、哥德珠寶層次、燭光反光與成熟電影誘惑感，不得分離成胸罩內褲或情趣內衣套裝，不生成比基尼式服裝、上下分離內衣造型，也不額外放大胸腰比例。";
+    return "真人可穿戴的魅魔夜宴連身緞面禮服裙造型：流動感絲緞面料、自然垂墜深 V 領口、高開衩飄逸裙擺、半透明薄紗層次，主體是 one-piece bias-cut silk evening gown，胸腰與下身由連身絲綢裙身完整覆蓋，外層搭配哥德式華麗配件、薄紗披袖、垂墜披紗與寶石肩鏈；重點是深 V 領口、絲綢垂墜、哥德珠寶層次、燭光反光與成熟電影魅力，不得分離成胸罩內褲或情趣內衣套裝，不生成比基尼式服裝、上下分離內衣造型，也不額外放大胸腰比例。";
   }
 
   const layerText = [form.costumeLayer1, form.costumeLayer3, form.costumeLayer4, form.costumeLayer6, form.costumeLayer8]
