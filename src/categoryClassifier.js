@@ -364,7 +364,6 @@ const PRIORITY_PARENT_CATEGORY_LABELS = [
 const PROFILE_PARENT_CATEGORY_CACHE = new WeakMap();
 const LEGACY_PARENT_CATEGORY_LABELS = new Map([
   ["唐朝服飾", "唐朝服飾／泛唐風古裝"],
-  ["中國歷代服裝", "中國歷代服裝／泛朝代總覽"],
 ]);
 
 export function normalizeSearchText(value) {
@@ -417,13 +416,15 @@ export function parentCategoryForProfile(profile) {
   if (profile && typeof profile === "object" && PROFILE_PARENT_CATEGORY_CACHE.has(profile)) {
     return PROFILE_PARENT_CATEGORY_CACHE.get(profile);
   }
-  if ((profile?.id?.startsWith("ref-temp-") || profile?.id?.startsWith("eighth-")) && profile.parentCategory) {
+  if ((profile?.id?.startsWith("ref-temp-") || profile?.id?.startsWith("eighth-") || profile?.id?.startsWith("ninth-")) && profile.parentCategory) {
     PROFILE_PARENT_CATEGORY_CACHE.set(profile, profile.parentCategory);
     return profile.parentCategory;
   }
   const inferredCategory = parentCategoryForText(profileCategoryText(profile));
   let category;
   if (PRIORITY_PARENT_CATEGORY_LABELS.includes(inferredCategory)) {
+    category = inferredCategory;
+  } else if (profile?.parentCategory === "中國歷代服裝" && inferredCategory) {
     category = inferredCategory;
   } else if (profile?.parentCategory) {
     category = LEGACY_PARENT_CATEGORY_LABELS.get(profile.parentCategory) || profile.parentCategory;

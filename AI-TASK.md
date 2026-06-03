@@ -2,267 +2,324 @@
 
 ---
 
-## 全專案審查報告 v4（最終確認版）
+## 全專案審查報告 v5
 
-日期：2026-06-02（第四次，全面驗證）
-版本：APP_VERSION `v1.28`（最新 commit：`58bdc4f Record final full project verification`）
-狀態：tests **47/47** 通過，lint 0 errors，build OK，UI verify OK，git 乾淨
-
----
-
-## v3 錯誤更正
-
-v3 報告的「acropolis-olympus-saint 無父分類」是 **誤報**。
-
-**原因**：v3 分析時 grep 返回了舊版快取結果，顯示 `searchSynonyms.js` L9 仍有「聖女」。實際上 commit `93d585a Expand role library and add role-max preset` 早已移除「聖女」，因此：
-
-- `normalizeForSearch('聖女')` 現在返回 `'聖女'`（不再正規化為「仙俠」）
-- `acropolis-olympus-saint` 正確對應父分類「西方古典 / 歐陸史詩」（hits: 奧林匹斯, 文藝復興）
-- **WORLD_LAYER_PROFILES with no parent: 0** ✅
+日期：2026-06-03
+版本：APP_VERSION `v1.28`（最新 commit：`4842859 Expand dynasty role categories and Tang specialty cards`）
+執行：Claude 全掃，**未修改任何檔案**
 
 ---
 
-## 全系統完整性報告（此次實測）
+## 系統健康總覽
 
 | 檢查項目 | 結果 |
 |----------|------|
-| ROLE_SUGGESTION_ITEMS 數量 | 1535 |
-| WORLD_LAYER_PROFILES 數量 | 1574 |
-| ROLE_CATEGORIES 數量 | 81 |
-| PARENT_ROLE_CATEGORIES 數量 | 29 |
-| 重複 ROLE_SUGGESTION_ITEMS id | ✅ 0 |
-| 重複 WORLD_LAYER_PROFILES id | ✅ 0 |
-| ROLE_SUGGESTION_ITEMS 真正隱形 | ✅ 0 |
-| WORLD_LAYER_PROFILES 無父分類 | ✅ 0 |
-| Ghost ROLE_CATEGORIES（有定義但無 item） | ⚠️ 2 個 |
-| tests | ✅ 47/47 |
+| tests | ✅ 53/53 通過 |
 | lint | ✅ 0 errors |
-| build | ✅ OK（chunk 警告已知，非阻斷） |
-| UI verify | ✅ desktop + mobile 0 console errors |
+| build | ✅ 成功（570KB，chunk 警告已知） |
+| UI verify | ✅ desktop + mobile，169 controls，0 console errors |
+| GitHub Pages | ✅ 最新版已上線 |
+| git 狀態 | ✅ 乾淨，與 origin/main 同步 |
+| ROLE_SUGGESTION_ITEMS 重複 id | ✅ 0 |
+| WORLD_LAYER_PROFILES 重複 id | ✅ 0 |
+| ROLE_SUGGESTION_ITEMS 隱形（無父分類） | ✅ 0 |
+| WORLD_LAYER_PROFILES 無父分類 | ✅ 0 |
+| Ghost ROLE_CATEGORIES | ✅ 0 |
 
 ---
 
-## 新發現：2 個 Ghost ROLE_CATEGORIES
+## 資料規模（目前）
 
-**定義在 `ROLE_CATEGORIES` 但沒有任何 ROLE_SUGGESTION_ITEMS 或 WORLD_LAYER_PROFILES 使用的 category 字串**：
+| 指標 | 數量 |
+|------|------|
+| ROLE_SUGGESTION_ITEMS | 1,698 |
+| WORLD_LAYER_PROFILES | 1,733 |
+| ROLE_CATEGORIES | 81 |
+| PARENT_ROLE_CATEGORIES | 36 |
 
-```
-長相思旅拍／西安古城紅衣電影
-民族古城旅拍／漢服民族風／夜景電影
-```
+---
 
-**影響**：這兩個分類出現在 UI 的 sub-category 下拉選單中，但選取後顯示 0 筆結果（所有相關 profile 已改用更細的 category，例如 `長相思／清水鎮醫女／仙俠神話 / 古裝陸劇`）。
+## 檔案規模
 
-**修法（可選）**：從 `src/data.js` 的 `ROLE_CATEGORIES` 陣列刪除這兩個字串。
+| 檔案 | 行數 | 大小 |
+|------|------|------|
+| src/data.js | **7,775** | **912KB** |
+| src/fifthWaveProfiles.js | 1,810 | 76KB |
+| src/seventhWaveProfiles.js | 143（超長行） | 56KB |
+| src/promptEngine.js | 1,100 | 72KB |
+| src/main.js | 926 | 44KB |
+| src/eighthWaveProfiles.js | 458 | 28KB |
+| src/fourthWaveProfiles.js | 765 | 40KB |
+| src/sixthWaveProfiles.js | 250 | 16KB |
+| src/categoryClassifier.js | 438 | 16KB |
+| src/searchSynonyms.js | — | 4KB |
 
-**風險**：低。ROLE_CATEGORIES 主要用於 sub-category 選項的「種子列表」，`allRoleCategories()` 會自動加入實際 item 的 categories。
+---
+
+## 問題與建議
+
+---
+
+### ⚠️ 重要：data.js 已超過行數閾值
+
+**現況**：7,775 行 / 912KB，超過先前設定的 7,600 行建議上限  
+**成長**：上次審查（2026-06-02）7,445 行 → 現在 7,775 行，**330 行的增長**  
+**原因**：Codex 在 `4842859`、`4f9bc83` 等 commit 中繼續直接在 data.js 新增大唐相關角色卡  
+**影響**：
+- build 輸出 570KB → 正在逼近 Vite 的 800KB minification 後閾值
+- 每次 CI `npm run check` 要轉換更多資料，測試時間從 13 秒增加到 27 秒
+
+**建議**：下一波新角色卡必須走獨立 wave 檔（如 `ninthWaveProfiles.js`），禁止直接擴展 data.js 主體
+
+---
+
+### ⚠️ 重要：父分類 `中國歷代服裝` 只有 1 個 profile
+
+**現況**：PARENT_ROLE_CATEGORIES 有 `中國歷代服裝` 和 `中國歷代服裝／泛朝代總覽` 兩個標籤，但「中國歷代服裝」（不含「泛朝代總覽」）只有 1 個 profile 對應。
+
+**原因**：`ref-temp-pale-pink-hanfu-garden-lady`（category：`中國歷代服裝／淡粉漢服／花庭欄邊`）無法匹配 `中國歷代服裝／泛朝代總覽` 的 keyword，因為它的 category 字串只包含「中國歷代服裝」，而 `parentCategoryForText` 把它匹配到較短的 `中國歷代服裝` 標籤（LEGACY_PARENT_CATEGORY_LABELS 的後備）。
+
+**影響**：UI 點「中國歷代服裝」父分類 filter 只顯示 1 張卡，使用者體驗差
+
+**建議**：
+- 選項 A：把這張 ref-temp profile 的 category 改成 `中國歷代服裝／泛朝代總覽` 系統下的值
+- 選項 B：移除 `中國歷代服裝`（純字串版）的 LEGACY 對應，讓所有中國歷代服裝 profile 統一歸到「泛朝代總覽」
+
+---
+
+### ⚠️ 父分類分布極度不均衡
+
+**現況**：
+
+| 父分類 | profile 數 |
+|--------|-----------|
+| 世界景點旅拍 | 331 |
+| 中國歷代服裝／泛朝代總覽 | 189 |
+| 仙俠神話 / 古裝陸劇 | 126 |
+| 歷史小說名著人物 | 123 |
+| 魅魔 | 115 |
+| ... | ... |
+| 中國歷代服裝 | **1** |
+| 動漫次文化街拍 | **4** |
+| 東方和風旅拍 | **4** |
+| 東方旗袍夜宴 | **4** |
+| 田園花園旅拍 | **5** |
+| 賽博機甲 / 科幻戰姬 | **5** |
+| 現代都市 / 街拍電影 | **5** |
+| 世界地標旅拍 | **5** |
+
+**建議**：補卡優先順序（每個父分類至少 10 張才有選擇意義）：
+1. 中國歷代服裝（修 bug，見上條）
+2. 動漫次文化街拍（+6）
+3. 東方和風旅拍（+6）
+4. 東方旗袍夜宴（+6）
+
+---
+
+### ℹ️ `safePosePriorityText()` 仍被呼叫 2 次（L868, L876）
+
+**狀況**：函數本身已縮短為 45 字，但在 `buildActionCinematographyText()` 的兩個分支（有/無動作）各呼叫一次，屬於合理的 if/else 設計，每次出圖只執行一次。**不需要修改**，確認此為已知且合理的設計。
+
+---
+
+### ℹ️ Prompt 長度現況（本次實測）
+
+| 案例 | 長度 |
+|------|------|
+| 大唐西域公主（基本） | 2,070 字 |
+| 暗黑王族夜宴魅魔 | 2,365 字 |
+| 敦煌飛天舞姬（有動作） | 1,936 字 |
+| 都市電影女主（有場景） | 1,982 字 |
+| 西方古典希臘女神（有動作） | 2,006 字 |
+| **平均** | **2,072 字** |
+| UI 實測（verify:ui） | 2,624–2,625 字 |
+
+**結論**：維持在 2,000–2,400 字合理區間，不建議再壓縮。
 
 ---
 
 ## 完整動作清單（供 Codex 執行）
 
-### P1 — 測試覆蓋補強
+### P0 — 即修（UI 顯示問題）
 
-#### Task 1：加入 WORLD_LAYER_PROFILES 父分類完整性測試
+#### Task 1：修正 `ref-temp-pale-pink-hanfu-garden-lady` 的父分類對應
 
-防止未來新增 profile 時遺漏父分類對應。
+**問題**：這張 ref-temp profile 的 category 是 `中國歷代服裝／淡粉漢服／花庭欄邊`，導致父分類分類器匹配到舊的「中國歷代服裝」標籤而不是「中國歷代服裝／泛朝代總覽」。
 
-**檔案**：`tests/promptEngine.test.js`
+**修法**：在 `src/data.js` 找到這個 profile，明確加上 `parentCategory: "中國歷代服裝／泛朝代總覽"` 欄位。
 
-在現有父分類對應測試（`maps world templates into the correct parent role categories`）附近加入：
-
+**驗證**：
 ```js
-it("every world layer profile has a parent category", () => {
-  const orphans = WORLD_LAYER_PROFILES.filter((p) => !parentCategoryForProfile(p));
-  expect(orphans.map((p) => `${p.id}: ${p.category}`)).toEqual([]);
-});
+import { WORLD_LAYER_PROFILES } from './src/data.js';
+import { parentCategoryForProfile } from './src/categoryClassifier.js';
+const p = WORLD_LAYER_PROFILES.find(p => p.id === 'ref-temp-pale-pink-hanfu-garden-lady');
+console.log(parentCategoryForProfile(p)); // 期望：中國歷代服裝／泛朝代總覽
 ```
 
-**驗證**：`npm run test` 48/48 通過。
+---
+
+### P1 — 高優先級（資料健康）
+
+#### Task 2：強制新增角色卡走 `ninthWaveProfiles.js`
+
+**問題**：data.js 已 7,775 行（超過 7,600 行閾值），Codex 仍在直接對 data.js 主體新增資料。
+
+**修法**：
+1. 建立 `src/ninthWaveProfiles.js`（格式同 eighthWaveProfiles.js）
+2. 在 `src/data.js` import 並接入 WORLD_LAYER_PROFILES 聚合
+3. 往後所有新角色卡移至 ninthWaveProfiles.js
+
+**驗證**：`data.js` 行數回到 7,600 行以下。
 
 ---
 
-### P2 — 清理（可選）
+#### Task 3：補足分布偏低的父分類
 
-#### Task 2：移除 2 個 Ghost ROLE_CATEGORIES
+**目標**：每個父分類至少 10 個 profile（放到 ninthWaveProfiles.js）
 
-**檔案**：`src/data.js` ROLE_CATEGORIES 陣列
-
-移除：
-- `"長相思旅拍／西安古城紅衣電影"`
-- `"民族古城旅拍／漢服民族風／夜景電影"`
-
-**驗證**：`npm run test` 通過，UI sub-category 下拉不再出現這兩個 0 結果選項。
+| 父分類 | 目前 | 需補 |
+|--------|------|------|
+| 動漫次文化街拍 | 4 | +6 |
+| 東方和風旅拍 | 4 | +6 |
+| 東方旗袍夜宴 | 4 | +6 |
+| 田園花園旅拍 | 5 | +5 |
+| 賽博機甲 / 科幻戰姬 | 5 | +5 |
+| 現代都市 / 街拍電影 | 5 | +5 |
+| 世界地標旅拍 | 5 | +5 |
 
 ---
 
-#### Task 3：data.js 行數上限保護（lint）
+### P2 — 測試覆蓋補強
 
-**檔案**：`scripts/lint.mjs`
+#### Task 4：加入 data.js 行數上限保護
 
+**修法**（加到 `tests/promptEngine.test.js` 或 `scripts/lint.mjs`）：
 ```js
 import { readFileSync } from 'fs';
 const lines = readFileSync('./src/data.js', 'utf8').split('\n').length;
-if (lines > 7600) throw new Error(`data.js 超過 7600 行（${lines}），下一波改用 eighthWaveProfiles.js`);
+if (lines > 7800) throw new Error(`data.js 超過 7800 行（${lines} 行），新增資料請使用 ninthWaveProfiles.js`);
 ```
 
 ---
 
-## Prompt 長度實測（5 個多樣化 profile）
-
-| profile | 長度 |
-|---------|------|
-| diaochan-moon-palace-beauty（貂蟬） | 2224 字 |
-| fallen-feather-night-court（暗黑墮天使） | 2298 字 |
-| acropolis-olympus-saint（希臘衛城） | 2232 字 |
-| tang-peony-imperial-consort（大唐貴妃） | 2245 字 |
-| antarctic-penguin-photo-traveler（南極旅拍） | 2196 字 |
-| **平均** | **2239 字** |
-
-穩定在 2200 ± 100 字範圍，不建議再壓縮。
-
----
-
-## 已排除不需要修的事項
-
-| 事項 | 結論 |
-|------|------|
-| acropolis-olympus-saint 無父分類 | ✅ v3 誤報，實際已正常（0 no-parent profiles） |
-| searchSynonyms.js「聖女」問題 | ✅ commit 93d585a 已修 |
-| safePosePriorityText 呼叫 2 次 | ✅ if/else 兩分支各一次，合理 |
-| Prompt 壓縮到 1000-1300 字 | ❌ 不建議 |
-| data.js 立即分拆 | ⏸ 暫緩，下一波角色卡再啟動 |
-
----
-
-## 目前完整檔案規模
-
-| 檔案 | 行數 | 大小 |
-|------|------|------|
-| src/data.js | 7445 | 864KB |
-| src/fifthWaveProfiles.js | 1810 | 76KB |
-| src/seventhWaveProfiles.js | 143（長行） | 56KB |
-| src/promptEngine.js | 1055 | 68KB |
-| src/main.js | 921 | 44KB |
-| src/fourthWaveProfiles.js | 765 | 40KB |
-| src/sixthWaveProfiles.js | 250 | 16KB |
-| src/categoryClassifier.js | 376 | 16KB |
-| src/searchSynonyms.js | 53 | 4KB |
-
----
-
-## 關鍵函數位置
+## 關鍵函數位置（目前）
 
 | 函數 | 位置 |
 |------|------|
-| `buildChatGptInstruction()` | promptEngine.js L1001 |
-| `buildFinalIdentityText()` | promptEngine.js L443 |
-| `buildFinalActionText()` | promptEngine.js L475 |
-| `safePosePriorityText()` | promptEngine.js L781 |
-| `parentCategoryForProfile()` | categoryClassifier.js L354 |
-| `parentCategoryForText()` | categoryClassifier.js L318 |
+| `buildChatGptInstruction()` | promptEngine.js L1044 |
+| `buildFinalIdentityText()` | promptEngine.js L446 |
+| `buildFinalCostumeText()` | promptEngine.js L453 |
+| `buildFinalSceneText()` | promptEngine.js L469 |
+| `buildFinalActionText()` | promptEngine.js L478 |
+| `safePosePriorityText()` | promptEngine.js L826 |
+| `buildActionCinematographyText()` | promptEngine.js L862 |
+| `expandSceneToDirectorFields()` | promptEngine.js L984 |
+| `parentCategoryForProfile()` | categoryClassifier.js L354+ |
 | `normalizeForSearch()` | searchSynonyms.js L34 |
-| SEARCH_SYNONYM_GROUPS | searchSynonyms.js L1 |
 | ROLE_CATEGORIES | data.js L17 |
 | PARENT_ROLE_CATEGORIES | categoryClassifier.js L5 |
 
 ---
 
-## 歷史記錄
+## 已確認不需要修的事項
 
-| 日期 | 執行者 | 摘要 |
-|------|--------|------|
-| 2026-05-30 | Claude Opus 4.7 | Prompt 分析，建議壓縮 |
-| 2026-06-02 R1 | Codex | 刪 4 重複 id、縮短 safePosePriority、加測試，tests 45→47 |
-| 2026-06-02 R2 | Claude | 發現 115 個 ROLE_SUGGESTION_ITEMS 父分類隱形 |
-| 2026-06-02 R3 | Codex | 補 categoryClassifier.js keywords，truly unmatched 歸零 |
-| 2026-06-02 R4 | Claude | 誤報 acropolis bug（grep 快取問題），v3 已更正 |
-| 2026-06-02 R5 | Codex | 全系統重驗通過（47 tests, lint, build, UI verify OK） |
-| 2026-06-02 R6 | Claude（此次） | 確認全系統健康，發現 2 個 Ghost ROLE_CATEGORIES |
+| 事項 | 結論 |
+|------|------|
+| safePosePriorityText 被呼叫 2 次 | ✅ if/else 各一次，合理設計 |
+| Prompt 壓縮到 1,000–1,300 字 | ❌ 不建議，核心安全層不可壓縮 |
+| WORLD_LAYER_PROFILES 全部有父分類 | ✅ 除 Task 1 外全部正常 |
+| 重複 id | ✅ 0 個 |
 
 ---
 
-## Codex 執行紀錄 v4
+## 近期 Commit 摘要（2026-06-01 起，共 20 個）
 
-日期：2026-06-02
-狀態：已完成並通過全專案檢查，準備上架。
-
-### 本次處理
-
-1. 方案 1 守門機制
-   - 移除 searchSynonyms.js 中「聖女」對「仙俠」的同義詞正規化，避免西方古典/歐陸史詩卡被錯誤歸到仙俠語系。
-   - 新增 WORLD_LAYER_PROFILES 父分類守門測試：所有世界角色卡都必須能取得 parent category。
-   - 資料守門結果：no-parent count: 0 []。
-
-2. 姿態模式 + poseBias
-   - 新增 POSE_MODES：自動推薦、踏階行走、扶欄回身、倚靠坐姿、王座端坐、臨案坐姿、轉身抓拍、低位坐靠、自然站姿。
-   - normalizeForm 新增 poseMode，非法值會回到「自動推薦」。
-   - promptEngine 新增分類自動 pose bias：暗黑王族、唐/古裝、世界地標旅拍、室內生活、海岸度假、賽博機甲等會各自推薦支撐點動作。
-   - buildFinalActionText 與 buildActionCinematographyText 皆會輸出姿態模式/自動推薦提示，降低預設站姿比例。
-   - UI 在「電影主視覺模式 / 色彩張力 / 布料動態」區塊新增「姿態模式」控制。
-
-3. 方案 2 小批角色卡品質升級
-   - 升級代表卡/模板的 sceneAction，將容易出現的「端莊站姿、自然站立、穩定站姿」改為扶欄、踏階、臨案、王座端坐、機甲艙門互動、踏浪、坐靠礁石等可拍攝動作。
-   - 已同步 scripts/verify-ui.mjs 的驗證期待，確保 UI 套用新版角色卡動作。
-
-### 驗證結果
-
-- npm.cmd run test：50/50 passed。
-- npm.cmd run check：通過。內容包含 sync:spec、eslint、vitest、vite build、verify:ui。
-- verify:ui：desktop/mobile 皆 ok，horizontalOverflow=false，consoleErrors=0。
-- build 仍出現 Vite large chunk warning（assets/index 約 1,048.98 kB），此為既有單頁資料量大的正常提醒，不影響輸出。
-
-### 給 Claude 的後續建議
-
-- 目前姿態控制已完成第一版，可先用實際出圖觀察站姿比例是否下降。
-- 下一輪若要繼續優化，建議以每批 30-50 張角色卡為單位，優先處理 sceneAction 中含「站立、站姿、自然站立、直立」的卡。
-- 不建議此刻做 code splitting；目前 chunk warning 屬資料量型提醒，除非後續要大幅擴資料或追求載入性能，否則先保留單頁穩定性。
+- **4842859** Expand dynasty role categories and Tang specialty cards（最新）
+- **d846cf7** Update UI verification for Tang category filters
+- **c3e27b5** Expose Tang specialty categories in UI filters
+- **4f9bc83** Add Tang court research and entertainment role cards
+- **b2c2214** Rebuild standalone HTML after succubus prompt update
+- **de546b3** Revert sleepwear terms except category name; keep fabric description
+- **312e25a** Replace sleepwear terms with formal dress vocabulary in succubus prompts
+- **57ff998** Fix eighth-wave category routing test and ship full check
+- **0857c41** Speed up world profile parent guard
 
 ---
 
-## Codex 執行紀錄 v5
+*生成時間：2026-06-03，Claude Sonnet 4.6，未修改任何程式碼*
 
-日期：2026-06-02
-狀態：全角色卡品質升級與分類擴充已完成，進入全專案檢查與上架流程。
+---
 
-### 本次依使用者要求處理
+## Codex 審核意見（2026-06-03）
 
-1. 讀取並延續 AI-TASK.md
-   - 依 v4 建議，不短版化母板、不拆固定咒語。
-   - 新增卡片改走新 wave 檔，避免繼續擴大 data.js 主檔。
+整體判斷：Claude 的方向可以採用，但執行時需要微調，避免把相容性問題和資料搬遷問題混在一起。
 
-2. 全角色卡品質升級
-   - 升級 `src/data.js` 的 `enrichSceneAction()`。
-   - 所有 `WORLD_LAYER_PROFILES` 皆追加「全角色卡品質補強」。
-   - 補強內容包含：明確支撐點、可拍攝動作、手/道具/布料/髮絲/特效不得遮五官、肩頸胸腔骨盆膝踝受力合理、避免筆直呆站與證件照站姿。
+### 同意採用
 
-3. 全分類角色卡盤點與擴充
-   - 盤點後優先補卡量較少的父分類。
-   - 新增 `src/eighthWaveProfiles.js`，共 24 張新角色卡。
-   - 8 個父分類各補 3 張：東方和風旅拍、東方旗袍夜宴、賽博機甲 / 科幻戰姬、現代都市 / 街拍電影、世界地標旅拍、室內生活寫真、海岸度假旅拍、高訂婚紗禮服。
-   - 清除 2 個 ghost `ROLE_CATEGORIES`：長相思旅拍／西安古城紅衣電影、民族古城旅拍／漢服民族風／夜景電影。
+1. `src/data.js` 已經過大，之後新增角色卡應改走獨立 wave 檔，例如 `src/ninthWaveProfiles.js`。
+2. 低數量父分類補到至少 10 張是合理的 UI 改善，分類只有 4-5 張時使用體驗偏空。
+3. `ref-temp-pale-pink-hanfu-garden-lady` 可明確指定 `parentCategory: "中國歷代服裝／泛朝代總覽"`，屬於低風險小修。
+4. 加入 `data.js` 行數上限保護是合理的，能防止未來繼續把大型資料塞回主檔。
 
-4. 分類路由修正
-   - `categoryClassifier.js` 的 `parentCategoryForProfile()` 現在會尊重 `eighth-*` profiles 的 `parentCategory`。
-   - 避免第八波旗袍/都市相關卡被 priority keyword 錯誤改派到其他父分類。
+### 需要修正的判斷
 
-5. 測試與文件
-   - `tests/promptEngine.test.js` 新增守門：第八波 24 張、8 類各 3 張、全角色卡 action guard、ghost category 歸零。
-   - 新增 `docs/development-log/2026-06-02-role-card-quality-expansion.md`。
-   - 更新 `docs/PROJECT.md`，記錄姿態模式、全角色卡品質補強與第八波分類補卡。
+1. Task 1 的成因描述不完全精準。`ref-temp-*` profile 在 `parentCategoryForProfile()` 中有特殊邏輯，若有 `profile.parentCategory` 會直接返回它；因此最穩的修法是明確更新該 profile 的 `parentCategory`，而不是移除 legacy 對應。
+2. Task 2 說建立 `ninthWaveProfiles.js` 後 `data.js` 行數會回到 7,600 以下，這點不會自動成立。只有建立新檔並接入聚合，`data.js` 不會變短；若要低於 7,600 行，必須把近期新增的大段角色卡搬出 `data.js`。
+3. 不建議移除 `LEGACY_PARENT_CATEGORY_LABELS` 裡的舊分類對應，因為舊資料與臨時參考卡仍可能依賴相容層。
 
-### 本次資料盤點結果
+### 建議執行順序
 
-- `WORLD_LAYER_PROFILES`：1598 張。
-- `ROLE_SUGGESTION_ITEMS`：1559 筆。
-- `eighth-* profiles`：24 張。
-- duplicate ids：0。
-- no-parent profiles：0。
-- ghost `ROLE_CATEGORIES`：0。
-- missing 全角色卡品質補強：0。
+1. 先做 P0：修 `ref-temp-pale-pink-hanfu-garden-lady` 的父分類。
+2. 建立 `src/ninthWaveProfiles.js`，並在 `src/data.js` 接入 `WORLD_LAYER_PROFILES` 聚合。
+3. 之後所有新補卡全部放入 `ninthWaveProfiles.js`，不要再直接擴展 `data.js` 主體。
+4. 補足低數量分類到至少 10 張。
+5. 加入 `data.js` 行數保護。門檻建議先設 `7800`；若堅持 `7600`，需先做既有資料搬遷。
 
-### 後續驗證待辦
+### 結論
 
-- `npm.cmd run check`。
-- 若通過，commit / push / GitHub Pages deploy。
-- Pages 上架後確認 live URL。
+可採用 Claude 報告的大方向，但建議執行策略改為：
+
+`小修分類 -> 建 ninth wave -> 新卡走新檔 -> 補低量分類 -> 加行數保護`
+
+不建議以移除 legacy 對應作為修 bug 的主要手段，優先維持舊資料相容性。
+
+---
+
+## Claude 二次意見（2026-06-03）
+
+### 同意 Codex 的修正
+
+**「建 ninthWaveProfiles.js 不會讓 data.js 自動縮短」**——這個更正重要。我的 Task 2 原本寫法讓人誤以為只要建新檔就夠了。要讓 data.js 真正縮短，必須把最近幾個 commit（`4842859`、`4f9bc83`）直接新增進 data.js 的大唐角色卡段落**搬移**到 ninth wave，才是真正的分拆。否則只是「往後不再加」，當前超閾問題依然存在。
+
+### 與 Codex 不同的判斷
+
+**關於「不建議移除 LEGACY 對應」**——Codex 偏保守，我認為這裡應該修乾淨。
+
+理由：
+- `LEGACY_PARENT_CATEGORY_LABELS` 是給 UI filter 按鈕用的，「中國歷代服裝」這個 filter 點下去只顯示 **1 張卡**，這是使用者看得到的明顯壞體驗
+- 涉及的那 1 張 ref-temp profile（`ref-temp-pale-pink-hanfu-garden-lady`）本來就是臨時展示用途，不是生產核心資料
+- 只加 `parentCategory` 欄位讓舊標籤繼續存在，等於問題沒真正解決，日後還可能再長出其他 1 張卡的孤立 filter
+
+建議**修法**：加 `parentCategory: "中國歷代服裝／泛朝代總覽"` 到該 profile，**同時**把 LEGACY_PARENT_CATEGORY_LABELS 中的 `"中國歷代服裝"` 移除，讓它不再出現在 UI filter 列表。風險極低，影響範圍僅限這 1 張卡。
+
+### 最終建議執行順序（整合兩方意見）
+
+```
+1. 搬遷 data.js 中近期新增的大唐段落 → ninthWaveProfiles.js
+   （讓 data.js 真正低於 7,600 行）
+
+2. 建立 ninthWaveProfiles.js 框架並接入 data.js import
+
+3. 修 ref-temp-pale-pink-hanfu-garden-lady：
+   - 加 parentCategory: "中國歷代服裝／泛朝代總覽"
+   - 移除 LEGACY_PARENT_CATEGORY_LABELS 中的孤立「中國歷代服裝」
+
+4. 補低量父分類角色卡至 ninthWaveProfiles.js（各至少 10 張）
+   優先：動漫次文化街拍、東方和風旅拍、東方旗袍夜宴
+
+5. 加 data.js 行數保護（閾值 7,600）
+```
+
+### 一句話結論
+
+搬遷資料是核心，光建新檔沒用；ref-temp 的 legacy 對應應該一起修乾淨，不要讓 1 張卡的 filter 繼續出現在 UI 裡。

@@ -25,6 +25,7 @@ import { normalizeSearchText, parentCategoryForProfile } from "../src/categoryCl
 
 const TANG_GENERIC_PARENT = "唐朝服飾／泛唐風古裝";
 const CHINESE_HISTORICAL_PARENT = "中國歷代服裝／泛朝代總覽";
+const DATA_JS_LINE_LIMIT = 7600;
 const displayParentCategory = (category) => ({
   "唐朝服飾": TANG_GENERIC_PARENT,
   "中國歷代服裝": CHINESE_HISTORICAL_PARENT,
@@ -105,7 +106,7 @@ const TEMP_IMAGE_PROFILE_EXPECTATIONS = [
   ["ref-temp-wet-white-beach-kneeling", "白浪岸邊・濕紗坐姿旅人", "海岸度假旅拍"],
   ["ref-temp-neon-cat-ear-girl", "霓虹貓耳・粉白街頭少女", "動漫次文化街拍"],
   ["ref-temp-black-banquet-sofa-queen", "黑紗夜宴・沙發女王", "奇幻異世界 / 暗黑王族"],
-  ["ref-temp-pale-pink-hanfu-garden-lady", "淡粉花庭・欄邊漢服仕女", "中國歷代服裝"],
+  ["ref-temp-pale-pink-hanfu-garden-lady", "淡粉花庭・欄邊漢服仕女", CHINESE_HISTORICAL_PARENT],
 ];
 
 const BATCH_ROLE_LABELS = [
@@ -214,6 +215,13 @@ describe("prompt engine", () => {
     expect(mainSource).toContain("最高原則：真人鎖臉優先於所有華麗主視覺，不讓角色滑回 AI 仙女臉。");
     expect(mainSource).toContain("const PRODUCT_PRINCIPLE");
   }, 20000);
+
+  it("keeps bulk profile data out of data.js", () => {
+    const dataSource = fs.readFileSync(new URL("../src/data.js", import.meta.url), "utf8");
+    const lineCount = dataSource.split("\n").length;
+
+    expect(lineCount, `src/data.js has ${lineCount} lines; new bulk cards must go into wave profile modules`).toBeLessThanOrEqual(DATA_JS_LINE_LIMIT);
+  });
 
   it("uses explicit defaults for the three director weight controls", () => {
     const form = normalizeForm({});
@@ -802,7 +810,7 @@ describe("prompt engine", () => {
       expect(profiles.length, parentCategory).toBeGreaterThanOrEqual(expectedMinimum);
       for (const profile of profiles) {
         const profileText = `${profile.id} ${profile.title} ${profile.themeHint} ${profile.category} ${(profile.aliases || []).join(" ")}`;
-        const expectedParent = (profile.id.startsWith("eighth-") && profile.parentCategory)
+        const expectedParent = ((profile.id.startsWith("eighth-") || profile.id.startsWith("ninth-")) && profile.parentCategory)
           ? profile.parentCategory
           : /金庸|神鵰|小龍女|古墓派/.test(profileText)
           ? "歷史小說名著人物"
@@ -842,6 +850,8 @@ describe("prompt engine", () => {
                   ? "明宮織金／牡丹王姬／禮制服制"
                 : /dynasty-specialty-qing-palace-/.test(profileText)
                   ? "清宮旗裝／雪苑貴妃／晚清宮廷寫實"
+                : /絲路|西域|胡姬|樓蘭|波斯|粟特|商隊|漢使玉節/.test(profileText)
+                  ? "東方異域 / 絲路西域"
                 : /江南|江東|水鄉|水榭|古鎮|西塘|荷塘|桃花庭院|蘇州|水岸/.test(profileText)
                   ? "江南旅拍"
                   : /龍宮|海國|深海|水下|滄海|水母|靈珠|海月|聽潮|龍女/.test(profileText)
@@ -860,6 +870,8 @@ describe("prompt engine", () => {
                       ? "明宮織金／牡丹王姬／禮制服制"
                     : /dynasty-specialty-qing-palace-/.test(profileText)
                       ? "清宮旗裝／雪苑貴妃／晚清宮廷寫實"
+                    : /絲路|西域|胡姬|樓蘭|波斯|粟特|商隊|漢使玉節/.test(profileText)
+                      ? "東方異域 / 絲路西域"
                   : /現代|都市|都會|夜景|霓虹|街拍|首爾|上海|香港|台北|賽博|捷運|燈火|夜色|travel-paris-louvre-night/.test(profileText)
                     ? "現代都市夜景"
                     : /大唐|盛唐|唐代|唐朝|長安/.test(profileText)
