@@ -813,6 +813,10 @@ describe("prompt engine", () => {
                   ? "江南旅拍"
                   : /龍宮|海國|深海|水下|滄海|水母|靈珠|海月|聽潮|龍女/.test(profileText)
                   ? "水下龍宮海國"
+                  : /盛唐宮廷考據／大明宮貴妃／史實考據|tang-daming-palace-research|tang-huaqing-palace-research|tang-xingqing-palace-research|tang-qujiang-research|tang-linde-hall-research|tang-hanyuan-hall-research|tang-imperial-library-research|tang-jiaofang-research-consort|tang-silk-workshop-research|tang-lotus-pavilion-research/.test(profileText)
+                    ? "盛唐宮廷考據／大明宮貴妃／史實考據"
+                    : /盛唐風月／教坊平康／胡姬樂舞|tang-jiaofang-inner-dancer|tang-jiaofang-pipa-star|tang-jiaofang-drum-dancer|tang-jiaofang-flute-performer|tang-jiaofang-court-vocalist|tang-pingkang-beili-courtesan|tang-pingkang-poetry-queen|tang-pingkang-lute-courtesan|tang-pingkang-incense-hostess|tang-pingkang-masked-dancer|tang-sogdian-winehouse-huji|tang-persian-caravan-huji|tang-kucha-drum-huji|tang-samarqand-blue-huji|tang-turkic-horsewoman-huji/.test(profileText)
+                      ? "盛唐風月／教坊平康／胡姬樂舞"
                   : /現代|都市|都會|夜景|霓虹|街拍|首爾|上海|香港|台北|賽博|捷運|燈火|夜色|travel-paris-louvre-night/.test(profileText)
                     ? "現代都市夜景"
                     : /大唐|盛唐|唐代|唐朝|長安/.test(profileText)

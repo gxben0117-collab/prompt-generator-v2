@@ -39,8 +39,18 @@ export const PARENT_ROLE_CATEGORIES = [
     keywords: ["水下龍宮海國", "龍宮", "海國", "深海", "水下", "滄海", "水母", "靈珠", "海月", "聽潮", "龍女"],
   },
   {
+    label: "盛唐宮廷考據／大明宮貴妃／史實考據",
+    exclude: [],
+    keywords: ["盛唐宮廷考據／大明宮貴妃／史實考據", "tang-daming-palace-research", "tang-huaqing-palace-research", "tang-xingqing-palace-research", "tang-qujiang-research", "tang-linde-hall-research", "tang-hanyuan-hall-research", "tang-imperial-library-research", "tang-jiaofang-research-consort", "tang-silk-workshop-research", "tang-lotus-pavilion-research"],
+  },
+  {
+    label: "盛唐風月／教坊平康／胡姬樂舞",
+    exclude: [],
+    keywords: ["盛唐風月／教坊平康／胡姬樂舞", "tang-jiaofang-inner-dancer", "tang-jiaofang-pipa-star", "tang-jiaofang-drum-dancer", "tang-jiaofang-flute-performer", "tang-jiaofang-court-vocalist", "tang-pingkang-beili-courtesan", "tang-pingkang-poetry-queen", "tang-pingkang-lute-courtesan", "tang-pingkang-incense-hostess", "tang-pingkang-masked-dancer", "tang-sogdian-winehouse-huji", "tang-persian-caravan-huji", "tang-kucha-drum-huji", "tang-samarqand-blue-huji", "tang-turkic-horsewoman-huji"],
+  },
+  {
     label: "唐朝服飾",
-    exclude: ["長相思", "西安古城", "敦煌", "飛天", "莫高窟", "九尾", "妖狐", "狐仙", "魅魔", "魅姬", "魔妃", "暗黑", "哥德", "墮天使", "龍宮", "海國", "深海", "水下"],
+    exclude: ["長相思", "西安古城", "敦煌", "飛天", "莫高窟", "九尾", "妖狐", "狐仙", "魅魔", "魅姬", "魔妃", "暗黑", "哥德", "墮天使", "龍宮", "海國", "深海", "水下", "盛唐宮廷考據", "大明宮貴妃", "盛唐風月", "教坊平康", "胡姬樂舞"],
     keywords: ["大唐", "盛唐", "唐代", "唐朝", "長安", "唐闕", "唐珠", "唐制", "霓裳", "飛天伎樂", "花鈿", "襦裙", "披帛"],
   },
   {
@@ -304,7 +314,7 @@ export const PARENT_ROLE_CATEGORIES = [
   },
 ];
 
-const PRIORITY_PARENT_CATEGORY_LABELS = ["長相思旅拍", "民族古城旅拍", "敦煌飛天", "九尾妖狐", "魅魔", "暗黑墮天使", "水下龍宮海國", "唐朝服飾", "江南旅拍", "世界頂級網紅地標旅拍", "現代都市夜景"];
+const PRIORITY_PARENT_CATEGORY_LABELS = ["長相思旅拍", "民族古城旅拍", "敦煌飛天", "九尾妖狐", "魅魔", "暗黑墮天使", "水下龍宮海國", "盛唐宮廷考據／大明宮貴妃／史實考據", "盛唐風月／教坊平康／胡姬樂舞", "唐朝服飾", "江南旅拍", "世界頂級網紅地標旅拍", "現代都市夜景"];
 const PROFILE_PARENT_CATEGORY_CACHE = new WeakMap();
 
 export function normalizeSearchText(value) {
