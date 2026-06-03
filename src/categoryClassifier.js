@@ -41,17 +41,42 @@ export const PARENT_ROLE_CATEGORIES = [
   {
     label: "盛唐宮廷考據／大明宮貴妃／史實考據",
     exclude: [],
-    keywords: ["盛唐宮廷考據／大明宮貴妃／史實考據", "tang-daming-palace-research", "tang-huaqing-palace-research", "tang-xingqing-palace-research", "tang-qujiang-research", "tang-linde-hall-research", "tang-hanyuan-hall-research", "tang-imperial-library-research", "tang-jiaofang-research-consort", "tang-silk-workshop-research", "tang-lotus-pavilion-research"],
+    keywords: ["盛唐宮廷考據／大明宮貴妃／史實考據", "盛唐宮廷考據", "大明宮貴妃", "tang-daming-palace-research", "tang-huaqing-palace-research", "tang-xingqing-palace-research", "tang-qujiang-research", "tang-linde-hall-research", "tang-hanyuan-hall-research", "tang-imperial-library-research", "tang-jiaofang-research-consort", "tang-silk-workshop-research", "tang-lotus-pavilion-research"],
   },
   {
     label: "盛唐風月／教坊平康／胡姬樂舞",
     exclude: [],
-    keywords: ["盛唐風月／教坊平康／胡姬樂舞", "tang-jiaofang-inner-dancer", "tang-jiaofang-pipa-star", "tang-jiaofang-drum-dancer", "tang-jiaofang-flute-performer", "tang-jiaofang-court-vocalist", "tang-pingkang-beili-courtesan", "tang-pingkang-poetry-queen", "tang-pingkang-lute-courtesan", "tang-pingkang-incense-hostess", "tang-pingkang-masked-dancer", "tang-sogdian-winehouse-huji", "tang-persian-caravan-huji", "tang-kucha-drum-huji", "tang-samarqand-blue-huji", "tang-turkic-horsewoman-huji"],
+    keywords: ["盛唐風月／教坊平康／胡姬樂舞", "盛唐風月", "教坊平康", "胡姬樂舞", "tang-entertainment-extra", "tang-jiaofang-inner-dancer", "tang-jiaofang-pipa-star", "tang-jiaofang-drum-dancer", "tang-jiaofang-flute-performer", "tang-jiaofang-court-vocalist", "tang-pingkang-beili-courtesan", "tang-pingkang-poetry-queen", "tang-pingkang-lute-courtesan", "tang-pingkang-incense-hostess", "tang-pingkang-masked-dancer", "tang-sogdian-winehouse-huji", "tang-persian-caravan-huji", "tang-kucha-drum-huji", "tang-samarqand-blue-huji", "tang-turkic-horsewoman-huji"],
   },
   {
-    label: "唐朝服飾",
+    label: "漢宮禮樂／長信宮燈／漢代仕女考據",
+    exclude: [],
+    keywords: ["漢宮禮樂／長信宮燈／漢代仕女考據", "han-court-rite-"],
+  },
+  {
+    label: "魏晉風骨／洛水女神／清談名姝",
+    exclude: [],
+    keywords: ["魏晉風骨／洛水女神／清談名姝", "weijin-luoshui-"],
+  },
+  {
+    label: "宋韻雅集／汴梁茶香／文人仕女",
+    exclude: [],
+    keywords: ["宋韻雅集／汴梁茶香／文人仕女", "song-bianliang-"],
+  },
+  {
+    label: "明宮織金／牡丹王姬／禮制服制",
+    exclude: [],
+    keywords: ["明宮織金／牡丹王姬／禮制服制", "dynasty-specialty-ming-palace-"],
+  },
+  {
+    label: "清宮旗裝／雪苑貴妃／晚清宮廷寫實",
+    exclude: [],
+    keywords: ["清宮旗裝／雪苑貴妃／晚清宮廷寫實", "dynasty-specialty-qing-palace-"],
+  },
+  {
+    label: "唐朝服飾／泛唐風古裝",
     exclude: ["長相思", "西安古城", "敦煌", "飛天", "莫高窟", "九尾", "妖狐", "狐仙", "魅魔", "魅姬", "魔妃", "暗黑", "哥德", "墮天使", "龍宮", "海國", "深海", "水下", "盛唐宮廷考據", "大明宮貴妃", "盛唐風月", "教坊平康", "胡姬樂舞"],
-    keywords: ["大唐", "盛唐", "唐代", "唐朝", "長安", "唐闕", "唐珠", "唐制", "霓裳", "飛天伎樂", "花鈿", "襦裙", "披帛"],
+    keywords: ["唐朝服飾", "泛唐風古裝", "大唐", "盛唐", "唐代", "唐朝", "長安", "唐闕", "唐珠", "唐制", "霓裳", "飛天伎樂", "花鈿", "襦裙", "披帛"],
   },
   {
     label: "江南旅拍",
@@ -146,9 +171,11 @@ export const PARENT_ROLE_CATEGORIES = [
     ],
   },
   {
-    label: "中國歷代服裝",
+    label: "中國歷代服裝／泛朝代總覽",
     exclude: ["歷史小說名著人物", "三國演義", "三國", "東吳", "西方", "歐洲", "歐陸", "雅典", "希臘", "奧林匹斯", "凡爾賽", "哥德", "墮羽", "墮天使", "魔后", "魅魔", "魅姬", "血族", "暗黑"],
     keywords: [
+      "中國歷代服裝",
+      "泛朝代總覽",
       "中國朝代",
       "漢代",
       "宋代",
@@ -314,8 +341,31 @@ export const PARENT_ROLE_CATEGORIES = [
   },
 ];
 
-const PRIORITY_PARENT_CATEGORY_LABELS = ["長相思旅拍", "民族古城旅拍", "敦煌飛天", "九尾妖狐", "魅魔", "暗黑墮天使", "水下龍宮海國", "盛唐宮廷考據／大明宮貴妃／史實考據", "盛唐風月／教坊平康／胡姬樂舞", "唐朝服飾", "江南旅拍", "世界頂級網紅地標旅拍", "現代都市夜景"];
+const PRIORITY_PARENT_CATEGORY_LABELS = [
+  "長相思旅拍",
+  "盛唐宮廷考據／大明宮貴妃／史實考據",
+  "盛唐風月／教坊平康／胡姬樂舞",
+  "漢宮禮樂／長信宮燈／漢代仕女考據",
+  "魏晉風骨／洛水女神／清談名姝",
+  "宋韻雅集／汴梁茶香／文人仕女",
+  "明宮織金／牡丹王姬／禮制服制",
+  "清宮旗裝／雪苑貴妃／晚清宮廷寫實",
+  "民族古城旅拍",
+  "敦煌飛天",
+  "九尾妖狐",
+  "魅魔",
+  "暗黑墮天使",
+  "水下龍宮海國",
+  "唐朝服飾／泛唐風古裝",
+  "江南旅拍",
+  "世界頂級網紅地標旅拍",
+  "現代都市夜景",
+];
 const PROFILE_PARENT_CATEGORY_CACHE = new WeakMap();
+const LEGACY_PARENT_CATEGORY_LABELS = new Map([
+  ["唐朝服飾", "唐朝服飾／泛唐風古裝"],
+  ["中國歷代服裝", "中國歷代服裝／泛朝代總覽"],
+]);
 
 export function normalizeSearchText(value) {
   return normalizeForSearch(value);
@@ -328,12 +378,14 @@ export function profileCategoryText(profile) {
 export function parentCategoryForText(value) {
   const rawHaystack = String(value || "").toLowerCase();
   const haystack = normalizeSearchText(value);
-  const priorityCandidate = PARENT_ROLE_CATEGORIES.find((parent) => {
-    if (!PRIORITY_PARENT_CATEGORY_LABELS.includes(parent.label)) return false;
+  const priorityCandidate = PRIORITY_PARENT_CATEGORY_LABELS
+    .map((label) => PARENT_ROLE_CATEGORIES.find((parent) => parent.label === label))
+    .filter(Boolean)
+    .find((parent) => {
     const blocked = (parent.exclude || []).some((keyword) => rawHaystack.includes(String(keyword).toLowerCase()));
     if (blocked) return false;
     return parent.keywords.some((keyword) => rawHaystack.includes(String(keyword).toLowerCase()));
-  });
+    });
   if (priorityCandidate) return priorityCandidate.label;
 
   const candidates = PARENT_ROLE_CATEGORIES.map((parent, index) => {
@@ -374,7 +426,7 @@ export function parentCategoryForProfile(profile) {
   if (PRIORITY_PARENT_CATEGORY_LABELS.includes(inferredCategory)) {
     category = inferredCategory;
   } else if (profile?.parentCategory) {
-    category = profile.parentCategory;
+    category = LEGACY_PARENT_CATEGORY_LABELS.get(profile.parentCategory) || profile.parentCategory;
   } else {
     category = inferredCategory;
   }

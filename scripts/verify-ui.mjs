@@ -18,7 +18,12 @@ const parentCategories = [
   "水下龍宮海國",
   "盛唐宮廷考據／大明宮貴妃／史實考據",
   "盛唐風月／教坊平康／胡姬樂舞",
-  "唐朝服飾",
+  "漢宮禮樂／長信宮燈／漢代仕女考據",
+  "魏晉風骨／洛水女神／清談名姝",
+  "宋韻雅集／汴梁茶香／文人仕女",
+  "明宮織金／牡丹王姬／禮制服制",
+  "清宮旗裝／雪苑貴妃／晚清宮廷寫實",
+  "唐朝服飾／泛唐風古裝",
   "江南旅拍",
   "田園花園旅拍",
   "高訂婚紗禮服",
@@ -31,7 +36,7 @@ const parentCategories = [
   "世界頂級網紅地標旅拍",
   "現代都市夜景",
   "歷史小說名著人物",
-  "中國歷代服裝",
+  "中國歷代服裝／泛朝代總覽",
   "武俠江湖 / 戰場女將",
   "仙俠神話 / 古裝陸劇",
   "東方異域 / 絲路西域",
@@ -350,7 +355,7 @@ try {
     }
     await page.locator('input[name="profileSearch"]').fill("");
 
-    await clickSingle(page, page.locator('[data-role-parent="中國歷代服裝"]'), "中國歷代服裝 parent", viewport.name);
+    await clickSingle(page, page.locator('[data-role-parent="中國歷代服裝／泛朝代總覽"]'), "中國歷代服裝／泛朝代總覽 parent", viewport.name);
     await expectNoOldChipUi(page, viewport.name);
     await page.locator('input[name="profileSearch"]').fill("宋韻茶樓");
     if ((await page.locator('[data-world-profile="song-tea-house-jade-lady"]').count()) !== 1) {
