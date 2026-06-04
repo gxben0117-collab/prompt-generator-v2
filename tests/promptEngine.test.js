@@ -21,7 +21,7 @@ import {
   sanitizeInput,
   suggestThemeRewrite,
 } from "../src/promptEngine.js";
-import { normalizeSearchText, parentCategoryForProfile } from "../src/categoryClassifier.js";
+import { normalizeSearchText, parentCategoryForProfile, PARENT_ROLE_CATEGORIES } from "../src/categoryClassifier.js";
 
 const TANG_GENERIC_PARENT = "唐朝服飾／泛唐風古裝";
 const CHINESE_HISTORICAL_PARENT = "中國歷代服裝／泛朝代總覽";
@@ -29,6 +29,7 @@ const DATA_JS_LINE_LIMIT = 7600;
 const displayParentCategory = (category) => ({
   "唐朝服飾": TANG_GENERIC_PARENT,
   "中國歷代服裝": CHINESE_HISTORICAL_PARENT,
+  "世界地標旅拍": "世界景點旅拍",
 }[category] || category);
 
 
@@ -326,6 +327,16 @@ describe("prompt engine", () => {
     expect(orphans.map((profile) => `${profile.id}: ${profile.category}`)).toEqual([]);
   }, 60000);
 
+  it("every world layer profile maps to a visible parent category filter", () => {
+    const validLabels = new Set(PARENT_ROLE_CATEGORIES.map((parent) => parent.label));
+    const invalidProfiles = WORLD_LAYER_PROFILES.filter((profile) => {
+      const parentCategory = parentCategoryForProfile(profile);
+      return !parentCategory || !validLabels.has(parentCategory);
+    });
+
+    expect(invalidProfiles.map((profile) => `${profile.id}: ${parentCategoryForProfile(profile)}`)).toEqual([]);
+  }, 60000);
+
   it("adds eighth-wave category expansion profiles with balanced parent coverage", () => {
     const eighthProfiles = WORLD_LAYER_PROFILES.filter((profile) => profile.id.startsWith("eighth-"));
     const counts = eighthProfiles.reduce((acc, profile) => {
@@ -340,7 +351,7 @@ describe("prompt engine", () => {
       "東方旗袍夜宴": 3,
       "賽博機甲 / 科幻戰姬": 3,
       "現代都市 / 街拍電影": 3,
-      "世界地標旅拍": 3,
+      "世界景點旅拍": 3,
       "室內生活寫真": 3,
       "海岸度假旅拍": 3,
       "高訂婚紗禮服": 3,
@@ -810,8 +821,17 @@ describe("prompt engine", () => {
       expect(profiles.length, parentCategory).toBeGreaterThanOrEqual(expectedMinimum);
       for (const profile of profiles) {
         const profileText = `${profile.id} ${profile.title} ${profile.themeHint} ${profile.category} ${(profile.aliases || []).join(" ")}`;
-        const expectedParent = ((profile.id.startsWith("eighth-") || profile.id.startsWith("ninth-")) && profile.parentCategory)
-          ? profile.parentCategory
+        const expectedParent = (
+          (
+            profile.id.startsWith("eighth-") ||
+            profile.id.startsWith("ninth-") ||
+            profile.id.startsWith("tenth-") ||
+            profile.id.startsWith("style-ref-")
+          ) &&
+          profile.parentCategory &&
+          profile.parentCategory !== "中國歷代服裝"
+        )
+          ? displayParentCategory(profile.parentCategory)
           : /金庸|神鵰|小龍女|古墓派/.test(profileText)
           ? "歷史小說名著人物"
           : /長相思|西安古城|雪城紅裳|宮廊紅袖|紅綾持劍|西炎|皓翎|辰榮|塗山/.test(profileText)
@@ -1779,12 +1799,12 @@ describe("prompt engine", () => {
       .join("\n");
 
     expect(profiles.every(Boolean)).toBe(true);
-    expect(parentCategoryForProfile(byId("ref-style-example-iridescent-lagoon-swimsuit"))).toBe("世界地標旅拍");
+    expect(parentCategoryForProfile(byId("ref-style-example-iridescent-lagoon-swimsuit"))).toBe("世界景點旅拍");
     expect(parentCategoryForProfile(byId("ref-style-example-sakura-parasol-courtyard-lady"))).toBe(CHINESE_HISTORICAL_PARENT);
     expect(parentCategoryForProfile(byId("ref-style-example-moon-dragon-cloud-saint"))).toBe("仙俠神話 / 古裝陸劇");
     expect(parentCategoryForProfile(byId("ref-style-example-floral-clock-butterfly-girl"))).toBe("花園童話 / 自然精靈");
     expect(parentCategoryForProfile(byId("ref-style-example-baroque-ruby-princess-closeup"))).toBe("西方古典 / 歐陸史詩");
-    expect(parentCategoryForProfile(byId("ref-style-example-venice-golden-carnival-couture"))).toBe("世界地標旅拍");
+    expect(parentCategoryForProfile(byId("ref-style-example-venice-golden-carnival-couture"))).toBe("世界景點旅拍");
     expect(parentCategoryForProfile(byId("ref-style-example-shanghai-bund-emerald-qipao"))).toBe("現代都市夜景");
     expect(combinedText).toContain("虹彩珠光泳裝");
     expect(combinedText).toContain("金色歐式宮殿大理石長廊");
