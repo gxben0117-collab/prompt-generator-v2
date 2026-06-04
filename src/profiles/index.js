@@ -1,0 +1,9 @@
+export { TANG_MUSICIAN_PROFILE_DEFS, FOURTH_WAVE_PROFILE_DEFS } from "./culturalFantasyProfiles.js";
+export { FIFTH_WAVE_PROFILE_DEFS } from "./bulkExpansionProfiles.js";
+export { SIXTH_WAVE_PROFILE_DEFS } from "./darkRoyalProfiles.js";
+export { SEVENTH_WAVE_PROFILE_DEFS } from "./landmarkDiverseProfiles.js";
+export { EIGHTH_WAVE_PROFILE_DEFS } from "./modernLifestyleProfiles.js";
+export { NINTH_WAVE_PROFILE_DEFS } from "./historicalAndStyleExpansionProfiles.js";
+export { STYLE_REFERENCE_PROFILES as TENTH_WAVE_PROFILE_DEFS } from "./styleReferenceProfiles.js";
+export { EGYPTIAN_MYTH_QUEEN_PROFILES } from "./egyptianProfiles.js";
+export { REQUESTED_ICONIC_CHECKIN_PROFILES } from "./landmarkProfiles.js";

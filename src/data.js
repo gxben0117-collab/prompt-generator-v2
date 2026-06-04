@@ -1,12 +1,15 @@
-﻿import { TANG_MUSICIAN_PROFILE_DEFS, FOURTH_WAVE_PROFILE_DEFS } from './fourthWaveProfiles.js';
-import { FIFTH_WAVE_PROFILE_DEFS } from './fifthWaveProfiles.js';
-import { SIXTH_WAVE_PROFILE_DEFS } from './sixthWaveProfiles.js';
-import { SEVENTH_WAVE_PROFILE_DEFS } from './seventhWaveProfiles.js';
-import { EIGHTH_WAVE_PROFILE_DEFS } from './eighthWaveProfiles.js';
-import { NINTH_WAVE_PROFILE_DEFS } from './ninthWaveProfiles.js';
-import { TENTH_WAVE_PROFILE_DEFS } from './tenthWaveProfiles.js';
-import { EGYPTIAN_MYTH_QUEEN_PROFILES } from './profiles/egyptianProfiles.js';
-import { REQUESTED_ICONIC_CHECKIN_PROFILES } from './profiles/landmarkProfiles.js';
+﻿import {
+  TANG_MUSICIAN_PROFILE_DEFS,
+  FOURTH_WAVE_PROFILE_DEFS,
+  FIFTH_WAVE_PROFILE_DEFS,
+  SIXTH_WAVE_PROFILE_DEFS,
+  SEVENTH_WAVE_PROFILE_DEFS,
+  EIGHTH_WAVE_PROFILE_DEFS,
+  NINTH_WAVE_PROFILE_DEFS,
+  TENTH_WAVE_PROFILE_DEFS,
+  EGYPTIAN_MYTH_QUEEN_PROFILES,
+  REQUESTED_ICONIC_CHECKIN_PROFILES,
+} from './profiles/index.js';
 import { createCuratedRoleProfile, createLayerProfile } from './profileFactory.js';
 import { LEGACY_ROLE_NAME_OVERRIDES } from './roleNaming.js';
 
