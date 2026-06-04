@@ -337,6 +337,22 @@ describe("prompt engine", () => {
     expect(invalidProfiles.map((profile) => `${profile.id}: ${parentCategoryForProfile(profile)}`)).toEqual([]);
   }, 60000);
 
+  it("keeps every world layer profile structurally valid", () => {
+    const ids = WORLD_LAYER_PROFILES.map((profile) => profile.id);
+    const duplicateIds = ids.filter((id, index) => ids.indexOf(id) !== index);
+    const invalidProfiles = WORLD_LAYER_PROFILES.filter((profile) => (
+      !profile.id ||
+      !profile.title ||
+      !profile.category ||
+      !profile.themeHint ||
+      !parentCategoryForProfile(profile) ||
+      Object.keys(profile.layers || {}).length !== 10
+    ));
+
+    expect(duplicateIds).toEqual([]);
+    expect(invalidProfiles.map((profile) => profile.id)).toEqual([]);
+  }, 60000);
+
   it("adds eighth-wave category expansion profiles with balanced parent coverage", () => {
     const eighthProfiles = WORLD_LAYER_PROFILES.filter((profile) => profile.id.startsWith("eighth-"));
     const counts = eighthProfiles.reduce((acc, profile) => {
