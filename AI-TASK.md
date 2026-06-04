@@ -2,6 +2,64 @@
 
 ---
 
+## 2026-06-04 最新交接狀態（給 Claude / Codex）
+
+### 目前真實狀態
+
+- 最新 commit：`d53118f Add style reference role-card report`
+- 已上架：GitHub Pages workflow `Deploy to GitHub Pages` 最後一輪成功
+- 線上網址：`https://gxben0117-collab.github.io/prompt-generator-v2/`
+- 工作區狀態：乾淨，沒有 staged / untracked 檔案
+- `src/tenthWaveProfiles.js` 已提交：`8836ccd Add missing tenth wave profile data`
+- 風格範例報告已提交：`d53118f Add style reference role-card report`
+
+### 2026-06-04 已完成事項
+
+- 「世界頂級網紅地標旅拍」新增 20 組角色卡。
+- 新增父分類：「埃及豔后／尼羅河女兒／埃及神話女神」。
+- 埃及分類新增 10 組內建角色卡。
+- `ref-temp-pale-pink-hanfu-garden-lady` 的 P0 父分類問題已修正，測試確認會歸入「中國歷代服裝／泛朝代總覽」。
+- `src/tenthWaveProfiles.js` 已納入 git，遠端部署不再缺檔。
+- `docs/reports/2026-06-04-style-reference-role-cards.md` 已納入 git。
+
+### 最新驗證
+
+- `npm run check` 已通過：
+  - `sync:spec` 通過
+  - `lint` 0 errors
+  - `vitest` 55/55 通過
+  - `build` 成功
+  - `verify:ui` desktop + mobile 成功，0 console errors，無 horizontal overflow
+- GitHub Pages 部署成功。
+
+### 已知但不阻塞上架
+
+- Vite build 仍有 chunk > 800KB 警告。
+- dist JS 約 1.17MB，主要來自 ninth/tenth wave 與大量角色卡資料。
+- 這是效能與拆包優化議題，不是目前上架阻塞。
+
+### 下一輪建議待辦
+
+1. 補低量父分類角色卡，優先順序：
+   - 動漫次文化街拍：至少 +6
+   - 東方和風旅拍：至少 +6
+   - 東方旗袍夜宴：至少 +6
+2. 後續新增角色卡請繼續放到獨立 wave 檔，不要直接塞回 `src/data.js` 主體。
+3. 若要處理 chunk 警告，可評估資料拆包、lazy load 或角色卡資料外部化。
+4. 若要加 `data.js` 行數保護，請先重新評估目前已搬遷後的實際行數與合理門檻；舊報告裡的 7,600/7,800 門檻已不完全反映最新資料架構。
+
+### 舊報告注意事項
+
+下方「全專案審查報告 v5」是 2026-06-03 的歷史紀錄，部分內容已過期：
+
+- 最新 commit 不再是 `4842859` 或 `8a1efab`，而是 `d53118f`。
+- `src/tenthWaveProfiles.js` 已經 commit，不再是未追蹤檔。
+- `docs/reports/2026-06-04-style-reference-role-cards.md` 已經 commit，不再是未追蹤檔。
+- P0 bug 已修。
+- GitHub Pages 已成功部署最新版。
+
+---
+
 ## 全專案審查報告 v5
 
 日期：2026-06-03
