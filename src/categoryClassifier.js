@@ -39,6 +39,11 @@ export const PARENT_ROLE_CATEGORIES = [
     keywords: ["水下龍宮海國", "龍宮", "海國", "深海", "水下", "滄海", "水母", "靈珠", "海月", "聽潮", "龍女"],
   },
   {
+    label: "埃及豔后／尼羅河女兒／埃及神話女神",
+    exclude: ["世界頂級網紅地標旅拍", "世界地標", "網紅打卡", "iconic-checkin"],
+    keywords: ["埃及豔后", "尼羅河女兒", "埃及神話女神", "埃及神話", "埃及女神", "克麗奧佩特拉", "Cleopatra", "尼羅河", "伊西斯", "哈索爾", "巴斯特", "塞赫美特", "奈芙蒂斯", "努特", "瑪特", "聖甲蟲", "紙莎草"],
+  },
+  {
     label: "盛唐宮廷考據／大明宮貴妃／史實考據",
     exclude: [],
     keywords: ["盛唐宮廷考據／大明宮貴妃／史實考據", "盛唐宮廷考據", "大明宮貴妃", "tang-daming-palace-research", "tang-huaqing-palace-research", "tang-xingqing-palace-research", "tang-qujiang-research", "tang-linde-hall-research", "tang-hanyuan-hall-research", "tang-imperial-library-research", "tang-jiaofang-research-consort", "tang-silk-workshop-research", "tang-lotus-pavilion-research"],
@@ -356,6 +361,7 @@ const PRIORITY_PARENT_CATEGORY_LABELS = [
   "魅魔",
   "暗黑墮天使",
   "水下龍宮海國",
+  "埃及豔后／尼羅河女兒／埃及神話女神",
   "唐朝服飾／泛唐風古裝",
   "江南旅拍",
   "世界頂級網紅地標旅拍",

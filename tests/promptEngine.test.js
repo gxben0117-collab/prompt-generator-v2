@@ -1871,7 +1871,7 @@ describe("prompt engine", () => {
       .map((profile) => [profile.title, profile.category, profile.costume, profile.scene, profile.sceneEnvironment, profile.sceneLighting, ...Object.values(profile.layers)].join(" "))
       .join("\n");
 
-    expect(profiles).toHaveLength(27);
+    expect(profiles).toHaveLength(47);
     expect(profiles.every((profile) => parentCategoryForProfile(profile) === "世界頂級網紅地標旅拍")).toBe(true);
     expect(parentCategoryForProfile(byId("iconic-checkin-paris-eiffel-champagne-night"))).toBe("世界頂級網紅地標旅拍");
     expect(parentCategoryForProfile(byId("iconic-checkin-taipei-101-rain-night-heroine"))).toBe("世界頂級網紅地標旅拍");
@@ -1903,8 +1903,43 @@ describe("prompt engine", () => {
       "Hollywood Sign",
       "Space Needle",
       "中央公園",
+      "里約基督像",
+      "馬丘比丘",
+      "查理橋",
+      "聖索菲亞",
+      "阿姆斯特丹運河",
+      "布蘭登堡門",
+      "維也納歌劇院",
+      "冰島藍湖",
+      "露易絲湖",
+      "杜布羅夫尼克",
+      "雅典衛城",
+      "米蘭大教堂",
+      "聖母百花大教堂",
+      "阿爾罕布拉宮",
+      "貝倫塔",
+      "奇琴伊察",
+      "布宜諾斯艾利斯方尖碑",
+      "烏魯瓦圖",
+      "卡皮拉諾吊橋",
+      "開普敦桌山",
     ]) {
       expect(combinedText).toContain(landmark);
+    }
+  });
+
+  it("ships Egyptian queen and Nile mythology role cards as their own parent category", () => {
+    const profiles = WORLD_LAYER_PROFILES.filter((profile) => profile.id.startsWith("egypt-"));
+    const byId = (id) => WORLD_LAYER_PROFILES.find((profile) => profile.id === id);
+    const combinedText = profiles
+      .map((profile) => [profile.title, profile.category, profile.costume, profile.scene, profile.sceneEnvironment, profile.sceneLighting, ...Object.values(profile.layers)].join(" "))
+      .join("\n");
+
+    expect(profiles).toHaveLength(10);
+    expect(profiles.every((profile) => parentCategoryForProfile(profile) === "埃及豔后／尼羅河女兒／埃及神話女神")).toBe(true);
+    expect(parentCategoryForProfile(byId("egypt-cleopatra-nile-gold-throne"))).toBe("埃及豔后／尼羅河女兒／埃及神話女神");
+    for (const keyword of ["埃及豔后", "尼羅河女兒", "伊西斯", "巴斯特", "哈索爾", "塞赫美特", "奈芙蒂斯", "努特", "瑪特", "聖甲蟲"]) {
+      expect(combinedText).toContain(keyword);
     }
   });
 
