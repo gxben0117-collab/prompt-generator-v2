@@ -1,6 +1,6 @@
 # 專案文件：出圖自組咒語生產器
 
-最後更新：2026-06-01
+最後更新：2026-06-05
 
 ## 專案定位
 
@@ -39,20 +39,35 @@
 - 分類姿態推薦：`src/promptEngine.js` 的 `autoPoseBiasText()`
 - 測試覆蓋：`tests/promptEngine.test.js`
 
-### 第八波分類補卡
+### 角色卡模組化資料架構
 
-第八波角色卡放在 `src/eighthWaveProfiles.js`，用來補足卡量較少的分類，不再繼續把大量新卡直接塞進 `src/data.js` 主檔。
+角色卡資料已從時間序 wave 檔重整為 `src/profiles/` 主題模組，`src/data.js` 只透過 `src/profiles/index.js` 聚合匯入。這讓後續新增、查找與審查角色卡時不用再記憶「第幾波」加入，而是依資料主題定位。
 
-本波共 24 張，8 個父分類各 3 張：
+目前角色卡資料現況：
 
-- 東方和風旅拍
-- 東方旗袍夜宴
-- 賽博機甲 / 科幻戰姬
-- 現代都市 / 街拍電影
-- 世界地標旅拍
-- 室內生活寫真
-- 海岸度假旅拍
-- 高訂婚紗禮服
+- `WORLD_LAYER_PROFILES`：1833 張
+- `ROLE_CATEGORIES`：81
+- `PARENT_ROLE_CATEGORIES`：37
+- profile inventory：無重複 id
+- orphan parentCategory：0
+
+目前 profile 模組：
+
+- `src/profiles/bulkExpansionProfiles.js`
+- `src/profiles/culturalFantasyProfiles.js`
+- `src/profiles/darkRoyalProfiles.js`
+- `src/profiles/egyptianProfiles.js`
+- `src/profiles/historicalAndStyleExpansionProfiles.js`
+- `src/profiles/landmarkDiverseProfiles.js`
+- `src/profiles/landmarkProfiles.js`
+- `src/profiles/modernLifestyleProfiles.js`
+- `src/profiles/styleReferenceProfiles.js`
+- `src/profiles/index.js`
+
+資料守門：
+
+- `scripts/profile_inventory.mjs` 可盤點角色卡總數與重複 id。
+- `tests/promptEngine.test.js` 會驗證 profile schema、10 層服裝 Layer、父分類可解析且可見於 UI。
 
 ### 世界頂級網紅地標旅拍
 
@@ -62,7 +77,7 @@
 
 - 角色卡 id 前綴：`iconic-checkin-*`
 - 分類邏輯：`src/categoryClassifier.js`
-- 角色卡資料：`src/data.js`
+- 角色卡資料：`src/profiles/landmarkProfiles.js`
 - 測試覆蓋：`tests/promptEngine.test.js`
 - UI 驗證：`scripts/verify-ui.mjs`
 
@@ -91,7 +106,9 @@
 index.html                         # 單檔成品，GitHub Pages 入口
 src/main.js                        # UI 表單、互動、模板套用與輸出流程
 src/promptEngine.js                # 咒語生成、壓縮、鎖臉與分類治理
-src/data.js                        # 尺寸、構圖、服裝 Layer、角色卡資料
+src/data.js                        # 尺寸、構圖、服裝 Layer 與角色卡聚合入口
+src/profiles/                      # 角色卡主題模組
+src/profileFactory.js              # 角色卡建立工廠
 src/categoryClassifier.js          # 角色大分類判斷
 src/styles.css                     # 版面、響應式與視覺樣式
 doc/核心咒語規範.txt                # 固定母版來源
@@ -99,6 +116,7 @@ src/coreSpec.js                    # 由固定母版同步產生，勿手改
 scripts/prepare-vite-entry.mjs     # Vite entry 準備
 scripts/create_standalone_html.mjs # 產生單檔 index.html
 scripts/sync-core-spec-module.mjs  # 同步固定母版到 JS module
+scripts/profile_inventory.mjs      # 角色卡 inventory / 重複 id 檢查
 scripts/verify-ui.mjs              # Playwright file:// UI 驗證
 tests/promptEngine.test.js         # prompt engine 與分類測試
 versions/                          # 歷史單檔 release 快照
@@ -141,14 +159,16 @@ npm.cmd run build
 npm.cmd run test
 npm.cmd run lint
 npm.cmd run verify:ui
+npm.cmd run inventory:profiles
 ```
 
 最新全專案檢查結果：
 
-- 日期：2026-06-01
+- 日期：2026-06-05
 - 指令：`npm.cmd run check`
 - 結果：通過
-- Vitest：41 passed
+- Vitest：57 passed
+- Profile inventory：1833 profiles，duplicateIds 0
 - UI 驗證：desktop / mobile 通過
 - Console errors：0
 - 橫向 overflow：未發現

@@ -786,3 +786,65 @@ import { EXTRA_WORLD_LAYER_PROFILES } from "./profiles/index.js";
 npm run test
 npm run check
 ```
+
+---
+
+## 2026-06-05 全專案檢查與文件更新（Codex 最新狀態）
+
+最新 commit：`7f74c26 Rebuild standalone HTML after profile refactor`
+
+線上站台：<https://gxben0117-collab.github.io/prompt-generator-v2/>
+
+### 本次檢查結果
+
+| 項目 | 結果 |
+| --- | --- |
+| `npm run check` | 通過 |
+| lint | 0 errors |
+| tests | 57/57 passed |
+| build | 成功 |
+| verify:ui | desktop / mobile 通過 |
+| consoleErrors | 0 |
+| horizontalOverflow | false |
+| profile inventory | 1833 profiles，duplicateIds 0 |
+| orphan parentCategory | 0 |
+
+### 最新資料規模
+
+| 項目 | 數量 |
+| --- | ---: |
+| WORLD_LAYER_PROFILES | 1833 |
+| ROLE_CATEGORIES | 81 |
+| PARENT_ROLE_CATEGORIES | 37 |
+| data.js 行數 | 7386 |
+| standalone index.html | 612.04KB |
+| dist JS | 1210.57KB |
+| dist JS gzip | 392.16KB |
+
+### 已完成的重要整理
+
+- 已先備份完整專案：
+  - `C:\AIProjects\002專案進行中\出圖自組咒語生產器_backup_20260604-231353`
+- `doc/核心咒語規範.txt` 已確認為核心規範權威來源。
+- `src/coreSpec.js` 已由 `npm run sync:spec` 正確生成，勿手動改。
+- 角色卡資料已完成模組化：
+  - 舊 `fourth/fifth/sixth/seventh/eighth/ninth/tenthWaveProfiles.js` 已移除。
+  - 角色卡資料集中在 `src/profiles/`。
+  - `src/data.js` 透過 `src/profiles/index.js` 匯入 profile defs。
+- 已新增防線：
+  - `scripts/profile_inventory.mjs`
+  - `npm run inventory:profiles`
+  - `tests/promptEngine.test.js` profile schema 測試
+
+### 本次文件更新
+
+- `docs/PROJECT.md`
+- `docs/development-log/2026-06-05-profile-refactor-and-project-check.md`
+- `docs/reports/2026-06-05-full-project-check.md`
+- `AI-TASK.md`
+
+### 待注意
+
+- Vite 仍有 chunk > 800KB warning，屬 P2 bundle splitting 議題。
+- 目前不影響功能、測試、UI 驗證或 GitHub Pages 部署。
+- 未來新增角色卡請放入 `src/profiles/` 對應主題檔，不要再新增 wave 檔。
