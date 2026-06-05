@@ -7,9 +7,10 @@
 > 這份準則優先於下方所有舊報告。舊 v6/v5 報告與 wave 檔任務已全部作廢。
 
 ### 最新狀態
-- 最新 commit：`8a6f051 Update project check documentation`
-- tests：57/57 ✅、lint 乾淨 ✅、build 成功 ✅
+- 最新程式上架 commit：`46ed70b Expand red epic and landmark role cards`
+- APP_VERSION：`v1.29`；tests：58/58 ✅、lint 乾淨 ✅、build 成功 ✅、UI 驗證 ✅
 - 角色卡檔案重整已完成，`src/profiles/` 主題命名取代舊 wave 時間序命名
+- 2026-06-05 v1.29 已上架：長相思紅衣封神 +30、世界頂級網紅地標 +30，`WORLD_LAYER_PROFILES` = 1,893，`iconic-checkin-*` = 77
 
 ### 新卡只能進 `src/profiles/`，不可新增 wave 檔
 
@@ -24,7 +25,7 @@
 ### 補卡後必跑
 ```bash
 npm run inventory:profiles   # 確認 id 無重複、數量正確
-npm run test                 # 57 tests 必須全過
+npm run test                 # 58 tests 必須全過
 npm run check                # sync:spec + lint + test + build + verify:ui
 ```
 

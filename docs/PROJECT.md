@@ -45,7 +45,7 @@
 
 目前角色卡資料現況：
 
-- `WORLD_LAYER_PROFILES`：1833 張
+- `WORLD_LAYER_PROFILES`：1893 張
 - `ROLE_CATEGORIES`：81
 - `PARENT_ROLE_CATEGORIES`：37
 - profile inventory：無重複 id
@@ -53,6 +53,7 @@
 
 目前 profile 模組：
 
+- `src/profiles/changxiangsiRedEpicProfiles.js`
 - `src/profiles/bulkExpansionProfiles.js`
 - `src/profiles/culturalFantasyProfiles.js`
 - `src/profiles/darkRoyalProfiles.js`
@@ -73,6 +74,8 @@
 
 此分類已獨立拉出為父分類，用來收納全球高辨識度旅拍地標角色卡。分類用途是讓威尼斯、自由女神像、台北 101、上海灘、金字塔、人面獅身像、倫敦塔橋等「一眼可辨識」網紅打卡場景，不再混在一般世界景點旅拍中。
 
+目前此分類 `iconic-checkin-*` 共 77 張。v1.29 新增 30 張爆款地標角色卡，包含東方明珠、陸家嘴、萬里長城、北京故宮、大唐不夜城、杭州西湖、太平山頂、澳門巴黎人、東京晴空塔、大阪道頓堀、巴黎凱旋門、蒙馬特、聖馬可廣場、五漁村、阿瑪菲海岸、米克諾斯風車、大笨鐘、布達佩斯漁人堡、馬特洪峰、新天鵝堡、聖米歇爾山、棉堡、齋浦爾風之宮、阿布辛貝、金門大橋、拉斯維加斯大道、芝加哥雲門、羚羊峽谷、杜拜未來博物館與芬蘭極光玻璃屋。
+
 相關資料與驗證點：
 
 - 角色卡 id 前綴：`iconic-checkin-*`
@@ -81,6 +84,16 @@
 - 測試覆蓋：`tests/promptEngine.test.js`
 - UI 驗證：`scripts/verify-ui.mjs`
 
+
+### 長相思紅衣封神旅拍
+
+v1.29 新增 `src/profiles/changxiangsiRedEpicProfiles.js`，收納 30 張「長相思紅衣封神」大型旅拍角色卡，分為三組：
+
+- 紅巾飛天：大漠、鳴沙、懸崖、雲海、雪城等紅巾與紅綾大動態。
+- 女將軍：城樓、戰旗、長槍、雪原、邊城等戰場女將軍主視覺。
+- 抖音爆款：城牆奔跑、回首紅巾、紅傘雪城、萬燈夜行、山巔展翼等短影音強記憶點。
+
+此批角色卡全部歸入 `長相思旅拍` 父分類，id 前綴為 `changxiangsi-red-epic-*`，並由測試確認 30 張全數存在、父分類正確、10 層服裝 Layer 完整。
 ### 短版實際出圖咒語
 
 核心母版仍作為內部治理規則使用，但畫面複製出去的是短版實際出圖指令。輸出順序固定為：
