@@ -7,3 +7,4 @@ export { NINTH_WAVE_PROFILE_DEFS } from "./historicalAndStyleExpansionProfiles.j
 export { STYLE_REFERENCE_PROFILES as TENTH_WAVE_PROFILE_DEFS } from "./styleReferenceProfiles.js";
 export { EGYPTIAN_MYTH_QUEEN_PROFILES } from "./egyptianProfiles.js";
 export { REQUESTED_ICONIC_CHECKIN_PROFILES } from "./landmarkProfiles.js";
+export { CHANGXIANGSI_RED_EPIC_PROFILES } from "./changxiangsiRedEpicProfiles.js";

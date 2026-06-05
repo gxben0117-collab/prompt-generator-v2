@@ -1,4 +1,4 @@
-import { normalizeForSearch } from "./searchSynonyms.js";
+﻿import { normalizeForSearch } from "./searchSynonyms.js";
 
 export const ALL_FILTER_LABEL = "全部";
 
@@ -429,7 +429,8 @@ export function parentCategoryForProfile(profile) {
     profile?.id?.startsWith("eighth-") ||
     profile?.id?.startsWith("ninth-") ||
     profile?.id?.startsWith("tenth-") ||
-    profile?.id?.startsWith("style-ref-")
+    profile?.id?.startsWith("style-ref-") ||
+    profile?.id?.startsWith("iconic-checkin-")
   ) && profile.parentCategory && profile.parentCategory !== "中國歷代服裝";
   if (hasTrustedParentCategory) {
     const category = LEGACY_PARENT_CATEGORY_LABELS.get(profile.parentCategory) || profile.parentCategory;
@@ -453,3 +454,4 @@ export function parentCategoryForProfile(profile) {
   }
   return category;
 }
+

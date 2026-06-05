@@ -1907,7 +1907,7 @@ describe("prompt engine", () => {
       .map((profile) => [profile.title, profile.category, profile.costume, profile.scene, profile.sceneEnvironment, profile.sceneLighting, ...Object.values(profile.layers)].join(" "))
       .join("\n");
 
-    expect(profiles).toHaveLength(47);
+    expect(profiles).toHaveLength(77);
     expect(profiles.every((profile) => parentCategoryForProfile(profile) === "世界頂級網紅地標旅拍")).toBe(true);
     expect(parentCategoryForProfile(byId("iconic-checkin-paris-eiffel-champagne-night"))).toBe("世界頂級網紅地標旅拍");
     expect(parentCategoryForProfile(byId("iconic-checkin-taipei-101-rain-night-heroine"))).toBe("世界頂級網紅地標旅拍");
@@ -1959,8 +1959,54 @@ describe("prompt engine", () => {
       "烏魯瓦圖",
       "卡皮拉諾吊橋",
       "開普敦桌山",
+      "東方明珠",
+      "陸家嘴",
+      "萬里長城",
+      "故宮",
+      "大唐不夜城",
+      "西湖",
+      "太平山頂",
+      "澳門巴黎人",
+      "晴空塔",
+      "道頓堀",
+      "凱旋門",
+      "蒙馬特",
+      "聖馬可廣場",
+      "五漁村",
+      "阿瑪菲海岸",
+      "米克諾斯風車",
+      "大笨鐘",
+      "漁人堡",
+      "馬特洪峰",
+      "新天鵝堡",
+      "聖米歇爾山",
+      "棉堡",
+      "風之宮",
+      "阿布辛貝",
+      "金門大橋",
+      "拉斯維加斯大道",
+      "芝加哥雲門",
+      "羚羊峽谷",
+      "未來博物館",
+      "芬蘭極光玻璃屋",
     ]) {
       expect(combinedText).toContain(landmark);
+    }
+  });
+
+  it("ships Changxiangsi red epic travel role cards", () => {
+    const profiles = WORLD_LAYER_PROFILES.filter((profile) => profile.id.startsWith("changxiangsi-red-epic-"));
+    const byId = (id) => WORLD_LAYER_PROFILES.find((profile) => profile.id === id);
+    const combinedText = profiles
+      .map((profile) => [profile.title, profile.category, profile.costume, profile.scene, profile.sceneEnvironment, profile.sceneLighting, ...Object.values(profile.layers)].join(" "))
+      .join("\n");
+
+    expect(profiles).toHaveLength(30);
+    expect(profiles.every((profile) => parentCategoryForProfile(profile) === "長相思旅拍")).toBe(true);
+    expect(parentCategoryForProfile(byId("changxiangsi-red-epic-desert-scarf-sky"))).toBe("長相思旅拍");
+    expect(parentCategoryForProfile(byId("changxiangsi-red-epic-city-wall-battle-flags"))).toBe("長相思旅拍");
+    for (const keyword of ["大漠紅巾飛九天", "鳴沙長風舞紅綾", "萬旗風起女將軍", "城樓戰旗滿天飛", "城牆奔跑紅裙飛揚", "雪夜執燈紅衣少女"]) {
+      expect(combinedText).toContain(keyword);
     }
   });
 
