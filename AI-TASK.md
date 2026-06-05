@@ -2,6 +2,236 @@
 
 ---
 
+## ⚡ 補卡執行準則（2026-06-05，以此為準）
+
+> 這份準則優先於下方所有舊報告。舊 v6/v5 報告與 wave 檔任務已全部作廢。
+
+### 最新狀態
+- 最新 commit：`8a6f051 Update project check documentation`
+- tests：57/57 ✅、lint 乾淨 ✅、build 成功 ✅
+- 角色卡檔案重整已完成，`src/profiles/` 主題命名取代舊 wave 時間序命名
+
+### 新卡只能進 `src/profiles/`，不可新增 wave 檔
+
+| 用途 | 目標檔案 |
+|------|---------|
+| 長相思紅衣封神系列（大型新批次） | 新建 `src/profiles/changxiangsiRedEpicProfiles.js` |
+| 世界頂級網紅地標旅拍 / 爆款地標補卡 | `src/profiles/landmarkProfiles.js` |
+| 世界景點旅拍 / 一般世界旅拍 | `src/profiles/landmarkDiverseProfiles.js` |
+| 生活寫真 / 婚紗 / 海岸補卡 | `src/profiles/modernLifestyleProfiles.js` |
+| style reference 新增 | `src/profiles/styleReferenceProfiles.js` |
+
+### 補卡後必跑
+```bash
+npm run inventory:profiles   # 確認 id 無重複、數量正確
+npm run test                 # 57 tests 必須全過
+npm run check                # sync:spec + lint + test + build + verify:ui
+```
+
+### 更新 `src/profiles/index.js`
+每新增或修改一個 profile 模組，`index.js` 的對應 export 必須同步更新。
+
+### 精確說明（避免誤解）
+- 「所有 profile 有 parentCategory」正確說法：**所有 profile 都能透過 `parentCategoryForProfile()` 解析到有效 UI 父分類，沒有 orphan**。部分舊卡沒有實體 `parentCategory` 欄位，但靠 inference 正確歸類。
+- Wave 檔（`fourthWave`、`fifthWave`…`tenthWave`）現已移除，不能再用舊報告的 wave 路徑做任何操作。
+
+---
+
+## 全專案審查報告 v7（Claude 邏輯分析版）
+
+日期：2026-06-05
+最新 commit：`8a6f051 Update project check documentation`
+執行：Claude Sonnet 4.6，完整掃描 src/profiles/、data.js、tests/、categoryClassifier、promptEngine，**未修改任何程式碼**
+
+---
+
+### 系統健康
+
+| 項目 | 結果 |
+|------|------|
+| tests | ✅ **57/57** 通過（v6 為 56） |
+| lint | ✅ 0 errors |
+| build | ✅ 成功（1,182KB，chunk 警告存在） |
+| git 狀態 | ✅ 乾淨，working tree clean |
+| data.js 行數 | ✅ **7,386 行**（低於 7,600 保護閾值，且比 v6 的 7,478 減少了 92 行） |
+| coreSpec 同步 | ✅ `doc/核心咒語規範.txt` 與 `src/coreSpec.js` 完全同步（6,179 chars，含 POSE_MODES、14.8:21、鏡頭景別） |
+
+---
+
+### 資料規模（v7 最新實測）
+
+| 指標 | v6（06-04） | v7（06-05） | 變化 |
+|------|------------|------------|------|
+| WORLD_LAYER_PROFILES | 1,826 | **1,833** | +7 |
+| ROLE_SUGGESTION_ITEMS | — | **1,798** | — |
+| ROLE_CATEGORIES | 81 | **81** | 0 |
+| data.js 行數 | 7,478 | **7,386** | -92 ✅ |
+| dist JS | 1,174KB | **1,182KB** | +8KB |
+| tests | 56 | **57** | +1（schema 測試） |
+
+---
+
+### 重大結構變化（v6 → v7）
+
+Codex 在 v6 之後完成了角色卡檔案重整，這是本次最重要的變化：
+
+**舊結構（時間序命名）：**
+```
+src/fourthWaveProfiles.js, fifthWave, sixthWave, seventhWave, eighthWave, ninthWave, tenthWave
+```
+
+**新結構（主題命名）：**
+```
+src/profiles/
+  index.js                           ← 唯一出口（9 行）
+  bulkExpansionProfiles.js           ← 1,810 行 / 75KB（原 fifth wave）
+  culturalFantasyProfiles.js         ← 765 行 / 37KB（原 fourth wave + 唐代樂師）
+  darkRoyalProfiles.js               ← 250 行 / 16KB（原 sixth wave）
+  egyptianProfiles.js                ← 16 行 / 9KB（埃及系列）
+  historicalAndStyleExpansionProfiles.js ← 363 行 / 52KB（原 ninth wave）
+  landmarkDiverseProfiles.js         ← 143 行 / 54KB（原 seventh wave）
+  landmarkProfiles.js                ← 53 行 / 43KB（地標打卡系列）
+  modernLifestyleProfiles.js         ← 458 行 / 25KB（原 eighth wave）
+  styleReferenceProfiles.js          ← 572 行 / 34KB（原 tenth wave）
+```
+
+`data.js` 現在只 import 一個出口：
+```js
+import { ... } from './profiles/index.js';
+```
+
+`src/profileFactory.js`（89 行）新增——統一的角色卡建立函數，供各 profile 模組使用。
+
+---
+
+### 父分類 profile 分布（v7 最新實測）
+
+**最低量（≥10 全部達標，v6 孤兒問題已解）：**
+
+| 父分類 | 數量 |
+|--------|------|
+| 海岸度假旅拍 | 10 |
+| 室內生活寫真 | 10 |
+| 東方旗袍夜宴 | 10 |
+| 動漫次文化街拍 | 10 |
+| 漢宮禮樂／長信宮燈／漢代仕女考據 | 10 |
+| 魏晉風骨 / 宋韻雅集 / 明宮 / 清宮 | 各 10 |
+| 東方和風旅拍 | 11 |
+| 田園花園旅拍 | 11 |
+| 高訂婚紗禮服 | 12 |
+| 賽博機甲 / 科幻戰姬 | 13 |
+
+✅ 無孤兒標籤，所有 profile 都映射到有效 PARENT_ROLE_CATEGORIES 條目（57th test 保護）。
+
+---
+
+### 問題分析
+
+---
+
+#### ⚠️ P1：`landmarkDiverseProfiles.js` 與 `landmarkProfiles.js` 仍為超長行格式
+
+**現況：**
+- `landmarkDiverseProfiles.js`：143 行 / **54KB**（平均每行 387 bytes）
+- `landmarkProfiles.js`：53 行 / **43KB**（平均每行 830 bytes）
+
+這兩個是從舊 `seventhWaveProfiles.js` 繼承來的單行格式——一整個 array row 壓成一行。可以正常運作，但：
+- git diff 幾乎不可讀（整行變更）
+- AI 協作時 context window 佔用大
+- 人工審查幾乎不可能確認內容正確性
+
+**建議**：下次觸碰這兩個檔案時順帶改成多行物件格式（參考 `styleReferenceProfiles.js` 的風格）。非阻塞，不需要立即改。
+
+---
+
+#### ⚠️ P1：`profiles/index.js` 出口仍使用 wave 名稱別名
+
+**現況：**
+```js
+export { STYLE_REFERENCE_PROFILES as TENTH_WAVE_PROFILE_DEFS } from "./styleReferenceProfiles.js";
+```
+
+主題命名的好處被 wave 別名部分抵消——`data.js` 仍依賴 `TENTH_WAVE_PROFILE_DEFS` 這樣的 import 名。
+
+**建議**：將 `data.js` 的 import 名稱改為主題名（如 `STYLE_REFERENCE_PROFILE_DEFS`），讓命名一致。改動範圍小，但需要同步更新 `data.js` 的聚合語法與測試裡對應的 assertion。非緊急。
+
+---
+
+#### ⚠️ P1：dist JS 1,182KB，Vite chunk 警告持續
+
+**現況**：自 v5（570KB）到 v7（1,182KB），bundle 成長了一倍以上。主要原因是角色卡資料量持續增長，且未做任何 lazy load。
+
+**重整後為何沒改善**：檔案搬移不影響 bundle size，Vite 仍把所有 profile 資料打包進同一個 chunk。
+
+**選項**（依風險由低到高）：
+- C（目前做法）：接受警告，繼續以 1.1MB+ bundle 運作。功能正常，上線不阻塞。
+- B（中期）：把各 profile 模組改成 `dynamic import()`，首屏只載入 promptEngine + UI，profile 資料在使用者選分類時 lazy load。需改動 `data.js` 聚合邏輯與 categoryClassifier 初始化流程。
+- A（激進）：把 profile 資料外部化為 JSON，runtime 再 fetch。改動最大，但 bundle 可降至 300KB 以下。
+
+---
+
+#### ℹ️ P2：`bulkExpansionProfiles.js` 仍是最大單一 profile 檔（1,810 行）
+
+這是從 `fifthWaveProfiles.js` 直接更名而來，包含大量混雜主題卡片。功能正常，但長期看應進一步按主題拆分（例如分出 `xianxiaProfiles.js`、`wuxiaProfiles.js`）。目前是最低優先，不需要立即處理。
+
+---
+
+#### ℹ️ 已確認正常的項目
+
+| 項目 | 結論 |
+|------|------|
+| coreSpec.js 與 doc/txt 同步 | ✅ 完全同步，6,179 chars，含 POSE_MODES / 新比例 / 鏡頭景別 |
+| 父分類孤兒問題 | ✅ 全部修正，57th test 保護 |
+| data.js 行數保護 | ✅ 7,386 行，低於 7,600 閾值 |
+| profileFactory.js 新增 | ✅ 統一角色卡建立介面，良好抽象 |
+| 重複 id | ✅ 0 個 |
+| 所有 profile 有 parentCategory | ✅ 且映射到有效標籤 |
+| promptEngine.js | 1,100 行（v6 為 1,008，增長 92 行，可能來自 POSE_MODES 指引擴充） |
+
+---
+
+### 建議執行順序
+
+```
+P1（本輪可做）：
+1. profiles/index.js 出口改為主題名稱（移除 wave 別名）
+   → 同步更新 data.js import 名稱與相關測試 assertion
+
+2. landmarkDiverseProfiles.js + landmarkProfiles.js 改多行物件格式
+   → 觸碰這兩個檔案時順帶改，不需要特地開一輪
+
+P1（評估後決定）：
+3. dist bundle 拆包策略
+   → 選項 B（dynamic import）是最實際的中期方向
+   → 需要 spike 確認改動範圍後再決定
+
+P2（長期）：
+4. bulkExpansionProfiles.js 按主題進一步拆分
+   → 最低優先，等內容繼續增長後再評估
+```
+
+---
+
+### 函數與檔案位置（v7 更新）
+
+| 項目 | 位置 |
+|------|------|
+| Profile 出口 | `src/profiles/index.js` |
+| Profile 工廠函數 | `src/profileFactory.js` |
+| `parentCategoryForProfile()` 快速路徑 | `categoryClassifier.js L421` |
+| `PARENT_ROLE_CATEGORIES` | `categoryClassifier.js L5` |
+| `buildChatGptInstruction()` | `promptEngine.js`（約 L1044） |
+| data.js 行數保護 test | `tests/promptEngine.test.js L219` |
+| 角色卡 schema 驗證 test | `tests/promptEngine.test.js`（`f13b550` 新增） |
+| coreSpec 權威來源 | `doc/核心咒語規範.txt` |
+| coreSpec 自動生成 | `src/coreSpec.js`（`npm run sync:spec` 生成） |
+
+---
+
+*報告由 Claude Sonnet 4.6 生成，2026-06-05，未修改任何程式碼*
+
+---
+
 ## 全專案審查報告 v6（Claude 邏輯分析版）
 
 日期：2026-06-04
