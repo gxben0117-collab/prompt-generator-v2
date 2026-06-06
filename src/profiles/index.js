@@ -5,6 +5,7 @@ export { SEVENTH_WAVE_PROFILE_DEFS } from "./landmarkDiverseProfiles.js";
 export { EIGHTH_WAVE_PROFILE_DEFS } from "./modernLifestyleProfiles.js";
 export { NINTH_WAVE_PROFILE_DEFS } from "./historicalAndStyleExpansionProfiles.js";
 export { STYLE_REFERENCE_PROFILES as TENTH_WAVE_PROFILE_DEFS } from "./styleReferenceProfiles.js";
+export { HANDCRAFTED_CONSORT_PROFILES } from "./handcraftedConsortProfiles.js";
 export { EGYPTIAN_MYTH_QUEEN_PROFILES } from "./egyptianProfiles.js";
 export { REQUESTED_ICONIC_CHECKIN_PROFILES } from "./landmarkProfiles.js";
 export { CHANGXIANGSI_RED_EPIC_PROFILES } from "./changxiangsiRedEpicProfiles.js";
