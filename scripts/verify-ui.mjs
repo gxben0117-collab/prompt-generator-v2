@@ -19,6 +19,7 @@ const parentCategories = [
   "埃及豔后／尼羅河女兒／埃及神話女神",
   "盛唐宮廷考據／大明宮貴妃／史實考據",
   "盛唐風月／教坊平康／胡姬樂舞",
+  "寢宮寵妃系列",
   "漢宮禮樂／長信宮燈／漢代仕女考據",
   "魏晉風骨／洛水女神／清談名姝",
   "宋韻雅集／汴梁茶香／文人仕女",
@@ -371,6 +372,12 @@ try {
     await page.locator('input[name="profileSearch"]').fill("書香");
     if ((await page.locator('[data-world-profile="scholar-study-calligraphy-lady"]').count()) !== 1) {
       throw new Error(`${viewport.name}: Jiangnan travel parent search did not reveal scholar profile`);
+    }
+
+    await clickSingle(page, page.locator('[data-role-parent="寢宮寵妃系列"]'), "寢宮寵妃系列 parent", viewport.name);
+    await page.locator('input[name="profileSearch"]').fill("金緞寢宮");
+    if ((await page.locator('[data-world-profile="style-ref-golden-satin-bedchamber-favored-consort"]').count()) !== 1) {
+      throw new Error(`${viewport.name}: bedchamber consort parent search did not reveal golden satin profile`);
     }
 
     await clickSingle(page, page.locator('[data-role-parent="魅魔"]'), "魅魔 parent", viewport.name);
