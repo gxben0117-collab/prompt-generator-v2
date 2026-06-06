@@ -2118,7 +2118,8 @@ describe("prompt engine", () => {
     expect(prompt).toContain("背景必須服務角色且不可壓過主角");
     expect(prompt).toContain("absolute visual priority");
     expect(prompt).toContain("臉部主控");
-    expect(prompt).toContain("先鎖定原始真人臉");
+    expect(prompt).toContain("有上傳圖時先鎖定原始真人臉");
+    expect(prompt).toContain("AI絕世美人");
     expect(prompt).toContain("髮型只能微調");
     expect(prompt).toContain("正面或微側正面");
     expect(prompt).toContain("身體姿勢、肩頸與頭部角度配合臉部");
@@ -2184,8 +2185,9 @@ describe("prompt engine", () => {
     });
 
     expect(prompt).toContain("臉部主控");
-    expect(prompt).toContain("以上傳照片中的臉部作為唯一身份來源");
-    expect(prompt).toContain("先鎖定原始真人臉");
+    expect(prompt).toContain("若有上傳角色圖片，以上傳照片中的臉部作為唯一身份來源");
+    expect(prompt).toContain("若沒有上傳圖片，請先建立一位 AI絕世美人 虛擬真人角色作為本次唯一身份來源");
+    expect(prompt).toContain("有上傳圖時先鎖定原始真人臉");
     expect(prompt).toContain("正面或微側正面");
     expect(prompt).toContain("雙眼清楚看向鏡頭");
     expect(prompt).toContain("front-facing or slight three-quarter direct gaze");
@@ -2458,7 +2460,8 @@ describe("prompt engine", () => {
       scene: "暗紫絲絨寢宮",
     });
 
-    expect(instruction).toContain("請根據上傳真人照片生成");
+    expect(instruction).toContain("請根據上傳角色圖片生成");
+    expect(instruction).toContain("AI絕世美人");
     expect(instruction).toContain("背景不得出現路人或群演");
     expect(instruction).toContain("高亮商業奇幻曝光");
     expect(instruction).toContain("臉部明亮可辨識");
@@ -2706,7 +2709,8 @@ describe("prompt engine", () => {
       });
 
       expect(form.ratio).toBe(ratio);
-      expect(instruction).toContain(`請根據上傳真人照片生成 ${ratio} 真人電影級奇幻海報`);
+      expect(instruction).toContain(`請根據上傳角色圖片生成 ${ratio} 真人電影級奇幻海報`);
+      expect(instruction).toContain("如果沒有上傳圖片，請先創造一位 AI絕世美人 虛擬真人角色作為唯一主角");
       expect(instruction).toContain(expectedText);
       expect(instruction).toContain("composition must respect the specified aspect ratio");
     }
@@ -2757,9 +2761,11 @@ describe("prompt engine", () => {
 
   it("wraps the prompt for ChatGPT image generation", () => {
     const instruction = buildChatGptInstruction({ theme: "雲海仙門旅拍" });
-    expect(instruction).toContain("請根據上傳真人照片生成 4:5 真人電影級奇幻海報");
-    expect(instruction).toContain("真人身份鎖定");
+    expect(instruction).toContain("請根據上傳角色圖片生成 4:5 真人電影級奇幻海報");
+    expect(instruction).toContain("如果沒有上傳圖片，請先創造一位 AI絕世美人 虛擬真人角色作為唯一主角");
+    expect(instruction).toContain("角色身份鎖定");
     expect(instruction).toContain("原始臉型");
+    expect(instruction).toContain("AI絕世美人");
     expect(instruction).toContain("眼型");
     expect(instruction).toContain("鼻型");
     expect(instruction).toContain("不換臉");

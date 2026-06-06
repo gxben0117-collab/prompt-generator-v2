@@ -554,7 +554,7 @@ try {
     if (!promptText.includes(typedTheme)) {
       throw new Error(`${viewport.name}: prompt did not include theme after compose`);
     }
-    if (!promptText.includes("請根據上傳真人照片生成")) {
+    if (!promptText.includes("請根據上傳角色圖片生成") || !promptText.includes("AI絕世美人")) {
       throw new Error(`${viewport.name}: compact ChatGPT prompt opening missing`);
     }
     if (promptText.includes("【真人電影級 AI 電影角色系統｜V4.0 Ultimate】") || promptText.includes("【輸出格式】")) {
@@ -587,7 +587,7 @@ try {
     if (!promptText.includes("服裝：") || !promptText.includes("妝容：") || !promptText.includes("場景：") || !promptText.includes("動作：") || !promptText.includes("光影：") || !promptText.includes("負面：")) {
       throw new Error(`${viewport.name}: compact final prompt structure missing`);
     }
-    if (!promptText.includes("真人身份鎖定") || !promptText.includes("原始臉型") || !promptText.includes("眼型") || !promptText.includes("鼻型")) {
+    if (!promptText.includes("角色身份鎖定") || !promptText.includes("原始臉型") || !promptText.includes("眼型") || !promptText.includes("鼻型")) {
       throw new Error(`${viewport.name}: compact facial identity lock missing`);
     }
     if (!promptText.includes("請依主題、角色身份與情節重新設計背景近景 / 中景 / 遠景")) {
