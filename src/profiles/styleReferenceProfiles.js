@@ -1,3 +1,98 @@
+function createBedchamberConsortExpansionProfile([slug, title, seriesName, palette, costumeCore, jewelry, prop, place, foreground, midground, background, action, lighting]) {
+  return {
+    id: `bedchamber-consort-expanded-${slug}`,
+    title,
+    parentCategory: "寢宮寵妃系列",
+    series: `寢宮寵妃系列／${seriesName}`,
+    themeHint: `寢宮寵妃 皇宮寢宮 宮燈 紅木床榻 高訂緞面禮服 ${title} ${seriesName}`,
+    aliases: ["寢宮寵妃", "皇宮寢宮", "宮燈", "紅木床榻", "高訂緞面禮服", title],
+    identity: title.replace("・", ""),
+    palette,
+    costumeCore,
+    jewelry,
+    prop,
+    place,
+    foreground,
+    midground,
+    background,
+    action,
+    lighting,
+    atmosphere: "成熟高訂古風寢宮寵妃電影封面，收錄斜躺、倚臥、長腿線條與低領禮服比例，但保持服裝完整、真人可穿戴與非低俗寫真",
+  };
+}
+
+function createBedchamberSuccubusExpansionProfile([slug, title, seriesName, palette, costumeCore, jewelry, prop, place, foreground, midground, background, action, lighting]) {
+  return {
+    id: `bedchamber-succubus-expanded-${slug}`,
+    title,
+    parentCategory: "魅魔",
+    series: `寢宮魅魔系列／${seriesName}`,
+    themeHint: `魅魔 寢宮 夜宴 高訂暗黑禮服 宮燈 床榻 珠寶 ${title} ${seriesName}`,
+    aliases: ["魅魔", "寢宮魅魔", "夜宴魅姬", "高訂暗黑禮服", "宮燈床榻", title],
+    identity: title.replace("・", ""),
+    palette,
+    costumeCore,
+    jewelry,
+    prop,
+    place,
+    foreground,
+    midground,
+    background,
+    action,
+    lighting,
+    atmosphere: "參考寢宮寵妃構圖的高訂暗黑魅魔電影封面，重點是絲緞、薄紗、珠寶、翼形披紗與成熟女王氣場，不做情趣內衣、裸露或遊戲低俗化",
+    cupSize: "K",
+  };
+}
+
+const BEDCHAMBER_CONSORT_EXPANSION_PROFILES = [
+  ["golden-lotus-reclining", "金蓮燈榻・斜臥寵妃", "金蓮斜臥", "蓮金、香檳緞、琥珀燈火與紅木棕", "蓮金 satin 低領宮廷長裙、完整安全內襯、鑽石腰封、側開衩裙擺與寬幅金紗披袍", "金蓮花冠、琥珀流蘇步搖、鑽石項鍊與細金臂釧", "蓮紋金盒與玉盞", "金蓮宮燈皇宮寢榻", "金緞裙擺、蓮紋金盒、玉盞與床榻錦墊", "真人寵妃斜臥於床榻，臉部正視鏡頭，長腿線條由裙擺自然延伸", "金色宮燈、紅木屏風、絲綢帷帳與珠寶托盤", "人物一手撐床榻，一手低扶玉盞，姿態舒展但穩定", "warm lotus lantern key、gold satin shine、soft Vogue facial fill"],
+  ["ruby-candle-couch", "紅寶燭榻・側坐寵妃", "紅寶側坐", "紅寶石、古金、深紅木與燭火橙", "紅寶 satin 宮廷禮服、低領水晶胸衣外層、完整內襯、修身腰封與高開衩長裙", "紅寶鳳冠、金絲流蘇耳墜、紅寶項鍊與鑽石腰鏈", "紅寶酒杯與金色燭台", "紅寶燭光寢宮軟榻", "酒杯、燭台、紅緞裙擺與錦墊", "真人寵妃側坐軟榻，雙腿斜向前景，臉部微側正面", "燭火、紅木雕花牆、金色帷幕與床柱", "人物一手扶軟榻，一手低持酒杯，手不遮臉", "ruby candle glow、warm skin-safe fill、gold jewelry sparkle"],
+  ["ivory-pearl-canopy", "象牙珠帳・倚枕寵妃", "珠帳倚枕", "象牙白、珍珠金、月銀與柔燭色", "象牙 satin 低領宮廷禮服、珍珠鑲邊、完整內襯、柔紗披袖與修長裙擺", "珍珠金冠、月銀流蘇、白鑽耳墜與玉鐲", "珍珠團扇與白玉香盒", "象牙珠帳皇宮寢榻", "團扇、白玉香盒、珍珠簾與象牙裙擺", "真人寵妃倚靠軟枕，肩頸線條清楚，臉部正向鏡頭", "白紗帷帳、金色宮燈、紅木妝台與月窗", "人物一手扶軟枕，一手低持團扇，姿態柔和", "pearl-white silk bounce、warm lantern edge、soft beauty light"],
+  ["sapphire-lantern-long-leg", "藍寶宮燈・長腿寵妃", "藍寶長腿", "藍寶石、香檳金、深木棕與琥珀光", "藍寶 satin 高訂宮廷禮服、低領金蕾絲結構、完整安全內襯、長裙開衩與藍金薄紗披帛", "藍寶金冠、青金石耳墜、鑽石頸鍊與金色腰飾", "藍寶酒杯與宮扇", "藍寶宮燈寢宮床榻", "宮扇、藍寶酒杯、裙擺反光與床榻邊緣", "真人寵妃坐於床榻側緣，長腿線條在裙擺間自然可見", "藍金帷幕、金色燈架、紅木屏風與珠簾", "人物一手低持宮扇，一手扶床榻，臉部正視鏡頭", "sapphire silk bounce、amber lantern key、diamond sparkle"],
+  ["jade-incense-recline", "玉煙翠榻・低靠寵妃", "玉煙低靠", "翡翠、玉白、暖金與紅木棕", "翡翠 satin 宮廷長裙、玉白內襯、低領金邊胸衣外層、側開衩裙擺與輕薄披袖", "翡翠步搖、玉石耳墜、金絲髮簪與細鑽項鍊", "白玉香爐與翡翠香盒", "玉煙寢宮紅木軟榻", "香煙、白玉香爐、翡翠香盒與綠緞裙擺", "真人寵妃低靠軟榻，臉部微側正面清楚", "玉屏風、宮燈、紅木床柱與絲綢帷帳", "人物一手撐軟枕，一手整理披袖，姿態穩定", "jade silk fill、warm incense glow、soft facial key"],
+  ["amethyst-mirror-lounge", "紫晶鏡奩・半倚寵妃", "紫晶妝榻", "紫晶、暗玫瑰、香檳金與燭火金", "紫晶 satin 低領宮廷禮服、完整內襯、香檳金水晶腰封與半透明紫金披袍", "紫晶花冠、紫寶流蘇耳飾、鑽石項鍊與水晶手鏈", "銅鏡、紫晶酒杯與胭脂盒", "紫晶妝台皇宮寢室", "銅鏡、胭脂盒、紫晶酒杯與紫金裙擺", "真人寵妃半倚妝台，禮服輪廓與臉部都清楚", "紅木妝台、紫金帷幕、宮燈與床榻深景", "人物一手扶妝台，一手低持酒杯，正視鏡頭", "amethyst glow、vanity lantern warmth、crystal highlights"],
+  ["black-gold-phoenix-bed", "黑金鳳榻・夜宮寵妃", "黑金鳳榻", "墨黑、古金、琥珀、暗紅與燭火橙", "黑金 satin 宮廷禮服、低領金線胸衣、完整內襯、修身長裙開衩與黑金披紗", "黑金鳳冠、黑曜石耳墜、古金項鍊與金絲腰鏈", "黑玉香盒與金色燭台", "黑金鳳紋皇宮寢榻", "燭台、黑玉香盒、黑金裙擺與鳳紋靠枕", "真人寵妃倚靠鳳榻，長腿線條由裙擺引導但不局部特寫", "深色帷幕、金色宮燈、紅木床柱與燭火", "人物一手撐靠枕，一手低扶裙側，臉部轉向鏡頭", "candle key、black satin rim light、warm amber fill"],
+  ["rose-gold-silk-pillow", "玫瑰金枕・凝眸寵妃", "玫瑰金凝眸", "玫瑰金、蜜桃粉、珍珠白與暖金", "玫瑰金 satin 低領宮廷長裙、完整安全內襯、粉晶腰飾、柔紗披袖與修長裙擺", "玫瑰金花冠、粉晶耳墜、珍珠項鍊與細金手鐲", "粉晶香瓶與玫瑰金團扇", "玫瑰金寢宮軟枕床榻", "團扇、香瓶、軟枕與玫瑰金裙擺", "真人寵妃倚枕凝眸，肩頸線條優雅，臉部明亮", "粉金帷幕、紅木床榻、宮燈與珠寶台", "人物一手扶軟枕，一手低持團扇，姿態舒展", "rose-gold silk highlight、warm palace fill、soft editorial light"],
+  ["snow-gold-side-lie", "雪金紗榻・側臥寵妃", "雪金側臥", "雪白、淡金、月銀、紅木棕與暖燭", "雪金 satin 宮廷長裙、淡金蕾絲低領結構、完整內襯、銀白披紗與側開衩裙擺", "淡金月冠、珍珠流蘇、白鑽耳墜與玉鐲", "月白團扇與白玉香盒", "雪金紗帳月窗寢榻", "月白團扇、白玉香盒、雪金裙擺與紗帳垂墜", "真人寵妃側臥床榻，臉部朝向鏡頭，身形舒展", "月窗、白紗帷幕、紅木家具與柔焦宮燈", "人物一手低持團扇，一手撐床榻，腿部比例自然", "cool moon fill、warm lantern key、snow-gold satin sheen"],
+  ["copper-brocade-low-couch", "銅金錦榻・低坐寵妃", "銅金低坐", "銅金、栗棕、香檳金與暖燭色", "銅金 satin 宮廷禮服、低領珠繡外層、完整內襯、錦緞腰封與厚重披袍", "銅金花冠、黃水晶耳飾、金色項鍊與臂釧", "銅鏡、金盒與小酒盞", "銅金錦繡皇宮寢榻", "銅鏡、小酒盞、金盒與錦墊紋理", "真人寵妃低坐床榻邊，雙腿斜收，臉部正面", "紅木家具、金色帷幕、宮燈與深景珠寶架", "人物一手扶榻邊，一手低持酒盞，姿勢端正", "copper lantern glow、brocade texture highlights、soft facial fill"],
+  ["champagne-bead-curtain", "香檳珠簾・撩簾寵妃", "香檳撩簾", "香檳金、珍珠白、紅木棕與琥珀光", "香檳 satin 低領宮廷長裙、完整安全內襯、珍珠水晶腰封、長裙開衩與柔金披袖", "珍珠金冠、長流蘇步搖、鑽石耳墜與珍珠項鍊", "珠簾、金色香盒與手持小扇", "香檳珠簾寢宮入口", "珠簾、小扇、香盒與金緞裙擺", "真人寵妃坐於床榻側並撩開珠簾，臉部正視鏡頭", "宮燈、紅木屏風、絲帳與床榻深景", "人物一手撩珠簾，一手低持小扇，腿部線條自然延伸", "champagne lantern key、pearl sparkle、warm editorial fill"],
+  ["peony-gold-bedside", "牡丹金榻・花冠寵妃", "牡丹金榻", "牡丹粉、香檳金、暖紅木與燭火金", "牡丹金 satin 宮廷禮服、低領花瓣珠繡結構、完整內襯、花紋克制的長裙與披袍", "牡丹金冠、粉晶耳墜、細鑽項鍊與花形腰飾", "牡丹花枝與金色香瓶", "牡丹金燈皇宮寢榻", "牡丹花枝、香瓶、裙擺與錦墊", "真人寵妃倚坐床榻，身形修長，臉部看向鏡頭", "牡丹屏風、宮燈、紅木床榻與珠寶擺件", "人物一手低持牡丹，一手扶軟枕，姿態華麗", "peony-gold bounce、warm lamp key、soft skin texture light"],
+  ["lapis-gold-moon-bed", "青金月榻・側倚寵妃", "青金月榻", "青金石藍、古金、月銀與紅木棕", "青金 satin 宮廷長裙、低領金線胸衣外層、完整內襯、修長開衩裙擺與月銀披紗", "青金石金冠、藍寶耳墜、月銀項鍊與金絲腰飾", "青金酒杯與月形香爐", "青金月窗寢宮床榻", "酒杯、月形香爐、青金裙擺與床榻邊緣", "真人寵妃側倚床榻，臉部微側正面，長腿線條由裙擺帶出", "月窗、藍金帷幕、宮燈與紅木屏風", "人物一手撐床榻，一手低持酒杯，手不遮臉", "moon cool fill、gold lantern key、lapis satin sheen"],
+  ["honey-gold-incense-bed", "蜜金香榻・暖燈寵妃", "蜜金香榻", "蜜金、暖棕、香檳白與燭火橙", "蜜金 satin 低領宮廷禮服、完整內襯、鑽石細腰封、柔軟長披袍與側開衩裙擺", "蜜金花冠、黃水晶耳墜、鑽石鎖骨鏈與金鐲", "鎏金香爐與蜜色酒盞", "蜜金香霧皇宮寢榻", "香爐、酒盞、暖色煙氣與蜜金裙擺", "真人寵妃倚靠床榻軟枕，臉部正視鏡頭", "金色宮燈、紅木家具、絲綢帷帳與香霧", "人物一手扶軟枕，一手低持酒盞，腿部線條自然呈現", "honey lantern key、incense haze、satin sparkle highlights"],
+  ["silver-gold-royal-couch", "銀金御榻・清冷寵妃", "銀金御榻", "銀金、月白、冷灰、紅木棕與暖燭", "銀金 satin 宮廷長裙、低領銀線胸衣、完整安全內襯、冷光水晶腰封與透明披袖", "銀金冠、白鑽耳墜、月銀項鍊與水晶手鏈", "銀色香盒與白玉杯", "銀金冷月皇宮寢榻", "白玉杯、銀色香盒、冷光裙擺與床榻", "真人寵妃端坐後微微斜靠，清冷凝視鏡頭", "月窗、白紗帳、金色宮燈與紅木深景", "人物一手扶床榻，一手低持白玉杯，姿態克制", "cool moon key、warm lantern balance、silver satin highlights"],
+  ["wine-red-brocade-bed", "酒紅錦榻・濃艷寵妃", "酒紅錦榻", "酒紅、暗金、紅木棕與燭火橙", "酒紅 satin 宮廷低領禮服、完整內襯、暗金刺繡腰封、側開衩長裙與酒紅披袍", "酒紅寶石冠、紅寶耳墜、暗金項鍊與金絲腰鏈", "紅玉酒杯與金色燭台", "酒紅錦繡寢宮床榻", "酒杯、燭台、酒紅裙擺與錦墊", "真人寵妃斜靠床榻，身形豐盈修長，臉部明亮", "深紅帷幕、紅木屏風、宮燈與珠寶盒", "人物一手低持酒杯，一手扶披袍，正面或微側正面", "wine-red candle glow、gold embroidery sparkle、soft face fill"],
+  ["tea-gold-wood-screen", "茶金木屏・靜坐寵妃", "茶金木屏", "茶金、檀木棕、香檳金與暖燭色", "茶金 satin 宮廷禮服、低領珠繡外層、完整內襯、簡潔奢華長裙與薄紗披袖", "茶晶金冠、琥珀耳墜、細金項鍊與玉戒", "茶盞、香盒與木屏", "茶金木屏皇宮寢殿", "茶盞、香盒、木屏邊緣與茶金裙擺", "真人寵妃靜坐床榻側方，腿部線條在裙擺下自然延伸", "檀木屏風、宮燈、紅木家具與絲帳", "人物一手扶木屏，一手低持茶盞，姿態端莊", "warm wood bounce、tea-gold satin highlights、soft editorial key"],
+  ["opal-gold-jewel-bed", "歐泊金榻・珠光寵妃", "歐泊珠光", "歐泊白、淡金、珍珠粉與暖木棕", "歐泊金 satin 宮廷長裙、低領水晶胸衣、完整內襯、珠光腰封與輕薄披袍", "歐泊金冠、珍珠耳墜、白鑽項鍊與水晶腰飾", "歐泊珠寶盒與金色手鏡", "歐泊珠光皇宮寢榻", "珠寶盒、手鏡、歐泊裙擺與錦墊", "真人寵妃半躺床榻，臉部正視鏡頭，光澤華麗", "珠簾、宮燈、紅木床柱與絲綢帷幕", "人物一手扶床榻，一手低持手鏡，姿態舒展", "opal shimmer light、warm lantern glow、diamond sparkle"],
+  ["bronze-gold-lantern-bed", "鎏銅宮燈・倚臂寵妃", "鎏銅倚臂", "鎏銅金、暖棕、琥珀與暗紅", "鎏銅 satin 宮廷低領長裙、完整安全內襯、金屬蕾絲邊、鑽石腰飾與寬袖披袍", "鎏銅花冠、琥珀耳墜、金色項鍊與臂釧", "鎏金宮燈與小香瓶", "鎏銅宮燈寢宮榻旁", "小香瓶、宮燈反光、鎏銅裙擺與床榻", "真人寵妃倚靠扶手，長腿斜向前景，臉部看鏡頭", "紅木家具、金色床帳、燭台與珠寶擺設", "人物一手倚扶手，一手低扶裙側，姿勢高級穩定", "bronze lantern key、amber silk bounce、metal lace sparkle"],
+  ["pale-blue-silk-bed", "霧藍紗榻・清雅寵妃", "霧藍紗榻", "霧藍、淡金、月白與紅木棕", "霧藍 satin 宮廷長裙、低領淡金珠飾結構、完整內襯、透明霧藍披帛與側開衩裙擺", "霧藍寶冠、月白耳墜、細鑽項鍊與玉鐲", "霧藍團扇與白瓷茶盞", "霧藍紗帳皇宮寢榻", "團扇、茶盞、霧藍裙擺與紗帳邊緣", "真人寵妃側坐床榻，臉部正向鏡頭，姿態清雅", "霧藍帷幕、金色宮燈、紅木窗格與床榻", "人物一手低持團扇，一手扶床榻，長腿線條自然", "misty blue silk fill、warm lantern key、soft facial catchlight"],
+  ["lotus-pink-satin-bed", "蓮粉緞榻・柔媚寵妃", "蓮粉緞榻", "蓮粉、香檳金、珍珠白與暖木棕", "蓮粉 satin 宮廷低領禮服、完整安全內襯、珍珠腰封、柔紗披袖與修長開衩裙擺", "蓮花金冠、粉晶耳墜、珍珠項鍊與細金手鏈", "蓮花香盒與粉晶團扇", "蓮粉緞面皇宮寢榻", "香盒、團扇、蓮粉裙擺與軟枕", "真人寵妃斜倚床榻，臉部正視鏡頭，肩頸線條柔和", "蓮紋屏風、金色宮燈、紅木床柱與絲帳", "人物一手扶軟枕，一手低持團扇，姿態成熟柔美", "lotus-pink bounce、champagne lantern glow、pearl highlights"],
+].map(createBedchamberConsortExpansionProfile);
+
+const BEDCHAMBER_SUCCUBUS_EXPANSION_PROFILES = [
+  ["obsidian-gold-recline", "黑曜金榻・魅魔女王", "黑曜金榻", "黑曜石、暗金、酒紅與燭火紫", "黑曜 satin 高訂寢宮禮服、深領但有安全內襯的水晶胸衣、側開衩長裙、黑金薄紗披袍與翼形肩紗", "黑曜王冠、暗金流蘇耳飾、紫晶項鍊與金屬腰鏈", "黑玫酒杯與紫晶香爐", "黑曜寢宮王榻", "黑玫酒杯、紫晶香爐、黑金裙擺與軟枕", "真人魅魔女王斜躺王榻，臉部正視鏡頭，長腿線條由禮服自然延伸", "暗金宮燈、黑紅帷帳、哥德床柱與燭火", "人物一手撐王榻，一手低持酒杯，翼形披紗不遮臉", "obsidian candle key、purple rim light、gold satin sparkle"],
+  ["ruby-moon-bed", "紅月絲榻・魅魔寵姬", "紅月絲榻", "血月紅、黑金、煙紫與燭火橙", "紅月 satin 高訂長裙、完整內襯、低領紅寶胸衣外層、黑紗披袖與修身腰封", "紅寶魔冠、黑金耳墜、紅晶項鍊與細鏈腰飾", "紅晶酒杯與黑玫瑰", "紅月夜宴寢榻", "黑玫瑰、酒杯、紅月裙擺與床榻錦墊", "真人魅魔寵姬側坐寢榻，臉部微側正面，姿態華麗", "紅月窗、黑金帷幕、燭台與深色紅木家具", "人物一手低持酒杯，一手扶床榻，腿部線條作為禮服剪裁點綴", "red moon backlight、warm candle fill、ruby sparkle"],
+  ["amethyst-wing-lounge", "紫晶翼帳・魅魔女爵", "紫晶翼帳", "紫晶、黑緞、冷銀與暗金", "紫晶黑 satin 寢宮禮服、完整內襯、低領水晶胸衣、翼形透明披紗與高訂拖尾長裙", "紫晶冠、冷銀流蘇耳墜、黑鑽項鍊與水晶臂鏈", "紫晶星盤與黑色香盒", "紫晶翼帳哥德寢宮", "星盤、香盒、紫晶裙擺與翼形披紗", "真人魅魔女爵倚靠軟枕，臉部正視鏡頭，翼紗向後展開", "紫黑帷帳、金色宮燈、尖拱窗與燭火", "人物一手扶星盤，一手整理披紗，手不遮臉", "amethyst glow、silver rim light、warm gold practicals"],
+  ["midnight-blue-satin", "午夜藍榻・魅魔名姝", "午夜藍榻", "午夜藍、黑金、月銀與紫霧", "午夜藍 satin 高訂低領長裙、完整安全內襯、黑金珠飾腰封、側開衩裙擺與月銀披紗", "藍寶魔冠、月銀耳墜、黑鑽頸鍊與金屬手鏈", "藍寶酒杯與月銀手鏡", "午夜藍哥德寢榻", "酒杯、手鏡、藍緞裙擺與床榻邊緣", "真人魅魔名姝坐於床榻側，長腿線條自然延伸，臉部明亮", "月窗、藍黑帷幕、宮燈與燭火", "人物一手低持手鏡，一手扶床榻，微側正面看鏡頭", "midnight blue bounce、moon rim、warm candle facial fill"],
+  ["rose-smoke-couch", "煙玫瑰榻・魅魔夢姬", "煙玫瑰榻", "煙玫瑰、黑紫、香檳金與柔燭色", "煙玫瑰 satin 寢宮禮服、完整內襯、低領蕾絲外層、薄紗披袖與修身長裙", "玫瑰金魔冠、粉晶流蘇耳墜、細鑽項鍊與黑金腰鏈", "煙玫瑰香瓶與粉晶酒杯", "煙玫瑰夜宴寢宮", "香瓶、酒杯、煙玫瑰裙擺與軟枕", "真人魅魔夢姬半倚軟榻，臉部正向鏡頭", "玫瑰色帷幕、黑金床柱、宮燈與柔霧", "人物一手扶軟枕，一手低持酒杯，姿態柔媚但端正", "rose smoke haze、champagne lantern key、soft glam fill"],
+  ["emerald-venom-bed", "翡翠毒藤・魅魔女王", "翡翠毒藤", "翡翠綠、黑金、毒藤紫與暖金", "翡翠黑 satin 禮服、完整安全內襯、低領金藤胸衣外層、側開衩長裙與藤蔓刺繡披袖", "翡翠魔冠、綠寶耳墜、黑金項鍊與藤紋腰鏈", "翡翠酒盞與黑藤香爐", "翡翠毒藤寢宮王榻", "酒盞、香爐、藤紋披袖與綠緞裙擺", "真人魅魔女王側倚王榻，臉部明亮，身形修長", "黑金帷幕、綠色燭火、紅木床榻與珠寶擺設", "人物一手扶床柱，一手低持酒盞，雙眼看向鏡頭", "emerald candle glow、gold edge light、green satin highlights"],
+  ["silver-moon-succubus", "銀月紗榻・魅魔聖姬", "銀月紗榻", "銀月、黑白、淡金與紫灰", "銀月 satin 高訂長裙、完整內襯、低領銀線胸衣、透明月紗披肩與修身開衩裙擺", "銀月魔冠、白鑽耳墜、月銀項鍊與水晶臂鏈", "銀色聖杯與月形香盒", "銀月紗帳魅魔寢榻", "聖杯、月形香盒、銀月裙擺與紗帳", "真人魅魔聖姬側臥紗榻，臉部正視鏡頭", "月窗、銀白帷幕、黑金燭台與柔焦床柱", "人物一手撐床榻，一手低持聖杯，姿態清冷", "cool moon key、warm candle balance、silver satin sheen"],
+  ["wine-velvet-lounge", "酒紅絲絨・魅魔女爵", "酒紅絲絨", "酒紅、黑金、暗玫瑰與燭火", "酒紅 satin 絲絨感寢宮禮服、完整內襯、低領黑蕾絲外層、長裙開衩與黑紅披袍", "紅寶魔冠、黑金耳墜、酒紅寶石項鍊與細鏈腰飾", "紅酒杯與黑玫瑰手包", "酒紅夜宴魅魔寢宮", "紅酒杯、黑玫瑰、酒紅裙擺與軟枕", "真人魅魔女爵低靠軟榻，長腿線條由裙擺帶出", "酒紅帷幕、黑金宮燈、紅木家具與燭火", "人物一手低持紅酒杯，一手扶披袍，臉部正向鏡頭", "wine velvet glow、candle key、ruby catchlight"],
+  ["pearl-black-crown", "黑珍珠榻・魅魔王妃", "黑珍珠榻", "黑珍珠、香檳金、煙灰與燭火紫", "黑珍珠 satin 宮廷魅魔禮服、完整安全內襯、低領珍珠胸衣外層、黑金薄紗袖與長裙拖尾", "黑珍珠王冠、珍珠流蘇耳墜、黑鑽項鍊與金色臂釧", "黑珍珠盒與金色香瓶", "黑珍珠宮燈王妃寢榻", "珍珠盒、香瓶、黑珍珠裙擺與床榻錦墊", "真人魅魔王妃端坐後斜靠，臉部清楚看向鏡頭", "黑金帷幕、宮燈、紅木床柱與珠簾", "人物一手扶珍珠盒，一手整理薄紗袖，姿態高貴", "black pearl sheen、gold lantern key、soft purple rim"],
+  ["copper-horn-couch", "銅金角冠・魅魔御姬", "銅金角冠", "銅金、黑棕、琥珀與暗紅", "銅金 satin 高訂寢宮長裙、完整內襯、低領金屬蕾絲外層、側開衩裙擺與黑棕披袍", "銅金小角冠、琥珀耳墜、金屬項圈式項鍊與臂鏈", "銅燈與琥珀酒杯", "銅金魅魔寢宮軟榻", "銅燈、酒杯、銅金裙擺與軟枕", "真人魅魔御姬倚臂軟榻，臉部微側正面", "暖暗宮燈、紅木牆、黑金帷幕與燭火", "人物一手倚扶手，一手低持酒杯，長腿自然延伸", "copper practical glow、amber satin highlights、soft face fill"],
+  ["frost-blue-gothic-bed", "冰藍霜榻・魅魔冰姬", "冰藍霜榻", "冰藍、銀白、黑金與冷紫", "冰藍 satin 高訂長裙、完整安全內襯、低領水晶胸衣、銀白披紗與修長側開衩裙擺", "冰晶魔冠、銀白耳墜、藍鑽項鍊與水晶手鏈", "冰晶酒杯與銀色香盒", "冰藍霜光哥德寢榻", "冰晶酒杯、香盒、冰藍裙擺與白霧", "真人魅魔冰姬側臥床榻，臉部正視鏡頭", "冷月窗、黑金床柱、銀白帷幕與藍色燭火", "人物一手撐床榻，一手低持冰晶杯，姿態冷艷", "icy moon key、blue candle rim、silver satin sparkle"],
+  ["gold-butterfly-succubus", "金蝶夜榻・魅魔花姬", "金蝶夜榻", "金蝶色、黑紫、蜜金與燭火橙", "金蝶 satin 寢宮禮服、完整內襯、低領蝶翼胸衣外層、黑紫薄紗披袖與高訂長裙", "金蝶魔冠、蝶形流蘇耳飾、蜜金項鍊與水晶腰鏈", "金蝶面具與小酒杯", "金蝶夜宴魅魔寢榻", "面具、酒杯、蝶翼披袖與金蝶裙擺", "真人魅魔花姬半倚軟榻，臉部正面明亮", "黑紫帷幕、金色宮燈、蝶形珠簾與紅木家具", "人物一手低持面具，一手扶軟枕，披袖不遮臉", "gold butterfly sparkle、purple haze rim、warm lantern key"],
+  ["crimson-spider-silk", "緋蛛絲榻・魅魔織姬", "緋蛛絲榻", "緋紅、黑金、煙紫與燭火", "緋紅 satin 高訂長裙、完整內襯、低領黑蕾絲胸衣外層、蛛絲紋披紗與側開衩裙擺", "緋紅魔冠、黑金蛛絲耳墜、紅晶項鍊與細鏈腰飾", "紅晶香爐與黑絲手扇", "緋紅蛛絲魅魔寢宮", "香爐、手扇、蛛絲披紗與紅裙擺", "真人魅魔織姬坐於床榻側方，長腿線條自然呈現", "蛛絲紋帷幕、黑金宮燈、紅木床榻與燭火", "人物一手低持手扇，一手扶床榻，眼神看鏡頭", "crimson candle key、black lace texture、ruby sparkle"],
+  ["violet-orchid-bed", "紫蘭香榻・魅魔香姬", "紫蘭香榻", "紫蘭、黑金、香檳紫與暖燭", "紫蘭 satin 寢宮禮服、完整安全內襯、低領水晶外層、柔紗披袖與修長長裙", "紫蘭魔冠、紫晶耳墜、細鑽項鍊與黑金手鏈", "紫蘭香瓶與水晶酒杯", "紫蘭香霧魅魔寢榻", "香瓶、酒杯、紫蘭裙擺與香霧", "真人魅魔香姬倚靠軟枕，臉部正視鏡頭", "紫蘭帷幕、金色宮燈、紅木床柱與霧氣", "人物一手扶香瓶，一手整理披袖，姿態成熟", "violet haze、warm lantern key、crystal highlights"],
+  ["dark-jade-moon-bed", "暗玉月榻・魅魔妖后", "暗玉月榻", "暗玉綠、黑金、月銀與冷紫", "暗玉 satin 高訂魅魔禮服、完整內襯、低領金邊胸衣、側開衩長裙與黑綠披紗", "暗玉魔冠、綠寶耳墜、月銀項鍊與金絲腰鏈", "暗玉酒杯與月形香爐", "暗玉月窗魅魔寢榻", "酒杯、香爐、暗玉裙擺與月窗反光", "真人魅魔妖后側倚床榻，臉部明亮且凝視鏡頭", "月窗、黑金帷幕、綠色燭火與紅木家具", "人物一手扶床柱，一手低持酒杯，姿態威儀", "dark jade bounce、moon rim light、green candle glow"],
+  ["champagne-black-silk", "香檳黑紗・魅魔名伶", "香檳黑紗", "香檳金、黑紗、珍珠白與暖燭", "香檳 satin 禮服、完整安全內襯、低領黑蕾絲外層、黑紗披袖與高訂開衩長裙", "香檳金魔冠、珍珠流蘇耳墜、黑鑽項鍊與細金手鏈", "黑紗團扇與香檳杯", "香檳黑紗夜宴寢宮", "團扇、香檳杯、黑紗披袖與香檳裙擺", "真人魅魔名伶斜坐床榻，臉部正視鏡頭", "黑金帷幕、宮燈、紅木妝台與床榻深景", "人物一手低持團扇，一手扶床榻，長腿線條自然", "champagne practicals、black lace rim、soft editorial fill"],
+  ["blood-amber-throne-bed", "血珀王榻・魅魔女帝", "血珀王榻", "血珀、黑金、暗紅與紫霧", "血珀 satin 高訂寢宮長裙、完整內襯、低領紅晶胸衣、黑金披袍與修長開衩裙擺", "血珀王冠、紅晶耳墜、黑金項鍊與寶石腰鏈", "血珀權杖與紅酒杯", "血珀王榻魅魔寢宮", "權杖、酒杯、血珀裙擺與王榻錦墊", "真人魅魔女帝倚坐王榻，臉部正面清楚，姿態有王權感", "黑紅帷幕、金色燭台、哥德床柱與紫霧", "人物一手扶權杖，一手低持酒杯，身體斜靠但端正", "blood amber key、purple rim haze、gold edge light"],
+  ["moon-silver-chain", "月銀鏈紗・魅魔月姬", "月銀鏈紗", "月銀、黑紫、冷白與淡金", "月銀 satin 高訂低領禮服、完整內襯、細鏈肩飾、黑紫透明披紗與側開衩長裙", "月銀魔冠、鏈條耳飾、白鑽項鍊與水晶腰鏈", "月銀手鏡與水晶杯", "月銀鏈紗魅魔寢榻", "手鏡、水晶杯、鏈紗肩飾與月銀裙擺", "真人魅魔月姬側臥床榻，臉部正視鏡頭", "月窗、黑紫帷幕、銀色燈架與柔焦燭火", "人物一手低持手鏡，一手撐床榻，姿態舒展", "silver moon fill、soft candle key、chain sparkle"],
+  ["onyx-red-lantern", "縞瑪瑙燈・魅魔掌燈姬", "縞瑪瑙掌燈", "縞瑪瑙黑、暗紅、古金與燭火橙", "縞瑪瑙黑 satin 禮服、完整安全內襯、暗紅低領胸衣外層、古金腰封與黑紅披袍", "黑曜魔冠、暗紅耳墜、古金項鍊與黑晶手鏈", "紅色宮燈與黑玉香盒", "縞瑪瑙夜燈魅魔寢宮", "紅燈、香盒、黑紅裙擺與床榻邊緣", "真人魅魔掌燈姬坐在床榻邊，臉部被紅燈柔光照亮", "黑金帷幕、紅木家具、燭台與深色珠簾", "人物一手提紅色宮燈，一手扶床榻，手不遮臉", "red lantern key、onyx satin rim、warm gold bounce"],
+  ["opal-night-succubus", "夜歐泊榻・魅魔幻姬", "夜歐泊幻姬", "夜歐泊、黑藍、淡金與紫霧", "夜歐泊 satin 高訂禮服、完整內襯、低領珠光胸衣、黑藍薄紗披袖與長裙開衩", "歐泊魔冠、珠光耳墜、白鑽項鍊與水晶腰飾", "歐泊珠寶盒與藍紫酒杯", "夜歐泊幻光魅魔寢榻", "珠寶盒、酒杯、歐泊裙擺與幻光霧氣", "真人魅魔幻姬半躺床榻，臉部正視鏡頭，光澤夢幻", "藍紫帷幕、金色宮燈、紅木床柱與珠簾", "人物一手扶珠寶盒，一手撐床榻，姿態華麗", "opal shimmer、blue-purple rim、warm lantern fill"],
+  ["smoky-gold-veil", "煙金薄紗・魅魔簾后", "煙金薄紗", "煙金、黑灰、香檳色與燭火", "煙金 satin 寢宮禮服、完整內襯、低領金線胸衣、黑灰透明披紗與側開衩長裙", "煙金魔冠、灰晶耳墜、金色項鍊與細鏈臂飾", "煙金香爐與薄紗簾", "煙金簾幕魅魔寢宮", "香爐、薄紗簾、煙金裙擺與軟枕", "真人魅魔簾后坐於帷幕前，長腿線條由裙擺自然露出，臉部清楚", "煙灰帷幕、宮燈、紅木床榻與燭光", "人物一手撩薄紗簾，一手扶軟枕，正視鏡頭", "smoky gold haze、warm lantern key、soft glam fill"],
+].map(createBedchamberSuccubusExpansionProfile);
+
 export const STYLE_REFERENCE_PROFILES = [
   {
     id: "style-ref-flower-window-qipao",
@@ -572,7 +667,7 @@ export const STYLE_REFERENCE_PROFILES = [
   {
     id: "style-ref-golden-satin-bedchamber-favored-consort",
     title: "金緞寢宮・宮燈寵妃",
-    parentCategory: "中國歷代服裝",
+    parentCategory: "寢宮寵妃系列",
     series: "風格範例轉卡／金緞寢宮寵妃",
     themeHint: "古風宮廷 寵妃 金緞禮服 皇宮寢宮 宮燈 紅木床榻 珠寶 金冠流蘇",
     aliases: ["金緞寢宮", "宮燈寵妃", "皇宮寢宮", "金色緞面", "紅木床榻", "Vogue古風"],
@@ -592,7 +687,7 @@ export const STYLE_REFERENCE_PROFILES = [
   {
     id: "bedchamber-consort-amber-reclining-gaze",
     title: "琥珀金榻・正視斜臥寵妃",
-    parentCategory: "中國歷代服裝",
+    parentCategory: "寢宮寵妃系列",
     series: "寢宮寵妃系列／金緞斜臥",
     themeHint: "寵妃 寢宮 斜躺 正視鏡頭 琥珀金緞 大長腿 宮燈",
     aliases: ["寢宮寵妃", "斜躺正視", "琥珀金緞", "宮燈", "長腿線條"],
@@ -612,7 +707,7 @@ export const STYLE_REFERENCE_PROFILES = [
   {
     id: "bedchamber-consort-crimson-gold-couch",
     title: "朱金鳳帳・扶案側坐寵妃",
-    parentCategory: "中國歷代服裝",
+    parentCategory: "寢宮寵妃系列",
     series: "寢宮寵妃系列／鳳帳側坐",
     themeHint: "朱金寢宮 鳳帳 側坐 扶案 低領禮服 紅木珠寶",
     aliases: ["朱金寵妃", "鳳帳", "扶案側坐", "紅木珠寶", "低領禮服"],
@@ -632,7 +727,7 @@ export const STYLE_REFERENCE_PROFILES = [
   {
     id: "bedchamber-consort-moonwhite-silk-canopy",
     title: "月白紗帳・倚榻凝眸寵妃",
-    parentCategory: "中國歷代服裝",
+    parentCategory: "寢宮寵妃系列",
     series: "寢宮寵妃系列／月白倚榻",
     themeHint: "月白 緞面 寢宮 紗帳 倚榻 凝眸 珍珠",
     aliases: ["月白寵妃", "紗帳", "倚榻", "珍珠", "凝眸"],
@@ -652,7 +747,7 @@ export const STYLE_REFERENCE_PROFILES = [
   {
     id: "bedchamber-consort-peacock-blue-jewel-lantern",
     title: "孔雀藍燈・珠簾長腿寵妃",
-    parentCategory: "中國歷代服裝",
+    parentCategory: "寢宮寵妃系列",
     series: "寢宮寵妃系列／孔雀藍珠簾",
     themeHint: "孔雀藍 緞面 珠簾 宮燈 長腿 低領 寵妃",
     aliases: ["孔雀藍", "珠簾", "長腿寵妃", "低領緞面", "宮燈"],
@@ -672,7 +767,7 @@ export const STYLE_REFERENCE_PROFILES = [
   {
     id: "bedchamber-consort-rose-gold-makeup-table",
     title: "玫瑰金妝台・半倚寵妃",
-    parentCategory: "中國歷代服裝",
+    parentCategory: "寢宮寵妃系列",
     series: "寢宮寵妃系列／妝台半倚",
     themeHint: "玫瑰金 妝台 半倚 寵妃 鏡奩 珠寶 低領緞面",
     aliases: ["玫瑰金", "妝台", "半倚", "鏡奩", "珠寶寵妃"],
@@ -692,7 +787,7 @@ export const STYLE_REFERENCE_PROFILES = [
   {
     id: "bedchamber-consort-black-gold-night-palace",
     title: "墨金夜宮・低靠寵妃",
-    parentCategory: "中國歷代服裝",
+    parentCategory: "寢宮寵妃系列",
     series: "寢宮寵妃系列／墨金低靠",
     themeHint: "墨金 夜宮 寢宮 低靠 長腿 金冠 燭火",
     aliases: ["墨金", "夜宮", "低靠", "長腿", "燭火寵妃"],
@@ -712,7 +807,7 @@ export const STYLE_REFERENCE_PROFILES = [
   {
     id: "bedchamber-consort-emerald-jade-screen",
     title: "翡翠玉屏・回眸寵妃",
-    parentCategory: "中國歷代服裝",
+    parentCategory: "寢宮寵妃系列",
     series: "寢宮寵妃系列／翡翠玉屏",
     themeHint: "翡翠 緞面 玉屏 回眸 寢宮 長腿 低領",
     aliases: ["翡翠寵妃", "玉屏", "回眸", "翡翠緞面", "長腿"],
@@ -732,7 +827,7 @@ export const STYLE_REFERENCE_PROFILES = [
   {
     id: "bedchamber-consort-amethyst-purple-curtain",
     title: "紫晶帷幕・倚枕寵妃",
-    parentCategory: "中國歷代服裝",
+    parentCategory: "寢宮寵妃系列",
     series: "寢宮寵妃系列／紫晶倚枕",
     themeHint: "紫晶 宮廷 帷幕 倚枕 寵妃 低領 大長腿",
     aliases: ["紫晶寵妃", "帷幕", "倚枕", "低領", "大長腿"],
@@ -752,7 +847,7 @@ export const STYLE_REFERENCE_PROFILES = [
   {
     id: "bedchamber-consort-snow-gold-moon-window",
     title: "雪金月窗・側臥寵妃",
-    parentCategory: "中國歷代服裝",
+    parentCategory: "寢宮寵妃系列",
     series: "寢宮寵妃系列／雪金月窗",
     themeHint: "雪金 月窗 側臥 寵妃 緞面 長腿 宮廷",
     aliases: ["雪金", "月窗", "側臥", "寵妃", "緞面長腿"],
@@ -769,4 +864,6 @@ export const STYLE_REFERENCE_PROFILES = [
     lighting: "moon window cool fill、warm lantern key、snow-gold satin highlights",
     atmosphere: "雪金月夜寢宮封面感，保留斜臥姿勢與長腿線條，避免裸露、低俗視角與 AI 寫真感",
   },
+  ...BEDCHAMBER_CONSORT_EXPANSION_PROFILES,
+  ...BEDCHAMBER_SUCCUBUS_EXPANSION_PROFILES,
 ];

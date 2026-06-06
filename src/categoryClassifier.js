@@ -54,6 +54,11 @@ export const PARENT_ROLE_CATEGORIES = [
     keywords: ["盛唐風月／教坊平康／胡姬樂舞", "盛唐風月", "教坊平康", "胡姬樂舞", "tang-entertainment-extra", "tang-jiaofang-inner-dancer", "tang-jiaofang-pipa-star", "tang-jiaofang-drum-dancer", "tang-jiaofang-flute-performer", "tang-jiaofang-court-vocalist", "tang-pingkang-beili-courtesan", "tang-pingkang-poetry-queen", "tang-pingkang-lute-courtesan", "tang-pingkang-incense-hostess", "tang-pingkang-masked-dancer", "tang-sogdian-winehouse-huji", "tang-persian-caravan-huji", "tang-kucha-drum-huji", "tang-samarqand-blue-huji", "tang-turkic-horsewoman-huji"],
   },
   {
+    label: "寢宮寵妃系列",
+    exclude: ["魅魔", "夜宴魅姬", "暗黑", "哥德", "墮天使", "魔后"],
+    keywords: ["寢宮寵妃系列", "寢宮寵妃", "宮燈寵妃", "金緞寢宮", "皇宮寢宮", "bedchamber-consort"],
+  },
+  {
     label: "漢宮禮樂／長信宮燈／漢代仕女考據",
     exclude: [],
     keywords: ["漢宮禮樂／長信宮燈／漢代仕女考據", "han-court-rite-"],
@@ -350,6 +355,7 @@ const PRIORITY_PARENT_CATEGORY_LABELS = [
   "長相思旅拍",
   "盛唐宮廷考據／大明宮貴妃／史實考據",
   "盛唐風月／教坊平康／胡姬樂舞",
+  "寢宮寵妃系列",
   "漢宮禮樂／長信宮燈／漢代仕女考據",
   "魏晉風骨／洛水女神／清談名姝",
   "宋韻雅集／汴梁茶香／文人仕女",
