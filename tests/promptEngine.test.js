@@ -67,6 +67,7 @@ const STYLE_REFERENCE_PROFILE_EXPECTATIONS = [
   ["ref-valley-garden-peach-dress", "山谷花園・蜜桃長裙", "田園花園旅拍", "山谷牧野", "蜜桃長裙", "正常比例"],
   ["ref-butterfly-chestwrap-flower-fairy", "蝶飾花紗・粉紫仙姬", "仙俠神話 / 古裝陸劇", "暗色棚景仙俠", "粉紫胸衣", "K"],
   ["ref-ten-thousand-swords-wuxia-poster", "萬劍歸宗・風暴劍姬", "武俠江湖 / 戰場女將", "萬劍歸宗", "飛劍", "K"],
+  ["style-ref-champagne-wine-bar-gown-diva", "香檳酒紅・吧台晚禮服名伶", "現代都市 / 街拍電影", "暖色高級酒吧吧台", "香檳金到酒紅漸層亮片高訂晚禮服", "正常比例"],
 ];
 
 const TEMP_IMAGE_PROFILE_EXPECTATIONS = [
@@ -393,7 +394,7 @@ describe("prompt engine", () => {
     expect(ghostCategories).toEqual([]);
   });
 
-  it("adds the eight style-reference profiles with correct parent categories", () => {
+  it("adds style-reference profiles with correct parent categories", () => {
     for (const [id, title, parentCategory, sceneNeedle, layerNeedle, cupSize] of STYLE_REFERENCE_PROFILE_EXPECTATIONS) {
       const profile = WORLD_LAYER_PROFILES.find((item) => item.id === id);
 
