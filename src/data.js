@@ -7139,8 +7139,8 @@ function normalizeSceneActionProps(profile) {
     normalized = normalized.replace(pattern, text);
   }
 
-  if (normalized !== action && !/手部由 ChatGPT 依場景自然安排/.test(normalized)) {
-    normalized = `${normalized.replace(/。$/, "")}；手部由 ChatGPT 依場景自然安排`;
+  if (normalized !== action && !/手部依場景支撐點自然安排/.test(normalized)) {
+    normalized = `${normalized.replace(/。$/, "")}；手部依場景支撐點自然安排`;
   }
 
   return normalized;
@@ -7170,15 +7170,19 @@ function needsActionUpgrade(sceneAction) {
 
 function actionQualityGuardText(profile) {
   if (isBedchamberConsortProfile(profile)) {
-    return "全角色卡品質補強：姿態由 ChatGPT 依寢宮支撐點、角色身份、情節與構圖設計；需有自然支撐或動作理由，避免呆站與證件照；除非主題明確需要，否則不預設拿著酒杯、權杖、兵器或燭台，道具可作陳設、光源或支撐點；手、披帛、髮絲與道具不得遮五官，身體重心與布料受力合理。";
+    return "姿態依寢宮支撐點、角色身份、情節與構圖自然成立；需有自然支撐或動作理由，避免呆站與證件照；酒杯、權杖、兵器或燭台僅在主題明確需要時由人物拿在手上，道具可作陳設、光源或支撐點；手、披帛、髮絲與道具不得遮五官，身體重心與布料受力合理。";
   }
   const cues = inferActionCueTexts(profile);
   const cueText = cues.length ? cues.join("、") : fallbackActionDirection(profile.parentCategory);
-  return `全角色卡品質補強：姿態由 ChatGPT 依身份、場景、情節與構圖設計；需有支撐點與可拍攝動作，參考 ${cueText}，不套模板；非主題需要不預設拿道具；手、道具、布料、髮絲與特效不得遮五官，重心與布料受力合理，避免呆站。`;
+  return `姿態依身份、場景、情節與構圖自然成立；需有支撐點與可拍攝動作，參考 ${cueText}，不套模板；道具僅在主題明確需要時由人物拿在手上；手、道具、布料、髮絲與特效不得遮五官，重心與布料受力合理，避免呆站。`;
 }
 
 function enrichSceneAction(profile) {
-  if (profile.sceneAction.includes("全角色卡品質補強")) {
+  if (
+    profile.sceneAction.includes("姿態依身份、場景") ||
+    profile.sceneAction.includes("姿態依寢宮支撐點") ||
+    profile.sceneAction.includes("全角色卡品質補強")
+  ) {
     return profile.sceneAction;
   }
 

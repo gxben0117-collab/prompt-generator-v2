@@ -1,6 +1,113 @@
 ﻿# AI-TASK
 
 ---
+## 全專案出圖咒語邏輯檢查報告（2026-06-07）
+
+### 檢查目標
+檢查全專案程式邏輯、角色卡資料、實際產出咒語與 ChatGPT 包裝指令，確認是否有「不是給出圖模型看的文字」混入，例如報告、程式、函數、debug、AI-TASK、Claude、工程說明、流程註解，或過度像工作指令而不是畫面描述的內容。
+
+### 實測健康狀態
+本次已執行 `npm.cmd run check`：
+
+| 項目 | 結果 |
+| --- | --- |
+| sync:spec | 通過，`src/coreSpec.js` 同步 6,639 chars |
+| lint | 通過，0 errors |
+| tests | 通過，59/59 |
+| build | 通過 |
+| verify:ui desktop | 通過，171 controls，0 console errors，無水平溢出 |
+| verify:ui mobile | 通過，171 controls，0 console errors，無水平溢出 |
+| bundle | `assets/index-M62ro2yB.js` 約 1,457.13 KB，gzip 約 456.25 KB，仍有大 chunk warning |
+
+### 程式與資料掃描結論
+1. 角色卡資料中未發現 `AI-TASK`、`Claude`、`Sonnet`、`報告`、`程式`、`函數`、`debug`、`console`、`undefined`、`null` 等明顯非出圖資料污染。
+2. `WORLD_LAYER_PROFILES` 總數目前為 2,202。
+3. 全部 2,202 張角色卡的 `sceneAction` 都包含 `全角色卡品質補強`。
+4. 全部 2,202 張角色卡的 `sceneAction` 都包含 `ChatGPT`。
+5. 全部 2,202 張角色卡的 `sceneAction` 都包含 `不預設拿...` 類規則文字。
+6. `buildPrompt()` 對一般手填主題不會輸出 `不要照抄`，但當角色卡 `sceneAction` 進入表單時，會把 `ChatGPT` 這類流程詞一起帶進出圖咒語。
+7. `buildChatGptInstruction()` 會輸出 `不要照抄角色卡近中遠原句`，這是偏流程/工作指令，不是純畫面描述。
+
+### 重要判斷
+目前沒有發現報告文字、程式碼文字或 AI-TASK 內容直接污染出圖咒語，這點是安全的。
+
+但有一個新的品質問題：為了控制姿態邏輯，程式把「全角色卡品質補強」直接追加到每張角色卡的 `sceneAction` 裡。這讓產出咒語雖然邏輯更穩，但文字中會出現 `ChatGPT 依...設計`、`全角色卡品質補強`、`不預設拿...` 這類偏系統控制/流程管理的語句。它們不是錯誤，也能引導 ChatGPT，但不是最乾淨的出圖用畫面文字。
+
+### P0 問題：角色卡 sceneAction 被流程文字污染
+目前 `src/data.js` 的 `actionQualityGuardText(profile)` 會回傳：
+
+- `全角色卡品質補強：姿態由 ChatGPT...`
+- `不預設拿著酒杯、權杖、兵器或燭台`
+- `不預設拿道具`
+
+這些文字應該改成更像「畫面導演語言」：
+
+- 不要寫 `ChatGPT`。
+- 不要寫 `全角色卡品質補強`。
+- 少用「不預設」這種系統策略詞。
+- 改成直接描述畫面約束，例如：
+  - `姿態依角色身份、場景支撐點、情節與構圖自然成立。`
+  - `道具優先作為陳設、光源、前景或支撐點；只有主題明確需要時才由人物拿在手上。`
+  - `手部、披帛、髮絲與道具不得遮擋五官。`
+
+### P1 問題：ChatGPT 包裝指令仍有流程話術
+`src/promptEngine.js` 的 `buildFinalSceneText()` 目前含：
+
+`不要照抄角色卡近中遠原句`
+
+這句意思正確，但偏工作流程，不是畫面咒語。建議改成：
+
+`背景近景 / 中景 / 遠景需依本次主題重新組合，避免機械重複角色卡原句。`
+
+或更純出圖：
+
+`近景、中景與遠景保持本次主題專屬的敘事層次與空間變化。`
+
+### P1 問題：buildPrompt 仍保留欄位式輸出
+`buildPrompt()` 目前保留：
+
+- `【輸出格式】`
+- `分類：`
+- `主題：`
+- `服裝：`
+- `妝容：`
+- `場景：`
+- `動作：`
+- `光影：`
+
+這些不是報告/程式文字，而是穩定 prompt 結構。它們可接受，但如果目標是「最像直接丟給生圖模型的自然咒語」，可考慮增加一個「純咒語模式」，輸出無標題、無欄位名、直接連續描述。
+
+不建議現在直接移除，因為現有測試與 UI 都依賴這種五欄式結構；應作為可選模式，不要破壞現有模式。
+
+### P2 技術債：bundle 持續變大
+目前 build 後 JS chunk 約 1,457 KB，gzip 約 456 KB。功能不阻塞，但角色卡資料持續增加，建議後續規劃：
+
+1. profiles 分檔 lazy load。
+2. 角色卡資料 JSON 外部化。
+3. 搜尋索引與完整 profile 分離。
+
+### 建議修正順序
+1. **P0：清理 `actionQualityGuardText()` 的非出圖詞**
+   - `全角色卡品質補強` 改成 `姿態導演` 或直接不加標題。
+   - `ChatGPT 依...` 改成 `姿態依...自然成立`。
+   - `不預設拿...` 改成 `道具優先作陳設、光源、前景或支撐點，僅在主題明確需要時手持`。
+2. **P0：保留現有防呆站、防亂持物邏輯**
+   - 不要退回固定姿勢。
+   - 不要粗暴刪除合理持物場景。
+3. **P1：改 `buildFinalSceneText()` 的 `不要照抄...`**
+   - 改成畫面語言，不用工作流程語氣。
+4. **P1：新增測試**
+   - `WORLD_LAYER_PROFILES` 的輸出欄位不得含 `ChatGPT`、`全角色卡品質補強`。
+   - `buildChatGptInstruction()` 不得含 `不要照抄`。
+   - 寢宮持杯清理、吧台持杯保留的測試仍要保留。
+5. **P2：規劃純咒語模式**
+   - 現有五欄式 prompt 保留。
+   - 新增「純出圖咒語」輸出模式，移除欄位標題與流程文字。
+
+### 我的結論
+目前專案邏輯健康、測試通過、角色卡資料沒有混入報告或程式碼污染。但從「出圖用文字純度」來看，`sceneAction` 裡的 `ChatGPT`、`全角色卡品質補強`、`不預設拿...` 應視為下一輪優先優化。最佳做法不是刪掉防護，而是把它們改寫成畫面導演語言，讓 prompt 看起來像攝影/構圖描述，而不是系統工作流程說明。
+
+---
 ## 姿態動作生成策略決策（2026-06-07，最新執行方向）
 
 ### 結論
@@ -54,6 +161,220 @@
 這個方向比「每張卡指定動作」更好。因為角色卡數量已經很多，如果每張都硬寫動作，容易變成另一種重複；讓 ChatGPT 發揮姿態，搭配明確反呆站與反亂持物規則，才能讓出圖更自然、更有變化，也更符合不同主題。
 
 下一步應先實作 P0 的三個邏輯修正，再跑 `npm.cmd run check`，確認輸出咒語不再互相矛盾。
+
+---
+## 全專案檢查報告 v9（Claude 邏輯 + 咒語內容品質版）
+
+日期：2026-06-07
+執行：Claude Sonnet 4.6，npm run check 實測 + promptEngine / data.js / profiles 完整掃描，**未修改任何程式碼**
+
+---
+
+### 系統健康
+
+| 項目 | 結果 |
+|------|------|
+| tests | ✅ **59/59** 通過（比 v8 多 1 個，新增測試） |
+| lint | ✅ 0 errors |
+| sync:spec | ✅ 6,639 chars |
+| build | ✅ 成功（chunk ⚠️ 見下方） |
+| verify:ui desktop | ✅ 171 controls, 0 errors, 2,705 字 |
+| verify:ui mobile | ✅ 171 controls, 0 errors, 2,704 字 |
+
+---
+
+### ⚠️ Bundle 持續增長（趨勢警告）
+
+| 版本 | dist JS | gzip | standalone HTML |
+|------|---------|------|----------------|
+| v1.29（06-05） | 1,210 KB | 392 KB | 612 KB |
+| v8（06-07 早） | 1,436 KB | 449 KB | 717 KB |
+| v9（06-07 今） | **1,457 KB** | **456 KB** | **728 KB** |
+
+每次補卡都會增長，目前已是 v5（570 KB）的 **2.5 倍**。無功能阻塞，但建議本輪評估拆包策略。
+
+---
+
+### 咒語架構確認（重要前提）
+
+本系統咒語並非直接送給圖像 AI，而是送給 **ChatGPT** 作為指令文件，由 ChatGPT 解讀後出圖。因此：
+
+- **中文指令句**（必須、不得、請、避免）是刻意設計給 ChatGPT 讀的，功能上正確
+- `coreSpec.js` 透過 `getHiddenSystemPrompt()`（約行 278）作為**隱藏系統提示**傳入，未混入 `buildChatGptInstruction()` 輸出 ✅
+- 最終咒語 = 系統提示（coreSpec）＋ 使用者指令（buildChatGptInstruction 輸出）
+
+以下分析以「是否造成 ChatGPT 解讀矛盾或指令混亂」為判斷標準。
+
+---
+
+### 咒語輸出流程（buildChatGptInstruction 拼接順序）
+
+| 順序 | 段落 | 函數 | 行號 |
+|------|------|------|------|
+| 1 | 開場白（鎖臉指示） | 直接字串 | ~1064 |
+| 2 | 身份控制 | buildFinalIdentityText() | ~446 |
+| 3 | 分類｜主題｜風格 | 推導邏輯 | ~1068 |
+| 4 | 構圖 | buildFinalCompositionText() | ~1072 |
+| 5 | 服裝 | buildFinalCostumeText() | ~453 |
+| 6 | 妝容 | buildFinalMakeupText() | ~643 |
+| 7 | 場景 | buildFinalSceneText() | ~469 |
+| 8 | 動作 | buildFinalActionText() | ~478 |
+| 9 | 光影 | buildFinalLightingText() | ~486 |
+| 10 | 負面 | buildFinalNegativeText() | ~514 |
+
+---
+
+### 指令句統計（功能性，無廢文）
+
+咒語中的指令句全部具備功能意圖，ChatGPT 有效解讀，無需刪除：
+
+| 行號 | 關鍵詞 | 代表句摘要 | 評估 |
+|------|--------|---------|------|
+| 308 | 不得 | 不得分離成胸罩內褲或情趣內衣套裝 | ✅ 合理限制 |
+| 316–318 | 請 / 不得 | 若沒上傳圖片請先建立 AI 角色 / 不得漂移成多張臉 | ✅ 合理 |
+| 357 | 必須 | 夜宴魅姬式動作必須配合本次主題自由設計 | ✅ 合理 |
+| 391, 405 | 避免 | 避免自動特寫 / 避免裁頭裁手截斷全身 | ✅ 合理 |
+| 471 | 請 / 不要 | 請依主題重新設計；不要照抄角色卡近中遠原句 | ✅ 合理 |
+| 473–481 | 不得 | 背景不得出現路人或群演 / 不得遮五官 | ✅ 合理 |
+| 502–713 | 避免（多次） | 避免灰暗低光、塑膠 HDR、AI 換臉感 | ✅ 合理 |
+| 720 | 必須 | 必須具備 single-protagonist cinematic composition | ✅ 合理 |
+| 773 | 必須 / 不做 | 必須有支撐點互動，不做筆直站正中 | ✅ 合理 |
+
+**結論：所有指令句均有效，非廢文，無需清除。**
+
+---
+
+### 🔴 真正的邏輯衝突：矛盾指令（核心問題）
+
+這才是影響出圖品質的根本問題——**同一段輸出同時存在兩個矛盾指令**：
+
+#### 情境 A：寢宮寵妃 sceneAction 含持杯，但補強說不持杯
+
+```
+原始 sceneAction:     "側臥床榻，一手低持酒盞，眼神慵懶"
+enrichSceneAction 後: "側臥床榻，一手低持酒盞，眼神慵懶；
+                       全角色卡品質補強：...不預設拿著酒杯、權杖..."
+```
+
+ChatGPT 同時看到「持酒盞」（前）和「不預設拿酒杯」（後），可能優先抓較早的那句 → 仍出現持杯。
+
+#### 情境 B：「全角色卡品質補強：」標籤本身是系統控制標籤
+
+```
+全角色卡品質補強：姿態由 ChatGPT 依寢宮支撐點...
+```
+
+這個標籤字串是系統控制標記，不是圖像描述語言。ChatGPT 可能降低其執行優先權，視為說明句而非指令句。
+
+---
+
+### 程式邏輯問題彙整
+
+#### 問題 1：profileFactory.js 第 75 行道具句
+
+```js
+`${prop}作為角色記憶點，與手部動作自然互動`
+```
+
+強迫所有道具往手持方向靠。**尚未修改。**
+
+#### 問題 2：enrichSceneAction() 追加策略（矛盾指令根因）
+
+```js
+return [normalizedAction, upgradeText, actionQualityGuardText(profile)]
+  .filter(Boolean).join("；");
+```
+
+品質補強追加在原始 sceneAction 後，無法覆蓋原始持物動作。`normalizeSceneActionProps()` 應在組裝前先清理持物。**函數目前尚未建立。**
+
+#### 問題 3：isBedchamberConsortProfile() 正則漏洞
+
+```js
+/寢宮|寵妃|床榻|臥榻|軟榻|王榻|睡衣寵妃|旗袍寵妃|魅魔寵妃|宮燈寵妃/
+```
+
+「睡衣」單字未在清單，profile title 為「現代睡衣」不帶「寵妃」時漏網。
+
+#### 問題 4：寢宮版 actionQualityGuardText() 語氣比通用版更軟
+
+- 寢宮版：`除非主題明確需要，否則不預設拿著...`（語氣柔和，ChatGPT 容易忽略）
+- 通用版：`非主題需要不預設拿道具`（語氣較強）
+- 寢宮保護應更強，反而更軟。
+
+#### 問題 5：profiles layers 格式不統一
+
+| 檔案 | layers 長度 | 備註 |
+|------|----------:|------|
+| handcraftedConsortProfiles.js | 8 項 | 自由中文描述 |
+| darkRoyalProfiles.js | 9 項 | 含「K」罩杯字串 |
+| styleReferenceProfiles.js | 10 項 | 較細分（含燈光）|
+
+目前測試有 schema 保護，不阻塞功能，但格式不一致。
+
+---
+
+### 已確認正常的項目
+
+| 項目 | 結論 |
+|------|------|
+| coreSpec 與 system prompt 分離 | ✅ getHiddenSystemPrompt() 獨立傳送，未混入咒語 |
+| 重複 id | ✅ 0 個 |
+| orphan parentCategory | ✅ 0 個 |
+| 指令句功能性 | ✅ 全部有功能意圖，無廢文 |
+| profiles layers 格式 | ✅ 一致為字串陣列，無物件混入 |
+| 59 個測試全過 | ✅ |
+| inferActionCueTexts() 寢宮特例 | ✅ 寢宮判定成立時直接回傳床榻姿態，跳過關鍵字推斷 |
+| coreSpec.js 不混入 buildChatGptInstruction | ✅ 確認通過 getHiddenSystemPrompt() 獨立分離 |
+
+---
+
+### 建議執行優先順序（v9 整合）
+
+#### P0（邏輯衝突，直接影響出圖品質）
+
+1. **建立 `normalizeSceneActionProps(profile)`**（在 `enrichSceneAction()` 組裝前執行）：
+   - 寢宮類遇到 `持酒杯|持酒盞|端盞|托盞|持杯` → 改為「酒盞置於床邊小几」
+   - 寢宮類遇到 `提燈|持燭台|手持宮燈` → 改為「宮燈作床邊光源」
+   - 寢宮類遇到 `持權杖|扶權杖` → 改為「權杖靠床榻側邊」
+
+2. **修改 `profileFactory.js` 第 75 行**：
+   - 現在：`${prop}作為角色記憶點，與手部動作自然互動`
+   - 改為：`${prop}可依場景作為手持、支撐點、桌面、床邊、前景或近景道具，不必固定拿在手上`
+
+3. **強化 `isBedchamberConsortProfile()` 正則**：補入「睡衣|私房|臥室」
+
+4. **強化寢宮版 actionQualityGuardText() 措辭**：把「除非主題明確需要，否則不預設」改為更強語氣
+
+#### P1（資料清理）
+
+5. 人工清理 `handcraftedConsortProfiles.js` 原始 sceneAction（74 組持杯 + 16 組硬道具）
+
+#### P2（技術債）
+
+6. 評估 bundle 拆包：dist 已達 1,457 KB
+
+---
+
+### 函數位置（v9 更新）
+
+| 函數 | 位置 |
+|------|------|
+| `buildChatGptInstruction()` | `src/promptEngine.js` 約行 1051 |
+| `buildFinalIdentityText()` | `src/promptEngine.js` 約行 446 |
+| `buildFinalSceneText()` | `src/promptEngine.js` 約行 469 |
+| `buildFinalActionText()` | `src/promptEngine.js` 約行 478 |
+| `getHiddenSystemPrompt()` | `src/promptEngine.js` 約行 278 |
+| `createCuratedRoleProfile()` 第 8 層 | `src/profileFactory.js` 行 75 |
+| `inferActionCueTexts()` | `src/data.js` 約行 7074 |
+| `isBedchamberConsortProfile()` | `src/data.js` 約行 7105 |
+| `actionQualityGuardText()` | `src/data.js` 約行 7132（寢宮版約行 7172） |
+| `enrichSceneAction()` | `src/data.js` 約行 7141（新版約行 7180） |
+| `normalizeSceneActionProps` | ❌ 尚未建立 |
+| `propInteractionPolicy` | ❌ 尚未建立 |
+
+---
+
+*報告由 Claude Sonnet 4.6 生成，2026-06-07，未修改任何程式碼*
 
 ---
 ## 全專案檢查報告 v8（Claude 邏輯分析版）

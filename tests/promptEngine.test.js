@@ -71,6 +71,9 @@ const STYLE_REFERENCE_PROFILE_EXPECTATIONS = [
   ["style-ref-rain-lantern-red-umbrella-maiko", "雨巷紅傘・夜燈和風姬", "東方和風旅拍", "雨夜燈籠古街", "黑紅層疊和風禮服", "正常比例"],
   ["style-ref-loulan-sunset-desert-princess", "樓蘭夕照・沙漠披紗公主", "東方異域 / 絲路西域", "樓蘭沙漠遺跡夕陽坡地", "絲路披紗長裙", "正常比例"],
   ["style-ref-lilac-lake-terrace-consort", "櫻橋紫紗・湖畔倚欄寵姬", "中國歷代服裝", "櫻花湖畔木橋露台", "淡紫薄紗古風禮裙", "正常比例"],
+  ["style-ref-dream-garden-iridescent-feather-couture", "夢境花園・虹羽高訂花藝超模", "高訂婚紗禮服", "薰衣草紫夢境花園精品攝影棚", "超高級奇幻羽毛高訂禮服", "正常比例"],
+  ["style-ref-mist-amber-leopard-bedchamber-consort", "霧琥珀豹紋・宮榻寵妃", "寢宮寵妃系列", "霧琥珀古風宮廷床榻", "古風宮廷寵妃造型", "正常比例"],
+  ["style-ref-republic-koi-corridor-qipao", "錦鯉水廊・米金牡丹旗袍旅人", "東方旗袍夜宴", "復古中式木造走廊與錦鯉池", "米金色牡丹刺繡中國風旗袍", "正常比例"],
 ];
 
 const TEMP_IMAGE_PROFILE_EXPECTATIONS = [
@@ -381,9 +384,12 @@ describe("prompt engine", () => {
     expect(ROLE_SUGGESTIONS).toContain("首爾黑膠街角・皮衣音樂人");
   });
 
-  it("keeps all role cards covered by the shared action quality guard", () => {
-    const missingGuard = WORLD_LAYER_PROFILES.filter((profile) => !profile.sceneAction.includes("全角色卡品質補強"));
-    expect(missingGuard.map((profile) => profile.id)).toEqual([]);
+  it("keeps all role cards covered by visual pose direction without workflow wording", () => {
+    const missingDirection = WORLD_LAYER_PROFILES.filter((profile) => !/姿態依|避免呆站/.test(profile.sceneAction));
+    const workflowWording = WORLD_LAYER_PROFILES.filter((profile) => /全角色卡品質補強|ChatGPT|不預設/.test(profile.sceneAction));
+
+    expect(missingDirection.map((profile) => profile.id)).toEqual([]);
+    expect(workflowWording.map((profile) => profile.id)).toEqual([]);
   });
 
   it("lets ChatGPT design poses while cleaning conflicting bedchamber handheld props", () => {
@@ -392,7 +398,7 @@ describe("prompt engine", () => {
     const barGown = WORLD_LAYER_PROFILES.find((profile) => profile.id === "style-ref-champagne-wine-bar-gown-diva");
 
     expect(bedchamber?.layers.costumeLayer8).toContain("不必固定拿在手上");
-    expect(bedchamber?.sceneAction).toContain("姿態由 ChatGPT");
+    expect(bedchamber?.sceneAction).toContain("姿態依寢宮支撐點");
     expect(bedchamber?.sceneAction).toContain("杯盞改置於床邊小几");
     expect(bedchamber?.sceneAction).not.toMatch(/低持酒盞|低持酒杯|持酒盞|持酒杯/);
 
@@ -2252,11 +2258,12 @@ describe("prompt engine", () => {
     expect(prompt).toContain("避免正中立正");
     expect(prompt).toContain("依夜宴角色身份與當下情節選擇王座、臥榻、扶手、薄紗、珠鏈或本場景道具互動");
     expect(instruction).toContain("姿態安全");
-    expect(instruction).toContain("ChatGPT 需依場所、角色身份與情節設計姿勢");
+    expect(instruction).toContain("姿態依場所、角色身份與情節自然成立");
     expect(instruction).toContain("手部、披帛與道具不得遮五官");
     expect(instruction).toContain("肩頸、頭部、脊椎、骨盆與四肢受力合理");
     expect(instruction).toContain("避免詭異肢體");
-    expect(instruction).toContain("不要照抄角色卡近中遠原句");
+    expect(instruction).toContain("專屬敘事層次");
+    expect(instruction).not.toContain("不要照抄角色卡近中遠原句");
     expect(instruction).not.toContain("ChatGPT 的自由設計範圍是根據分類、主題、角色身份與情節設計場景、道具、姿勢、特效與氣氛");
     expect(instruction).not.toContain("不把單一道具當預設姿勢");
     expect(instruction).not.toContain("只在主題明確需要時才使用杯、扇、瓶、卷、星盤、樂器、花材、寵物或龍等道具");

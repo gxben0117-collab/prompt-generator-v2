@@ -468,7 +468,7 @@ function buildFinalCostumeText(form, category, theme) {
 
 function buildFinalSceneText(form, category, theme) {
   const sceneBase = compactText(form.scene, 120) || `依據「${theme}」建立可被真實攝影拍出的奇幻電影場景`;
-  const directorLens = "請依主題、角色身份與情節重新設計背景近景 / 中景 / 遠景：近景做壓鏡與視線引導，中景承接角色動作，遠景建立空間尺度、光源方向、特效與氛圍；不要照抄角色卡近中遠原句";
+  const directorLens = "背景近景 / 中景 / 遠景依本次主題、角色身份與情節形成專屬敘事層次：近景做壓鏡與視線引導，中景承接角色動作，遠景建立空間尺度、光源方向、特效與氛圍";
   if (isDarkRoyalCategory(category, theme, sceneBase)) {
     return `${sceneBase}。${directorLens}，可加入符合主題的燭光、建築輪廓、帷幕、反光、古器、粒子或景深。背景不得出現路人或群演。`;
   }
@@ -477,7 +477,7 @@ function buildFinalSceneText(form, category, theme) {
 
 function buildFinalActionText(form, category, theme) {
   const action = trimSentenceEnding(compactText(stabilizeFaceAngleText(form.sceneAction), 145));
-  const directorAction = `ChatGPT 需依場所、角色身份與情節設計姿勢；${poseBiasText({ ...form, category, theme })}`;
+  const directorAction = `姿態依場所、角色身份與情節自然成立；${poseBiasText({ ...form, category, theme })}`;
   const safety = "姿態安全：鎖臉與正常身體比例優先，臉部正面或微側正面清楚可辨識；手部、披帛與道具不得遮五官；肩頸、頭部、脊椎、骨盆與四肢受力合理，避免詭異肢體";
   if (action) return `${action}。${directorAction}。${safety}。`;
   return `${trimSentenceEnding(compactText(inferEmotionalAction(theme, form.scene), 120))}。${directorAction}。${safety}。`;

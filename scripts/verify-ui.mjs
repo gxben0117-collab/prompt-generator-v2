@@ -590,16 +590,16 @@ try {
     if (!promptText.includes("角色身份鎖定") || !promptText.includes("原始臉型") || !promptText.includes("眼型") || !promptText.includes("鼻型")) {
       throw new Error(`${viewport.name}: compact facial identity lock missing`);
     }
-    if (!promptText.includes("請依主題、角色身份與情節重新設計背景近景 / 中景 / 遠景")) {
+    if (!promptText.includes("背景近景 / 中景 / 遠景依本次主題、角色身份與情節形成專屬敘事層次")) {
       throw new Error(`${viewport.name}: adaptive near/mid/far scene direction missing`);
     }
-    if (!promptText.includes("不要照抄角色卡近中遠原句")) {
+    if (promptText.includes("不要照抄角色卡近中遠原句")) {
       throw new Error(`${viewport.name}: role-card scene copy guard missing`);
     }
     if (promptText.includes(environmentValue)) {
       throw new Error(`${viewport.name}: final prompt copied director environment field verbatim`);
     }
-    if (!promptText.includes("ChatGPT 需依場所、角色身份與情節設計姿勢")) {
+    if (!promptText.includes("姿態依場所、角色身份與情節自然成立")) {
       throw new Error(`${viewport.name}: adaptive action direction missing`);
     }
     if (!promptText.includes("豐滿體態女王版") || !promptText.includes("royal feminine physique") || !promptText.includes("balanced chest-to-shoulder ratio")) {
