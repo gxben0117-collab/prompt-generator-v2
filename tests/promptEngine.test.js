@@ -68,6 +68,9 @@ const STYLE_REFERENCE_PROFILE_EXPECTATIONS = [
   ["ref-butterfly-chestwrap-flower-fairy", "蝶飾花紗・粉紫仙姬", "仙俠神話 / 古裝陸劇", "暗色棚景仙俠", "粉紫胸衣", "K"],
   ["ref-ten-thousand-swords-wuxia-poster", "萬劍歸宗・風暴劍姬", "武俠江湖 / 戰場女將", "萬劍歸宗", "飛劍", "K"],
   ["style-ref-champagne-wine-bar-gown-diva", "香檳酒紅・吧台晚禮服名伶", "現代都市 / 街拍電影", "暖色高級酒吧吧台", "香檳金到酒紅漸層亮片高訂晚禮服", "正常比例"],
+  ["style-ref-rain-lantern-red-umbrella-maiko", "雨巷紅傘・夜燈和風姬", "東方和風旅拍", "雨夜燈籠古街", "黑紅層疊和風禮服", "正常比例"],
+  ["style-ref-loulan-sunset-desert-princess", "樓蘭夕照・沙漠披紗公主", "東方異域 / 絲路西域", "樓蘭沙漠遺跡夕陽坡地", "絲路披紗長裙", "正常比例"],
+  ["style-ref-lilac-lake-terrace-consort", "櫻橋紫紗・湖畔倚欄寵姬", "中國歷代服裝", "櫻花湖畔木橋露台", "淡紫薄紗古風禮裙", "正常比例"],
 ];
 
 const TEMP_IMAGE_PROFILE_EXPECTATIONS = [
@@ -381,6 +384,25 @@ describe("prompt engine", () => {
   it("keeps all role cards covered by the shared action quality guard", () => {
     const missingGuard = WORLD_LAYER_PROFILES.filter((profile) => !profile.sceneAction.includes("全角色卡品質補強"));
     expect(missingGuard.map((profile) => profile.id)).toEqual([]);
+  });
+
+  it("lets ChatGPT design poses while cleaning conflicting bedchamber handheld props", () => {
+    const bedchamber = WORLD_LAYER_PROFILES.find((profile) => profile.id === "bedchamber-consort-emerald-jade-screen");
+    const succubusBedchamber = WORLD_LAYER_PROFILES.find((profile) => profile.id === "bedchamber-succubus-expanded-blood-amber-throne-bed");
+    const barGown = WORLD_LAYER_PROFILES.find((profile) => profile.id === "style-ref-champagne-wine-bar-gown-diva");
+
+    expect(bedchamber?.layers.costumeLayer8).toContain("不必固定拿在手上");
+    expect(bedchamber?.sceneAction).toContain("姿態由 ChatGPT");
+    expect(bedchamber?.sceneAction).toContain("杯盞改置於床邊小几");
+    expect(bedchamber?.sceneAction).not.toMatch(/低持酒盞|低持酒杯|持酒盞|持酒杯/);
+
+    expect(succubusBedchamber?.sceneAction).toContain("權杖或兵器改靠在王座");
+    expect(succubusBedchamber?.sceneAction).toContain("杯盞改置於床邊小几");
+    expect(succubusBedchamber?.sceneAction).not.toMatch(/扶權杖|持權杖|低持酒杯|低持酒盞/);
+
+    expect(barGown?.sceneAction).toContain("一手低持紅酒杯");
+    expect(barGown?.sceneAction).toContain("扶吧台或杯沿停步");
+    expect(barGown?.sceneAction).not.toContain("杯盞改置於床邊小几");
   });
 
   it("does not keep ghost role categories without role cards", () => {

@@ -7086,6 +7086,7 @@ function inferActionCueTexts(profile) {
   addCue(/扇|羽扇/, "持扇回眸");
   addCue(/劍|刀|槍|弓|箭|劍門|戰袍|戰甲/, "按兵器借勢");
   addCue(/琴|箜篌|琵琶|鼓|樂器/, "扶琴或停拍");
+  addCue(/吧台|酒吧|紅酒杯|香檳杯|酒瓶|高腳椅/, "扶吧台或杯沿停步");
   addCue(/茶|茶盞|藥|藥盞|藥籃|藥方/, "端盞低坐");
   addCue(/書|卷|奏摺|地圖|帳冊|畫布|畫筆/, "執卷倚案");
   addCue(/花|花枝|花瓣|桃|蓮|玫瑰|白玫|桂花|梅枝/, "拈花聞香");
@@ -7104,7 +7105,45 @@ function inferActionCueTexts(profile) {
 
 function isBedchamberConsortProfile(profile) {
   const haystack = `${profile.title} ${profile.category} ${profile.parentCategory} ${profile.scene} ${profile.sceneEnvironment} ${profile.costume} ${profile.sceneAction}`;
-  return /寢宮|寵妃|床榻|臥榻|軟榻|王榻|睡衣寵妃|旗袍寵妃|魅魔寵妃|宮燈寵妃/.test(haystack);
+  return /寢宮|寵妃|床榻|臥榻|軟榻|王榻|睡衣|旗袍寵妃|魅魔寵妃|宮燈寵妃|私房|臥室|床邊/.test(haystack);
+}
+
+function allowsPrimaryHandheldProp(profile) {
+  const haystack = `${profile.title} ${profile.category} ${profile.parentCategory} ${profile.scene} ${profile.sceneEnvironment} ${profile.costume} ${profile.sceneAction}`;
+  return /吧台|酒吧|宮宴|宴會|舞會|茶席|茶館|茶屋|藥師|藥|戰場|武俠|兵器|祭司|祭儀|儀式|施法|法器|魔法|聖女|巫祝|旅拍相機|相機/.test(haystack);
+}
+
+function normalizeSceneActionProps(profile) {
+  if (!isBedchamberConsortProfile(profile) || allowsPrimaryHandheldProp(profile)) {
+    return profile.sceneAction;
+  }
+
+  let action = profile.sceneAction;
+  const replacements = [
+    {
+      pattern: /(一手|單手|右手|左手|手中|雙手)?(低)?(手持|持著|持|端著|端|托著|托|扶著|扶)(紅酒杯|酒杯|香檳杯|酒盞|玉盞|白玉杯|小酒盞|水晶杯|聖杯|茶盞|杯盞|冰晶杯)/g,
+      text: "杯盞改置於床邊小几、桌面或前景托盤",
+    },
+    {
+      pattern: /(一手|單手|右手|左手|手中|雙手)?(低)?(手持|持著|持|提著|提|扶著|扶)(宮燈|紅色宮燈|燈籠|提燈|燭台|金色燭台|銅燈)/g,
+      text: "宮燈或燭台改作為床邊光源與背景陳設",
+    },
+    {
+      pattern: /(一手|單手|右手|左手|手中|雙手)?(低)?(手持|持著|持|扶著|扶)(權杖|血珀權杖|大型紅寶石骸骨權杖|法杖|細劍|兵器)/g,
+      text: "權杖或兵器改靠在王座、床榻側邊或作為背景陳設",
+    },
+  ];
+
+  let normalized = action;
+  for (const { pattern, text } of replacements) {
+    normalized = normalized.replace(pattern, text);
+  }
+
+  if (normalized !== action && !/手部由 ChatGPT 依場景自然安排/.test(normalized)) {
+    normalized = `${normalized.replace(/。$/, "")}；手部由 ChatGPT 依場景自然安排`;
+  }
+
+  return normalized;
 }
 
 function fallbackActionDirection(parentCategory) {
@@ -7131,11 +7170,11 @@ function needsActionUpgrade(sceneAction) {
 
 function actionQualityGuardText(profile) {
   if (isBedchamberConsortProfile(profile)) {
-    return "全角色卡品質補強：寢宮姿態以斜倚床榻、側坐榻沿、倚靠軟枕、半躺臥榻、撩開帷帳或扶床榻起身為優先；手部可扶床榻、整理披袍、輕觸軟枕、牽起外袍或自然垂落，不必持酒杯、權杖、兵器或燭台；手部、披帛、髮絲與場景道具不得遮擋五官，肩頸、胸腔、骨盆、膝踝與受力方向符合真實成年人體結構，避免筆直呆站、證件照站姿與無情節擺拍。";
+    return "全角色卡品質補強：姿態由 ChatGPT 依寢宮支撐點、角色身份、情節與構圖設計；需有自然支撐或動作理由，避免呆站與證件照；除非主題明確需要，否則不預設拿著酒杯、權杖、兵器或燭台，道具可作陳設、光源或支撐點；手、披帛、髮絲與道具不得遮五官，身體重心與布料受力合理。";
   }
   const cues = inferActionCueTexts(profile);
   const cueText = cues.length ? cues.join("、") : fallbackActionDirection(profile.parentCategory);
-  return `全角色卡品質補強：姿態必須有明確支撐點與可拍攝動作，優先採 ${cueText}；手、道具、布料、髮絲與特效不得遮擋五官，肩頸、胸腔、骨盆、膝踝與受力方向符合真實成年人體結構，避免筆直呆站、證件照站姿與無情節擺拍。`;
+  return `全角色卡品質補強：姿態由 ChatGPT 依身份、場景、情節與構圖設計；需有支撐點與可拍攝動作，參考 ${cueText}，不套模板；非主題需要不預設拿道具；手、道具、布料、髮絲與特效不得遮五官，重心與布料受力合理，避免呆站。`;
 }
 
 function enrichSceneAction(profile) {
@@ -7143,10 +7182,11 @@ function enrichSceneAction(profile) {
     return profile.sceneAction;
   }
 
-  const upgradeText = needsActionUpgrade(profile.sceneAction)
+  const normalizedAction = normalizeSceneActionProps(profile);
+  const upgradeText = needsActionUpgrade(normalizedAction)
     ? `避免筆直呆站，改採 ${inferActionCueTexts(profile).join("、") || fallbackActionDirection(profile.parentCategory)} 等互動姿態。`
     : "";
-  return [profile.sceneAction, upgradeText, actionQualityGuardText(profile)].filter(Boolean).join("；");
+  return [normalizedAction, upgradeText, actionQualityGuardText(profile)].filter(Boolean).join("；");
 }
 
 WORLD_LAYER_PROFILES.forEach((profile) => {

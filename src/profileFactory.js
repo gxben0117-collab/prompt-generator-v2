@@ -72,7 +72,7 @@ export function createCuratedRoleProfile({
       `${jewelry}固定腰線、肩線與角色文化符號，反射真實光源`,
       `大型外袍、裙擺、披風或戰袍形成 dominant cinematic silhouette`,
       `肩飾、袖口、髮帶或身份飾件建立${series}辨識度，不遮擋臉部`,
-      `${prop}作為角色記憶點，與手部動作自然互動`,
+      `${prop}作為角色記憶點，可依場景作為手持、支撐點、桌面、床邊、前景、背景或近景道具，不必固定拿在手上`,
       `髮髻、冠飾、髮簪或帽飾貼合真人頭型與髮際線，完整露出原始五官`,
       `${palette}、${costumeCore}、${prop}、${place}與空氣光影共同形成${parentCategory}電影角色卡主視覺輪廓`,
     ],
