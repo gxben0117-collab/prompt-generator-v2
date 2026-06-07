@@ -2229,7 +2229,7 @@ describe("prompt engine", () => {
     expect(prompt).toContain("避免正中立正");
     expect(prompt).toContain("依夜宴角色身份與當下情節選擇王座、臥榻、扶手、薄紗、珠鏈或本場景道具互動");
     expect(instruction).toContain("姿態安全");
-    expect(instruction).toContain("ChatGPT 需依場所、角色身份與情節設計不呆站的姿勢");
+    expect(instruction).toContain("ChatGPT 需依場所、角色身份與情節設計姿勢");
     expect(instruction).toContain("手部、披帛與道具不得遮五官");
     expect(instruction).toContain("肩頸、頭部、脊椎、骨盆與四肢受力合理");
     expect(instruction).toContain("避免詭異肢體");
@@ -2330,12 +2330,12 @@ describe("prompt engine", () => {
     });
 
     expect(prompt).toContain("主視覺模式：高亮商業古裝海報");
-    expect(prompt).toContain("圖二亮麗版風格");
+    expect(prompt).toContain("亮麗高曝光商業古裝海報風格");
     expect(prompt).toContain("sparkle highlights");
     expect(prompt).toContain("saturated but realistic");
     expect(prompt).toContain("膝蓋以上");
     expect(instruction).toContain("高亮商業古裝電影海報");
-    expect(instruction).toContain("圖二亮麗版風格");
+    expect(instruction).toContain("亮麗高曝光商業古裝海報風格");
     expect(instruction).toContain("珠寶、金屬、燈籠、水面反光、絲綢、薄紗與披帛");
     expect(instruction).toContain("陰影抬升不厚重");
     expect(instruction).toContain("避免灰暗低光");

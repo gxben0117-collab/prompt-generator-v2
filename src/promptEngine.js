@@ -477,7 +477,7 @@ function buildFinalSceneText(form, category, theme) {
 
 function buildFinalActionText(form, category, theme) {
   const action = trimSentenceEnding(compactText(stabilizeFaceAngleText(form.sceneAction), 145));
-  const directorAction = `ChatGPT 需依場所、角色身份與情節設計不呆站的姿勢，可調整為踏階、旋身、扶欄、持物、倚坐、臨案或其他符合主題的支撐點動作；${poseBiasText({ ...form, category, theme })}`;
+  const directorAction = `ChatGPT 需依場所、角色身份與情節設計姿勢；${poseBiasText({ ...form, category, theme })}`;
   const safety = "姿態安全：鎖臉與正常身體比例優先，臉部正面或微側正面清楚可辨識；手部、披帛與道具不得遮五官；肩頸、頭部、脊椎、骨盆與四肢受力合理，避免詭異肢體";
   if (action) return `${action}。${directorAction}。${safety}。`;
   return `${trimSentenceEnding(compactText(inferEmotionalAction(theme, form.scene), 120))}。${directorAction}。${safety}。`;
@@ -499,7 +499,7 @@ function buildFinalLightingText(form, category, theme) {
       ? "高亮主角柔光、正面 beauty fill、柔和邊緣分離光、半透明 bloom、抬升暗部、通透空氣透視、冷暖混合發光層次、自然景深與真實皮膚反光。"
       : "側前方柔和主光、燭光或月光環境光、柔和邊緣分離光、自然景深、空氣霧化與真實皮膚反光。");
   if (brightCostumePoster) {
-    return `${base} 圖二亮麗版風格：臉部明亮清晰且保留真人皮膚紋理，眼睛有自然 catchlight；珠寶、金屬、燈籠、水面反光、絲綢、薄紗與披帛都有明顯 sparkle highlights；色彩飽和但真實，粉、金、青綠與寶石藍形成夢幻通透層次；陰影抬升不厚重，避免灰暗低光、塑膠 HDR 與 AI 美女換臉感。${realismQuality}${commercialQuality}。`;
+    return `${base} 亮麗高曝光商業古裝海報風格：臉部明亮清晰且保留真人皮膚紋理，眼睛有自然 catchlight；珠寶、金屬、燈籠、水面反光、絲綢、薄紗與披帛都有明顯 sparkle highlights；色彩飽和但真實，粉、金、青綠與寶石藍形成夢幻通透層次；陰影抬升不厚重，避免灰暗低光、塑膠 HDR 與 AI 美女換臉感。${realismQuality}${commercialQuality}。`;
   }
   if (commercial) {
     return dreamyRadiant
@@ -531,7 +531,7 @@ function buildFinalStyleText(form, category, theme) {
     : "";
   const visualModeText = {
     "Netflix 東方奇幻": "真人身份保留的東方奇幻電影主視覺",
-    "高亮商業古裝海報": "高亮商業古裝電影海報，圖二亮麗版風格，臉部、珠寶、絲綢、薄紗與燈火都是第一眼亮點",
+    "高亮商業古裝海報": "高亮商業古裝電影海報，亮麗高曝光商業古裝海報風格，臉部、珠寶、絲綢、薄紗與燈火都是第一眼亮點",
     "暗黑夜宴": "暗黑夜宴電影主視覺",
     "商業奇幻海報": "高級商業奇幻電影海報",
   }[form.visualMode] || "真人電影級奇幻主視覺";
@@ -671,7 +671,7 @@ function isChineseDynastyOrnateTheme(text = "") {
 }
 
 function isDreamyRadiantPosterTheme(text = "") {
-  return /高亮商業古裝海報|圖二亮麗版|歷史小說名著人物|中國歷代服裝|武俠江湖|戰場女將|仙俠神話|古裝陸劇|東方異域|絲路西域|奇幻異世界|暗黑王族|西方古典|歐陸史詩|花園童話|自然精靈|盛唐|宮廷|花宴|長安|月宮|雲海|仙俠|仙門|神殿|精靈|童話|史詩|絲路|西域|武俠|女俠|王族|王后|公主|皇后|貴妃|樂姬/.test(
+  return /高亮商業古裝海報|亮麗高曝光|歷史小說名著人物|中國歷代服裝|武俠江湖|戰場女將|仙俠神話|古裝陸劇|東方異域|絲路西域|奇幻異世界|暗黑王族|西方古典|歐陸史詩|花園童話|自然精靈|盛唐|宮廷|花宴|長安|月宮|雲海|仙俠|仙門|神殿|精靈|童話|史詩|絲路|西域|武俠|女俠|王族|王后|公主|皇后|貴妃|樂姬/.test(
     text,
   );
 }
@@ -702,7 +702,7 @@ function shouldUseCommercialGlamourLighting(form = DEFAULT_FORM) {
 function commercialGlamourLightingText(form = DEFAULT_FORM) {
   if (!shouldUseCommercialGlamourLighting(form)) return "";
   if (form.visualMode === "高亮商業古裝海報") {
-    return "高亮商業古裝海報：圖二亮麗版 commercial costume poster lighting、bright beauty exposure、translucent bloom、lifted shadows；臉部明亮清晰且有自然 catchlight，珠寶、金屬、燈籠、水面反光、絲綢、薄紗與披帛都有 sparkle highlights；色彩 saturated but realistic，畫面夢幻通透，避免灰暗低光、厚重陰影、塑膠 HDR 與 AI beauty face";
+    return "高亮商業古裝海報：bright commercial costume poster lighting、bright beauty exposure、translucent bloom、lifted shadows；臉部明亮清晰且有自然 catchlight，珠寶、金屬、燈籠、水面反光、絲綢、薄紗與披帛都有 sparkle highlights；色彩 saturated but realistic，畫面夢幻通透，避免灰暗低光、厚重陰影、塑膠 HDR 與 AI beauty face";
   }
   if (isDreamyRadiantPosterTheme(`${form.category} ${form.theme} ${form.scene} ${form.sceneEnvironment} ${form.visualMode}`)) {
     return "商業奇幻亮場：dreamy radiant fantasy poster lighting、bright beauty exposure、translucent bloom、lifted cinematic shadows；臉部穩定明亮，眼睛、珠寶、薄紗與花材有柔亮層次，避免 grim dark fantasy、muddy low exposure、大片黑影";
@@ -720,7 +720,7 @@ const VISUAL_MODE_TEXT = {
     "必須具備 single-protagonist cinematic composition、solo heroine visual dominance、isolated cinematic focus 與 environmental atmosphere around one protagonist",
   ],
   "高亮商業古裝海報": [
-    "主視覺模式：高亮商業古裝海報，圖二亮麗版風格，人物採近中景到膝蓋以上的華麗電影主視覺權重，臉部、眼神、珠寶、絲綢與燈火是第一眼焦點",
+    "主視覺模式：高亮商業古裝海報，亮麗高曝光商業古裝海報風格，人物採近中景到膝蓋以上的華麗電影主視覺權重，臉部、眼神、珠寶、絲綢與燈火是第一眼焦點",
     "畫面要有 bright commercial costume poster、high-key fantasy beauty exposure、saturated but realistic cinematic palette、translucent bloom、lifted shadows、sparkle highlights 與夢幻通透空氣感",
     "近景可由宮燈、花枝、飄紗、團扇、樂器、茶席或水面反光形成壓鏡，中景保留真人臉部與上半身珠寶細節，遠景以拱橋、亭台、水面燈影或建築 bokeh 建立層次；不可犧牲真人身份鎖定",
   ],
@@ -758,6 +758,10 @@ function isDarkBanquetTheme(theme = "", scene = "") {
   return /魅魔|魅姬|寢宮|絲絨|暗紫|哥德|黑玫瑰|黑曜|暗黑夜宴/.test(`${theme} ${scene}`);
 }
 
+function isBedchamberConsortTheme(text = "") {
+  return /寢宮|寵妃|床榻|臥榻|軟榻|王榻|睡衣寵妃|旗袍寵妃|魅魔寵妃|宮燈寵妃/.test(text);
+}
+
 const POSE_MODE_TEXT = {
   踏階行走: "姿態模式：踏階行走；讓人物踩在台階、街沿、甲板或石階上形成前進動作，裙擺、外袍或髮絲跟隨步伐拉出動線",
   扶欄回身: "姿態模式：扶欄回身；讓人物以欄杆、橋欄、露台或場景邊緣作支撐點，身體微側回身看向鏡頭",
@@ -771,6 +775,9 @@ const POSE_MODE_TEXT = {
 
 function autoPoseBiasText(form = DEFAULT_FORM) {
   const text = `${form.category} ${form.theme} ${form.scene} ${form.sceneEnvironment}`;
+  if (isBedchamberConsortTheme(text)) {
+    return "自動推薦姿態：斜倚床榻、側坐榻沿、倚靠軟枕、半躺臥榻、撩開帷帳或扶床榻起身；手部以扶床榻、整理披袍、輕觸軟枕、牽起外袍或自然垂落為主，不必持酒杯、權杖、兵器或燭台";
+  }
   if (isDarkBanquetTheme(form.theme, `${form.scene} ${form.sceneEnvironment}`) || /女王|魔后|王座|哥德|血族|冥界|暗黑/.test(text)) {
     return "自動推薦姿態：王座端坐、倚靠坐姿或扶椅起身；優先用王座、臥榻、扶手、帷幕、權杖或燭台建立支撐點";
   }

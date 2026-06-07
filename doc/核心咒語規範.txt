@@ -244,7 +244,7 @@
 現行主視覺模式：
 
 - Netflix 東方奇幻：真人身份保留的東方奇幻電影主視覺
-- 高亮商業古裝海報：圖二亮麗版風格，強化臉部明亮、自然 catchlight、珠寶 / 金屬 / 燈火 / 絲綢 / 薄紗 sparkle highlights、saturated but realistic 色彩與夢幻通透高曝光商業古裝海報感
+- 高亮商業古裝海報：亮麗高曝光商業古裝海報風格，強化臉部明亮、自然 catchlight、珠寶 / 金屬 / 燈火 / 絲綢 / 薄紗 sparkle highlights、saturated but realistic 色彩與夢幻通透高曝光商業古裝海報感
 - 暗黑夜宴：暗黑夜宴電影主視覺
 - 商業奇幻海報：高級商業奇幻電影海報
 

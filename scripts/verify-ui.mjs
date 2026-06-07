@@ -599,7 +599,7 @@ try {
     if (promptText.includes(environmentValue)) {
       throw new Error(`${viewport.name}: final prompt copied director environment field verbatim`);
     }
-    if (!promptText.includes("ChatGPT 需依場所、角色身份與情節設計不呆站的姿勢")) {
+    if (!promptText.includes("ChatGPT 需依場所、角色身份與情節設計姿勢")) {
       throw new Error(`${viewport.name}: adaptive action direction missing`);
     }
     if (!promptText.includes("豐滿體態女王版") || !promptText.includes("royal feminine physique") || !promptText.includes("balanced chest-to-shoulder ratio")) {
