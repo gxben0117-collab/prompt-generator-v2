@@ -9,3 +9,4 @@ export { HANDCRAFTED_CONSORT_PROFILES } from "./handcraftedConsortProfiles.js";
 export { EGYPTIAN_MYTH_QUEEN_PROFILES } from "./egyptianProfiles.js";
 export { REQUESTED_ICONIC_CHECKIN_PROFILES } from "./landmarkProfiles.js";
 export { CHANGXIANGSI_RED_EPIC_PROFILES } from "./changxiangsiRedEpicProfiles.js";
+export { STYLE_ANALYSIS_PROFILES } from "./styleAnalysisProfiles.js";
