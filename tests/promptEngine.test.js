@@ -22,6 +22,11 @@ import {
   suggestThemeRewrite,
 } from "../src/promptEngine.js";
 import { normalizeSearchText, parentCategoryForProfile, PARENT_ROLE_CATEGORIES } from "../src/categoryClassifier.js";
+import {
+  PROFILE_LIBRARY_MODE_ALL,
+  PROFILE_LIBRARY_MODE_CORE,
+  curatedWorldProfileEntries,
+} from "../src/profileLibraryCuration.js";
 
 const TANG_GENERIC_PARENT = "唐朝服飾／泛唐風古裝";
 const CHINESE_HISTORICAL_PARENT = "中國歷代服裝／泛朝代總覽";
@@ -344,6 +349,22 @@ describe("prompt engine", () => {
     expect(invalidProfiles.map((profile) => `${profile.id}: ${parentCategoryForProfile(profile)}`)).toEqual([]);
   }, 60000);
 
+  it("keeps overpopulated role categories curated without hiding search or full-library access", () => {
+    const overloadedParents = new Set(["寢宮寵妃系列", CHINESE_HISTORICAL_PARENT, "世界景點旅拍"]);
+    const entries = WORLD_LAYER_PROFILES.map((profile) => ({
+      profile,
+      parentCategory: parentCategoryForProfile(profile),
+    })).filter(({ parentCategory }) => overloadedParents.has(parentCategory));
+
+    const coreEntries = curatedWorldProfileEntries(entries, PROFILE_LIBRARY_MODE_CORE, "");
+    const searchEntries = curatedWorldProfileEntries(entries, PROFILE_LIBRARY_MODE_CORE, "han");
+    const allEntries = curatedWorldProfileEntries(entries, PROFILE_LIBRARY_MODE_ALL, "");
+
+    expect(coreEntries.length).toBeLessThan(entries.length);
+    expect(searchEntries).toHaveLength(entries.length);
+    expect(allEntries).toHaveLength(entries.length);
+  }, 60000);
+
   it("keeps every world layer profile structurally valid", () => {
     const ids = WORLD_LAYER_PROFILES.map((profile) => profile.id);
     const duplicateIds = ids.filter((id, index) => ids.indexOf(id) !== index);
@@ -390,6 +411,19 @@ describe("prompt engine", () => {
 
     expect(missingDirection.map((profile) => profile.id)).toEqual([]);
     expect(workflowWording.map((profile) => profile.id)).toEqual([]);
+  });
+
+  it("gives every role card a cinematic action formula with dynamic movement guidance", () => {
+    const missingActionFormula = WORLD_LAYER_PROFILES.filter(
+      (profile) =>
+        !profile.sceneAction.includes("一個主動作") ||
+        !profile.sceneAction.includes("一個動態核心") ||
+        !profile.sceneAction.includes("支撐點") ||
+        !profile.sceneAction.includes("前景互動") ||
+        !profile.sceneAction.includes("方向性"),
+    );
+
+    expect(missingActionFormula.map((profile) => profile.id)).toEqual([]);
   });
 
   it("lets ChatGPT design poses while cleaning conflicting bedchamber handheld props", () => {
@@ -1747,7 +1781,9 @@ describe("prompt engine", () => {
     expect(darkDomainQueen.layers.costumeLayer10).toContain("月蝕古殿不朽聖女");
     expect(darkDomainQueen.scene).toContain("長安夜宴暗影刺客");
     expect(darkDomainQueen.scene).toContain("月蝕古殿不朽聖女／不朽祭司");
-    expect(darkDomainQueen.sceneAction).toContain("雙腳平穩著地挺拔站立");
+    expect(darkDomainQueen.sceneAction).toContain("破碎石階側身停步");
+    expect(darkDomainQueen.sceneAction).toContain("石柱裂紋或王座扶手形成支撐");
+    expect(darkDomainQueen.sceneAction).toContain("紫色魔法能量繞過前景燭霧");
     expect(darkDomainQueen.sceneLighting).toContain("冷霧與 floating dust particles");
     expect(qingluanSaint.category).toBe("東方玄幻史詩電影");
     expect(qingluanSaint.layers.costumeLayer7).toContain("非對稱青羽肩飾");
@@ -2267,6 +2303,27 @@ describe("prompt engine", () => {
     expect(instruction).not.toContain("ChatGPT 的自由設計範圍是根據分類、主題、角色身份與情節設計場景、道具、姿勢、特效與氣氛");
     expect(instruction).not.toContain("不把單一道具當預設姿勢");
     expect(instruction).not.toContain("只在主題明確需要時才使用杯、扇、瓶、卷、星盤、樂器、花材、寵物或龍等道具");
+  });
+
+  it("cleans workflow wording from the final ChatGPT instruction action text", () => {
+    const instruction = buildChatGptInstruction({
+      theme: "寢宮窗邊貴妃",
+      category: "中國朝代古裝 / 中國神話",
+      scene: "夜色寢宮窗邊",
+      sceneAction:
+        "全角色卡品質補強：姿態由 ChatGPT 依寢宮支撐點設計；不要照抄角色卡近中遠原句；不預設拿著酒杯；道具與手部動作自然互動。",
+    });
+
+    expect(instruction).not.toContain("全角色卡品質補強");
+    expect(instruction).not.toContain("姿態由 ChatGPT 依");
+    expect(instruction).not.toContain("ChatGPT 依");
+    expect(instruction).not.toContain("不要照抄角色卡近中遠原句");
+    expect(instruction).not.toContain("不預設拿");
+    expect(instruction).not.toContain("與手部動作自然互動");
+    expect(instruction).toContain("姿態依寢宮支撐點設計");
+    expect(instruction).toContain("近景、中景與遠景保持本次主題專屬的敘事層次與空間變化");
+    expect(instruction).toContain("道具僅在主題明確需要時手持");
+    expect(instruction).toContain("依場景作為手持、支撐點、前景或陳設");
   });
 
   it("allows hairstyle adjustments only when the original face identity remains unchanged", () => {

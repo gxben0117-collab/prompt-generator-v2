@@ -475,8 +475,22 @@ function buildFinalSceneText(form, category, theme) {
   return `${sceneBase}。${directorLens}；場景道具、特效與氛圍都服務本次角色和故事。背景不得出現路人。`;
 }
 
+function cleanFinalPromptWorkflowWording(text = "") {
+  return text
+    .replace(/全角色卡品質補強[:：]?/g, "")
+    .replace(/姿態由\s*ChatGPT\s*依/g, "姿態依")
+    .replace(/ChatGPT\s*依/g, "依")
+    .replace(/不要照抄角色卡近中遠原句/g, "近景、中景與遠景保持本次主題專屬的敘事層次與空間變化")
+    .replace(/與手部動作自然互動/g, "依場景作為手持、支撐點、前景或陳設")
+    .replace(/不預設拿著/g, "道具僅在主題明確需要時手持")
+    .replace(/不預設拿/g, "道具僅在主題明確需要時手持")
+    .replace(/；{2,}/g, "；")
+    .replace(/^；|；$/g, "")
+    .trim();
+}
+
 function buildFinalActionText(form, category, theme) {
-  const action = trimSentenceEnding(compactText(stabilizeFaceAngleText(form.sceneAction), 145));
+  const action = trimSentenceEnding(compactText(cleanFinalPromptWorkflowWording(stabilizeFaceAngleText(form.sceneAction)), 145));
   const directorAction = `姿態依場所、角色身份與情節自然成立；${poseBiasText({ ...form, category, theme })}`;
   const safety = "姿態安全：鎖臉與正常身體比例優先，臉部正面或微側正面清楚可辨識；手部、披帛與道具不得遮五官；肩頸、頭部、脊椎、骨盆與四肢受力合理，避免詭異肢體";
   if (action) return `${action}。${directorAction}。${safety}。`;

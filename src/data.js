@@ -38,7 +38,7 @@ export const POSE_MODES = [
   "自然站姿",
 ];
 
-export const ROLE_CATEGORIES = ["全部", "風格範例精選", "古裝", "中國朝代古裝", "大唐宮廷／盛世貴妃系列", "盛唐宮廷考據／大明宮貴妃／史實考據", "盛唐風月／教坊平康／胡姬樂舞", "盛唐宮廷／皇后／東方電影美學", "盛唐宮廷／春日旅拍／東方電影美學", "盛唐宮姬｜牡丹庭院｜宮廷旅拍", "大唐花朝｜宮廷貴姬｜盛世古風電影", "故宮古風／宮廷電影／盛世王朝", "宮廷古裝／東方寫實電影／故宮美學", "夜宴貴姬｜古風宮廷｜夜景電影旅拍", "寢宮寵妃系列", "中國田園旅拍", "江南古鎮／電影旅拍／寫實東方美學", "江南古風／桃花庭院／春日寫實電影", "江南園林／古風仕女／東方旅拍電影", "荷塘仕女｜江南園林｜古風生活電影", "江南水鄉／寫實旅拍／東方電影感", "江南水鄉｜古風生活旅拍｜療癒系電影", "海棠仙旅｜東方旅拍｜古風電影感", "江南花渡｜水鄉古風｜東方電影旅拍", "桃花庭院／東方電影／古風仕女", "桃花仙境｜江南仙姬｜古風電影旅拍", "桃花女俠｜江湖旅拍｜仙俠動作電影風", "書香才女｜古典文人｜文藝電影風", "日式庭園／紫陽花海／初夏和服", "神話", "中國神話", "東方神話／飛天系列", "上古神話／鳳凰戰姬／仙俠史詩", "仙俠神話／白龍神域／天空聖女", "東方神話／深海龍宮／龍族王后／海國奇幻電影", "東方神話／鳳凰神女／王庭奇幻", "天界神女｜仙宮神域｜東方神話電影", "月下仙姬｜桂花宮苑｜中秋神話電影", "聖域天使｜天空神國｜史詩奇幻電影", "東方奇幻／陰陽術法／紫櫻巫女", "東方奇幻／異域神殿／神秘祭司", "絲路奇幻／大漠王族／電影級旅拍", "絲路旅人｜西域長歌｜大漠電影旅拍", "月光奇幻／銀河神話／東方精靈", "月光奇幻／水鏡晶花／高級寫實奇幻", "花園奇幻／森林精靈／電影童話", "夢幻電影／花靈仙境／高級寫實奇幻", "東方古風／月夜庭院／琴師仙姬", "聊齋志異／幽冥系列", "聊齋志異／狐仙系列", "仙俠修真", "仙俠修真／月夜劍修", "月下飛仙｜古風舞姬｜仙俠奇幻電影", "雲巔仙宗｜修真古境｜仙俠電影", "夜宴魅魔／高訂暗黑禮服電影", "夜宴魅姬／暗黑浪漫電影", "黑暗墮天使／黑羽史詩電影", "冰霜夜宴魅姬｜哥德寢宮電影", "暗黑魔后｜亡靈王座｜哥德奇幻電影", "幽冥妖后｜亡魂夜宴｜東方暗黑奇幻", "黑暗奇幻／冥界妖后", "黑暗奇幻／墮天使／史詩電影", "黑暗奇幻／墮天使／哥德電影／廢墟神殿", "墮落天使｜末日神話｜魔幻史詩電影", "血族神話｜哥德歌劇｜吸血鬼暗黑電影", "東方戰爭電影／女帝／古代戰場", "帝王宮廷／東方史詩電影／皇后", "大周女帝｜皇朝史詩｜宮廷電影風", "歐陸密教｜近代奇幻｜暮色懸疑電影", "古典神話｜希臘史詩｜神諭史詩電影", "神話紀實｜歷史史詩｜文藝復興電影", "室內宮廷｜古典懸疑｜巴洛克黑色電影", "都市", "科幻", "西方奇幻", "都市電影／City Pop／霓虹街拍", "電影旅拍／北境海岸／現代文藝", "現代都會／韓系夜景／高級名媛", "歐洲旅拍／威尼斯夜景／電影寫實", "武俠奇幻／血色江湖／劍門聖女", "世界地標旅拍", "世界花園旅拍", "世界旅拍／歐洲古城／異域貴婦"];
+export const ROLE_CATEGORIES = ["全部", "古裝", "中國朝代古裝", "大唐宮廷／盛世貴妃系列", "盛唐宮廷考據／大明宮貴妃／史實考據", "盛唐風月／教坊平康／胡姬樂舞", "盛唐宮廷／皇后／東方電影美學", "盛唐宮廷／春日旅拍／東方電影美學", "盛唐宮姬｜牡丹庭院｜宮廷旅拍", "大唐花朝｜宮廷貴姬｜盛世古風電影", "故宮古風／宮廷電影／盛世王朝", "宮廷古裝／東方寫實電影／故宮美學", "夜宴貴姬｜古風宮廷｜夜景電影旅拍", "寢宮寵妃系列", "中國田園旅拍", "江南古鎮／電影旅拍／寫實東方美學", "江南古風／桃花庭院／春日寫實電影", "江南園林／古風仕女／東方旅拍電影", "荷塘仕女｜江南園林｜古風生活電影", "江南水鄉／寫實旅拍／東方電影感", "江南水鄉｜古風生活旅拍｜療癒系電影", "海棠仙旅｜東方旅拍｜古風電影感", "江南花渡｜水鄉古風｜東方電影旅拍", "桃花庭院／東方電影／古風仕女", "桃花仙境｜江南仙姬｜古風電影旅拍", "桃花女俠｜江湖旅拍｜仙俠動作電影風", "書香才女｜古典文人｜文藝電影風", "日式庭園／紫陽花海／初夏和服", "神話", "中國神話", "東方神話／飛天系列", "上古神話／鳳凰戰姬／仙俠史詩", "仙俠神話／白龍神域／天空聖女", "東方神話／深海龍宮／龍族王后／海國奇幻電影", "東方神話／鳳凰神女／王庭奇幻", "天界神女｜仙宮神域｜東方神話電影", "月下仙姬｜桂花宮苑｜中秋神話電影", "聖域天使｜天空神國｜史詩奇幻電影", "東方奇幻／陰陽術法／紫櫻巫女", "東方奇幻／異域神殿／神秘祭司", "絲路奇幻／大漠王族／電影級旅拍", "絲路旅人｜西域長歌｜大漠電影旅拍", "月光奇幻／銀河神話／東方精靈", "月光奇幻／水鏡晶花／高級寫實奇幻", "花園奇幻／森林精靈／電影童話", "夢幻電影／花靈仙境／高級寫實奇幻", "東方古風／月夜庭院／琴師仙姬", "聊齋志異／幽冥系列", "聊齋志異／狐仙系列", "仙俠修真", "仙俠修真／月夜劍修", "月下飛仙｜古風舞姬｜仙俠奇幻電影", "雲巔仙宗｜修真古境｜仙俠電影", "夜宴魅魔／高訂暗黑禮服電影", "夜宴魅姬／暗黑浪漫電影", "黑暗墮天使／黑羽史詩電影", "冰霜夜宴魅姬｜哥德寢宮電影", "暗黑魔后｜亡靈王座｜哥德奇幻電影", "幽冥妖后｜亡魂夜宴｜東方暗黑奇幻", "黑暗奇幻／冥界妖后", "黑暗奇幻／墮天使／史詩電影", "黑暗奇幻／墮天使／哥德電影／廢墟神殿", "墮落天使｜末日神話｜魔幻史詩電影", "血族神話｜哥德歌劇｜吸血鬼暗黑電影", "東方戰爭電影／女帝／古代戰場", "帝王宮廷／東方史詩電影／皇后", "大周女帝｜皇朝史詩｜宮廷電影風", "歐陸密教｜近代奇幻｜暮色懸疑電影", "古典神話｜希臘史詩｜神諭史詩電影", "神話紀實｜歷史史詩｜文藝復興電影", "室內宮廷｜古典懸疑｜巴洛克黑色電影", "都市", "科幻", "西方奇幻", "都市電影／City Pop／霓虹街拍", "電影旅拍／北境海岸／現代文藝", "現代都會／韓系夜景／高級名媛", "歐洲旅拍／威尼斯夜景／電影寫實", "武俠奇幻／血色江湖／劍門聖女", "世界地標旅拍", "世界花園旅拍", "世界旅拍／歐洲古城／異域貴婦"];
 
 export const ROLE_SUGGESTION_ITEMS = [
   { id: "succulent-greenhouse-goddess", label: "多肉花房・緞粉女神", category: "花園奇幻／自然奢華／多肉花房" },
@@ -323,7 +323,7 @@ function createHistoricalNovelProfile({
       `${jewelry}作為身份細節，低調反射燈光但不搶臉部辨識度`,
       `長袖、披風、斗篷或裙擺形成主輪廓，服從 50mm 真人電影構圖`,
       `肩頸披帛、髮帶或外層飾件建立角色氣場，不遮擋臉部與眼神`,
-      `${prop}作為角色記憶點，與手部動作自然互動`,
+      `${prop}作為角色記憶點，可依場景作為手持、支撐點、桌面、前景、背景或近景道具，不必固定拿在手上`,
       `髮髻、髮簪、冠飾或髮帶貼合真人頭型與髮際線，完整露出原始五官`,
       `${palette}服裝、${prop}、${place}與空氣光影共同形成歷史小說名著人物電影主視覺輪廓`,
     ],
@@ -664,6 +664,63 @@ const REQUESTED_HISTORICAL_SERIES = {
   ],
 };
 
+const DYNASTY_PROFILE_OVERRIDES = {
+  "dynasty-han-empress-1": {
+    place: "長信宮正殿玉璽受命中軸",
+    foreground: "青銅宮燈、玉璽漆案、朱漆階沿與低位香煙形成前景壓鏡",
+    midground: "真人漢代皇后立於玉璽漆案與中軸石階之間，鳳冠垂旒與廣袖輪廓完整",
+    background: "漢闕門影、朱漆立柱、玉璧牆飾與深層宮殿燈火形成權力縱深",
+    action:
+      "人物一手扶住玉璽漆案邊緣形成支撐，另一手停在玉璽下方不遮臉，身體由中軸微轉向鏡頭，像剛完成受命儀式後抬眼；玉璽作桌案核心道具，不必被雙手固定捧起",
+    lighting: "高位殿門柔光、青銅宮燈暖補、玉璽反射與朱漆柱面金色邊緣光",
+  },
+  "dynasty-han-empress-2": {
+    place: "長信宮側殿珠旒銅鏡前",
+    foreground: "半開珠簾、青銅鏡緣、玉璧托盤與香煙在鏡頭前形成柔焦層次",
+    midground: "真人漢代皇后側坐於銅鏡與矮案之間，珠旒垂影與曲裾深衣清楚可見",
+    background: "朱漆屏風、青銅宮燈、漢闕窗格與暗金帷幕形成側殿儀式空間",
+    action:
+      "人物坐於矮案旁微側轉身，一手輕扶銅鏡座或案沿，另一手整理珠旒下方的垂飾但不碰臉，目光越過鏡面反射看向鏡頭；姿態重點是鏡面反光與珠旒影，不是站中軸捧玉璽",
+    lighting: "銅鏡反射柔光、宮燈暖金補光、珠旒細小高光與屏風陰影分層",
+  },
+  "dynasty-han-empress-3": {
+    place: "長信宮丹墀階前晨光",
+    foreground: "丹墀石階、垂落廣袖、青銅燈架與薄香煙形成低角度前景",
+    midground: "真人漢代皇后正從殿階側向轉身停步，曲裾深衣與長袖形成斜向流線",
+    background: "晨光穿過漢闕門廊、朱漆柱列、遠處玉璧與金色殿燈建立皇朝尺度",
+    action:
+      "人物在丹墀階上轉身停步，一手輕扶階側朱漆欄或袖口保持重心，另一手收住廣袖下緣，臉部正面或微側正面看向鏡頭；裙裾與廣袖受階梯動作牽引，不再固定站立捧璽",
+    lighting: "清晨殿門逆光、丹墀石面反射、朱漆欄暖色 bounce 與鳳冠金屬高光",
+  },
+  "dynasty-han-princess-1": {
+    place: "長信宮佩蘭水榭欄邊",
+    foreground: "佩蘭花枝、低垂玉佩、水面反光與青銅宮燈倒影形成柔焦前景",
+    midground: "真人漢代公主停在水榭木欄旁，單側披帛與曲裾裙擺被湖風帶起",
+    background: "長信宮水面、漢闕剪影、朱漆廊柱與遠處宮燈倒影形成清雅皇室庭園",
+    action:
+      "人物一手扶住水榭欄杆作支撐，另一手讓佩蘭花枝或玉佩垂在腰側，身體像剛沿水邊行走後停步回望；披帛由湖風帶出斜向動勢，手與花枝都低於臉部",
+    lighting: "水面反射柔光、宮燈暖色點光、玉佩細高光與湖風薄霧空氣透視",
+  },
+  "dynasty-han-imperial-consort-1": {
+    place: "長信宮月窗步搖妝台",
+    foreground: "銅鏡、團扇、玉梳與月窗紗影形成近景遮擋",
+    midground: "真人漢代宮妃坐在妝台側邊準備起身，金步搖、廣袖與披帛完整入鏡",
+    background: "月窗、青銅宮燈、低矮屏風、朱漆木案與深色帷幕形成寢殿外側空間",
+    action:
+      "人物一手扶住妝台邊緣準備起身，另一手整理步搖垂飾或披帛，團扇放在妝台前景作角色記憶點；臉部正面或微側正面看向鏡頭，動作像夜宴前被月光定格",
+    lighting: "月窗冷柔光、青銅宮燈暖補、銅鏡反射與金步搖 sparkle highlights",
+  },
+  "dynasty-han-courtesan-1": {
+    place: "長信宮燭影樂案",
+    foreground: "琵琶弦軸、金簫、燭火與散落曲譜形成音樂前景",
+    midground: "真人漢代樂伎坐在樂案側邊半起身，琵琶靠在案旁，長袖與腰飾清楚可見",
+    background: "珠簾、青銅宮燈、朱漆廊柱、宴席燈火與漢闕窗影建立夜宴深景",
+    action:
+      "人物一手停在琵琶弦旁像剛按下最後一聲，另一手扶住樂案邊緣準備起身回望鏡頭；琵琶與金簫作樂案道具，不必高舉遮臉，長袖沿案邊自然垂落",
+    lighting: "燭火主光、樂器金屬與漆面反射、珠簾散景與臉部柔和補光",
+  },
+};
+
 const REQUESTED_DYNASTY_PROFILES = (() => {
   const dynasties = [
     ["han", "漢", "漢代", "長信宮", "玄黑、朱砂與鎏金色", "曲裾深衣、交領襦裙與雲紋廣袖", "青銅宮燈、玉璧、朱漆立柱與漢闕剪影"],
@@ -704,6 +761,15 @@ const REQUESTED_DYNASTY_PROFILES = (() => {
       variants: ["琵琶映燭", "金簫回雪", "綺席停歌", "珠簾按拍", "華燈弄影", "錦筵流音"],
     },
   };
+  const costumeAccents = ["重點在禮制外袍與寬緣袖口", "重點在珠飾壓襟與層疊裙緣", "重點在披帛受風與腰封受力", "重點在暗紋織金與袖口翻折", "重點在薄紗外層與下擺厚度", "重點在宮廷正裝輪廓與手工刺繡"];
+  const roleActionVariants = {
+    empress: ["一手扶玉璽漆案，一手壓住寬袖，半步轉身承接殿門天光", "抬眼越過珠旒看向鏡頭，指尖掠過冠鏈，肩線微轉", "踏下丹墀石階前緣，廣袖被側風帶開，玉佩向前晃動", "停在中軸御案旁整理禮帶，袍角沿石階垂落", "端坐高台前緣回眸，雙手收住袖口與玉佩", "從金闕簾影下緩步逼近，鳳袍拖尾拉出斜向線"],
+    "imperial-consort": ["倚在月窗妝台旁扶步搖，另一手牽起披帛邊緣", "團扇壓低至腰側，身體側轉穿過珠簾光影", "從香階半步回身，長袖被宮燈暖風帶起", "扶住屏風邊緣停步，裙擺在腳邊形成旋線", "坐在窗榻前緣整理珠帷，臉部轉向鏡頭", "沿金篆地毯緩步前行，披帛與髮絲向後飄散"],
+    princess: ["臨水扶欄回望，佩蘭與裙裾被湖風帶起", "伸手觸近景花枝，另一手收住披帛不遮臉", "踏過庭橋半步停住，翠佩與髮絲同向晃動", "從瑤階下行時提住裙緣，肩線保持自然受力", "穿過羅帔煙霧回眸，披紗從手臂後方拖出弧線", "停在玉階前緣輕扶欄柱，遠景鸞燈形成縱深"],
+    "noble-daughter": ["靠近書案翻開卷軸，袖口壓住紙角，庭風掠過竹影", "珠簾旁側坐聽雨，一手扶窗框，一手收住書卷", "在竹影羅衫間停步回眸，裙擺繞過石凳", "捧卷立於金閨屏前，指尖翻頁形成細小動作", "倚窗凝思時肩線微轉，窗紗與髮絲向同側飄", "從繡閣屏後走出半步，袖緣擦過案面"],
+    "minister-daughter": ["立於朱門階前扶玉佩，另一手整理禮袖", "屏風前側身整珮，腰佩與袖口形成斜向垂線", "抬手拂過繡袂邊緣，身體從官家屏風旁轉出", "手持禮箋低於胸口，另一手扶住玉簪垂鏈", "從華堂門檻前緩步停住，裙角被地面反光勾出", "站在金階側邊扶欄回望，官家腰佩向前晃動"],
+    courtesan: ["坐在燭影樂案旁按住琵琶弦，抬眼回看鏡頭", "金簫垂在肩側下方，另一手掀開珠簾半步轉身", "綺席間停歌回眸，手指仍停在拍板邊緣", "珠簾前按拍停住，袖口與燭煙形成同向流線", "華燈旁起身離席，裙擺與樂案紅紗被帶起", "錦筵前扶住琴案邊緣，身體側轉讓樂器不遮臉"],
+  };
   return dynasties.flatMap(([dynastyId, dynastyShort, dynastyName, placeBase, palette, costumeBase, visualBase], dynastyIndex) =>
     roles.flatMap(([roleId, roleName, poetic, prop, actionBase], roleIndex) => {
       const sequenceIndex = dynastyIndex * roles.length + roleIndex;
@@ -716,6 +782,7 @@ const REQUESTED_DYNASTY_PROFILES = (() => {
         const title = `${dynastyShort}${config.displayRole}・${config.variants[index]}`;
         const series = `${dynastyName}皇朝／${roleName}`;
         const place = `${placeBase}${roleName}主視覺${number}`;
+        const override = DYNASTY_PROFILE_OVERRIDES[id] || {};
         return createCuratedRoleProfile({
           id,
           title,
@@ -725,15 +792,17 @@ const REQUESTED_DYNASTY_PROFILES = (() => {
           aliases: [dynastyName, dynastyShort, roleName, config.displayRole, legacyTitle, poetic, "皇朝宮廷", "漢唐宋"],
           identity: `${dynastyName}${roleName}`,
           palette,
-          costumeCore: `${costumeBase}，依${roleName}身份加入高級宮廷剪裁與真實布料重量`,
+          costumeCore: `${costumeBase}，依${roleName}身份加入高級宮廷剪裁與真實布料重量，${costumeAccents[index % costumeAccents.length]}`,
           jewelry: `${prop}、金玉髮飾、珍珠耳墜與手工腰飾`,
           prop,
-          place,
-          foreground: `${visualBase}前景遮擋、花瓣或香煙`,
-          midground: `真人${roleName}位於${placeBase}中軸，服裝主輪廓完整`,
-          background: `${visualBase}遠景、宮殿門闕、園林或宴席燈火`,
-          action: `${actionBase}，臉部正面或微側正面清楚可見`,
-          lighting: "高級商業宮廷亮場，臉部柔和主光、金色邊緣光、絲綢高光、紅布條動態拖影與紅傘暖色反光、珠寶反射與真實空氣透視",
+          place: override.place || place,
+          foreground: override.foreground || `${visualBase}前景遮擋、花瓣或香煙`,
+          midground: override.midground || `真人${roleName}位於${placeBase}中軸，服裝主輪廓完整`,
+          background: override.background || `${visualBase}遠景、宮殿門闕、園林或宴席燈火`,
+          action: override.action || `${dynastyName}${roleName}${config.variants[index]}：${roleActionVariants[roleId][index] || actionBase}，臉部正面或微側正面清楚可見`,
+          lighting:
+            override.lighting ||
+            "高級商業宮廷亮場，臉部柔和主光、金色邊緣光、絲綢高光、紅布條動態拖影與紅傘暖色反光、珠寶反射與真實空氣透視",
           atmosphere: `${dynastyName}${roleName}高級皇朝宮廷電影主視覺`,
         });
       });
@@ -747,6 +816,7 @@ const REQUESTED_DARK_ROYAL_PROFILES = (() => {
     ["dark", "暗黑王族", 10, "暗黑系列／王族魔殿", "冥殿", "黑金、紫晶與冷銀色", "暗黑王族長袍、硬質披風與符文腰封", "紫晶冠、黑金肩鏈與骸骨寶石", "權杖與古卷", "黑曜石魔殿", "紫晶主光、臉部柔補光與黑金反射"],
     ["fallen", "墮天使", 10, "墮天使／黑羽史詩", "墮羽", "黑羽、月銀與深紫色", "黑羽史詩長袍、破碎披風與銀線腰封", "黑銀冠、羽形耳飾與暗紫吊墜", "黑羽披風與月銀長劍", "破碎哥德神殿", "冷月束光、黑羽 rim light 與暗紫霧氣"],
   ];
+  const royalActionConfigs = ["踏下王座台階時單手牽起硬質披風，另一手扶住符文腰封，披風向後形成斜線", "端坐王座前緣，權杖靠在椅側，指尖壓住古卷邊角，眼神越過燭火看向鏡頭", "側倚石柱半步回身，外袍被冷霧帶出層次，手臂自然垂在光束外", "緩步穿過破碎祭壇前景，肩甲與披風受力向後展開，腳步帶起碎羽或灰塵", "一手扶住高背椅扶手借力起身，另一手收住長袍下襬，臉部保持明亮清楚"];
   const succubusConfigs = [
     ["噬魂女皇・蝶魘裁心", "人物斜倚王座前緣，一手輕搭扶手，一手撩起薄紗罩裙，眼神直視鏡頭，哥德寶石肩鏈與披紗沿椅側自然垂落"],
     ["幽夜冕下・星鏈低垂", "人物立於月光窗紗前回眸，指尖輕觸鎖骨鏈，哥德肩紗與寶石垂鏈自肩後低垂，肩頸線條清楚且不僵硬"],
@@ -810,7 +880,7 @@ const REQUESTED_DARK_ROYAL_PROFILES = (() => {
       const action =
         kind === "succubus"
           ? succubusConfigs[index][1]
-          : "人物可站姿、坐姿、倚靠或緩步前行；雙手自然牽起外袍、扶住座椅邊緣或自然垂落，手部不遮臉";
+          : royalActionConfigs[index % royalActionConfigs.length];
       const atmosphere =
         kind === "succubus"
           ? "高亮商業奇幻夜宴魅惑主視覺，成熟、華麗、危險感鮮明且保持真人可穿戴"
@@ -3057,8 +3127,8 @@ const RAW_WORLD_LAYER_PROFILES = [
       "紫晶蝶焰星盤秘殿，金色巨型星盤位於後方，玻璃魔法瓶、古銅燭台、雕花王椅、紅寶石燈火、紫色發光蝴蝶、玫紫花瓣與透明帷幕形成亮場奢華奇幻電影場景。",
     sceneEnvironment:
       "近景以燭火、玻璃魔法瓶、紫色發光蝴蝶、玫紫花瓣與白紫披紗形成柔焦遮擋，中景真人女王坐於雕花王椅前緣並保持臉部清楚，遠景金色巨型星盤、古銅器皿、燈火層次、透明帷幕與深遠秘殿柱廊建立近中遠電影景深。",
-    sceneAction:
-      "人物坐於雕花王椅前緣或微側端坐，一手扶住椅臂或讓披紗自然垂落，另一手輕靠下巴旁但不遮臉，正面或微側正面看向鏡頭；肩頸、頭部、手指、膝蓋與腳踝方向符合真實坐姿，白紫披紗與紫蝶圍繞形成動態，不做枯燥直站或詭異肢體。",
+      sceneAction:
+        "人物坐於雕花王椅前緣，身體微向金色星盤轉動，單手扶住椅臂形成支撐，另一手停在身側星盤控制環旁引出紫蝶光軌；臉部正面或微側正面看向鏡頭，手勢不貼臉也不遮五官，披紗沿椅臂與膝側自然垂落，像正在啟動秘殿星盤的一瞬間。",
     sceneLighting:
       "金色星盤背光、暖橙燭火、紫晶蝶焰光、玻璃瓶折射、紅寶石高光與柔和臉部補光交織；近景燭火與蝴蝶形成 bokeh，中景臉部與珠寶保持清晰，遠景星盤與秘殿燈火建立 high-end commercial fantasy cinema lighting，避免低光死黑、塑膠 HDR 與過度遊戲特效。",
   },
@@ -4463,7 +4533,7 @@ const RAW_WORLD_LAYER_PROFILES = [
       costumeLayer6:
         "light combat skirt panels 使用 light wuxia armor styling 與短式戰鬥裙片，保留真實布料重量",
       costumeLayer7:
-        "竹杖與小型旅行配件作為江湖旅人道具，與手部動作自然互動",
+        "竹杖與小型旅行配件作為江湖旅人道具，可作行走支撐、身側道具、前景剪影或手持記憶點，不必固定拿在手上",
       costumeLayer8:
         "淡綠 fantasy hanfu 外層以輕量長紗與短裙片混合，兼具武俠行動性與電影可穿戴性",
       costumeLayer9:
@@ -5040,7 +5110,7 @@ const RAW_WORLD_LAYER_PROFILES = [
       costumeLayer8:
         "royal evening styling 以奶金、暖白與低飽和金色統一夜宴服裝色彩",
       costumeLayer9:
-        "花箋與小型宮廷手持道具作為角色故事細節，與手部動作自然互動",
+        "花箋與小型宮廷道具作為角色故事細節，可作手持、桌面、前景或侍宴陳設，依夜宴情節合理安排",
       costumeLayer10:
         "整體服裝以 cream gold hanfu、金刺繡、透明袖層與夜宮珠寶形成 cinematic palace evening noble-lady silhouette",
     },
@@ -5262,7 +5332,7 @@ const RAW_WORLD_LAYER_PROFILES = [
       costumeLayer4:
         "light waist ornament 以輕量腰飾固定裙身，維持自然站姿比例",
       costumeLayer5:
-        "paper umbrella accessories 包含紙傘與傘柄細節，與手部動作自然互動",
+        "paper umbrella accessories 包含紙傘與傘柄細節，可作遮光、倚靠、前景壓鏡或手持記憶點，依荷塘場景合理安排",
       costumeLayer6:
         "lotus floral hair ornaments 以小型蓮花髮飾與玉簪完成夏日妝髮輪廓",
       costumeLayer7:
@@ -6382,8 +6452,8 @@ const RAW_WORLD_LAYER_PROFILES = [
       ],
       makeup: "高清冷調電影妝感，保留毛孔、真人年齡感與自然反光；大地色眼妝疊加深紫煙燻或冷大地色暈染，裸粉至裸烏紅半啞光唇，額心紫水晶圖騰，自然披肩或全盤髮端莊。",
       scene: "月夜暗黑宮廷王座、長安夜宴暗影刺客與月蝕古殿不朽聖女／不朽祭司，紫水晶簾幕、蠟燭、落花、巨型滿月、黑色巨石石柱與風化圖騰壁畫形成歌德電影美術場景。",
-      sceneEnvironment: "月蝕古殿夜宴，前景花瓣、燭台與冷霧，中景人物挺拔站於石質地面並全身完整入鏡，遠景巨型月亮、黑色巨石石柱、風化圖騰壁畫、黑色雕花寶座與垂吊水晶自然虛化。",
-      sceneAction: "人物雙腳平穩著地挺拔站立，右手向前平伸承載紫色魔法能量，左手自然牽起外袍邊緣或垂於身側，肩膀與脊椎平衡，臉部正面或微側正面看向鏡頭。",
+      sceneEnvironment: "月蝕古殿夜宴，前景花瓣、燭台與冷霧，中景人物位於破碎石階與黑色雕花寶座之間並全身完整入鏡，遠景巨型月亮、黑色巨石石柱、風化圖騰壁畫、垂吊水晶與深殿陰影自然虛化。",
+      sceneAction: "人物從黑色雕花寶座前的破碎石階側身停步，一手扶住石柱裂紋或王座扶手形成支撐，另一手在胸口下方牽引紫色魔法能量繞過前景燭霧；臉部正面或微側正面看向鏡頭，外袍拖尾被冷風拉出斜向線條，重心落在台階轉身的瞬間。",
       sceneLighting: "紫色月光與冷藍色月光作 cinematic soft edge separation light，蠟燭提供暖光，掌心紫色魔法微光成主戲劇光源並具物理衰減，冷霧與 floating dust particles 產生 volumetric light haze。",
     },
     {
@@ -7172,27 +7242,42 @@ function needsActionUpgrade(sceneAction) {
 
 function actionQualityGuardText(profile) {
   if (isBedchamberConsortProfile(profile)) {
-    return "姿態依寢宮支撐點、角色身份、情節與構圖自然成立；需有自然支撐或動作理由，避免呆站與證件照；酒杯、權杖、兵器或燭台僅在主題明確需要時由人物拿在手上，道具可作陳設、光源或支撐點；手、披帛、髮絲與道具不得遮五官，身體重心與布料受力合理。";
+    return "姿態依寢宮支撐點成立；一個主動作、一個動態核心；床榻、帷幕、妝台、窗台、王座或桌沿作支撐點；道具位置明確，可作陳設、光源、前景或支撐點；布料、髮絲或燈火形成方向性，前景互動引導視線；手與道具不遮五官，避免呆站。";
   }
   const cues = inferActionCueTexts(profile);
   const cueText = cues.length ? cues.join("、") : fallbackActionDirection(profile.parentCategory);
-  return `姿態依身份、場景、情節與構圖自然成立；需有支撐點與可拍攝動作，參考 ${cueText}，不套模板；道具僅在主題明確需要時由人物拿在手上；手、道具、布料、髮絲與特效不得遮五官，重心與布料受力合理，避免呆站。`;
+  return `姿態依身份場景成立；一個主動作、一個動態核心，參考 ${cueText}；場景物件作支撐點；道具位置明確，可手持、陳設、光源、前景或背景；布料、髮絲、燈火或霧氣形成方向性，前景互動引導視線；手與道具不遮五官，避免呆站。`;
+}
+
+function cleanSceneActionWorkflowWording(sceneAction = "") {
+  return sceneAction
+    .replace(/全角色卡品質補強[:：]?/g, "")
+    .replace(/姿態由\s*ChatGPT\s*依/g, "姿態依")
+    .replace(/ChatGPT\s*依/g, "依")
+    .replace(/不預設拿著/g, "道具僅在主題明確需要時手持")
+    .replace(/不預設拿/g, "道具僅在主題明確需要時手持")
+    .replace(/與手部動作自然互動/g, "依場景作為手持、支撐點、前景或陳設")
+    .replace(/；{2,}/g, "；")
+    .replace(/^；|；$/g, "")
+    .trim();
 }
 
 function enrichSceneAction(profile) {
+  const cleanedAction = cleanSceneActionWorkflowWording(profile.sceneAction);
+  const cleanedProfile = { ...profile, sceneAction: cleanedAction };
+
   if (
-    profile.sceneAction.includes("姿態依身份、場景") ||
-    profile.sceneAction.includes("姿態依寢宮支撐點") ||
-    profile.sceneAction.includes("全角色卡品質補強")
+    cleanedAction.includes("姿態依身份、場景") ||
+    cleanedAction.includes("姿態依寢宮支撐點")
   ) {
-    return profile.sceneAction;
+    return cleanedAction;
   }
 
-  const normalizedAction = normalizeSceneActionProps(profile);
+  const normalizedAction = normalizeSceneActionProps(cleanedProfile);
   const upgradeText = needsActionUpgrade(normalizedAction)
-    ? `避免筆直呆站，改採 ${inferActionCueTexts(profile).join("、") || fallbackActionDirection(profile.parentCategory)} 等互動姿態。`
+    ? `避免筆直呆站，改採 ${inferActionCueTexts(cleanedProfile).join("、") || fallbackActionDirection(cleanedProfile.parentCategory)} 等互動姿態。`
     : "";
-  return [normalizedAction, upgradeText, actionQualityGuardText(profile)].filter(Boolean).join("；");
+  return [normalizedAction, upgradeText, actionQualityGuardText(cleanedProfile)].filter(Boolean).join("；");
 }
 
 WORLD_LAYER_PROFILES.forEach((profile) => {

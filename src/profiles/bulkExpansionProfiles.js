@@ -15,7 +15,9 @@ function buildProfiles(seriesConfig, variants) {
     foreground: variant.foreground || seriesConfig.foreground,
     midground: variant.midground,
     background: variant.background || seriesConfig.background,
-    action: variant.action,
+    action: /wave5-(dynasty|travel|xianxia)-/.test(seriesConfig.idPrefix || "")
+      ? `${seriesConfig.titlePrefix}${variant.role}：${variant.action}；動作需呼應${seriesConfig.themeHint}的材質、風向、光源與前景物件。`
+      : variant.action,
     lighting: variant.lighting || seriesConfig.lighting,
     atmosphere: variant.atmosphere || seriesConfig.atmosphere,
     cupSize: variant.cupSize || seriesConfig.cupSize,

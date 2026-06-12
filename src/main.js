@@ -25,6 +25,11 @@ import {
   normalizeSearchText,
   parentCategoryForProfile,
 } from "./categoryClassifier.js";
+import {
+  PROFILE_LIBRARY_MODE_ALL,
+  PROFILE_LIBRARY_MODE_CORE,
+  curatedWorldProfileEntries,
+} from "./profileLibraryCuration.js";
 
 const STORAGE_KEY = "hongbing-travel-prompt-state";
 const HISTORY_KEY = "hongbing-travel-prompt-history";
@@ -170,6 +175,7 @@ function loadUiPrefs() {
       roleParentCategory: ALL_FILTER_LABEL,
       roleCategory: ALL_FILTER_LABEL,
       profileSearch: "",
+      profileLibraryMode: PROFILE_LIBRARY_MODE_CORE,
       profileVisibleCount: PROFILE_PAGE_SIZE,
       ...(JSON.parse(localStorage.getItem(UI_PREFS_KEY)) || {}),
     };
@@ -178,6 +184,7 @@ function loadUiPrefs() {
       roleParentCategory: ALL_FILTER_LABEL,
       roleCategory: ALL_FILTER_LABEL,
       profileSearch: "",
+      profileLibraryMode: PROFILE_LIBRARY_MODE_CORE,
       profileVisibleCount: PROFILE_PAGE_SIZE,
     };
   }
@@ -311,18 +318,38 @@ function categoryOptions() {
   return allRoleCategories().map((category) => `<option value="${escapeHtml(category)}"></option>`).join("");
 }
 
-function filteredWorldLayerProfiles(activeParentCategory, activeCategory, searchTerm) {
+function matchingWorldProfileEntries(activeParentCategory, activeCategory, keyword) {
+  return WORLD_PROFILE_INDEX.filter(({ profile, parentCategory, searchText }) => {
+    const parentMatched = activeParentCategory === ALL_FILTER_LABEL || parentCategory === activeParentCategory;
+    if (!parentMatched || !profileMatchesFineCategory(profile, activeCategory)) return false;
+    return !keyword || searchText.includes(keyword);
+  });
+}
+
+function normalizedProfileLibraryMode(mode) {
+  return mode === PROFILE_LIBRARY_MODE_ALL ? PROFILE_LIBRARY_MODE_ALL : PROFILE_LIBRARY_MODE_CORE;
+}
+
+function profileLibraryModeButtons(activeMode) {
+  const normalizedMode = normalizedProfileLibraryMode(activeMode);
+  return [
+    [PROFILE_LIBRARY_MODE_CORE, "核心模板"],
+    [PROFILE_LIBRARY_MODE_ALL, "全部模板"],
+  ].map(([mode, label]) =>
+    `<button type="button" class="filter-chip library-mode-chip ${normalizedMode === mode ? "active" : ""}" data-profile-library-mode="${mode}">${label}</button>`,
+  ).join("");
+}
+
+function filteredWorldLayerProfiles(activeParentCategory, activeCategory, searchTerm, libraryMode = PROFILE_LIBRARY_MODE_CORE) {
   const keyword = normalizeSearchText(searchTerm).trim();
-  const cacheKey = `${activeParentCategory}\u0001${activeCategory}\u0001${keyword}`;
+  const mode = normalizedProfileLibraryMode(libraryMode);
+  const cacheKey = `${activeParentCategory}\u0001${activeCategory}\u0001${keyword}\u0001${mode}`;
   if (profileFilterCache.key === cacheKey) {
     return profileFilterCache.profiles;
   }
 
-  const profiles = WORLD_PROFILE_INDEX.filter(({ profile, parentCategory, searchText }) => {
-    const parentMatched = activeParentCategory === ALL_FILTER_LABEL || parentCategory === activeParentCategory;
-    if (!parentMatched || !profileMatchesFineCategory(profile, activeCategory)) return false;
-    return !keyword || searchText.includes(keyword);
-  }).map(({ profile }) => profile);
+  const matchedEntries = matchingWorldProfileEntries(activeParentCategory, activeCategory, keyword);
+  const profiles = curatedWorldProfileEntries(matchedEntries, mode, keyword).map(({ profile }) => profile);
 
   profileFilterCache = { key: cacheKey, profiles };
   return profiles;
@@ -344,8 +371,8 @@ function visibleProfileState(profiles, selectedProfileId = "", preferredVisibleC
   };
 }
 
-function worldLayerProfileButtons(activeParentCategory, activeCategory, searchTerm, selectedProfileId = "", preferredVisibleCount = PROFILE_PAGE_SIZE) {
-  const profiles = filteredWorldLayerProfiles(activeParentCategory, activeCategory, searchTerm);
+function worldLayerProfileButtons(activeParentCategory, activeCategory, searchTerm, selectedProfileId = "", preferredVisibleCount = PROFILE_PAGE_SIZE, libraryMode = PROFILE_LIBRARY_MODE_CORE) {
+  const profiles = filteredWorldLayerProfiles(activeParentCategory, activeCategory, searchTerm, libraryMode);
   if (profiles.length === 0) {
     return `<p class="empty-inline profile-empty">找不到符合條件的世界觀模板</p>`;
   }
@@ -360,8 +387,8 @@ function worldLayerProfileButtons(activeParentCategory, activeCategory, searchTe
   ).join("");
 }
 
-function profileLibraryFooter(activeParentCategory, activeCategory, searchTerm, selectedProfileId = "", preferredVisibleCount = PROFILE_PAGE_SIZE) {
-  const profiles = filteredWorldLayerProfiles(activeParentCategory, activeCategory, searchTerm);
+function profileLibraryFooter(activeParentCategory, activeCategory, searchTerm, selectedProfileId = "", preferredVisibleCount = PROFILE_PAGE_SIZE, libraryMode = PROFILE_LIBRARY_MODE_CORE) {
+  const profiles = filteredWorldLayerProfiles(activeParentCategory, activeCategory, searchTerm, libraryMode);
   if (profiles.length === 0) return "";
   const { visibleCount, totalCount, hasMore } = visibleProfileState(profiles, selectedProfileId, preferredVisibleCount);
   return `
@@ -422,10 +449,13 @@ function profileDefaultCupSize(profile) {
   return parentCategoryForProfile(profile) === "奇幻異世界 / 暗黑王族" ? "K" : "正常比例";
 }
 
-function profileCountText(activeParentCategory, activeCategory, searchTerm) {
-  const count = filteredWorldLayerProfiles(activeParentCategory, activeCategory, searchTerm).length;
+function profileCountText(activeParentCategory, activeCategory, searchTerm, libraryMode = PROFILE_LIBRARY_MODE_CORE) {
+  const keyword = normalizeSearchText(searchTerm).trim();
+  const matchedCount = matchingWorldProfileEntries(activeParentCategory, activeCategory, keyword).length;
+  const count = filteredWorldLayerProfiles(activeParentCategory, activeCategory, searchTerm, libraryMode).length;
   const total = WORLD_LAYER_PROFILES.length;
-  return `${count.toLocaleString("zh-Hant")} / ${total.toLocaleString("zh-Hant")} 組模板`;
+  if (count === matchedCount) return `${count.toLocaleString("zh-Hant")} / ${total.toLocaleString("zh-Hant")} 組模板`;
+  return `核心 ${count.toLocaleString("zh-Hant")} / 符合 ${matchedCount.toLocaleString("zh-Hant")} / 全庫 ${total.toLocaleString("zh-Hant")}`;
 }
 
 function promptStats(prompt) {
@@ -457,6 +487,7 @@ function render() {
   const activeParentCategory = uiPrefs.roleParentCategory || ALL_FILTER_LABEL;
   const activeCategory = ALL_FILTER_LABEL;
   const profileSearch = uiPrefs.profileSearch || "";
+  const profileLibraryMode = normalizedProfileLibraryMode(uiPrefs.profileLibraryMode);
   const profileVisibleCount = uiPrefs.profileVisibleCount || PROFILE_PAGE_SIZE;
 
   document.querySelector("#app").innerHTML = `
@@ -488,9 +519,10 @@ function render() {
                 <div class="library-toolbar template-grid-toolbar">
                   <div>
                     <div class="sec-label">選擇模板</div>
-                    <small data-profile-count>${escapeHtml(profileCountText(activeParentCategory, activeCategory, profileSearch))}</small>
+                    <small data-profile-count>${escapeHtml(profileCountText(activeParentCategory, activeCategory, profileSearch, profileLibraryMode))}</small>
                   </div>
                   <div class="template-toolbar-stack">
+                    <div class="filter-row library-mode-row" aria-label="模板庫顯示模式">${profileLibraryModeButtons(profileLibraryMode)}</div>
                     <label class="compact-search">
                       <span>搜尋模板</span>
                       <input class="inline-search" name="profileSearch" value="${escapeHtml(profileSearch)}" placeholder="輸入角色、分類、別名或 id" />
@@ -498,8 +530,8 @@ function render() {
                   </div>
                 </div>
                 <div class="template-grid-note">直接點小格選模板；我把它維持在頁面格狀排列，方便快速掃描，不再走下拉式挑選。</div>
-                <div class="profile-row template-profile-row">${worldLayerProfileButtons(activeParentCategory, activeCategory, profileSearch, state.selectedProfileId, profileVisibleCount)}</div>
-                ${profileLibraryFooter(activeParentCategory, activeCategory, profileSearch, state.selectedProfileId, profileVisibleCount)}
+                <div class="profile-row template-profile-row">${worldLayerProfileButtons(activeParentCategory, activeCategory, profileSearch, state.selectedProfileId, profileVisibleCount, profileLibraryMode)}</div>
+                ${profileLibraryFooter(activeParentCategory, activeCategory, profileSearch, state.selectedProfileId, profileVisibleCount, profileLibraryMode)}
               </div>
             </section>
 
@@ -729,6 +761,16 @@ function bindEvents() {
       render();
     });
   });
+  document.querySelectorAll("[data-profile-library-mode]").forEach((button) => {
+    button.addEventListener("click", () => {
+      saveUiPrefs({
+        profileLibraryMode: button.dataset.profileLibraryMode,
+        profileVisibleCount: PROFILE_PAGE_SIZE,
+      });
+      saveState({ ...formToState(form), finalPrompt: document.querySelector("#prompt-output").value });
+      render();
+    });
+  });
   document.querySelectorAll("[data-world-profile]").forEach((button) => {
     button.addEventListener("click", () => applyWorldLayerProfile(form, button.dataset.worldProfile));
   });
@@ -797,21 +839,23 @@ function refreshProfileLibrary(form) {
   const activeParentCategory = uiPrefs.roleParentCategory || ALL_FILTER_LABEL;
   const activeCategory = ALL_FILTER_LABEL;
   const profileSearch = form.elements.profileSearch?.value || "";
+  const profileLibraryMode = normalizedProfileLibraryMode(uiPrefs.profileLibraryMode);
   const selectedProfileId = form.elements.selectedProfileId?.value || "";
   const profileVisibleCount = uiPrefs.profileVisibleCount || PROFILE_PAGE_SIZE;
 
-  document.querySelector("[data-profile-count]").textContent = profileCountText(activeParentCategory, activeCategory, profileSearch);
+  document.querySelector("[data-profile-count]").textContent = profileCountText(activeParentCategory, activeCategory, profileSearch, profileLibraryMode);
   document.querySelector(".template-profile-row").innerHTML = worldLayerProfileButtons(
     activeParentCategory,
     activeCategory,
     profileSearch,
     selectedProfileId,
     profileVisibleCount,
+    profileLibraryMode,
   );
   document.querySelector(".template-grid-foot")?.remove();
   document.querySelector(".template-picker")?.insertAdjacentHTML(
     "beforeend",
-    profileLibraryFooter(activeParentCategory, activeCategory, profileSearch, selectedProfileId, profileVisibleCount),
+    profileLibraryFooter(activeParentCategory, activeCategory, profileSearch, selectedProfileId, profileVisibleCount, profileLibraryMode),
   );
   document.querySelectorAll("[data-world-profile]").forEach((button) => {
     button.addEventListener("click", () => applyWorldLayerProfile(form, button.dataset.worldProfile));

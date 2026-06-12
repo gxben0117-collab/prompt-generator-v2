@@ -329,6 +329,20 @@ textarea:focus {
   justify-items: end;
 }
 
+.template-toolbar-stack .compact-search {
+  width: min(280px, 100%);
+}
+
+.library-mode-row {
+  justify-content: end;
+  max-width: 280px;
+}
+
+.library-mode-chip {
+  min-width: 58px;
+  justify-content: center;
+}
+
 .compact-search span {
   color: var(--muted);
   font-size: 0.7rem;
@@ -890,6 +904,15 @@ button.ghost {
 
   .template-toolbar-stack {
     justify-items: stretch;
+  }
+
+  .library-mode-row {
+    justify-content: stretch;
+    max-width: none;
+  }
+
+  .library-mode-chip {
+    flex: 1;
   }
 
   .director-panel summary {
