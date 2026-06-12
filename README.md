@@ -1,259 +1,77 @@
-﻿# 出圖自組咒語生產器 v1.28
+﻿# 出圖自組咒語生產器 v1.30
 
-真人電影級出圖咒語表單工具。主入口是可直接開啟的單檔 `index.html`，用來把使用者輸入的主題、服裝 Layer、妝容、場景、常用圖片尺寸與人物構圖組成「短版實際出圖咒語」。
+這是一個 Vite + Node 的單頁式咒語產生工具，主用途是把角色卡、服裝 Layer、妝容、場景、鏡頭、比例與母板治理規則整理成可直接貼到 ChatGPT 或其他生圖模型的短版輸出。
 
-## 核心理念
+正式輸出是根目錄 `index.html`。日常開發則以 `src/`、`tests/`、`scripts/`、`doc/`、`docs/` 為核心。
 
-最高原則：真人鎖臉優先於所有華麗主視覺，不讓角色滑回 AI 仙女臉。
-
-人物必須是「真人演員被拍進奇幻電影世界」，不是重新設計 AI 美女角色。
-
-目前母版以實際短版輸出為準：`請根據上傳真人照片生成...` → 鎖臉與真實人體 → 分類 / 主題 / 風格 → 構圖 → 服裝 → 妝容 → 場景 → 動作 → 光影 → 負面。
-
-工具會保護：
-
-- 真人臉部辨識度
-- 原始五官比例與骨相
-- 真實成年人體比例
-- 真人攝影感
-- 電影級可穿戴服裝邏輯
-
-## 如何使用
-
-直接開啟：
+## 快速開始
 
 ```powershell
-start index.html
+npm.cmd install
+npm.cmd run dev
 ```
 
-或雙擊：
-
-```text
-啟動.bat
-```
-
-使用流程：
-
-1. 選擇 `角色大分類`，或直接搜尋並套用下方世界觀模組塊
-2. 在第一屏的 `選擇模板` 區塊挑一個角色模板
-3. 進入 `詳細設定`，從 `目前模板角色` 狀態卡開始調整分類、常用圖片尺寸與人物鏡頭
-4. 選擇 `電影主視覺模式`、`色彩張力`、`布料動態`
-5. 微調 `主題（必填）`
-6. 調整 `服裝 Layer 1-10`
-7. 填寫 `妝容` 和 `場景`
-8. 需要時按 `自動補導演欄位`
-9. 按 `完成出圖 + 複製完整咒語`
-10. 在 ChatGPT 上傳真人照片並貼上咒語
-
-## 開發流程
-
-原始碼在 `src/`，建置後會輸出成單檔 `index.html`。
-
-完整專案現況、交接手冊、維護規則與最新驗證結果見：`docs/PROJECT.md`。
+## 常用指令
 
 ```powershell
-npm.cmd run check
-```
-
-`check` 會依序執行：
-
-- 同步 `doc/核心咒語規範.txt` 到 `src/coreSpec.js`
-- ESLint
-- Vitest
-- Vite build
-- 產生單檔 `index.html`
-- Playwright 直接用 `file://` 驗證 HTML
-
-單獨建置：
-
-```powershell
+npm.cmd run lint
+npm.cmd run test
 npm.cmd run build
+npm.cmd run verify:ui
+npm.cmd run check
 ```
 
 ## 專案結構
 
-```text
-index.html                         # 可直接開啟的單檔成品，也是目前 Pages 入口
-src/                               # Vite app 原始碼
-src/main.js                        # UI 表單與互動
-src/promptEngine.js                # 短版咒語生成架構
-src/data.js                        # 常用尺寸、人物構圖、服裝 Layer、角色卡資料
-src/categoryClassifier.js          # 角色大分類判斷
-src/styles.css                     # UI 樣式與 responsive
-doc/核心咒語規範.txt                # 固定母板來源，v1.21 Actual Output Canon
-src/coreSpec.js                    # 由 doc/核心咒語規範.txt 同步產生
-scripts/                           # 建置、同步、驗證與資料維護腳本
-scripts/maintenance/               # 歷史批次維護腳本，重跑前需審查
-tests/promptEngine.test.js         # prompt engine 測試
-versions/                          # 舊版 index.html release 快照
-backups/                           # 手動備份
-docs/                              # 專案文件與整理報告
-archive/                           # legacy / experimental / temp 保留區
-核心資料/                           # 大型規範與風格資料
-dist/                              # Vite build 暫存輸出，不追蹤
-```
+| 路徑 | 用途 | 建議定位 |
+| --- | --- | --- |
+| `src/` | 正式前端原始碼、prompt engine、角色資料 | 核心開發區 |
+| `tests/` | Vitest 測試 | 核心測試區 |
+| `scripts/` | build、同步、驗證與資料維護腳本 | 正式腳本 + maintenance 子區 |
+| `doc/` | 核心母板來源與訪談紀錄 | 來源文件區 |
+| `docs/` | 專案文件、報告、部署說明 | 正式文件區 |
+| `核心資料/` | 大型規範、風格範例、服飾結構資料 | 內部資料庫 |
+| `versions/` | 舊版 `index.html` 快照 | 版本封存區 |
+| `backups/` | 手動備份 | 備份區 |
+| `archive/` | legacy / experimental / misc 保留區 | 歷史保留區 |
+| `dist/` | Vite build 輸出 | 生成輸出區 |
+| `tmp/`、`temp/`、`output/` | 本機暫存與中繼輸出 | 本機工作區 |
+| `memory/`、`MEMORY.md`、`game-plan.html` | 工作備忘與草稿頁 | 本機 scratch，不當正式入口 |
+| `assets/` | 預留給未來靜態圖片 / bitmap / icon 資源 | 未啟用預留區 |
 
-重要來源關係：
+## 目前正式資料流
 
 ```text
-doc/核心咒語規範.txt                # 實際短版出圖母版
+doc/核心咒語規範.txt
   -> npm.cmd run sync:spec
   -> src/coreSpec.js
   -> npm.cmd run build
   -> index.html
 ```
 
-`index.html` 是成品，不是主要開發入口。日常修改應優先改 `src/`、`doc/`、`tests/`，再用 build 重新產生 `index.html`。
+`index.html` 是可直接開啟的正式成品，不是主要開發入口。若要修改功能，請優先改 `src/`、`doc/`、`tests/`，再用 `npm.cmd run check` 驗證。
 
-## 維護規則
+## Node / Python 完整性
 
-- 不要直接手改 `dist/`，它是 Vite build 輸出。
-- 不要手改 `src/coreSpec.js`，請改 `doc/核心咒語規範.txt` 後執行 `npm.cmd run sync:spec` 或 `npm.cmd run check`。
-- `versions/` 是單檔 release archive，保留歷史快照。
-- `backups/` 是手動備份，保留但不作為主要開發入口。
-- `scripts/create_standalone_html.mjs`、`prepare-vite-entry.mjs`、`sync-core-spec-module.mjs`、`verify-ui.mjs` 是正式流程腳本。
-- 其他批次修改資料的舊腳本已移至 `scripts/maintenance/`，重跑前需先讀內容、確認硬編碼路徑與用途。
-- `archive/legacy/core.js` 是舊版單檔核心保留，不是目前 Vite app 入口。
-- `archive/experimental/userLibrary.js` 是尚未整合進 UI 的 localStorage 自訂資料模組，正式使用前需補測試與 import。
-- `package-lock.json` 應保留在版本控制中，確保 Node 依賴可重現。
-- GitHub Pages 目前部署整個 repo 根目錄，新增大型暫存或報告前要先判斷是否應被追蹤。
+- Node 專案完整，`package.json` 與 `package-lock.json` 都在。
+- 目前沒有 Python 專案檔，未發現 `requirements.txt`、`pyproject.toml`、`setup.py`、`Pipfile`、`poetry.lock`。
+- 依賴管理以 npm 為準。
 
-更完整的整理與搬移建議見：
+## 整理原則
 
-```text
-docs/project-organization-report.md
-```
+- `dist/`、`tmp/`、`temp/`、`output/` 視為輸出或暫存，不應作為正式程式來源。
+- `memory/`、`MEMORY.md`、`game-plan.html` 視為工作草稿與臨時紀錄，不納入正式產品入口。若要跨 session 接手，先讀 `memory/MEMORY.md` 再往下看相關卡片。
+- `archive/`、`backups/`、`versions/` 保留歷史，不作為主開發入口。
+- `scripts/maintenance/` 是一次性批次腳本集合，重跑前先看內容。
+- `coreSpec` 不直接手改，請改 `doc/核心咒語規範.txt` 後同步。
 
-## 版本控制規範
+## 文件入口
 
-每次更新 `index.html` 前，先把上一版成品保存到 `versions/`。v0.88 已保留：
+- [專案整理報告](docs/reports/2026-06-13-project-organization-audit.md)
+- [正式專案總覽](docs/PROJECT.md)
+- [部署說明](docs/deployment/GitHub部署說明.md)
 
-```text
-versions/index_v0.87_before_v0.88.html
-versions/index_v0.88_before_v0.89.html
-versions/index_v0.89_before_v0.90.html
-versions/index_v0.90_before_v0.91.html
-versions/index_v0.91_before_v0.92.html
-versions/index_v0.92_before_v0.93.html
-versions/index_v0.93_before_v0.94.html
-versions/index_v0.94_before_v0.95.html
-versions/index_v0.95_before_v0.96.html
-versions/index_v0.96_before_v0.97.html
-versions/index_v0.97_before_v0.98.html
-versions/index_v0.98_before_v0.99.html
-versions/index_v0.99_before_v1.00.html
-versions/index_v1.00_before_v1.01.html
-versions/index_v1.01_before_v1.02.html
-versions/index_v1.02_before_v1.03.html
-versions/index_v1.03_before_v1.04.html
-versions/index_v1.04_before_v1.05.html
-versions/index_v1.05_before_v1.06.html
-```
+## 當前狀態
 
-建置驗證通過後，再保存當前正式版：
-
-```text
-versions/index_v0.91.html
-versions/index_v0.92.html
-versions/index_v0.93.html
-versions/index_v0.94.html
-versions/index_v0.95.html
-versions/index_v0.96.html
-versions/index_v0.97.html
-versions/index_v0.98.html
-versions/index_v0.99.html
-versions/index_v1.00.html
-versions/index_v1.01.html
-versions/index_v1.02.html
-versions/index_v1.03.html
-versions/index_v1.04.html
-versions/index_v1.05.html
-versions/index_v1.06.html
-versions/index_v1.07.html
-versions/index_v1.08.html
-versions/index_v1.09.html
-versions/index_v1.10.html
-versions/index_v1.11.html
-versions/index_v1.12.html
-versions/index_v1.13.html
-versions/index_v1.14.html
-versions/index_v1.15.html
-versions/index_v1.16.html
-versions/index_v1.17.html
-versions/index_v1.18.html
-versions/index_v1.19.html
-versions/index_v1.20.html
-```
-
-## 版本重點
-
-- `v1.27`：新增正式魅魔女王系高訂哥德禮服 10 張角色卡，服裝核心改為黑色蕾絲馬甲、深 V 宮廷胸衣、金絲藤蔓刺繡、紅寶石鑲嵌與透明蕾絲袖。
-- `v1.27`：新增正式墮天使女王推薦版 10 張角色卡，涵蓋月銀真絲高腰長裙、黑羽胸腰甲、大型黑羽肩甲、多層羽毛戰裙與月銀長劍 / 黑羽權杖 / 破碎聖典 / 墮落王印。
-- `v1.27`：既有性感睡衣魅魔與性感睡衣墮天使保留並統一加上 `性感睡衣` 名稱前綴；移除長版絲絨晨袍方向，改以哥德式華麗配件、寶石肩鏈與披紗建立夜宴輪廓。
-- `v1.27`：修正小龍女分類，金庸《神鵰俠侶》小龍女角色卡歸回 `歷史小說名著人物`，不再被 `龍女` 關鍵字誤分到水下龍宮海國。
-- `v1.26`：依 24 張民族風 / 漢服 / 古城夜景參考圖新增 `民族古城旅拍` 父分類與 10 張完整角色卡，涵蓋紅衣漢服提燈、湖亭紙傘、青碧民族紗裙、草原紅氅、夜河金塔、月洞門紅氅、苗風銀冠、白裘夜街、花燈窗影與水車銀冠。
-- `v1.26`：新增卡皆補齊 10 Layer、妝容、場景、環境、動作、光影與正常比例罩杯，並鎖定紙傘、提燈、銀冠、皮草、木欄、水車與夜景燈火等道具互動不遮臉。
-- `v1.20`：依指定分類新增第二波 70 張角色卡：武俠江湖 / 戰場女將 10 組、仙俠神話 / 古裝陸劇 40 組、世界景點旅拍 10 組、現代都市 / 街拍電影 10 組。
-- `v1.20`：仙俠神話新增 `長相思` 10 組、大唐飛天 5 組與神話女性神仙卡，包含嫦娥、九天玄女、七仙女、女媧、洛神、瑤池金母等；新增卡皆保留罩杯 `正常比例`、10 Layer、場景、動作、光影與背景不放路人控制。
-- `v1.20`：第二波角色卡刻意加入坐姿、泡茶、撫琴、持扇、持刀、靠欄、月台等待、街拍互動等動作語言，鎖臉前提下不再把角色卡都導回普通站姿。
-- `v1.19`：依指定分類批量擴充角色卡：歷史小說名著人物新增金瓶梅、金庸、三國、西遊記各 10 組；中國歷代服裝新增漢 / 唐 / 宋皇朝宮廷 100 組；奇幻異世界 / 暗黑王族新增魅魔 20 組、暗黑系列 10 組、墮天使 10 組。
-- `v1.19`：新增批次角色卡全部補齊 10 Layer、妝容、場景、環境、動作、光影與 parentCategory；暗黑王族新增卡維持罩杯 `K`，其他新增卡維持 `正常比例`。
-- `v1.18`：合併 `完成出圖咒語` 與 `複製完整咒語`，改成一鍵 `完成出圖 + 複製完整咒語`，每次按下都會用目前表單重新生成並嘗試複製。
-- `v1.18`：目前模板角色摘要不再顯示 `罩杯 正常比例`；只有 K 等特殊罩杯值會在角色摘要顯示，正常比例仍保留在咒語資料判斷中。
-- `v1.17`：修正動作系統過度保守問題。鎖臉不再等於只能站姿，坐姿、臥姿、倚靠、泡茶、拿扇子、拿刀、持傘、撫琴與王座前緣端坐都可用；限制改為臉部不可遮擋、角度穩定、身體比例與受力合理。
-- `v1.17`：暗黑王族與夜宴魅魔不再把使用者或角色卡提供的坐姿/道具互動覆蓋成站姿，4:5 構圖也改為 character-dominant cinematic composition。
-- `v1.16`：備份 v1.15 角色卡資料與單檔成品後，新增 100 張完整角色卡，10 個角色大分類各 10 張，涵蓋歷史小說名著、漢唐宋、武俠戰場、仙俠神話、絲路西域、暗黑王族、西方古典、台灣/大陸景點、現代都市與花園自然精靈。
-- `v1.16`：新增批量角色卡 factory 與明確 `parentCategory` 欄位，分類器優先讀取角色卡大分類，避免跨題材關鍵字讓模板被錯分。
-- `v1.15`：依據風格範例新增 `多肉花房・緞粉女神`、`玫瑰晶翼・花園精靈女王` 兩張完整角色卡，將範例咒語轉為真人鎖臉、禮服遮覆、商業奇幻花園主視覺欄位。
-- `v1.15`：`歷史小說名著人物` 擴充 15 位完整角色卡，涵蓋三國、紅樓夢與金庸系列；每張卡皆補齊 10 Layer、妝容、場景、環境、動作與光影。
-- `v1.13`：修正角色卡場景殘留。套用缺少場景欄位的舊 Layer 卡時，會清空上一張角色卡的場景、環境、動作與光影，避免赤金秘殿等舊場景被誤帶。
-- `v1.14`：新增角色大分類 `歷史小說名著人物`，首張範本為 `小喬・傾國佳人`，完整包含三國演義東吳名姬服裝 Layer、妝容、江東水榭場景、動作與光影。
-- `v1.14`：`奇幻異世界 / 暗黑王族` 角色卡罩杯欄位統一預設為 `K`，其他模板與空白欄位預設填入 `正常比例`，並寫入短版咒語的 `真實人體骨架`。
-- `v1.13`：角色卡新增 `罩杯` 欄位。套用暗黑王族模板時會依角色卡欄位寫入，其他模板與空白欄位預設填入 `正常比例`。
-- `v1.13`：重構最終輸出架構。核心母板保留為程式內部治理規則，但畫面上複製給 ChatGPT 的內容改為短版實際出圖咒語，不再輸出整本 V4.0 母板。
-- `v1.13`：短版咒語固定依序輸出鎖臉、分類、主題、風格、構圖、服裝、妝容、場景、動作、光影與負面，避免規範書式判斷文字壓過主題。
-- `v1.13`：暗黑王族 / 夜宴魅魔仍會由母板內部套用比例、人身穩定、背景路人控制與商業奇幻亮場策略，但最終提示只保留可直接出圖的必要句。
-- `v1.12`：修正暗黑王族 / 夜宴魅魔生成層比例漂移。移除生成層 `罩杯:J`、馬甲垂褶、托臉、王座坐姿與成熟豐滿預設，改成依上傳真人原始體型自然延伸、4:5 商業海報與穩定真人全身構圖。
-- `v1.12`：常用圖片尺寸改為一般出圖用途標籤，預設 `4:5 商業海報`，並保留 `9:16 手機桌布`、方形、直式、橫式、寬銀幕等常用畫幅。
-- `v1.12`：固定母板在 `【真實人體骨架】` 保留 `- 罩杯j`，但生成層不再把暗黑分類轉成罩杯驅動或 pin-up 身材指令。
-- `v1.11`：新增輸出比例控制系統。生成層會把 `9:16`、`4:5`、`16:9`、`2.39:1` 等畫幅寫入場景導演層，要求構圖服從指定畫幅並保留完整電影輪廓。
-- `v1.11`：新增真人比例穩定系統。鎖臉不得造成頭大、肩窄、軀幹壓縮或「臉貼在服裝上」的 AI 感，並針對坐姿/王座姿勢補強胸腔厚度與成人身體比例。
-- `v1.10`：強化臉部主控鎖臉。生成層會先鎖定上傳照片原始真人臉，再讓身體、服裝、姿勢、髮型、妝容、光影與場景配合該臉部。
-- `v1.10`：輸出前自動淨化高換臉風險姿勢詞，將 `over-shoulder`、大幅回眸、側身回望、側臉、低頭、仰頭等改成正面或微側正面凝視鏡頭。
-- `v1.09`：重整角色大分類 mapping。大分類只看模板標題、主題、分類、id 與別名，不再掃服裝 Layer / 場景全文，避免西方、暗黑、世界景點模板被「古裝」「神話」「花園」等泛詞誤吸。
-- `v1.09`：修正 `中國歷代服裝` 不再顯示墮羽夜庭魔姬、凡爾賽花庭公主；`仙俠神話 / 古裝陸劇` 不再顯示雅典神殿祭儀。
-- `v1.08`：新增背景角色控制與商業奇幻亮場系統。生成層預設為單女主電影海報，背景以建築、光影、水霧、燈籠、布料與空間透視撐場；只有宮廷宴會、戰場、市集、宗教儀式、王朝典禮等必要主題才允許少量 `small-scale cinematic silhouettes`。
-- `v1.08`：暗黑王族、夜宴魅魔、月夜女王、紫晶神女、黑玫瑰女王等主題會自動加入 `Commercial Fantasy Glamour Lighting`，避免臉部壓暗、黑色服裝死黑、珠寶無高光。
-- `v1.08`：清理容易造成背景路人與設定卡感的觸發詞，生成層不再用 `movie still`、`grand oriental fantasy spectacle`、`environmental storytelling`、`遠景群演` 等舊語意。
-
-## 目前輸出架構
-
-核心母板仍保留在程式內作為治理規則，但最終複製給 ChatGPT 的咒語是短版實際出圖指令，不再輸出完整 V4.0 母板。
-
-```text
-請根據上傳真人照片生成 ...
-鎖臉與真實人體
-分類 / 主題 / 風格
-構圖
-服裝
-妝容
-場景
-動作
-光影
-負面
-```
-
-程式會先用母板規則處理 UI 條件，再壓縮成可直接貼進 ChatGPT 出圖的咒語。圖片比例會明確寫入短版構圖段，例如 `4:5 premium commercial fantasy poster` 或 `9:16 cinematic mobile wallpaper`。
-
-## 驗證狀態
-
-目前已通過：
-
-- lint
-- unit test
-- build
-- 桌機 UI 驗證
-- mobile UI 驗證
-- `file:// index.html` 直接開啟驗證
-- console error 檢查
+最近一次完整檢查已通過：lint、test、build、桌機 UI、mobile UI、console 檢查。
 

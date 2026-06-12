@@ -1687,6 +1687,97 @@ npm run check
 
 ---
 
+## 架構分析：costumeLayer 10 層設計造成公式化出圖
+
+### 2026-06-13 分析
+
+#### 問題描述
+
+用戶反映出圖結果「很公式化」，每張圖服裝描述感覺都走同一個模板。
+
+#### 根本原因追蹤
+
+**Step 1：profileFactory.js 生成 10 層**
+
+`createCuratedRoleProfile()` 在 `layers` 陣列裡定義 10 個服裝層次（`costumeLayer1`～`costumeLayer10`），每層句型固定為：
+```
+「${材料} [動詞] 建立/形成/固定 [功能]」
+```
+
+**Step 2：promptEngine.js 只用其中 5 個，再 slice 成 4 個**
+
+```js
+// promptEngine.js line 458
+const layerText = [form.costumeLayer1, form.costumeLayer3, form.costumeLayer4, form.costumeLayer6, form.costumeLayer8]
+  .map(compactLayerValue)
+  .filter(Boolean)
+  .slice(0, 4)      // ← 最多只取前 4 個
+  .join("，");
+```
+
+實際進入 prompt 的永遠是：
+- layer1（內層底料）
+- layer3（主體輪廓）
+- layer4（外紗/披帛）
+- layer6（外袍/裙擺）
+
+**layer2、5、7、9、10 完全被丟棄，從不進入任何 prompt。**
+
+**Step 3：選層順序永遠相同**
+
+無論角色是武將、仙俠、旗袍、宮廷，最終送給 ChatGPT 的服裝描述結構永遠是：
+```
+「內層底料，主體輪廓，外紗披帛，外袍/裙擺」
+```
+
+#### 公式感的 3 個根源
+
+| # | 根源 | 說明 |
+|---|---|---|
+| 1 | **選層順序固定** | 永遠取 layer1/3/4/6，和角色類型無關 |
+| 2 | **每層句型模板相同** | 所有 profile 的 layer 都是「X 建立/形成 Y」的語法 |
+| 3 | **costume 主句模板固定** | 永遠是「${identity}電影角色卡，${palette}、${costumeCore}、${jewelry}與${prop}組成${atmosphere}」 |
+
+#### 改成 1~4 層有沒有用？
+
+**沒有用。** 目前 slice 後已經只有 4 個有效值，定義 10 層還是 4 層，輸出結果相同。問題不在層數，在於所有角色走相同的選層邏輯與句型模板。
+
+---
+
+### 建議修改方向
+
+#### 方向 A：每個 profile 自帶 highlightLayers（改動小）
+
+不固定選 layer1/3/4/6，改成 profile 自帶一個 `highlightLayers: [0, 3, 6, 8]` 索引陣列，讓不同類型的角色優先展示最有辨識度的層次：
+- 武將卡：優先盔甲、護具、戰袍
+- 旗袍卡：優先剪裁、盤扣、開衩比例
+- 仙俠卡：優先飄帛、仙氣、透明外紗
+
+**改動範圍：** `promptEngine.js buildFinalCostumeText()`，加一行讀取 `form.highlightLayers`。
+
+**優點：** 改動最小，不破壞現有 profile 結構（沒有 highlightLayers 的 profile fallback 到現有邏輯）。
+
+#### 方向 B：移除 layers 架構，直接寫角色專屬 costume 段落（根本解）
+
+`layers` 本來的目的是讓 AI 理解服裝層次邏輯，但 `costume` 主句已經包含 identity + palette + costumeCore + jewelry + prop 全部資訊。layers 只是用固定句型重複描述一遍，反而讓 AI 每次都走相同的「解包服裝結構」模式。
+
+改成每個 profile 直接在 `costume` 欄位（或新增 `costumeNarrative` 欄位）寫一段有個性的角色服裝描述，比 4 層拼接更自然、更有個別差異。
+
+**改動範圍：** `profileFactory.js`（移除 layers 生成邏輯）、`promptEngine.js buildFinalCostumeText()`（改讀 costumeNarrative）、所有 profile 的資料定義。
+
+**優點：** 根本解決公式感，每個角色有獨立「聲音」。  
+**缺點：** 工程量大，現有數千個 profile 需要轉換或補寫。
+
+---
+
+### 建議優先順序
+
+1. **短期（CODEX 可直接實作）：方向 A** — `buildFinalCostumeText()` 改讀 `profile.highlightLayers`，新 profile 可開始標注，舊 profile 不影響
+2. **中期：** 新增 profile 改用方向 B 的寫法（costumeNarrative 欄位）
+3. **長期：** 批次轉換舊 profile，layers 架構退場
+
+---
+
 ## 2026-06-12 角色卡生成策略備忘：圖片分析、姿勢道具與服裝 Layer（更新版）
 
 ### 核心判斷
@@ -1942,3 +2033,582 @@ npm run check
 
 - `src/data.js` 的 `actionQualityGuardText()` 已加入全角色卡動態分鏡規則。
 - `tests/promptEngine.test.js` 已新增測試，確保所有角色卡都有主動作、動態核心、支撐點、方向性與前景互動語義。
+
+---
+## 2026-06-13 專案結構與改進建議（Codex 意見）
+
+我讀完 `XXXXXX.txt` 與本文件後，對目前專案的判斷是：工程流程已經穩定，但真正的品質瓶頸已經轉到 prompt 內容本身。這不是單純「字數多」的問題，而是**同一語意被重複表達、姿態與道具規則偶爾互相打架、資料規模擴大後開始出現維護成本**。
+
+### 我的核心結論
+
+1. **先做 prompt 去重，不要先繼續加字。**
+   現在最需要的是壓縮與分層，而不是再把同一件事用不同句子補強一次。尤其是身份鎖定、真人骨架、風格高亮、全身入鏡、臉部朝向、抗 AI 感，應該各自保留一次就好。
+
+2. **把流程詞改成畫面語言。**
+   `ChatGPT`、`全角色卡品質補強`、`不預設拿...` 這類詞彙雖然在邏輯上有用，但對出圖模型來說偏流程說明，不夠乾淨。比較好的方向是直接寫成姿態、支撐點、道具位置與臉部保護的畫面規則。
+
+3. **姿態與道具應採用開放式邊界，不要固定模板。**
+   場景合理時才手持道具；否則讓道具作為陳設、前景、支撐點或背景記憶點。姿態由模型發揮，但必須避免呆站、證件照感與遮臉。
+
+4. **服裝 Layer 要保留結構，但不要永遠用同一套路。**
+   目前公式感有一部分來自固定選層與固定句型。建議保留 Layer 架構，但讓不同 profile 有不同 highlight 層，或逐步導向 `costumeNarrative` 類型的角色專屬服裝敘述。
+
+5. **大型資料檔案需要開始模組化。**
+   `src/data.js` 已經很大，這對維護與 bundle 都不是長期友善。建議依題材拆分角色卡與風格資料，讓搜尋索引和完整資料分離。
+
+### 我建議的優先順序
+
+#### P0
+- 先做 prompt 去重與分層壓縮
+- 清理 `sceneAction` 裡的流程詞污染
+- 讓道具與姿態改成「開放式邊界」語言
+
+#### P1
+- 調整服裝 Layer 的選取策略，減少公式感
+- 補內容型測試，檢查是否出現重複語意與流程詞
+
+#### P2
+- 拆分大型資料模組
+- 評估 bundle 拆包與資料載入策略
+- 整理 `AI-TASK.md` 成較明確的規格、決策、待辦三個區塊
+
+### 我對成效的預估
+
+如果照這個順序做，預期可以同時達到：
+- prompt 更短、更聚焦
+- 模型更容易抓到核心指令
+- 出圖的重複感下降
+- 姿態與道具更自然
+- bundle 與維護成本逐步下降
+
+### 我建議的實作方式
+
+不要一次大改所有卡，也不要同時改 prompt、資料結構、UI 三層。最穩的方式是：
+1. 先改 prompt 生成層，確認輸出變乾淨。
+2. 再改資料層，處理高重複的姿態與道具規則。
+3. 最後才做資料模組拆分與 bundle 優化。
+
+這樣每一步都能用 `npm.cmd run check` 驗證，不會一次把風險堆太高。
+
+---
+
+## 2026-06-13 全專案改進分析報告
+
+### 現況數據
+
+| 項目 | 數值 |
+|---|---|
+| WORLD_LAYER_PROFILES | 2,240 |
+| dist JS bundle | 1,540 KB（gzip 478 KB） |
+| tests | 59/59 通過 |
+| data.js 行數 | 7,300+ |
+
+---
+
+### 問題 1：costumeLayer 公式化（出圖重複感根源）
+
+**實際流向：**
+
+```
+profileFactory.js 定義 10 層
+→ promptEngine.js buildFinalCostumeText() 取 layer1/3/4/6/8（5個）
+→ .slice(0, 4) → 實際只用 4 個
+→ 永遠是「內層底料，主體輪廓，外紗披帛，外袍/裙擺」
+layer2、5、7、9、10 從不進入 prompt，完全被丟棄
+```
+
+**公式感的 3 個根源：**
+
+1. 選層順序固定：永遠 layer1→3→4→6，和角色類型無關
+2. 每層句型模板相同：所有 profile 都是「X 建立/形成 Y」語法
+3. costume 主句模板固定：永遠是「${identity}電影角色卡，${palette}、${costumeCore}、${jewelry}與${prop}組成${atmosphere}」
+
+**改成 1~4 層有沒有用？沒有用。** 目前 slice 後已是 4 個值，層數不是問題，選層邏輯才是。
+
+**修法方向：**
+
+- **方向 A（改動小）**：`buildFinalCostumeText()` 改讀 `profile.highlightLayers: [0,3,6,8]` 索引，讓武將卡優先盔甲、旗袍卡優先剪裁、仙俠卡優先飄帛。舊 profile 無此欄位則 fallback 現有邏輯。
+- **方向 B（根本解）**：移除 layers 架構，每個 profile 直接在 `costumeNarrative` 欄位寫一段有個性的服裝描述。現有 `costume` 主句已包含全部資訊，layers 只是重複描述。工程量大，需轉換 2,240+ 個 profile。
+
+**建議：先做方向 A，新 profile 開始用方向 B 寫法，逐步退場 layers。**
+
+---
+
+### 問題 2：prompt 結構冗餘（token 浪費 + 指令衝突）
+
+**現況：** `enrichSceneAction()` 流程：
+
+```
+cleanSceneActionWorkflowWording()  → 清除流程詞
+normalizeSceneActionProps()         → 寢宮 profile 替換手持道具
+needsActionUpgrade()                → 若呆站則插入動作提示
+actionQualityGuardText()            → 附加動態分鏡規則
+→ 三段拼接，用「；」連接
+```
+
+**問題：** 原始 `sceneAction` 若有「一手低持酒盞」，後面接的 guard 卻說「杯盞改置於床邊小几」，兩句同時存在，指令矛盾。`normalizeSceneActionProps()` 已有 regex 替換，但替換後的文字仍與 `actionQualityGuardText()` 的輸出拼在一起，產生語義重複。
+
+**修法：** `enrichSceneAction()` 輸出前做一次 dedup 檢查，若 normalizedAction 已包含「置於床邊小几/陳設」等語義，guard text 對應段落可省略。
+
+---
+
+### 問題 3：prompt 最終輸出過長（ChatGPT 指令負擔）
+
+`buildChatGptInstruction()` 輸出的 prompt 包含 10 個段落：opening、identity、category、composition、costume、makeup、scene、action、lighting、negative。
+
+每個段落都有固定的擴充模板（directorLens、safety、realismQuality 等），不管角色類型都全量附加。
+
+**影響：** prompt 過長時 ChatGPT 傾向照抄最顯眼的關鍵詞，忽略細節指令，導致出圖「看起來都差不多」。
+
+**修法方向：**
+
+- 把 `realismQuality`（約 100 token 的英文品質詞串）抽出放進 `coreSpec.js`（已作為 hidden system prompt），避免每次 prompt 都重複出現。
+- `directorLens` 固定文字（「背景近景/中景/遠景依本次主題...」）放進 system prompt，主 prompt 只傳差異化內容。
+
+---
+
+### 問題 4：bundle 膨脹（1,540 KB，P2）
+
+根本原因：2,240 個 profile 全都是 JS 物件字串，全量進主 bundle。每次新增 profile 都直接加大 bundle。
+
+**可行方向（不需現在做）：**
+- Vite `manualChunks`：把 profile 波次拆成獨立 chunk，首屏只載核心
+- JSON 外置：profile 資料改為 JSON fetch，排出 JS bundle
+- Array/tuple 格式：類似 `BEDCHAMBER_CONSORT_EXPANSION_PROFILES` 已用的 tuple 格式，比物件格式省 30~40%
+
+---
+
+### 建議優先順序
+
+| 優先級 | 項目 | 成效 | 工程量 |
+|---|---|---|---|
+| **P0-A** | `buildFinalCostumeText()` 加 `highlightLayers` fallback | 出圖多樣性提升 | 小（只改 promptEngine.js 一個函數） |
+| **P0-B** | `enrichSceneAction()` 去重：避免 normalizedAction 與 guardText 重複語義 | 減少指令矛盾 | 小（只改 data.js enrichSceneAction） |
+| **P1-A** | `realismQuality` 移入 coreSpec，主 prompt 減重 | prompt 更聚焦，ChatGPT 更易抓核心 | 中（需改 coreSpec + promptEngine） |
+| **P1-B** | 新增 profile 改用 `costumeNarrative` 欄位（方向 B 寫法） | 逐步退場 layer 公式感 | 小（每張卡多一欄位，舊卡不影響） |
+| **P2** | Vite manualChunks / JSON 外置 | 首屏載入加速 | 大（架構改動） |
+
+---
+
+### 不建議現在做
+
+- 一次大改所有 profile 的 layers 寫法（風險高，量大）
+- 同時改 prompt 層 + 資料層 + UI 層
+- 強制把 profile 的 sceneAction 全部重寫（已有 normalizeSceneActionProps 兜底）
+
+---
+
+## 2026-06-13 Kiro 對兩份 Codex 意見的分析回應
+
+### 總體評估
+
+Codex 的兩份意見方向正確，但有幾處需要補充細節、更正現況認知，以及補一個兩份都沒提到的盲點。
+
+---
+
+### 對 2026-06-07 Codex 意見的現況確認
+
+**P0 流程詞問題 — 已在程式碼層面處理完畢**
+
+Codex 2026-06-07 報告指出 sceneAction 含有 `ChatGPT`、`全角色卡品質補強`、`不預設拿` 等流程詞。
+
+這個問題在目前程式碼中已由兩層防線處理：
+
+1. `data.js cleanSceneActionWorkflowWording()` — profile 讀入時清除原始 sceneAction 的流程詞
+2. `promptEngine.js cleanFinalPromptWorkflowWording()` — 最終輸出時再過濾一次
+3. `actionQualityGuardText()` 的回傳內容已改為純畫面導演語言（確認：無 ChatGPT、無全角色卡品質補強）
+
+**結論：這個 P0 已解決，Codex 2026-06-13 意見的「先做 prompt 去重」是指更深層的語義重複問題，不是同一件事。**
+
+---
+
+### 對 2026-06-13 Codex 意見的補充與修正
+
+#### Codex 意見 1：先做 prompt 去重 ✅ 同意，但需補一個盲點
+
+Codex 提到去重，但漏掉了一個更大的固定模板問題：
+
+**暗黑系列（dark royal）有一個硬寫 bypass：**
+
+```js
+// promptEngine.js buildFinalCostumeText()
+if (isDarkRoyalCategory(category, theme, form.scene)) {
+  return "真人可穿戴的魅魔夜宴低胸真絲睡衣長裙造型：..."  // 固定字串
+}
+```
+
+這意味著**所有** dark royal / 魅魔 / 墮天使 / 血月系列的角色卡，不論 profile 定義了什麼 palette、costumeCore、layers，最終 prompt 的服裝段落都是同一句固定字串。這比 highlightLayers 問題更嚴重，且完全掩蓋了個別角色卡的差異。
+
+**建議**：`isDarkRoyalCategory` bypass 改成只加一段安全守則（防低俗），保留 profile 的服裝資料傳入。
+
+---
+
+#### Codex 意見 2：服裝 Layer 加 highlightLayers ✅ 同意，但句型問題未解
+
+方向 A（highlightLayers）可以讓不同類型的角色選不同層，是正確的短期修法。
+
+但有一個 Codex 未提到的問題：**即使換了哪些層，每層的句型結構仍然完全相同**：
+
+```
+「${X} 建立/形成/固定 [功能說明]」
+```
+
+也就是說，就算武將卡選了盔甲層、旗袍卡選了剪裁層，ChatGPT 收到的語法模式還是一樣的。視覺上的公式感有一部分來自句型，不只是選哪幾層。
+
+**建議**：方向 A 先做；方向 B（costumeNarrative）新卡開始採用時，要求用「敘述性語言」而非「X 建立 Y 功能」的結構型句子。
+
+---
+
+#### Codex 意見 3：realismQuality 移入 coreSpec ✅ 同意，但有操作風險
+
+`buildFinalLightingText()` 固定附加的 `realismQuality` 約 100 token，確認應該移入 coreSpec。
+
+**操作注意**：`src/coreSpec.js` 是由 `npm run sync:spec` 從 `doc/核心咒語規範.txt` 生成的，不能直接改 coreSpec.js，必須改 `doc/核心咒語規範.txt` 再跑 sync:spec，否則下次 sync 會覆蓋。
+
+同樣的，`directorLens` 固定句（「背景近景/中景/遠景依本次主題...」）在每次 buildFinalSceneText 都附加。這句的核心意義是「不要固定套用花瓣燈籠燭火」，也應進 coreSpec，主 prompt 只給場景差異化內容。
+
+---
+
+#### Codex 意見 4：資料模組化（P2）✅ 同意方向，補一個維護債
+
+兩份意見都提到 data.js 太大。還有一個相關的維護問題沒提到：
+
+**`DARK_ROYAL_PROFILE_IDS` 是手動硬寫的 ID 清單**（data.js line 7122）。每次新增暗黑系列角色卡，都要手動把 ID 加進這個清單，否則 cupSize 不會被設成 "K"。這是一個容易漏掉的維護陷阱。
+
+**建議**：改成依 `parentCategory` 或 `series` 做模式比對，移除硬寫清單。
+
+---
+
+### 優先順序最終建議
+
+| 優先級 | 項目 | 為什麼 | 改哪裡 |
+|---|---|---|---|
+| **P0-A** | 移除 `buildFinalCostumeText` 的 dark royal 固定 bypass | 影響最多（所有暗黑卡服裝都一樣） | promptEngine.js |
+| **P0-B** | `buildFinalCostumeText` 加 `highlightLayers` | 打破一般卡的固定選層 | promptEngine.js |
+| **P0-C** | `enrichSceneAction` 的 dedup：normalizedAction 已包含陳設語義時，guard text 跳過對應句 | 減少指令重複 | data.js |
+| **P1-A** | `realismQuality` 移入 `doc/核心咒語規範.txt`，重跑 sync:spec | prompt 減重 ~100 token | 核心咒語規範.txt |
+| **P1-B** | `directorLens` 固定句移入 coreSpec | prompt 減重 | 核心咒語規範.txt |
+| **P1-C** | `DARK_ROYAL_PROFILE_IDS` 改成 category/series 模式偵測 | 移除維護陷阱 | data.js |
+| **P2** | Vite manualChunks / JSON 外置 / tuple 格式 | bundle 減重 | 架構層 |
+
+---
+
+### 兩份意見都沒提到、但值得注意的問題
+
+1. **dark royal 服裝 bypass 造成的公式感 > layer 選層問題**：按重要性排，應先於 highlightLayers。
+
+2. **`DARK_ROYAL_PROFILE_IDS` 手工清單**：靜默的維護債，新卡容易漏加。
+
+3. **`doc/核心咒語規範.txt` 是唯一權威來源**：任何要進 coreSpec 的內容，必須改 .txt 再 sync，不能直接改 .js。所有 P1 的 coreSpec 改動都要走這個流程。
+
+4. **P0-C 的 dedup 邏輯有一個已存在的部分防線**：`enrichSceneAction` 已有 `if (cleanedAction.includes("姿態依身份、場景") || cleanedAction.includes("姿態依寢宮支撐點"))` 的 early return，防止 guard text 被重複附加。但這只保護已升級的文字，不保護 normalizeSceneActionProps 替換後的文字與 guard text 的語義重疊。
+
+
+---
+## 2026-06-13 Codex 再分析：下一輪實作應該怎麼切
+
+我重新讀過 `AI-TASK.md` 後的判斷是：目前專案不缺「知道問題在哪裡」的資訊，缺的是**把問題切成可驗證、低風險、可逐步回收成效的實作順序**。這也是接下來最值得做的事情。
+
+### 我對現況的總結
+
+1. **工程流程已經成熟。**
+   `sync:spec -> lint -> test -> build -> verify-ui` 這條鏈已經證明專案可以被持續維護，不需要再先重構整個基礎。
+
+2. **品質問題主要集中在 prompt 內容層。**
+   目前最大的耗損不是功能壞掉，而是 prompt 太長、同義重複太多、姿態與道具規則有時候互相拉扯，導致模型抓重點的效率下降。
+
+3. **資料規模正在變成長期成本。**
+   `src/data.js` 的壓力不只是 bundle 大，還會讓內容規則越來越難被人工檢查，尤其是 profile 與姿態規則同時增長時。
+
+### 我認為最該先做的三件事
+
+#### 1. 先做 prompt 去重與層級化
+
+這一步最划算，因為不用大改資料結構，就能直接減少文字肥大與語意重複。
+
+重點是：
+- 身份鎖定只保留一次
+- 真人骨架只保留一次
+- 風格只保留一次
+- 構圖只保留一次
+- 反 AI 感的負面只保留一次
+
+這會讓 prompt 更像「有控制力的導演指令」，而不是「把同一件事用三種說法再講一次」。
+
+#### 2. 再處理姿態、道具與 `sceneAction` 的規則
+
+這一層是現在最容易出現內容衝突的地方。比較好的方向不是全面硬改成固定姿勢，而是：
+- 讓 ChatGPT 依身份與場景自行發揮
+- 但提供足夠的邊界
+- 道具優先當陳設、前景或支撐點
+- 只有主題真的需要時才手持
+
+這樣可以維持變化，同時降低不合理持物與呆站問題。
+
+#### 3. 最後才碰大型資料模組化
+
+資料拆分、bundle 降載、profile 分檔，這些都重要，但它們是第二階段問題。先把內容品質穩定下來，之後拆資料才有意義，否則只是把問題搬家。
+
+### 我對目前文件中的分析的判斷
+
+我同意目前文件對以下幾點的看法：
+- `highlightLayers` 值得先做，因為它是低風險的差異化手段
+- `costumeNarrative` 是更長期的方向，適合新卡逐步導入
+- `realismQuality`、`directorLens` 這種固定長句，確實適合移到核心規範層，避免每次輸出都重複塞進 prompt
+- `DARK_ROYAL_PROFILE_IDS` 這類手工清單，長期看一定會變成維護陷阱
+
+### 我的執行建議
+
+如果現在要正式開工，我會這樣排：
+
+1. 先修 `buildFinalCostumeText()` 的固定 bypass 與選層策略
+2. 再做 `enrichSceneAction()` 的去重與語義清理
+3. 然後把最長、最固定的說明句移進 coreSpec / 規範層
+4. 再開始拆 profile 資料模組
+5. 每一步都跑 `npm.cmd run check`
+
+### 我對成效的預估
+
+照這個順序做，預期會有三個直接效果：
+- prompt 更短，模型更容易抓主軸
+- 角色差異更明顯，不會一直像同一套模板
+- 後續新增卡片與修規則的成本下降
+
+### 最後一句結論
+
+這個專案現在不是「能不能修」，而是「怎麼修最省風險」。最佳解不是大重寫，而是先把最重複、最固定、最容易打架的部分收斂掉，讓內容層先變乾淨，之後架構拆分才會真正有效。
+
+---
+
+## 2026-06-13 Kiro 對 Codex 第二輪意見的分析與回應
+
+### 總體評估
+
+Codex 第二輪的判斷方向是對的：「問題不缺，缺的是可驗證的實作順序」。但它的執行建議仍然停在策略層，沒有指出每一步的**具體切入點、驗證方式與潛在風險**。以下逐點補足。
+
+---
+
+### 確認正確的部分
+
+1. **工程流程成熟，不需要先重構基礎** — 正確。`sync:spec → lint → test → build → verify-ui` 已穩定，每一步改動都能用這條鏈驗證，這是重要的安全網。
+
+2. **品質問題集中在 prompt 內容層** — 正確，且可以更精確：核心問題是**3處固定輸出 + 2處指令重疊**，不是全面性的亂，是幾個定點的問題。
+
+3. **資料規模是長期成本，但不是現在最急的** — 正確，bundle 膨脹不影響功能，先讓內容品質提升，架構拆分才有意義。
+
+---
+
+### Codex 第二輪漏掉或說錯的部分
+
+#### 漏掉：dark royal bypass 是最高優先，不是 highlightLayers
+
+Codex 第二輪執行建議第一步是「修 buildFinalCostumeText() 的固定 bypass 與選層策略」，這是對的，但沒有說清楚兩件事的**順序差異**：
+
+- **dark royal 固定 bypass**（promptEngine.js line 454-456）：影響所有魅魔/暗黑/墮天使卡，**無論 profile 定義什麼服裝，輸出都是同一句固定字串**。這是 P0-A，影響面最大。
+- **highlightLayers**：影響非暗黑卡的選層多樣性。這是 P0-B，影響面次之。
+
+應先修 bypass，再做 highlightLayers，兩者不能合併為同一步。
+
+#### 漏掉：每層的句型模板問題比選哪幾層更根本
+
+Codex 建議 highlightLayers 讓武將選盔甲層、旗袍選剪裁層，但沒有指出：**即使選了不同的層，每層的句型仍然是「X 建立/形成 Y 功能」**。換了層之後，ChatGPT 收到的語法結構一樣，公式感不會完全消除，只是降低。
+
+真正要解決句型問題，需要方向 B（costumeNarrative）或在 highlightLayers 同時更新 profileFactory.js 的 layer 句型，讓不同類型的角色有不同的描述語氣。
+
+#### 說得不夠具體：enrichSceneAction 的 dedup
+
+Codex 說「再做 enrichSceneAction 的去重與語義清理」，但已有的防線沒說清楚：
+
+`enrichSceneAction` 已有一個 early return：
+```js
+if (cleanedAction.includes("姿態依身份、場景") || cleanedAction.includes("姿態依寢宮支撐點")) {
+  return cleanedAction;  // 跳過 guard text
+}
+```
+
+這個防線只保護**已升級過的 sceneAction**，不保護 `normalizeSceneActionProps` 替換後出現的語義重疊。因此 dedup 的目標是：**在 `enrichSceneAction` 最後拼接前，檢查 normalizedAction 是否已包含「陳設/置於床邊/前景」等語義，如有則跳過 guard text 對應段落**，而不是整個 early return。
+
+---
+
+### 具體實作細節補充
+
+#### P0-A 修法（dark royal bypass）
+
+`promptEngine.js buildFinalCostumeText()` 目前：
+```js
+if (isDarkRoyalCategory(category, theme, form.scene)) {
+  return "真人可穿戴的魅魔夜宴...固定字串";  // 完全忽略 profile
+}
+```
+
+建議改為：
+```js
+if (isDarkRoyalCategory(category, theme, form.scene)) {
+  const base = compactText(form.costume, 130) || `真人可穿戴的「${theme}」電影級高訂戲服`;
+  const safetyGuard = "主體是連身長裙結構，不得分離成胸罩內褲或情趣內衣套裝，不生成比基尼式服裝，不額外放大胸腰比例。";
+  return `${base}。${safetyGuard}`;
+}
+```
+
+這樣保留安全守則，但讓 profile 本身的服裝描述能進入 prompt。
+
+#### P0-B 修法（highlightLayers）
+
+`promptEngine.js buildFinalCostumeText()` 目前固定取 `[form.costumeLayer1, form.costumeLayer3, form.costumeLayer4, form.costumeLayer6, form.costumeLayer8]`。
+
+建議改為：
+```js
+const defaultLayerIndices = [0, 2, 3, 5, 7];  // 對應 layer1,3,4,6,8（0-indexed）
+const indices = form.highlightLayers || defaultLayerIndices;
+const allLayers = [
+  form.costumeLayer1, form.costumeLayer2, form.costumeLayer3, form.costumeLayer4,
+  form.costumeLayer5, form.costumeLayer6, form.costumeLayer7, form.costumeLayer8,
+  form.costumeLayer9, form.costumeLayer10
+];
+const layerText = indices.map(i => allLayers[i]).map(compactLayerValue).filter(Boolean).slice(0, 4).join("，");
+```
+
+舊 profile 沒有 `highlightLayers` 欄位 → fallback 現有邏輯，不破壞任何東西。
+
+#### P1-A 操作流程（realismQuality 移入 coreSpec）
+
+必須走這個流程，不能直接改 coreSpec.js：
+1. 編輯 `doc/核心咒語規範.txt`，在適當區段加入 realismQuality 內容
+2. 執行 `npm run sync:spec`，確認 `src/coreSpec.js` 更新
+3. 在 `promptEngine.js buildFinalLightingText()` 移除 `realismQuality` 字串
+4. 跑 `npm run check` 確認 59/59 仍通過
+
+---
+
+### 對 Codex 執行順序的修正版本
+
+Codex 建議的順序是：bypass → enrichSceneAction → coreSpec → 資料模組 → check。
+
+**修正版本**（更精確）：
+
+1. **P0-A**：修 `buildFinalCostumeText` 的 dark royal bypass（promptEngine.js，約 5 行）→ run check
+2. **P0-B**：加 `highlightLayers` fallback（promptEngine.js，約 10 行）→ run check
+3. **P0-C**：`enrichSceneAction` dedup（data.js，約 10 行）→ run check
+4. **P1-A**：`realismQuality` 移入 `doc/核心咒語規範.txt` → sync:spec → 移除 promptEngine.js 對應字串 → run check
+5. **P1-B**：`directorLens` 移入 coreSpec（同上流程）→ run check
+6. **P1-C**：`DARK_ROYAL_PROFILE_IDS` 改成 category/series 模式偵測（data.js）→ run check
+7. **P2**：bundle 拆分（另開任務）
+
+每一步都是獨立、可驗證、可回滾的。P0 三步改動量都很小（各 < 15 行），一天內可以完成並驗證。
+
+---
+
+### 最終結論
+
+Codex 第二輪的策略判斷是對的，但缺少「每一步的精確切入點」。補足之後的優先順序是：
+
+**先修 dark royal bypass（影響面最大）→ 加 highlightLayers（打破一般卡公式感）→ enrichSceneAction dedup（去除指令重疊）→ coreSpec 瘦身（減少 token）→ 維護債清理（DARK_ROYAL_PROFILE_IDS）→ bundle 優化（最後）**
+
+這個順序保持每步可驗證，不會一次把風險堆太高，符合 Codex 自己說的「怎麼修最省風險」原則。
+
+---
+## 2026-06-13 最終整合方案：如何同時解決 10 Layer 公式感、prompt 冗餘與維護成本
+
+綜合 `XXXXXX.txt`、目前 `AI-TASK.md`、以及前面幾輪 AI 的分析，我的整合結論是：**不要廢掉 Layer 系統，但要把它從「固定輸出模板」改成「可變權重的內容骨架」**。真正要修的不是「有沒有 10 層」，而是「每張卡是不是都用同一組層、同一句型、同一套語義在出圖」。
+
+### 最終判斷
+
+1. **10 Layer 可以保留，因為它是結構，不是問題本身。**
+   問題不是 Layer 數量，而是所有卡片都用相似的層順序與句型，導致 ChatGPT 看到的語法模式太一致。
+
+2. **`highlightLayers` 是短期最划算的修法。**
+   它不破壞舊卡，能讓不同角色卡先挑出最有辨識度的層，不必每張都固定輸出 layer1/3/4/6。這是打破公式感的第一步。
+
+3. **`costumeNarrative` 是中期方向。**
+   新卡可以逐步改成以敘事段落直接描述服裝，而不是所有卡都走「X 建立 Y 功能」的公式句型。這會比只改選層更能降低模板感。
+
+4. **`buildFinalCostumeText()` 的 dark royal 固定 bypass 必須優先拆掉。**
+   這是目前最強的公式來源，因為它直接覆蓋掉 profile 原本的服裝差異。它比一般 Layer 選取還更先影響出圖結果。
+
+5. **prompt 去重要做，但要做的是「語意去重」，不是單純刪字。**
+   身份、骨架、風格、構圖、動作、光影、負面這些關鍵控制句要各自只保留一次，避免同一件事在多個欄位反覆出現。
+
+### 我整合後的執行方案
+
+#### P0：先消掉最傷品質的固定模板
+
+- 修掉 `buildFinalCostumeText()` 的 dark royal 固定 bypass，讓服裝段回到 profile 驅動
+- 在 `buildFinalCostumeText()` 加 `highlightLayers` fallback，讓不同 profile 能選不同層
+- 在 `enrichSceneAction()` 做語義去重，避免 normalizedAction 與 guardText 互相重複
+
+#### P1：把固定長句移出主 prompt
+
+- 把 `realismQuality`、`directorLens` 這類穩定規則移到 `doc/核心咒語規範.txt`
+- 重新 sync 到 `src/coreSpec.js`
+- 讓主 prompt 只保留差異化內容，降低 token 與閱讀負擔
+
+#### P2：把資料與內容結構慢慢模組化
+
+- 暗黑系列不再依賴手工 `DARK_ROYAL_PROFILE_IDS` 清單
+- 新卡開始逐步使用 `highlightLayers` / `costumeNarrative`
+- 大型 profile 檔拆分成更穩定的主題模組，降低 bundle 與維護成本
+
+### 我對 10 Layer 問題的最終看法
+
+`10 Layer` 本身不是錯，錯的是它被當成每張卡都要完整、固定、同序輸出的內容模板。更好的方式是：
+
+- 保留 10 層作為內容庫
+- 但每張卡只輸出最有辨識度的幾層
+- 新卡不必沿用同一套句型
+- 舊卡維持 fallback，不要一次重寫全部
+
+這樣可以兼顧：
+- 結構穩定
+- 角色差異
+- 出圖變化
+- 低風險改造
+
+### 預期成效
+
+如果照這個整合方案做，應該會看到四個直接改善：
+- prompt 字數下降，重複語意減少
+- 服裝不再那麼公式化
+- 姿態與道具更自然，不容易互相打架
+- 後續新增角色卡時，維護成本會下降
+
+### 我建議的落地順序
+
+1. 先修 `dark royal bypass`
+2. 再加 `highlightLayers`
+3. 接著做 `enrichSceneAction` 的去重
+4. 再把固定長句移進 coreSpec
+5. 最後才做資料模組化
+
+### 最後結論
+
+我現在的整合意見是：**保留 Layer 系統，但不要讓 Layer 系統決定一切。**
+真正要改的是「固定順序、固定句型、固定 bypass」這三個來源。只要把這三個拆掉，出圖就會從公式化往角色化靠近，而且風險仍然可控。
+
+### 本次整合後的方向
+已把 Layer 系統往「低重複、高密度」方向調整，保留原始主 prompt 與優化增強模板的雙層結構，但讓層內內容更像畫面導演語言，而不是工程規則。
+
+目前的整合判斷是：
+
+- 保留 `highlightLayers`，但它只負責挑出真正需要突出的視覺層。
+- 保留 `costumeNarrative`，但它只補一句高價值服裝語意。
+- 場景層改成近景 / 中景 / 遠景的敘事拆解。
+- `sceneAction` 的流程詞持續清理，避免 `ChatGPT`、`不預設`、`全角色卡品質補強` 這種字眼滲入最終咒語。
+- 規範文件要跟著程式同步，讓後續維護者知道 Layer 的目的不是灌水，而是把視覺錨點說準。
+
+### 建議後續維護順序
+1. 先讓 `coreSpec` 跟 `doc/核心咒語規範.txt` 同步完成。
+2. 再跑 lint、test、build、verify:ui。
+3. 若輸出還是太公式化，就只收斂 Layer 的數量，不回頭把整個結構砍掉。
+### 本次驗證結果
+- `npm.cmd run sync:spec`：通過，`src/coreSpec.js` 已同步更新。
+- `npm.cmd run lint`：通過。
+- `npm.cmd run test`：通過，63 / 63。
+- `npm.cmd run build`：通過，已產生最新 `dist/` 與 standalone `index.html`。
+- `npm.cmd run verify:ui`：通過，desktop / mobile 皆無 console error、無水平溢出。
+
+### 本次實作摘要
+- 保留兩層 prompt 結構，讓原始主 prompt 與增強模板分開。
+- 新增 `highlightLayers` 與 `costumeNarrative`，讓 Layer 變成可選高價值補強，不再固定灌滿。
+- 場景層改成更明確的近景 / 中景 / 遠景敘事。
+- 清理流程語言，減少 `ChatGPT`、`全角色卡品質補強` 這類工程字眼滲入出圖文字。
+- 文件已同步到 `doc/核心咒語規範.txt`，AI-TASK 也已補上整合結論。

@@ -1,4 +1,4 @@
-import { CORE_SPEC_TEXT } from "./coreSpec.js";
+﻿import { CORE_SPEC_TEXT } from "./coreSpec.js";
 import {
   CAMERA_FRAMINGS,
   COLOR_INTENSITIES,
@@ -90,10 +90,52 @@ export const DEFAULT_FORM = {
   makeup: "",
   cupSize: "正常比例",
   selectedProfileId: "",
+    outputMode: "layered",
+    highlightLayers: [],
+  costumeNarrative: "",
   finalPrompt: "",
 };
 
 const FULLNESS_MARKERS = new Set(["K", "豐滿"]);
+const OUTPUT_MODE_VALUES = {
+  LAYERED: "layered",
+  PURE: "pure",
+};
+
+function normalizeHighlightLayers(value = []) {
+  const source = Array.isArray(value)
+    ? value
+    : String(value || "")
+        .split(/[,\s|/]+/)
+        .map((item) => item.trim())
+        .filter(Boolean);
+  const parsed = source
+    .map((item) => Number.parseInt(item, 10))
+    .filter((item) => Number.isInteger(item) && item >= 0 && item < 10);
+  if (parsed.length === 0) return [];
+  const hasZero = parsed.includes(0);
+  const normalized = parsed
+    .map((item) => (hasZero ? item : item - 1))
+    .filter((item) => item >= 0 && item < 10);
+  return [...new Set(normalized)];
+}
+
+export function normalizeOutputMode(value = OUTPUT_MODE_VALUES.LAYERED) {
+  return value === OUTPUT_MODE_VALUES.PURE ? OUTPUT_MODE_VALUES.PURE : OUTPUT_MODE_VALUES.LAYERED;
+}
+
+function resolveCostumeLayerIndices(form = DEFAULT_FORM, category = "", theme = "") {
+  const explicit = normalizeHighlightLayers(form.highlightLayers);
+  if (explicit.length) return explicit.slice(0, 4);
+
+  const text = `${category} ${theme} ${form.scene} ${form.sceneEnvironment} ${form.costume}`;
+  if (/奇幻異世界|暗黑王族|魅魔|魅姬|哥德|墮天使|冥界|幽冥|亡靈|血族|吸血鬼|黑鴉|黑翼|紫晶|骸骨/.test(text)) return [0, 2, 4, 6];
+  if (/武俠|女俠|戰場|江湖|劍|刀|槍|弓|邊關/.test(text)) return [1, 2, 5, 7];
+  if (/仙俠|神話|雲海|月宮|巫祝|祭司|法器/.test(text)) return [0, 3, 6, 8];
+  if (/中國朝代古裝|中國歷代服裝|唐|漢|宋|明|清宮|宮廷|長安|盛唐|故宮|花宴/.test(text)) return [0, 2, 5, 8];
+  if (/旅拍|地標|都市|街拍|咖啡|海岸|湖畔|山城|外灘|九份|威尼斯/.test(text)) return [0, 3, 5, 8];
+  return [0, 2, 3, 5];
+}
 
 export function sanitizeInput(value = "") {
   const protectedText = SANITIZE_PROTECTED_TERMS.reduce(
@@ -176,9 +218,12 @@ export function normalizeForm(input = {}) {
     visualFocus: sanitizeInput(form.visualFocus),
     frameEvent: sanitizeInput(form.frameEvent),
     costume: sanitizeInput(form.costume),
+    costumeNarrative: sanitizeInput(form.costumeNarrative),
     makeup: sanitizeInput(form.makeup),
     cupSize: normalizedCupSize,
     selectedProfileId: sanitizeInput(form.selectedProfileId),
+    outputMode: normalizeOutputMode(form.outputMode),
+    highlightLayers: normalizeHighlightLayers(form.highlightLayers),
     finalPrompt: String(form.finalPrompt || ""),
   };
 
@@ -252,19 +297,24 @@ export function expandCostumeToLayers(input = {}) {
 }
 
 function buildCostumeLayerText(form, theme) {
+  const costume = stabilizeFaceAngleText(form.costume) || `依據「${theme}」建立電影級可穿戴戲服`;
+  const category = inferCategory(theme, costume, form.scene);
+  const highlightLayers = resolveCostumeLayerIndices(form, category, theme);
   const filledLayers = COSTUME_LAYERS.map((layer, index) => ({
     index: index + 1,
     ...layer,
     value: stabilizeFaceAngleText(form[layer.id]),
   })).filter((layer) => layer.value);
-
-  const keyLayers = [1, 3, 4, 6, 8]
-    .map((index) => filledLayers.find((layer) => layer.index === index))
+  const selectedLayers = highlightLayers
+    .map((index) => filledLayers.find((layer) => layer.index === index + 1))
     .filter(Boolean)
     .slice(0, 4);
-  const layerSummary = keyLayers.map((layer) => `L${layer.index}: ${layer.value}`).join("；");
+  const narrative = compactText(form.costumeNarrative, 120);
+  const layerSummary = selectedLayers.map((layer) => `L${layer.index}: ${layer.value}`).join("；");
+
   return [
-    stabilizeFaceAngleText(form.costume) || `依據「${theme}」建立電影級可穿戴戲服`,
+    costume,
+    narrative ? `服裝敘事：${narrative}` : "",
     layerSummary ? `服裝 Layer 參考：${layerSummary}` : "",
     "服裝主視覺集中在主輪廓、主材質、主色彩與一到兩個記憶點，Layer 細節自然融入高訂戲服而不搶畫面焦點。",
     "絲綢、薄紗、披帛、珠寶或羽飾共同服務 dominant cinematic silhouette、visual flow 與角色銀幕存在感。",
@@ -305,7 +355,7 @@ function buildDarkRoyalBodyPresenceText(form, category) {
     "暗黑王族身形安全：胸部與身形只允許依照上傳真人原始體型自然延伸",
     "角色卡舊欄位 K 只作為豐滿體態記號，不在咒語中輸出罩杯字面值；不製造 pin-up 坐姿，不讓腿部或胸腰成為主視覺",
     bodyFullnessText,
-    "服裝採魅魔夜宴低胸真絲睡衣長裙：流動感絲緞面料、自然垂墜深 V 領口、高開衩飄逸裙擺、半透明薄紗層次，主體是 one-piece deep V satin nightgown，胸腰與下身由同一件長裙完整覆蓋；魅力來自深 V 領口、絲綢垂墜與燭光反光，不得分離成胸罩內褲或情趣內衣套裝",
+    "服裝維持真人可穿戴的連身高訂禮服或長裙結構，不分離成內衣套裝、不做比基尼式分體造型",
     "保留真實胸腔厚度、肩頸連接、正常腰臀比例與高訂布料張力",
     "視覺焦點集中在原始真人臉、暗黑王族氣場、絲絨高光與禮服輪廓",
   ].join("；");
@@ -426,12 +476,50 @@ function trimSentenceEnding(value = "") {
   return String(value || "").replace(/[。；，、\s]+$/g, "");
 }
 
-function compactLayerValue(value = "") {
-  return compactText(value, 42)
-    .replace(/作為.*$/g, "")
-    .replace(/使用.*$/g, "")
-    .replace(/，$/g, "")
+function splitPromptClauses(text = "") {
+  return String(text || "")
+    .split(/(?:\r?\n|[。；;]+)/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function normalizeClauseKey(clause = "") {
+  return String(clause || "")
+    .toLowerCase()
+    .replace(/[，,。；;:：]+/g, " ")
+    .replace(/\s+/g, " ")
     .trim();
+}
+
+function dedupePromptText(text = "", { preserveLines = true } = {}) {
+  const raw = String(text || "").trim();
+  if (!raw) return "";
+
+  const segments = preserveLines ? raw.split(/\r?\n+/) : [raw];
+  const seen = new Set();
+  const output = [];
+
+  for (const segment of segments) {
+    const clauses = preserveLines ? splitPromptClauses(segment) : [segment];
+    for (const clause of clauses) {
+      const cleaned = String(clause || "").trim();
+      if (!cleaned) continue;
+      const key = normalizeClauseKey(cleaned);
+      if (key && seen.has(key)) continue;
+      if (key) seen.add(key);
+      output.push(cleaned);
+    }
+  }
+
+  return preserveLines ? output.join("\n") : output.join(" ");
+}
+
+function stripLeadingPromptLabel(text = "") {
+  return String(text || "").replace(/^[^：:\n]+[：:]\s*/, "");
+}
+
+function flattenPromptText(text = "") {
+  return String(text || "").replace(/\s+/g, " ").replace(/[，,]+/g, " ").trim();
 }
 
 function buildCupSizeSkeletonText(form = DEFAULT_FORM) {
@@ -451,28 +539,33 @@ function buildFinalIdentityText(form = DEFAULT_FORM) {
 }
 
 function buildFinalCostumeText(form, category, theme) {
-  if (isDarkRoyalCategory(category, theme, form.scene)) {
-    return "真人可穿戴的魅魔夜宴低胸真絲睡衣長裙造型：流動感絲緞面料、自然垂墜深 V 領口、高開衩飄逸裙擺、半透明薄紗層次，主體是 one-piece deep V satin nightgown / slip dress nightgown，胸腰與下身由連身絲綢裙身完整覆蓋，外層搭配哥德式華麗配件、薄紗披袖、垂墜披紗與寶石肩鏈；重點是深 V 領口、絲綢垂墜、哥德珠寶層次、燭光反光與成熟電影魅力，不得分離成胸罩內褲或情趣內衣套裝，不生成比基尼式服裝、上下分離內衣造型，也不額外放大胸腰比例。";
-  }
-
-  const layerText = [form.costumeLayer1, form.costumeLayer3, form.costumeLayer4, form.costumeLayer6, form.costumeLayer8]
-    .map(compactLayerValue)
-    .filter(Boolean)
-    .slice(0, 4)
-    .join("，");
+  const costumeNarrative = compactText(form.costumeNarrative, 140);
+  const highlightLayers = resolveCostumeLayerIndices(form, category, theme);
+  const selectedLayers = highlightLayers
+    .map((index) => ({
+      index: index + 1,
+      value: compactText(form[`costumeLayer${index + 1}`], 80),
+    }))
+    .filter((layer) => layer.value)
+    .slice(0, 4);
+  const layerText = selectedLayers.map((layer) => `L${layer.index}: ${layer.value}`).join("，");
   const base = compactText(form.costume, 130) || `真人可穿戴的「${theme}」電影級高訂戲服`;
-  const detail = layerText ? `主要元素：${layerText}。` : "";
+  const narrativeText = costumeNarrative ? `服裝敘事：${costumeNarrative}。` : "";
+  const detailText = layerText ? `主要元素：${layerText}。` : "";
+  const darkSafety = isDarkRoyalCategory(category, theme, form.scene)
+    ? "暗黑題材仍需維持真人可穿戴的連身高訂禮服或長裙結構，不分離成胸罩內褲或情趣內衣套裝，不生成比基尼式服裝，不額外放大胸腰比例。"
+    : "";
 
-  return `${base}。${detail}重點是主輪廓、主材質、主色彩與一到兩個記憶點，真實布料重量、可穿戴結構與電影高訂質感。`;
+  return `${base}。${narrativeText}${detailText}重點是主輪廓、主材質、主色彩與一到兩個記憶點，真實布料重量、可穿戴結構與電影高訂質感。${darkSafety ? ` ${darkSafety}` : ""}`;
 }
 
 function buildFinalSceneText(form, category, theme) {
   const sceneBase = compactText(form.scene, 120) || `依據「${theme}」建立可被真實攝影拍出的奇幻電影場景`;
-  const directorLens = "背景近景 / 中景 / 遠景依本次主題、角色身份與情節形成專屬敘事層次：近景做壓鏡與視線引導，中景承接角色動作，遠景建立空間尺度、光源方向、特效與氛圍";
+  const sceneDirective = "背景近景 / 中景 / 遠景依本次主題、角色身份與情節形成專屬敘事層次，近景負責壓鏡與視線引導，中景承接角色動作，遠景建立空間尺度、光源方向、特效與氛圍";
   if (isDarkRoyalCategory(category, theme, sceneBase)) {
-    return `${sceneBase}。${directorLens}，可加入符合主題的燭光、建築輪廓、帷幕、反光、古器、粒子或景深。背景不得出現路人或群演。`;
+    return `${sceneBase}。${sceneDirective}；可加入符合主題的燭光、建築輪廓、帷幕、反光、古器、粒子或景深，但不得出現路人或群演。`;
   }
-  return `${sceneBase}。${directorLens}；場景道具、特效與氛圍都服務本次角色和故事。背景不得出現路人。`;
+  return `${sceneBase}。${sceneDirective}；場景道具、特效與氛圍都服務本次角色和故事，背景不得出現路人。`;
 }
 
 function cleanFinalPromptWorkflowWording(text = "") {
@@ -502,10 +595,9 @@ function buildFinalLightingText(form, category, theme) {
   const commercial = shouldUseCommercialGlamourLighting({ ...form, category, theme });
   const dreamyRadiant = isDreamyRadiantPosterTheme(`${category} ${theme} ${form.scene} ${form.sceneEnvironment} ${form.visualMode}`);
   const brightCostumePoster = form.visualMode === "高亮商業古裝海報";
-  const realismQuality =
-    "品質質感：ultra realistic cinematic photography、photorealistic、professional movie poster quality、high-detail skin texture、realistic hair strands、realistic fabric texture、realistic jewelry reflections、true-to-life lighting、medium format photography、extreme detail";
+  const qualityTail = "真實攝影質感、細緻皮膚紋理、真實布料反光、realistic fabric texture、true-to-life lighting、professional movie poster quality";
   const commercialQuality = brightCostumePoster
-    ? "、premium commercial fantasy artwork、bright commercial costume poster、luminous jewel-tone atmosphere"
+    ? "premium commercial fantasy artwork、bright commercial costume poster、luminous jewel-tone atmosphere"
     : "";
   const base =
     lighting ||
@@ -513,16 +605,16 @@ function buildFinalLightingText(form, category, theme) {
       ? "高亮主角柔光、正面 beauty fill、柔和邊緣分離光、半透明 bloom、抬升暗部、通透空氣透視、冷暖混合發光層次、自然景深與真實皮膚反光。"
       : "側前方柔和主光、燭光或月光環境光、柔和邊緣分離光、自然景深、空氣霧化與真實皮膚反光。");
   if (brightCostumePoster) {
-    return `${base} 亮麗高曝光商業古裝海報風格：臉部明亮清晰且保留真人皮膚紋理，眼睛有自然 catchlight；珠寶、金屬、燈籠、水面反光、絲綢、薄紗與披帛都有明顯 sparkle highlights；色彩飽和但真實，粉、金、青綠與寶石藍形成夢幻通透層次；陰影抬升不厚重，避免灰暗低光、塑膠 HDR 與 AI 美女換臉感。${realismQuality}${commercialQuality}。`;
+    return `${base} 亮麗高曝光商業古裝海報風格：臉部明亮清晰且保留真人皮膚紋理，眼睛有自然 catchlight；珠寶、金屬、燈籠、水面反光、絲綢、薄紗與披帛都有明顯 sparkle highlights；色彩飽和但真實，粉、金、青綠與寶石藍形成夢幻通透層次；陰影抬升不厚重，避免灰暗低光、塑膠 HDR 與 AI 美女換臉感。${qualityTail}${commercialQuality ? `、${commercialQuality}` : ""}。`;
   }
   if (commercial) {
     return dreamyRadiant
-      ? `${base} 臉部明亮且保留真人皮膚紋理，眼睛有自然 catchlight；絲綢、珠寶、薄紗與場景高光呈現 sparkle highlights，畫面夢幻通透但保持真實攝影質感。${realismQuality}。`
-      : `${base} 臉部明亮可辨識，眼睛有自然 catchlight，珠寶與服裝保留細膩高光，避免過暗、過度 HDR 與塑膠皮膚。${realismQuality}。`;
+      ? `${base} 臉部明亮且保留真人皮膚紋理，眼睛有自然 catchlight；絲綢、珠寶、薄紗與場景高光呈現 sparkle highlights，畫面夢幻通透但保持真實攝影質感。${qualityTail}。`
+      : `${base} 臉部明亮可辨識，眼睛有自然 catchlight，珠寶與服裝保留細膩高光，避免過暗、過度 HDR 與塑膠皮膚。${qualityTail}。`;
   }
   return dreamyRadiant
-    ? `${base} 臉部清楚可辨識，保留皮膚紋理、髮絲細節、真實空氣透視、柔亮 bloom 與電影攝影感。${realismQuality}。`
-    : `${base} 臉部清楚可辨識，保留皮膚紋理、髮絲細節、真實空氣透視與電影攝影感。${realismQuality}。`;
+    ? `${base} 臉部清楚可辨識，保留皮膚紋理、髮絲細節、真實空氣透視、柔亮 bloom 與電影攝影感。${qualityTail}。`
+    : `${base} 臉部清楚可辨識，保留皮膚紋理、髮絲細節、真實空氣透視與電影攝影感。${qualityTail}。`;
 }
 
 function buildFinalNegativeText() {
@@ -1062,6 +1154,73 @@ export function buildPrompt(input = {}) {
   ].join("\n");
 }
 
+export function buildPromptLayers(input = {}) {
+  const form = normalizeForm(input);
+  if (!form.theme) {
+    return {
+      form,
+      category: form.category || "",
+      ratio: effectiveOutputRatio(form),
+      lead: "",
+      corePrompt: "",
+      enhancementTemplate: "",
+      purePrompt: "",
+      finalPrompt: "",
+    };
+  }
+
+  const theme = form.theme;
+  const sceneInput = buildSceneInput(form, theme);
+  const costumeInput = buildCostumeLayerText(form, theme);
+  const category = form.category || inferCategory(theme, costumeInput, sceneInput);
+  const ratio = effectiveOutputRatio({ ...form, category });
+  const lead = `請根據上傳角色圖片生成 ${ratio} 真人電影級奇幻海報；如果沒有上傳圖片，請先創造一位 AI絕世美人 虛擬真人角色作為唯一主角。`;
+  const corePrompt = [
+    buildFinalIdentityText(form),
+    `分類：${category}`,
+    `主題：${theme}`,
+    `構圖：${buildFinalCompositionText(form, ratio)}`,
+    `服裝：${buildFinalCostumeText(form, category, theme)}`,
+    `妝容：${buildFinalMakeupText(form)}`,
+    `場景：${buildFinalSceneText(form, category, theme)}`,
+    `動作：${buildFinalActionText(form, category, theme)}`,
+  ].join("\n");
+  const enhancementTemplate = [
+    `風格：${buildFinalStyleText(form, category, theme)}`,
+    `光影：${buildFinalLightingText(form, category, theme)}`,
+    `負面：${buildFinalNegativeText()}`,
+  ].join("\n");
+  const finalPrompt = dedupePromptText([lead, corePrompt, enhancementTemplate].join("\n\n"));
+  const purePrompt = buildPurePromptText({ form, category, ratio });
+
+  return { form, category, ratio, lead, corePrompt, enhancementTemplate, purePrompt, finalPrompt };
+}
+
+function buildPurePromptText({ form, category, ratio }) {
+  const theme = form.theme || "本次主題";
+  const sceneInput = buildSceneInput(form, theme);
+  const costumeInput = buildCostumeLayerText(form, theme);
+  const resolvedCategory = category || form.category || inferCategory(theme, costumeInput, sceneInput);
+  const promptParts = [
+    `請根據上傳角色圖片生成 ${ratio} 真人電影級奇幻海報；如果沒有上傳圖片，請先創造一位 AI絕世美人 虛擬真人角色作為唯一主角。`,
+    buildFinalIdentityText(form),
+    `分類：${resolvedCategory}`,
+    `主題：${theme}`,
+    `構圖：${buildFinalCompositionText(form, ratio)}`,
+    `服裝：${buildFinalCostumeText(form, resolvedCategory, theme)}`,
+    `妝容：${buildFinalMakeupText(form)}`,
+    `場景：${buildFinalSceneText(form, resolvedCategory, theme)}`,
+    `動作：${buildFinalActionText(form, resolvedCategory, theme)}`,
+    `風格：${buildFinalStyleText(form, resolvedCategory, theme)}`,
+    `光影：${buildFinalLightingText(form, resolvedCategory, theme)}`,
+    buildFinalNegativeText(),
+  ];
+  return dedupePromptText(
+    promptParts.map((part) => flattenPromptText(stripLeadingPromptLabel(part))).join(" "),
+    { preserveLines: false },
+  );
+}
+
 export function buildChatGptInstruction(input = {}) {
   const form = normalizeForm(input);
   if (!form.theme) {
@@ -1074,31 +1233,21 @@ export function buildChatGptInstruction(input = {}) {
   const category = form.category || inferCategory(theme, costumeInput, sceneInput);
   const ratio = effectiveOutputRatio({ ...form, category });
 
-  return [
+  return dedupePromptText([
     `請根據上傳角色圖片生成 ${ratio} 真人電影級奇幻海報；如果沒有上傳圖片，請先創造一位 AI絕世美人 虛擬真人角色作為唯一主角。`,
-    "",
     buildFinalIdentityText(form),
-    "",
     `分類：${category}`,
     `主題：${theme}`,
     `風格：${buildFinalStyleText(form, category, theme)}`,
-    "",
     `構圖：${buildFinalCompositionText(form, ratio)}`,
-    "",
     `服裝：${buildFinalCostumeText(form, category, theme)}`,
-    "",
     `妝容：${buildFinalMakeupText(form)}`,
-    "",
     `場景：${buildFinalSceneText(form, category, theme)}`,
-    "",
     `動作：${buildFinalActionText(form, category, theme)}`,
-    "",
     `光影：${buildFinalLightingText(form, category, theme)}`,
-    "",
     buildFinalNegativeText(),
-  ].filter((part) => part !== "").join("\n");
+  ].join("\n"));
 }
-
 export function estimatePromptHealth(prompt) {
   const checks = [
     ["identity", /真人|real uploaded face identity|原始身份/.test(prompt)],
@@ -1119,3 +1268,21 @@ export function estimatePromptHealth(prompt) {
     missing: checks.filter(([, ok]) => !ok).map(([name]) => name),
   };
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

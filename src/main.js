@@ -15,6 +15,7 @@ import {
 } from "./data.js";
 import {
   buildChatGptInstruction,
+  buildPromptLayers,
   DEFAULT_FORM,
   expandSceneToDirectorFields,
   normalizeForm,
@@ -35,9 +36,13 @@ const STORAGE_KEY = "hongbing-travel-prompt-state";
 const HISTORY_KEY = "hongbing-travel-prompt-history";
 const UI_PREFS_KEY = "hongbing-travel-prompt-ui-prefs";
 const HISTORY_LIMIT = 5;
-const APP_VERSION = "v1.29";
+const APP_VERSION = "v1.30";
 const PROFILE_PAGE_SIZE = 60;
 const PRODUCT_PRINCIPLE = "最高原則：真人鎖臉優先於所有華麗主視覺，不讓角色滑回 AI 仙女臉。";
+const OUTPUT_MODE_OPTIONS = {
+  layered: "分層模式",
+  pure: "純咒語模式",
+};
 const RATIO_LABELS = {
   "4:5": "4:5 商業海報",
   "1:1": "1:1 方形貼文",
@@ -63,6 +68,22 @@ function cupSizeSelectOptions(activeValue) {
   return CUP_SIZE_OPTIONS.map(
     (value) => `<option value="${escapeHtml(value)}" ${activeValue === value ? "selected" : ""}>${escapeHtml(value)}</option>`,
   ).join("");
+}
+
+function outputModeLabel(value) {
+  return value === "pure" ? OUTPUT_MODE_OPTIONS.pure : OUTPUT_MODE_OPTIONS.layered;
+}
+
+function outputModeButtons(activeValue) {
+  return Object.entries(OUTPUT_MODE_OPTIONS)
+    .map(
+      ([mode, label]) => `<button type="button" class="filter-chip output-mode-chip ${activeValue === mode ? "active" : ""}" data-output-mode="${mode}">${escapeHtml(label)}</button>`,
+    )
+    .join("");
+}
+
+function promptOutputForMode(promptLayers, mode) {
+  return mode === "pure" ? promptLayers.purePrompt || promptLayers.finalPrompt : promptLayers.finalPrompt || promptLayers.purePrompt;
 }
 
 function templateDirectionForProfile(profile) {
@@ -230,7 +251,10 @@ function rememberPrompt(state, prompt) {
 }
 
 function formToState(form) {
-  return normalizeForm(Object.fromEntries(new FormData(form).entries()));
+  return normalizeForm({
+    ...loadState(),
+    ...Object.fromEntries(new FormData(form).entries()),
+  });
 }
 
 function costumeLayerFields(state) {
@@ -434,6 +458,8 @@ function stateWithProfileApplied(baseState, profile) {
     sceneEnvironment: mergeTemplateDirection(profile.sceneEnvironment || "", direction.environment),
     sceneAction: mergeTemplateDirection(profile.sceneAction || "", direction.action),
     sceneLighting: profile.sceneLighting || "",
+    costumeNarrative: profile.costumeNarrative || "",
+    highlightLayers: Array.isArray(profile.highlightLayers) ? profile.highlightLayers : [],
     cupSize: profile.cupSize || profileDefaultCupSize(profile),
     selectedProfileId: profile.id,
   };
@@ -483,6 +509,12 @@ function historyMarkup() {
 
 function render() {
   const state = loadState();
+  const promptLayers = buildPromptLayers(state);
+  const outputPrompt = promptOutputForMode(promptLayers, state.outputMode);
+  const outputModeName = outputModeLabel(state.outputMode);
+  const outputModeHint = state.outputMode === "pure"
+    ? "純咒語模式：直接輸出給生圖模型，不保留分層標籤。"
+    : "分層模式：保留結構標籤，方便在 ChatGPT 裡再調整。";
   const uiPrefs = loadUiPrefs();
   const activeParentCategory = uiPrefs.roleParentCategory || ALL_FILTER_LABEL;
   const activeCategory = ALL_FILTER_LABEL;
@@ -692,10 +724,36 @@ function render() {
           <div class="status-line compose-status" id="status-line">${escapeHtml(promptStats(state.finalPrompt))}</div>
           </form>
 
-          <section class="output-stack" aria-label="輸出與紀錄">
+                    <section class="output-stack" aria-label="輸出與紀錄">
             <div class="panel result">
-              <div class="panel-head"><h2>上傳照片後貼給 ChatGPT 的生成層咒語</h2></div>
-              <textarea id="prompt-output" readonly placeholder="按「完成出圖 + 複製完整咒語」後會顯示並複製：不複製母板全文的導演式生成咒語">${escapeHtml(state.finalPrompt)}</textarea>
+              <div class="panel-head">
+                <div>
+                  <h2>原始主 prompt</h2>
+                  <p>保留角色、構圖、服裝、妝容、場景與動作的骨架。</p>
+                </div>
+              </div>
+              <textarea class="prompt-core" readonly>${escapeHtml(promptLayers.corePrompt)}</textarea>
+            </div>
+
+            <div class="panel result">
+              <div class="panel-head">
+                <div>
+                  <h2>優化增強模板</h2>
+                  <p>只補風格、光影與負面詞，不改核心語意。</p>
+                </div>
+              </div>
+              <textarea class="prompt-enhancement" readonly>${escapeHtml(promptLayers.enhancementTemplate)}</textarea>
+            </div>
+
+            <div class="panel result final-result">
+              <div class="panel-head final-head">
+                <div>
+                  <h2>最終合併版</h2>
+                  <p>${escapeHtml(outputModeName)}｜${escapeHtml(outputModeHint)}</p>
+                </div>
+                <div class="output-mode-row">${outputModeButtons(state.outputMode)}</div>
+              </div>
+              <textarea id="prompt-output" class="prompt-final" readonly placeholder="按「完成出圖 + 複製完整咒語」後會顯示並複製：不複製母板全文的導演式生成咒語">${escapeHtml(outputPrompt || state.finalPrompt)}</textarea>
             </div>
 
             <div class="panel history-panel">
@@ -721,7 +779,8 @@ function composePrompt(form) {
     return "";
   }
 
-  const finalPrompt = buildChatGptInstruction(state);
+  const promptLayers = buildPromptLayers(state);
+  const finalPrompt = promptOutputForMode(promptLayers, state.outputMode) || buildChatGptInstruction(state);
   const nextState = { ...state, finalPrompt };
   saveState(nextState);
   rememberPrompt(state, finalPrompt);
@@ -749,6 +808,16 @@ function bindEvents() {
   const form = document.querySelector("#prompt-form");
   document.querySelectorAll("[data-fill-field]").forEach((button) => {
     button.addEventListener("click", () => fillField(form, button.dataset.fillField, button.dataset.fillValue));
+  });
+  document.querySelectorAll("[data-output-mode]").forEach((button) => {
+    button.addEventListener("click", () => {
+      saveState({
+        ...formToState(form),
+        outputMode: button.dataset.outputMode,
+        finalPrompt: document.querySelector("#prompt-output").value,
+      });
+      render();
+    });
   });
   document.querySelectorAll("[data-role-parent]").forEach((button) => {
     button.addEventListener("click", () => {
@@ -968,3 +1037,12 @@ function setStatus(message) {
 }
 
 render();
+
+
+
+
+
+
+
+
+

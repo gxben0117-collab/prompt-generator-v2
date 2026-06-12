@@ -7119,29 +7119,10 @@ const RAW_WORLD_LAYER_PROFILES = [
 
 export const WORLD_LAYER_PROFILES = RAW_WORLD_LAYER_PROFILES.map(applyLegacyProfileNameOverride);
 
-const DARK_ROYAL_PROFILE_IDS = [
-  "dark-succubus",
-  "fallen-angel",
-  "fallen-feather-night-court",
-  "abyss-spider-enchantress",
-  "blood-moon-spider-empress",
-  "cold-river-lantern-spirit",
-  "violet-underworld-bone-empress",
-  "fallen-elegy-black-wing-angel",
-  "frost-succubus-gothic-queen",
-  "dark-necromancer-throne-queen",
-  "fullmoon-skull-scepter-queen",
-  "ruby-skull-moon-throne-queen",
-  "underworld-spirit-banquet-empress",
-  "blood-amber-vampire-countess",
-  "purple-moon-night-court-empress",
-  "moon-weaving-dream-enchantress",
-  "raven-throne-night-empress",
-  "amethyst-temple-black-wing-queen",
-  "dark-domain-ancient-temple-queen",
-  "marionette-theater-soul-dominion",
-  ...REQUESTED_DARK_ROYAL_PROFILES.map((profile) => profile.id),
-];
+function isDarkRoyalProfile(profile) {
+  const text = `${profile.id} ${profile.title} ${profile.category} ${profile.parentCategory} ${profile.scene} ${profile.sceneEnvironment} ${profile.costume} ${profile.sceneAction}`;
+  return /奇幻異世界|暗黑王族|魅魔|魅姬|魔后|暗黑|哥德|墮天使|墮羽|黑羽|黑翼|冥界|幽冥|亡靈|血族|吸血鬼|夜庭|黑鴉|紫晶|骸骨|succubus|fallen angel|gothic|night court|blood moon|moon throne|underworld/i.test(text);
+}
 
 function inferActionCueTexts(profile) {
   const haystack = `${profile.title} ${profile.category} ${profile.scene} ${profile.sceneEnvironment} ${profile.costume} ${profile.sceneAction}`;
@@ -7240,13 +7221,15 @@ function needsActionUpgrade(sceneAction) {
   return stiffPattern.test(sceneAction) && !dynamicPattern.test(sceneAction);
 }
 
-function actionQualityGuardText(profile) {
+function actionQualityGuardText(profile, options = {}) {
+  const { omitPropClause = false } = options;
+  const propClause = omitPropClause ? "" : "；道具位置明確，可作陳設、光源、前景或支撐點";
   if (isBedchamberConsortProfile(profile)) {
-    return "姿態依寢宮支撐點成立；一個主動作、一個動態核心；床榻、帷幕、妝台、窗台、王座或桌沿作支撐點；道具位置明確，可作陳設、光源、前景或支撐點；布料、髮絲或燈火形成方向性，前景互動引導視線；手與道具不遮五官，避免呆站。";
+    return `姿態依寢宮支撐點成立；一個主動作、一個動態核心；床榻、帷幕、妝台、窗台、王座或桌沿作支撐點${propClause}；布料、髮絲或燈火形成方向性，前景互動引導視線；手與道具不遮五官，避免呆站。`;
   }
   const cues = inferActionCueTexts(profile);
   const cueText = cues.length ? cues.join("、") : fallbackActionDirection(profile.parentCategory);
-  return `姿態依身份場景成立；一個主動作、一個動態核心，參考 ${cueText}；場景物件作支撐點；道具位置明確，可手持、陳設、光源、前景或背景；布料、髮絲、燈火或霧氣形成方向性，前景互動引導視線；手與道具不遮五官，避免呆站。`;
+  return `姿態依身份場景成立；一個主動作、一個動態核心，參考 ${cueText}；場景物件作支撐點${propClause}；布料、髮絲、燈火或霧氣形成方向性，前景互動引導視線；手與道具不遮五官，避免呆站。`;
 }
 
 function cleanSceneActionWorkflowWording(sceneAction = "") {
@@ -7274,14 +7257,15 @@ function enrichSceneAction(profile) {
   }
 
   const normalizedAction = normalizeSceneActionProps(cleanedProfile);
+  const propHandled = normalizedAction !== cleanedAction;
   const upgradeText = needsActionUpgrade(normalizedAction)
     ? `避免筆直呆站，改採 ${inferActionCueTexts(cleanedProfile).join("、") || fallbackActionDirection(cleanedProfile.parentCategory)} 等互動姿態。`
     : "";
-  return [normalizedAction, upgradeText, actionQualityGuardText(cleanedProfile)].filter(Boolean).join("；");
+  return [normalizedAction, upgradeText, actionQualityGuardText(cleanedProfile, { omitPropClause: propHandled })].filter(Boolean).join("；");
 }
 
 WORLD_LAYER_PROFILES.forEach((profile) => {
-  if (DARK_ROYAL_PROFILE_IDS.includes(profile.id)) {
+  if (isDarkRoyalProfile(profile)) {
     profile.cupSize = "K";
   }
   profile.sceneAction = enrichSceneAction(profile);
@@ -7531,3 +7515,4 @@ export const NEGATIVE_PROMPT = [
   "CG render look",
   "fashion editorial beauty campaign",
 ];
+

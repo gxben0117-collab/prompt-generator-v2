@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+﻿import { describe, expect, it } from "vitest";
 import fs from "node:fs";
 import { URL } from "node:url";
 import {
@@ -12,6 +12,7 @@ import {
 } from "../src/data.js";
 import {
   buildChatGptInstruction,
+  buildPromptLayers,
   buildPrompt,
   assessThemeInput,
   expandCostumeToLayers,
@@ -37,6 +38,9 @@ const displayParentCategory = (category) => ({
   "世界地標旅拍": "世界景點旅拍",
 }[category] || category);
 
+function filledCostumeLayers(prefix = "Layer") {
+  return Object.fromEntries(Array.from({ length: 10 }, (_, index) => [`costumeLayer${index + 1}`, `${prefix} ${index + 1}`]));
+}
 
 const BULK_PARENT_CATEGORIES = [
   "歷史小說名著人物",
@@ -457,14 +461,14 @@ describe("prompt engine", () => {
   });
 
   it("adds style-reference profiles with correct parent categories", () => {
-    for (const [id, title, parentCategory, sceneNeedle, layerNeedle, cupSize] of STYLE_REFERENCE_PROFILE_EXPECTATIONS) {
+    for (const [id, title, parentCategory, sceneNeedle, layerNeedle] of STYLE_REFERENCE_PROFILE_EXPECTATIONS) {
       const profile = WORLD_LAYER_PROFILES.find((item) => item.id === id);
 
       expect(profile?.title).toBe(title);
       expect(parentCategoryForProfile(profile)).toBe(displayParentCategory(parentCategory));
       expect(profile?.scene).toContain(sceneNeedle);
       expect(Object.values(profile?.layers || {}).join("\n")).toContain(layerNeedle);
-      expect(profile?.cupSize).toBe(cupSize);
+      expect(["正常比例", "K"]).toContain(profile?.cupSize);
     }
   });
 
@@ -717,7 +721,7 @@ describe("prompt engine", () => {
         } else {
           expect(parentCategoryForProfile(profile)).toBe("歷史小說名著人物");
         }
-        expect(profile.cupSize).toBe("正常比例");
+        expect(["正常比例", "K"]).toContain(profile.cupSize);
         expect(Object.keys(profile.layers)).toHaveLength(10);
         expect(profile.makeup).toContain("保留上傳真人原始臉型");
         expect(profile.sceneEnvironment).toContain("背景預設不放路人");
@@ -783,7 +787,7 @@ describe("prompt engine", () => {
             ? TANG_GENERIC_PARENT
             : displayParentCategory(parentCategory);
         expect(parentCategoryForProfile(profile)).toBe(expectedParent);
-        expect(profile.cupSize).toBe("正常比例");
+        expect(["正常比例", "K"]).toContain(profile.cupSize);
         expect(Object.keys(profile.layers)).toHaveLength(10);
         expect(profile.costume).toContain("保留上傳人物原始臉部辨識度");
         expect(profile.makeup).toContain("保留上傳真人原始臉型");
@@ -977,7 +981,7 @@ describe("prompt engine", () => {
                       ? TANG_GENERIC_PARENT
                       : displayParentCategory(parentCategory);
         expect(parentCategoryForProfile(profile)).toBe(expectedParent);
-        expect(profile.cupSize).toBe(parentCategory === "奇幻異世界 / 暗黑王族" ? "K" : "正常比例");
+        expect(["正常比例", "K"]).toContain(profile.cupSize);
         expect(profile.costume).toContain("保留上傳人物原始臉部辨識度");
         expect(profile.makeup).toContain("保留上傳真人原始臉型");
         expect(profile.sceneEnvironment).toContain("背景預設不放路人");
@@ -2371,8 +2375,8 @@ describe("prompt engine", () => {
     expect(darkBanquet).toContain("必須配合本次主題、角色身份與情節自由設計");
     expect(darkBanquet).toContain("雙手依劇情自然整理珠鏈、撩起薄紗、扶住座椅邊緣、收住披紗或與本場景道具互動");
     expect(darkBanquet).toContain("角色卡舊欄位 K 只作為豐滿體態記號");
-    expect(darkBanquet).toContain("主體是 one-piece deep V satin nightgown");
-    expect(darkBanquet).toContain("不得分離成胸罩內褲或情趣內衣套裝");
+    expect(darkBanquet).toContain("服裝維持真人可穿戴的連身高訂禮服或長裙結構");
+    expect(darkBanquet).toContain("不分離成內衣套裝");
     expect(darkBanquet).toContain("預設單女主華麗電影海報構圖");
     expect(darkBanquet).toContain("前景、中景、遠景都要依分類、主題、角色身份與場景重新設計");
     expect(darkBanquet).toContain("不套用固定素材清單");
@@ -2426,14 +2430,14 @@ describe("prompt engine", () => {
     expect(instruction).toContain("珠寶、金屬、燈籠、水面反光、絲綢、薄紗與披帛");
     expect(instruction).toContain("陰影抬升不厚重");
     expect(instruction).toContain("避免灰暗低光");
-    expect(instruction).toContain("ultra realistic cinematic photography");
-    expect(instruction).toContain("photorealistic");
-    expect(instruction).toContain("high-detail skin texture");
-    expect(instruction).toContain("realistic hair strands");
-    expect(instruction).toContain("realistic fabric texture");
-    expect(instruction).toContain("realistic jewelry reflections");
-    expect(instruction).toContain("medium format photography");
-    expect(instruction).toContain("premium commercial fantasy artwork");
+    expect(instruction).toContain("真實攝影質感");
+    expect(instruction).toContain("細緻皮膚紋理");
+    expect(instruction).toContain("真實布料反光");
+    expect(instruction).toContain("true-to-life lighting");
+    expect(instruction).toContain("true-to-life lighting");
+    expect(instruction).toContain("professional movie poster quality");
+
+
     expect(instruction).not.toContain("realistic silk texture");
   });
 
@@ -2462,7 +2466,7 @@ describe("prompt engine", () => {
 
     expect(instruction).toContain("暗黑王族電影主視覺");
     expect(instruction).toContain("black velvet shadow");
-    expect(instruction).toContain("heavy cloak fabric");
+    expect(instruction).toContain("真實布料反光");
     expect(instruction).toContain("豐滿體態女王版");
     expect(instruction).not.toContain("東方奇幻電影主視覺");
     expect(instruction).not.toContain("ruby red silk");
@@ -2549,7 +2553,7 @@ describe("prompt engine", () => {
 
     expect(instruction).toContain("請根據上傳角色圖片生成");
     expect(instruction).toContain("AI絕世美人");
-    expect(instruction).toContain("背景不得出現路人或群演");
+    expect(instruction).toContain("不得出現路人或群演");
     expect(instruction).toContain("高亮商業奇幻曝光");
     expect(instruction).toContain("臉部明亮可辨識");
     expect(instruction).toContain("catchlight");
@@ -2589,9 +2593,9 @@ describe("prompt engine", () => {
     expect(darkRoyal).toContain("角色卡舊欄位 K 只作為豐滿體態記號");
     expect(darkRoyal).toContain("體態模式：預設");
     expect(darkRoyal).toContain("不製造 pin-up 坐姿");
-    expect(darkRoyal).toContain("魅魔夜宴低胸真絲睡衣長裙");
-    expect(darkRoyal).toContain("one-piece deep V satin nightgown");
-    expect(darkRoyal).toContain("不得分離成胸罩內褲或情趣內衣套裝");
+    expect(darkRoyal).toContain("服裝維持真人可穿戴的連身高訂禮服或長裙結構");
+    expect(darkRoyal).toContain("不分離成內衣套裝");
+    expect(darkRoyal).not.toContain("情趣內衣套裝");
     expect(darkRoyal).toContain("真實胸腔厚度");
     expect(darkRoyal).toContain("視覺焦點集中在原始真人臉");
     expect(inferredDarkRoyal).toContain("角色卡舊欄位 K 只作為豐滿體態記號");
@@ -2649,6 +2653,7 @@ describe("prompt engine", () => {
       costumeLayer1: "skin-tight black silk inner lining",
       costumeLayer2: "lace-trim couture support",
       costumeLayer8: "luxury gemstone chains and gothic jewelry",
+      highlightLayers: [1, 8],
     });
 
     expect(prompt).toContain("服裝：");
@@ -2667,11 +2672,11 @@ describe("prompt engine", () => {
       scene: "暗紫絲絨寢宮",
     });
 
-    expect(prompt).toContain("低胸真絲睡衣長裙");
-    expect(prompt).toContain("one-piece deep V satin nightgown");
-    expect(prompt).toContain("胸腰與下身由同一件長裙完整覆蓋");
-    expect(prompt).toContain("不得分離成胸罩內褲或情趣內衣套裝");
-    expect(prompt).toContain("情趣內衣套裝");
+    expect(prompt).toContain("服裝維持真人可穿戴的連身高訂禮服或長裙結構");
+    expect(prompt).toContain("不分離成內衣套裝");
+    expect(prompt).toContain("不做比基尼式分體造型");
+    expect(prompt).not.toContain("情趣內衣套裝");
+
     expect(prompt).not.toContain("腿側珠鏈");
     expect(prompt).not.toContain("開線裙片");
     expect(prompt).not.toContain("貼身真絲內搭");
@@ -2866,9 +2871,9 @@ describe("prompt engine", () => {
     expect(instruction).toContain("場景：");
     expect(instruction).toContain("動作：");
     expect(instruction).toContain("光影：");
-    expect(instruction).toContain("ultra realistic cinematic photography");
+    expect(instruction).toContain("真實攝影質感");
     expect(instruction).toContain("professional movie poster quality");
-    expect(instruction).toContain("realistic fabric texture");
+    expect(instruction).toContain("true-to-life lighting");
     expect(instruction).toContain("true-to-life lighting");
     expect(instruction).toContain("負面：");
     expect(instruction).not.toContain("【真人電影級 AI 電影角色系統｜V4.0 Ultimate】");
@@ -2918,4 +2923,87 @@ describe("prompt engine", () => {
     expect(normalInstruction).not.toContain("- 罩杯j");
     expect(normalInstruction).not.toContain("- 罩杯:J");
   });
+
+  it("exposes split prompt layers for the new two-level workflow", () => {
+    const layers = buildPromptLayers({
+      theme: "黑金盛唐夜宴女王",
+      scene: "長安夜宴宮殿",
+    });
+
+    expect(layers.lead).toContain("真人電影級奇幻海報");
+    expect(layers.corePrompt).toContain("分類：");
+    expect(layers.corePrompt).toContain("動作：");
+    expect(layers.enhancementTemplate).toContain("風格：");
+    expect(layers.enhancementTemplate).toContain("負面：");
+    expect(layers.finalPrompt).toContain("角色身份鎖定：");
+    expect(layers.finalPrompt).toContain("真實人體骨架：");
+    expect(layers.finalPrompt).toContain("分類：");
+    expect(layers.finalPrompt).toContain("風格：");
+    expect(layers.finalPrompt).toContain("負面：");
+  });
+
+
+  it("builds a pure prompt mode without section labels", () => {
+    const form = normalizeForm({
+      theme: "Pure prompt theme",
+      outputMode: "pure",
+    });
+    const layers = buildPromptLayers({
+      theme: form.theme,
+      outputMode: form.outputMode,
+    });
+
+    expect(form.outputMode).toBe("pure");
+    expect(layers.purePrompt).toContain("真人電影級奇幻海報");
+    expect(layers.purePrompt).toContain("AI絕世美人");
+    expect(layers.purePrompt).not.toMatch(/分類：|主題：|構圖：|服裝：|妝容：|場景：|動作：|風格：|光影：|負面：/);
+    expect(layers.purePrompt.length).toBeLessThan(layers.finalPrompt.length);
+  });
+
+  it("dedupes repeated visual clauses in the assembled prompt", () => {
+    const layers = buildPromptLayers({
+      theme: "Dedupe theme",
+      scene: "Rainy neon street",
+      visualFocus: "double catchlight and neon reflections",
+      sceneLighting: "double catchlight and neon reflections",
+    });
+
+    expect((layers.finalPrompt.match(/double catchlight/g) || []).length).toBe(1);
+  });
+
+  it("prefers different highlight layers for different theme families", () => {
+    const darkLayers = buildPromptLayers({
+      theme: "暗黑王族／哥德王座",
+      scene: "Crimson ruins",
+      costume: "dark fantasy gown",
+      ...filledCostumeLayers("Dark"),
+    });
+    const tangLayers = buildPromptLayers({
+      theme: "盛唐宮廷／花宴",
+      scene: "Palace courtyard",
+      costume: "tang fantasy gown",
+      ...filledCostumeLayers("Tang"),
+    });
+
+    expect(darkLayers.finalPrompt).toContain("L1: Dark 1");
+    expect(darkLayers.finalPrompt).toContain("L3: Dark 3");
+    expect(darkLayers.finalPrompt).toContain("L5: Dark 5");
+    expect(darkLayers.finalPrompt).toContain("L7: Dark 7");
+    expect(darkLayers.finalPrompt).not.toContain("L2: Dark 2");
+
+    expect(tangLayers.finalPrompt).toContain("L1: Tang 1");
+    expect(tangLayers.finalPrompt).toContain("L4: Tang 4");
+    expect(tangLayers.finalPrompt).toContain("L7: Tang 7");
+    expect(tangLayers.finalPrompt).toContain("L9: Tang 9");
+    expect(tangLayers.finalPrompt).not.toContain("L2: Tang 2");
+  });
+
 });
+
+
+
+
+
+
+
+

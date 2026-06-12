@@ -1,4 +1,4 @@
-export function createLayerProfile({
+﻿export function createLayerProfile({
   id,
   title,
   themeHint,
@@ -7,12 +7,14 @@ export function createLayerProfile({
   aliases,
   cupSize,
   costume,
+  costumeNarrative = "",
   makeup,
   scene,
   sceneEnvironment,
   sceneAction,
   sceneLighting,
   layers,
+  highlightLayers = [],
 }) {
   return {
     id,
@@ -23,11 +25,13 @@ export function createLayerProfile({
     aliases,
     cupSize: cupSize || "正常比例",
     costume,
+    costumeNarrative,
     makeup,
     scene,
     sceneEnvironment,
     sceneAction,
     sceneLighting,
+    highlightLayers,
     layers: Object.fromEntries(layers.map((layer, index) => [`costumeLayer${index + 1}`, layer])),
   };
 }
@@ -52,6 +56,8 @@ export function createCuratedRoleProfile({
   lighting,
   atmosphere = "高級商業奇幻電影主視覺",
   cupSize = "正常比例",
+  highlightLayers = [],
+  costumeNarrative = "",
 }) {
   const fullTheme = `${title} ${themeHint || ""} ${parentCategory} ${series}`.trim();
   return createLayerProfile({
@@ -64,6 +70,8 @@ export function createCuratedRoleProfile({
     cupSize,
     costume:
       `${identity}電影角色卡，${palette}、${costumeCore}、${jewelry}與${prop}組成${atmosphere}；服裝只服務真人身份與畫面主輪廓，保留上傳人物原始臉部辨識度，不重塑成 AI 模板臉。`,
+    costumeNarrative,
+    highlightLayers,
     layers: [
       `${palette}內層真絲或細織襯底建立真人成年骨架、肩頸與胸腔厚度`,
       `${costumeCore}基礎支撐結構貼合角色身份，保持正常軀幹深度與可穿戴邏輯`,

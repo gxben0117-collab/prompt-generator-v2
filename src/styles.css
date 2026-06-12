@@ -786,6 +786,22 @@ button.ghost {
   background: rgba(255, 255, 255, 0.055);
 }
 
+.final-head {
+  align-items: start;
+}
+
+.output-mode-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.output-mode-chip {
+  min-width: 86px;
+  justify-content: center;
+}
+
 .small-btn {
   min-height: 32px;
   padding: 7px 10px;
@@ -837,6 +853,25 @@ button.ghost {
   font-family: "Cascadia Mono", "Consolas", monospace;
   font-size: 0.9rem;
   line-height: 1.65;
+  resize: vertical;
+}
+
+.panel-head p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.prompt-core {
+  min-height: 230px;
+}
+
+.prompt-enhancement {
+  min-height: 180px;
+}
+
+.final-result .prompt-final {
+  min-height: 340px;
 }
 
 .status-line {
@@ -904,6 +939,15 @@ button.ghost {
 
   .template-toolbar-stack {
     justify-items: stretch;
+  }
+
+  .output-mode-row {
+    width: 100%;
+    justify-content: stretch;
+  }
+
+  .output-mode-chip {
+    flex: 1;
   }
 
   .library-mode-row {
