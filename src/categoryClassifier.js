@@ -34,16 +34,6 @@ export const PARENT_ROLE_CATEGORIES = [
     keywords: ["暗黑墮天使", "墮天使", "墮羽", "黑羽", "黑翼", "殘翼", "末日神話"],
   },
   {
-    label: "水下龍宮海國",
-    exclude: ["小龍女", "金庸", "神鵰", "神鵰俠侶", "古墓派"],
-    keywords: ["水下龍宮海國", "龍宮", "海國", "深海", "水下", "滄海", "水母", "靈珠", "海月", "聽潮", "龍女"],
-  },
-  {
-    label: "埃及豔后／尼羅河女兒／埃及神話女神",
-    exclude: ["世界頂級網紅地標旅拍", "世界地標", "網紅打卡", "iconic-checkin"],
-    keywords: ["埃及豔后", "尼羅河女兒", "埃及神話女神", "埃及神話", "埃及女神", "克麗奧佩特拉", "Cleopatra", "尼羅河", "伊西斯", "哈索爾", "巴斯特", "塞赫美特", "奈芙蒂斯", "努特", "瑪特", "聖甲蟲", "紙莎草"],
-  },
-  {
     label: "盛唐宮廷考據／大明宮貴妃／史實考據",
     exclude: [],
     keywords: ["盛唐宮廷考據／大明宮貴妃／史實考據", "盛唐宮廷考據", "大明宮貴妃", "tang-daming-palace-research", "tang-huaqing-palace-research", "tang-xingqing-palace-research", "tang-qujiang-research", "tang-linde-hall-research", "tang-hanyuan-hall-research", "tang-imperial-library-research", "tang-jiaofang-research-consort", "tang-silk-workshop-research", "tang-lotus-pavilion-research"],
@@ -109,11 +99,6 @@ export const PARENT_ROLE_CATEGORIES = [
     keywords: ["海岸度假旅拍", "海灘", "海岸", "沙灘", "浪花", "礁石", "比基尼", "泳裝", "海邊", "度假"],
   },
   {
-    label: "室內生活寫真",
-    exclude: ["王座", "哥德", "暗黑", "婚紗", "戰場", "賽博"],
-    keywords: ["室內生活寫真", "室內", "沙發", "臥室", "窗邊", "居家", "辦公桌", "電腦桌", "生活寫真"],
-  },
-  {
     label: "賽博機甲 / 科幻戰姬",
     exclude: ["古裝", "漢服", "婚紗"],
     keywords: ["賽博機甲", "科幻戰姬", "機甲", "鋼彈", "戰甲", "未來裝甲", "太空艙", "機械", "cyber mech"],
@@ -137,11 +122,6 @@ export const PARENT_ROLE_CATEGORIES = [
     label: "世界頂級網紅地標旅拍",
     exclude: [],
     keywords: ["世界頂級網紅地標旅拍", "網紅打卡", "iconic-checkin", "頂級網紅地標"],
-  },
-  {
-    label: "現代都市夜景",
-    exclude: ["艾菲爾", "自由女神", "威尼斯", "人面獅身", "金字塔", "塔橋", "哈里發塔", "羅馬競技場", "泰姬陵", "雪梨歌劇院", "聖家堂", "聖托里尼", "伏見稻荷", "佩特拉", "舍夫沙萬", "卡帕多奇亞", "Hollywood Sign", "中央公園"],
-    keywords: ["現代都市夜景", "都市夜景", "現代", "都市", "都會", "夜景", "霓虹", "街拍", "首爾", "上海", "香港", "台北", "賽博", "捷運", "city pop"],
   },
   {
     label: "歷史小說名著人物",
@@ -335,16 +315,6 @@ export const PARENT_ROLE_CATEGORIES = [
     keywords: ["雅典", "希臘", "奧林匹斯", "神諭", "巴洛克", "歐陸", "文藝復興", "古堡", "聖殿", "凡爾賽", "歌劇"],
   },
   {
-    label: "世界景點旅拍",
-    exclude: ["大唐", "盛唐", "長安", "仙俠", "修真", "魅魔", "魔后", "墮天使", "冥界", "雅典", "希臘", "奧林匹斯", "聖殿", "神諭", "歌劇"],
-    keywords: ["世界地標", "世界旅拍", "歐洲", "巴黎", "威尼斯", "首爾", "北境", "水城", "古橋", "海岸", "旅拍", "水巷"],
-  },
-  {
-    label: "現代都市 / 街拍電影",
-    exclude: ["大唐", "盛唐", "長安", "江南", "仙俠", "修真", "神話", "哥德", "凡爾賽"],
-    keywords: ["現代", "都市", "都會", "city pop", "霓虹", "街頭", "街拍", "韓系", "賽博", "電競", "格鬥", "未來"],
-  },
-  {
     label: "花園童話 / 自然精靈",
     exclude: ["凡爾賽", "雅典", "希臘", "大唐", "盛唐", "長安", "哥德", "暗黑", "血族"],
     keywords: ["花園", "花靈", "森林", "精靈", "童話", "白玫", "花神", "夢幻", "花海", "晶花", "水鏡", "自然", "紫陽花"],
@@ -377,7 +347,6 @@ const PROFILE_PARENT_CATEGORY_CACHE = new WeakMap();
 const LEGACY_PARENT_CATEGORY_LABELS = new Map([
   ["唐朝服飾", "唐朝服飾／泛唐風古裝"],
   ["中國歷代服裝", "中國歷代服裝／泛朝代總覽"],
-  ["世界地標旅拍", "世界景點旅拍"],
 ]);
 
 export function normalizeSearchText(value) {

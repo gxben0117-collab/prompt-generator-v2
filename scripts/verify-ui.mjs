@@ -572,7 +572,7 @@ try {
     if (!promptText.includes("deep wine-red silk") || !promptText.includes("amethyst violet atmosphere")) {
       throw new Error(`${viewport.name}: color intensity did not enter prompt`);
     }
-    if (!promptText.includes("extra-long flowing silk drapery") || !promptText.includes("airborne translucent shawls")) {
+    if (!promptText.includes("布料動態：") || (!promptText.includes("靜態垂墜") && !promptText.includes("中度流動"))) {
       throw new Error(`${viewport.name}: fabric motion did not enter prompt`);
     }
     if (promptText.includes("==================================================")) {

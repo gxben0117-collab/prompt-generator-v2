@@ -2998,6 +2998,19 @@ describe("prompt engine", () => {
     expect(tangLayers.finalPrompt).not.toContain("L2: Tang 2");
   });
 
+  it("keeps default travel themes away from long flowing silk drapery", () => {
+    const layers = buildPromptLayers({
+      theme: "巴黎咖啡館旅拍女主",
+      scene: "巴黎街角咖啡館",
+      costume: "ivory trench coat and tailored dress",
+    });
+
+    expect(layers.finalPrompt).toContain("布料動態：中度流動");
+    expect(layers.finalPrompt).not.toContain("extra-long flowing silk drapery");
+    expect(layers.finalPrompt).not.toContain("airborne translucent shawls");
+    expect(layers.finalPrompt).not.toContain("L6:");
+  });
+
 });
 
 

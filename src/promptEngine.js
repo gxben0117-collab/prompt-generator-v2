@@ -90,8 +90,8 @@ export const DEFAULT_FORM = {
   makeup: "",
   cupSize: "正常比例",
   selectedProfileId: "",
-    outputMode: "layered",
-    highlightLayers: [],
+  outputMode: "layered",
+  highlightLayers: [],
   costumeNarrative: "",
   finalPrompt: "",
 };
@@ -133,7 +133,7 @@ function resolveCostumeLayerIndices(form = DEFAULT_FORM, category = "", theme = 
   if (/武俠|女俠|戰場|江湖|劍|刀|槍|弓|邊關/.test(text)) return [1, 2, 5, 7];
   if (/仙俠|神話|雲海|月宮|巫祝|祭司|法器/.test(text)) return [0, 3, 6, 8];
   if (/中國朝代古裝|中國歷代服裝|唐|漢|宋|明|清宮|宮廷|長安|盛唐|故宮|花宴/.test(text)) return [0, 2, 5, 8];
-  if (/旅拍|地標|都市|街拍|咖啡|海岸|湖畔|山城|外灘|九份|威尼斯/.test(text)) return [0, 3, 5, 8];
+  if (/旅拍|地標|都市|街拍|咖啡|咖啡館|藝廊|展覽|畫廊|博物館|海岸|湖畔|山城|外灘|九份|威尼斯/.test(text)) return [0, 1, 3, 7];
   return [0, 2, 3, 5];
 }
 
@@ -635,6 +635,9 @@ function buildFinalStyleText(form, category, theme) {
   const inferredMaterialText = usesDefaultFabric
     ? inferCategoryMaterialText(categoryText)
     : "";
+  const inferredFabricText = usesDefaultFabric
+    ? inferCategoryFabricText(categoryText)
+    : "";
   const visualModeText = {
     "Netflix 東方奇幻": "真人身份保留的東方奇幻電影主視覺",
     "高亮商業古裝海報": "高亮商業古裝電影海報，亮麗高曝光商業古裝海報風格，臉部、珠寶、絲綢、薄紗與燈火都是第一眼亮點",
@@ -652,13 +655,15 @@ function buildFinalStyleText(form, category, theme) {
     "中度流動": "中度流動，披帛、長袖與外袍依照動作自然延伸",
     "靜態垂墜": "靜態垂墜，重點是真實布料重量與高訂結構",
   }[form.fabricMotion] || "真實布料動態";
-  const hasCategoryInference = Boolean(inferredVisualModeText || inferredColorText || inferredMaterialText);
+  const hasCategoryInference = Boolean(inferredVisualModeText || inferredColorText || inferredMaterialText || inferredFabricText);
   const commercial = shouldUseCommercialGlamourLighting({ ...form, category, theme })
     ? "高亮商業奇幻曝光，臉亮、珠寶亮、避免灰暗低光。"
     : hasCategoryInference
       ? "真人電影級主視覺，華麗但保持真實攝影可存在性。"
       : "真人電影級奇幻主視覺，華麗但保持真實攝影可存在性。";
-  return [inferredVisualModeText || visualModeText, inferredColorText || colorText, inferredMaterialText || fabricText, commercial].join("；");
+  return [inferredVisualModeText || visualModeText, inferredColorText || colorText, inferredFabricText || fabricText, inferredMaterialText, commercial]
+    .filter(Boolean)
+    .join("；");
 }
 
 function inferCategoryVisualModeText(text = "") {
@@ -732,6 +737,34 @@ function inferCategoryMaterialText(text = "") {
   }
   if (/暗黑王族|哥德|黑曜|吸血|女王|夜宴/.test(text)) {
     return "暗黑宮廷材質動態，black velvet、obsidian jewelry、structured corset gown、heavy cloak fabric 與燭光反射自然呈現";
+  }
+  return "";
+}
+
+function inferCategoryFabricText(text = "") {
+  if (/暗黑王族|哥德|黑曜|吸血|女王|夜宴/.test(text)) {
+    return "布料動態：靜態垂墜，絲絨、薄紗與長外袍保留重量感與壓迫感，不使用東方超長飄紗模板。";
+  }
+  if (/中國朝代古裝|中國歷代服裝|唐|漢|宋|明|清宮|宮廷|長安|盛唐|故宮|花宴/.test(text)) {
+    return "布料動態：中度流動，披帛、長袖與外袍依真實布料重量自然垂墜，保留宮廷氣韻但不過度飛散。";
+  }
+  if (/海岸度假|海灘|沙灘|泳裝|海邊|湖畔|水岸/.test(text)) {
+    return "布料動態：中度流動，裙襬、外套或披巾跟隨海風自然擺動，重點放在真實布料重量與旅拍感。";
+  }
+  if (/室內生活寫真|沙發|臥室|辦公桌|居家|室內/.test(text)) {
+    return "布料動態：靜態垂墜，重點放在剪裁、坐姿受力與布料在家具上的自然堆疊。";
+  }
+  if (/高訂婚紗禮服|婚紗|禮服|晚禮服|舞會/.test(text)) {
+    return "布料動態：中度流動，裙襬、薄紗與珠鏈保留高訂重量感與步伐空氣流線。";
+  }
+  if (/動漫次文化街拍|電子寵物|貓耳|格鬥女忍|次文化/.test(text)) {
+    return "布料動態：中度流動，外套、短裙與街頭配件保留鏡頭感，不做誇張飄紗。";
+  }
+  if (/世界地標|旅拍|地標|都市|街拍|咖啡|咖啡館|藝廊|展覽|畫廊|博物館|巴黎|上海/.test(text)) {
+    return "布料動態：中度流動，重點是剪裁、色塊與真實布料受力，不使用過長飄紗模板。";
+  }
+  if (/賽博機甲|科幻戰姬|機甲|鋼彈|未來裝甲|cyber mech/.test(text)) {
+    return "布料動態：靜態垂墜，科技布料與機械關節依角色步伐微幅受力，不使用飄紗模板。";
   }
   return "";
 }
